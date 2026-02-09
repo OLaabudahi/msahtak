@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'services/localization_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => LocalizationService(),
+      child: const MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocalizationService>(
+      builder: (context, localizationService, child) {
+        return MaterialApp(
+          title: 'Msahtak',
+          debugShowCheckedModeBanner: false,
+          locale: localizationService.currentLocale,
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('ar', ''),
+          ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          theme: ThemeData(
+            primaryColor: const Color(0xFF5B8FB9),
+            scaffoldBackgroundColor: Colors.white,
+            fontFamily: 'Roboto',
+          ),
+          home: const LoginScreen(),
+        );
+      },
+    );
+  }
+}
