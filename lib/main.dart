@@ -3,6 +3,28 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'screens/splash_screen.dart';
 import 'services/localization_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'app/app.dart';
+import 'features/onboarding/bloc/onboarding_bloc.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'app/app.dart';
+import 'features/onboarding/bloc/onboarding_bloc.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => OnboardingBloc()..add(const OnboardingStarted())),
+      ],
+      child: const App(),
+    ),
+  );
+}
+/*
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +34,7 @@ void main() async {
       child: const MyApp(),
     ),
   );
-}
+}*/
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
