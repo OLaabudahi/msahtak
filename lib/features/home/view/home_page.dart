@@ -7,14 +7,15 @@ import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../space_details/view/space_details_page.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 import '../widgets/insight_tile.dart';
+import '../../../features/booking_details/view/booking_details_page.dart';
 import 'screens/booking_tab_page.dart';
 import 'screens/profile_tab_page.dart';
 import 'screens/settings_tab_page.dart';
-import 'screens/space_details_page.dart';
 import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
@@ -142,7 +143,9 @@ class _HomeTabState extends State<_HomeTab> {
   /// ✅ فتح صفحة تفاصيل المساحة (كارد For You)
   void _openSpaceDetails(BuildContext context, String spaceId) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => SpaceDetailsPage(spaceId: spaceId)),
+      MaterialPageRoute(
+        builder: (_) => SpaceDetailsPage.withBloc(spaceId: spaceId),
+      ),
     );
   }
 
