@@ -52,7 +52,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       listener: (context, state) {
         if (state.goHome) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const HomePage()),
+            MaterialPageRoute(builder: (_) => HomePage.withBloc()),
           );
           return;
         }
