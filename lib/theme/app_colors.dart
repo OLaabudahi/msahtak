@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Approximated from screenshot
   static const Color primary = Color(0xFFFBAD20); // orange
   static const Color background = Color(0xFFFFFFFF);
   static const Color surface = Color(0xFFF2F5F8); // light card background
@@ -16,10 +14,8 @@ class AppColors {
   static const Color dotActive = Color(0xFFFBAD20);
   static const Color dotInactive = Color(0xFF5682AF); // bluish dots like screenshot
 
-
   // light surfaces
   static const Color surface2 = Color(0xFFEFF4F8);
   static const Color softOrange = Color(0xFFF9E8C6);
   static const Color link = Color(0xFF2B6CB0);
-
-  }
+}

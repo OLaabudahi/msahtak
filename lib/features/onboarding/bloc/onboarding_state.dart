@@ -3,8 +3,6 @@ part of 'onboarding_bloc.dart';
 enum BookingPurpose { study, deepFocus, meetings, teamWork, callsInterviews, creative }
 enum WhatMatters { quiet, fastWifi, budgetFriendly }
 enum ReminderTiming { min30, hour1, sameDay9am }
-
-// جديد: خيارات "Why Mashtak"
 enum WhyChoose { confidence, smartSuggestions }
 
 class OnboardingState extends Equatable {
@@ -13,8 +11,6 @@ class OnboardingState extends Equatable {
 
   final Set<BookingPurpose> selectedPurposes;
   final Set<WhatMatters> selectedMatters;
-
-  // جديد: خيارات الشاشة الأولى (مفعّلة افتراضيًا)
   final Set<WhyChoose> selectedWhy;
 
   final bool bookingApprovedAlert;
@@ -42,7 +38,6 @@ class OnboardingState extends Equatable {
     totalSteps: 3,
     selectedPurposes: {BookingPurpose.study},
     selectedMatters: {WhatMatters.quiet},
-    // مفعّلين افتراضيًا مثل طلبك
     selectedWhy: {WhyChoose.confidence, WhyChoose.smartSuggestions},
     bookingApprovedAlert: true,
     bookingRejectedAlert: true,

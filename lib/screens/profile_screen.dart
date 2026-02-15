@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'your_usage_screen.dart';
+import 'reviews_ratings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -143,13 +145,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _buildMenuItem('P', 'Personal Info', onTap: () {}),
           _buildDivider(),
-          _buildMenuItem('B', 'Your usage', onTap: () {}),
+          _buildMenuItem('B', 'Your usage', onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const YourUsageScreen()),
+            );
+          }),
           _buildDivider(),
           _buildMenuItem('\$', 'Payments & Receipts', onTap: () {}),
           _buildDivider(),
           _buildPaymentDetails(),
           _buildDivider(),
-          _buildMenuItem('★', 'Reviews & Ratings', isStarIcon: true, onTap: () {}),
+          _buildMenuItem('★', 'Reviews & Ratings', isStarIcon: true, onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ReviewsRatingsScreen()),
+            );
+          }),
           _buildDivider(),
           _buildMenuItem('♥', 'Saved Spaces', isHeartIcon: true, onTap: () {}),
         ],

@@ -52,11 +52,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
       listener: (context, state) {
         if (state.goHome) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomePage.withBloc()),
+            MaterialPageRoute(builder: (_) => const OnboardingHomePage()),
           );
           return;
         }
-        // لما نغيّر step من زر Next أو dot tap
         _animateTo(state.stepIndex);
       },
       child: Scaffold(
@@ -69,15 +68,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
               return Column(
                 children: [
-                  // ✅ ثابت: Header
                   Padding(
                     padding: AppSpacing.screen,
                     child: _TopHeader(
                       onSkip: () => bloc.add(const OnboardingSkipPressed()),
                     ),
                   ),
-
-                  // ✅ ثابت: Step indicator (نفس تصميمه) - مثبت مع الثابتين
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                     child: _StepRow(
@@ -87,15 +83,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onDotTap: (i) => bloc.add(OnboardingGoToStep(i)),
                     ),
                   ),
-
-                  // ✅ متحرك: فقط المحتوى بالنص + Swipe enabled
                   Expanded(
                     child: PageView(
                       controller: _controller,
                       physics: const BouncingScrollPhysics(),
                       onPageChanged: (index) {
-                        // مهم: لما المستخدم يسحب، حدث الـ BLoC
-                        // وبنمنع loop: إذا نفس الإندكس ما نعمل شي
                         if (index != state.stepIndex) {
                           bloc.add(OnboardingGoToStepFromSwipe(index));
                         }
@@ -107,8 +99,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ],
                     ),
                   ),
-
-                  // ✅ ثابت: Bottom button
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
                     child: SizedBox(
@@ -272,7 +262,7 @@ class _Step2Content extends StatelessWidget {
           AppSpacing.vLg,
           const Text('What are you booking for?', style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text('Select all that apply. We’ll tailor\nspaces to your needs.', style: AppTextStyles.body),
+          const Text('Select all that apply. We\'ll tailor\nspaces to your needs.', style: AppTextStyles.body),
           AppSpacing.vLg,
           Row(
             children: [
@@ -313,7 +303,7 @@ class _Step2Content extends StatelessWidget {
           ),
           AppSpacing.vLg,
           const InsightsCard(
-            title: 'You’ll see insights like',
+            title: 'You\'ll see insights like',
             chips: ['Best for study', 'Quiet + strong internet', 'Weekly saves more'],
           ),
           AppSpacing.vMd,
@@ -418,7 +408,7 @@ class _Step3Content extends StatelessWidget {
             leadingIcon: Icons.notifications_none_rounded,
             title: 'Notifications help you trust bookings',
             subtitle: 'Get approvals, rejections, and reminders\nright on time.',
-            footnote: 'Tip: You’ll still see booking status inside the Bookings tab.',
+            footnote: 'Tip: You\'ll still see booking status inside the Bookings tab.',
           ),
           AppSpacing.vXl,
         ],

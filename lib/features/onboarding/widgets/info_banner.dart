@@ -67,9 +67,9 @@ class _IconBadge extends StatelessWidget {
       child: leadingIcon != null
           ? Icon(leadingIcon, color: AppColors.primary, size: 24)
           : Text(
-        iconText ?? '',
-        style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900),
-      ),
+              iconText ?? '',
+              style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900),
+            ),
     );
   }
 }

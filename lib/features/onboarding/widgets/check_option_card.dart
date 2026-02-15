@@ -66,7 +66,7 @@ class _CheckCircle extends StatelessWidget {
       width: 22,
       height: 22,
       decoration: BoxDecoration(
-        color: selected ? Colors.white : Colors.white,
+        color: Colors.white,
         shape: BoxShape.circle,
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.border,

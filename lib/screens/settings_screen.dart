@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'notification_settings_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -55,6 +56,12 @@ class SettingsScreen extends StatelessWidget {
                 'Notifications',
                 'Booking & offers',
                 isLast: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const NotificationSettingsScreen()),
+                  );
+                },
               ),
             ]),
             const SizedBox(height: 24),
@@ -104,11 +111,12 @@ class SettingsScreen extends StatelessWidget {
     String title,
     String subtitle, {
     bool isLast = false,
+    VoidCallback? onTap,
   }) {
     return Column(
       children: [
         InkWell(
-          onTap: () {},
+          onTap: onTap ?? () {},
           borderRadius: isLast
               ? const BorderRadius.only(
                   bottomLeft: Radius.circular(16),

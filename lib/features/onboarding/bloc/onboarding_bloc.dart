@@ -26,6 +26,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   void _onStarted(OnboardingStarted event, Emitter<OnboardingState> emit) {
     emit(state.copyWith(stepIndex: 0, goHome: false));
   }
+
   void _onGoToStepFromSwipe(OnboardingGoToStepFromSwipe event, Emitter<OnboardingState> emit) {
     final idx = event.index.clamp(0, state.totalSteps - 1);
     emit(state.copyWith(stepIndex: idx));
@@ -41,7 +42,6 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   }
 
   void _onSkip(OnboardingSkipPressed event, Emitter<OnboardingState> emit) {
-    // Skip -> آخر خطوة (مثل السابق)
     final bool isLast = state.stepIndex == state.totalSteps - 1;
     if (isLast) {
       emit(state.copyWith(goHome: true));
@@ -100,5 +100,4 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   void _onSelectTiming(OnboardingSelectReminderTiming event, Emitter<OnboardingState> emit) {
     emit(state.copyWith(reminderTiming: event.timing));
   }
-
 }

@@ -43,7 +43,6 @@ class OnboardingToggleMatter extends OnboardingEvent {
   List<Object?> get props => [matter];
 }
 
-// جديد: Toggle خيارات Why Mashtak
 class OnboardingToggleWhy extends OnboardingEvent {
   final WhyChoose option;
   const OnboardingToggleWhy(this.option);
@@ -59,6 +58,7 @@ class OnboardingToggleApprovedAlert extends OnboardingEvent {
 class OnboardingToggleRejectedAlert extends OnboardingEvent {
   const OnboardingToggleRejectedAlert();
 }
+
 class OnboardingGoToStepFromSwipe extends OnboardingEvent {
   final int index;
   const OnboardingGoToStepFromSwipe(this.index);
@@ -66,6 +66,7 @@ class OnboardingGoToStepFromSwipe extends OnboardingEvent {
   @override
   List<Object?> get props => [index];
 }
+
 class OnboardingToggleReminderBeforeBooking extends OnboardingEvent {
   const OnboardingToggleReminderBeforeBooking();
 }
