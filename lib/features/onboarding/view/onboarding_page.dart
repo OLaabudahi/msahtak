@@ -19,6 +19,13 @@ class OnboardingPage extends StatefulWidget {
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
+  static Widget withBloc() {
+    return BlocProvider(
+      create: (_) => OnboardingBloc(),
+      child: const OnboardingPage(),
+    );
+  }
+
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
@@ -52,7 +59,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       listener: (context, state) {
         if (state.goHome) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const OnboardingHomePage()),
+            MaterialPageRoute(builder: (_) => HomePage.withBloc()),
           );
           return;
         }

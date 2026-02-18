@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_screen.dart';
@@ -5,9 +6,6 @@ import 'best_for_you_screen.dart';
 import 'offers_screen.dart';
 import 'weekly_plan_screen.dart';
 import 'policies_dialog.dart';
-import 'bookings_screen.dart';
-import 'profile_screen.dart';
-import 'settings_screen.dart';
 import 'notifications_list_screen.dart';
 import '../features/onboarding/bloc/onboarding_bloc.dart';
 import '../features/onboarding/view/onboarding_page.dart';
@@ -66,20 +64,24 @@ class ScreensDemo extends StatelessWidget {
               Icons.calendar_today,
               const WeeklyPlanScreen(),
             ),
-            const SizedBox(height: 16),
+           */
+/* const SizedBox(height: 16),
             _buildNavButton(
               context,
               'Bookings',
               Icons.menu_book,
               const BookingsScreen(),
-            ),
-            const SizedBox(height: 16),
+            ),*//*
+
+            */
+/*const SizedBox(height: 16),
             _buildNavButton(
               context,
               'Profile',
               Icons.person_outline,
               const ProfileScreen(),
-            ),
+            ),*//*
+
             const SizedBox(height: 16),
             _buildNavButton(
               context,
@@ -87,13 +89,15 @@ class ScreensDemo extends StatelessWidget {
               Icons.notifications_outlined,
               const NotificationsListScreen(),
             ),
-            const SizedBox(height: 16),
+            */
+/*const SizedBox(height: 16),
             _buildNavButton(
               context,
               'Settings',
               Icons.settings_outlined,
               const SettingsScreen(),
-            ),
+            ),*//*
+
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
@@ -181,3 +185,4 @@ class ScreensDemo extends StatelessWidget {
     );
   }
 }
+*/
