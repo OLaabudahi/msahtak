@@ -1,5 +1,5 @@
 import '../models/settings_model.dart';
-import 'settings_repo.dart';
+import '../../domain/repos/settings_repo.dart';
 
 /// ✅ Dummy repo (جاهز للاستبدال بالـ API أو Local storage)
 class SettingsRepoDummy implements SettingsRepo {

@@ -1,8 +1,18 @@
 part of 'onboarding_bloc.dart';
 
-enum BookingPurpose { study, deepFocus, meetings, teamWork, callsInterviews, creative }
+enum BookingPurpose {
+  study,
+  deepFocus,
+  meetings,
+  teamWork,
+  callsInterviews,
+  creative,
+}
+
 enum WhatMatters { quiet, fastWifi, budgetFriendly }
+
 enum ReminderTiming { min30, hour1, sameDay9am }
+
 enum WhyChoose { confidence, smartSuggestions }
 
 class OnboardingState extends Equatable {
@@ -68,7 +78,8 @@ class OnboardingState extends Equatable {
       selectedWhy: selectedWhy ?? this.selectedWhy,
       bookingApprovedAlert: bookingApprovedAlert ?? this.bookingApprovedAlert,
       bookingRejectedAlert: bookingRejectedAlert ?? this.bookingRejectedAlert,
-      reminderBeforeBooking: reminderBeforeBooking ?? this.reminderBeforeBooking,
+      reminderBeforeBooking:
+          reminderBeforeBooking ?? this.reminderBeforeBooking,
       reminderTiming: reminderTiming ?? this.reminderTiming,
       goHome: goHome ?? this.goHome,
     );

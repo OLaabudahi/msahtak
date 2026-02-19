@@ -15,11 +15,7 @@ class ProfileState extends Equatable {
   factory ProfileState.initial() =>
       const ProfileState(loading: true, error: null, user: null);
 
-  ProfileState copyWith({
-    bool? loading,
-    String? error,
-    UserModel? user,
-  }) {
+  ProfileState copyWith({bool? loading, String? error, UserModel? user}) {
     return ProfileState(
       loading: loading ?? this.loading,
       error: error,

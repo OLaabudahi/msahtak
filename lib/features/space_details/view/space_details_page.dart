@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
+import '../../booking/booking_feature_routes.dart';
 import '../bloc/space_details_bloc.dart';
 import '../bloc/space_details_event.dart';
 import '../bloc/space_details_state.dart';
@@ -26,8 +27,9 @@ class SpaceDetailsPage extends StatefulWidget {
   /// ✅ دالة: فتح الصفحة مع Bloc + Repo (Dummy حالياً)
   static Widget withBloc({required String spaceId}) {
     return BlocProvider(
-      create: (_) => SpaceDetailsBloc(repo: SpaceDetailsRepoDummy())
-        ..add(SpaceDetailsStarted(spaceId)),
+      create: (_) =>
+          SpaceDetailsBloc(repo: SpaceDetailsRepoDummy())
+            ..add(SpaceDetailsStarted(spaceId)),
       child: SpaceDetailsPage(spaceId: spaceId),
     );
   }
@@ -164,11 +166,11 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       Text('صار خطأ: ${state.error ?? "Unknown"}'),
                       const SizedBox(height: 12),
                       FilledButton(
-                        onPressed: () => context
-                            .read<SpaceDetailsBloc>()
-                            .add(SpaceDetailsStarted(widget.spaceId)),
+                        onPressed: () => context.read<SpaceDetailsBloc>().add(
+                          SpaceDetailsStarted(widget.spaceId),
+                        ),
                         child: const Text('إعادة المحاولة'),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -195,7 +197,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           borderRadius: BorderRadius.circular(999),
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.arrow_back_ios_new_rounded),
+                            child: Icon(Icons.arrow_back),
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -227,13 +229,18 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                             _stopImageAutoSlide();
                           },
                           onPointerUp: (_) => _scheduleResumeImageAutoSlide(),
-                          onPointerCancel: (_) => _scheduleResumeImageAutoSlide(),
+                          onPointerCancel: (_) =>
+                              _scheduleResumeImageAutoSlide(),
                           child: PageView.builder(
                             controller: _imagesController,
                             itemCount: d.imageAssets.length,
-                            onPageChanged: (i) => bloc.add(SpaceDetailsCarouselChanged(i)),
+                            onPageChanged: (i) =>
+                                bloc.add(SpaceDetailsCarouselChanged(i)),
                             itemBuilder: (_, i) {
-                              return Image.asset(d.imageAssets[i], fit: BoxFit.cover);
+                              return Image.asset(
+                                d.imageAssets[i],
+                                fit: BoxFit.cover,
+                              );
 
                               // ✅ API READY (كومنت)
                               // return Image.network(d.imageUrls[i], fit: BoxFit.cover);
@@ -245,7 +252,10 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   ),
 
                   const SizedBox(height: 8),
-                  DotIndicator(count: d.imageAssets.length, active: state.carouselIndex),
+                  DotIndicator(
+                    count: d.imageAssets.length,
+                    active: state.carouselIndex,
+                  ),
 
                   // السعر + rating
                   Padding(
@@ -254,12 +264,18 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            d.priceText,
-                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                            '${d.pricePerDay} /day',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF2F3542),
                             borderRadius: BorderRadius.circular(999),
@@ -268,10 +284,17 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                             children: [
                               Text(
                                 '${d.rating}',
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(Icons.star, size: 14, color: Color(0xFFF8B324)),
+                              const Icon(
+                                Icons.star,
+                                size: 14,
+                                color: Color(0xFFF8B324),
+                              ),
                             ],
                           ),
                         ),
@@ -343,7 +366,10 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 const SizedBox(height: 14),
                               ],
 
-                              const Text('Working hours', style: TextStyle(fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Working hours',
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
                               const SizedBox(height: 6),
                               Row(
                                 children: [
@@ -357,7 +383,8 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () => _openPoliciesSheet(context, state),
+                                    onTap: () =>
+                                        _openPoliciesSheet(context, state),
                                     child: const Text(
                                       'View Space Policies',
                                       style: TextStyle(
@@ -372,12 +399,22 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               const SizedBox(height: 14),
                               Row(
                                 children: [
-                                  const Expanded(child: Text('Location', style: TextStyle(fontWeight: FontWeight.w900))),
+                                  const Expanded(
+                                    child: Text(
+                                      'Location',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       // ✅ placeholder: share
                                     },
-                                    child: const Icon(Icons.share_outlined, size: 18),
+                                    child: const Icon(
+                                      Icons.share_outlined,
+                                      size: 18,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -406,12 +443,20 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               const SizedBox(height: 18),
 
                               // ✅ Features (لوحدها)
-                              const Text('Features', style: TextStyle(fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Features',
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
                               const SizedBox(height: 8),
                               ...d.features.map(
-                                    (f) => Padding(
+                                (f) => Padding(
                                   padding: const EdgeInsets.only(bottom: 6),
-                                  child: Text('• $f', style: const TextStyle(fontWeight: FontWeight.w700)),
+                                  child: Text(
+                                    '• $f',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
                               ),
 
@@ -424,23 +469,34 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: const Color(0xFFE6EEF7)),
+                                  border: Border.all(
+                                    color: const Color(0xFFE6EEF7),
+                                  ),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Who usually uses this space',
-                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                     const SizedBox(height: 12),
                                     UsageBars(
-                                      items: d.usageStats.map((e) => {'label': e.label, 'percent': e.percent}).toList(),
+                                      items: d.usageStats
+                                          .map(
+                                            (e) => {
+                                              'label': e.label,
+                                              'percent': e.percent,
+                                            },
+                                          )
+                                          .toList(),
                                     ),
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -451,22 +507,36 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Why people come here', style: TextStyle(fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Why people come here',
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
                               const SizedBox(height: 10),
                               Wrap(
                                 spacing: 10,
                                 runSpacing: 10,
-                                children: d.whyPeopleComeChips.map((t) => ReasonChip(text: t)).toList(),
+                                children: d.whyPeopleComeChips
+                                    .map((t) => ReasonChip(text: t))
+                                    .toList(),
                               ),
                               const SizedBox(height: 18),
                               Row(
                                 children: [
-                                  Text('${d.rating} ★', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22)),
+                                  Text(
+                                    '${d.rating} ★',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 22,
+                                    ),
+                                  ),
                                   const SizedBox(width: 10),
                                   Expanded(
                                     child: Text(
                                       'Based on ${d.reviewsCount} reviews',
-                                      style: const TextStyle(color: Color(0xFF6B7280), fontWeight: FontWeight.w700),
+                                      style: const TextStyle(
+                                        color: Color(0xFF6B7280),
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -474,29 +544,46 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                     child: OutlinedButton(
                                       style: OutlinedButton.styleFrom(
                                         shape: const StadiumBorder(),
-                                        side: const BorderSide(color: Color(0xFFF8B324)),
-                                        backgroundColor: const Color(0xFFFFF7ED),
+                                        side: const BorderSide(
+                                          color: Color(0xFFF8B324),
+                                        ),
+                                        backgroundColor: const Color(
+                                          0xFFFFF7ED,
+                                        ),
                                       ),
-                                      onPressed: () => _openReviewSummarySheet(context, state),
+                                      onPressed: () => _openReviewSummarySheet(
+                                        context,
+                                        state,
+                                      ),
                                       child: const Text(
                                         'Review Summary',
-                                        style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 18),
-                              const Text('Latest reviews', style: TextStyle(fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Latest reviews',
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
                               const SizedBox(height: 10),
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: d.latestReviews
-                                      .map((r) => Padding(
-                                    padding: const EdgeInsets.only(right: 12),
-                                    child: ReviewCard(review: r),
-                                  ))
+                                      .map(
+                                        (r) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 12,
+                                          ),
+                                          child: ReviewCard(review: r),
+                                        ),
+                                      )
                                       .toList(),
                                 ),
                               ),
@@ -510,15 +597,22 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Available offers', style: TextStyle(fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Available offers',
+                                style: TextStyle(fontWeight: FontWeight.w900),
+                              ),
                               const SizedBox(height: 6),
                               const Text(
                                 'Offers are applied during booking. You can choose or skip any offer later.',
-                                style: TextStyle(color: Color(0xFF6B7280), fontWeight: FontWeight.w700, height: 1.25),
+                                style: TextStyle(
+                                  color: Color(0xFF6B7280),
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.25,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               ...d.offers.map(
-                                    (o) => Padding(
+                                (o) => Padding(
                                   padding: const EdgeInsets.only(bottom: 12),
                                   child: OfferCard(offer: o),
                                 ),
@@ -545,13 +639,22 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       backgroundColor: const Color(0xFFF8B324),
                       shape: const StadiumBorder(),
                     ),
-                    onPressed: () {
-                      // ✅ لاحقاً: يفتح Request Booking Flow
-                    },
                     child: const Text(
                       'Request Booking',
-                      style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black,
+                      ),
                     ),
+                    onPressed: () {
+                      final repo = SpaceDetailsRepoDummy();
+
+                      final summary = repo.mapToBookingSummary(d);
+
+                      Navigator.of(context).push(
+                        BookingFeatureRoutes.requestBooking(space: summary),
+                      );
+                    },
                   ),
                 ),
               ),

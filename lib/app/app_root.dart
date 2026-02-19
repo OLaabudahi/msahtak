@@ -5,7 +5,7 @@ import '../features/app_start/view/splash_page.dart';
 import '../features/app_start/bloc/app_start_bloc.dart';
 import '../features/app_start/bloc/app_start_event.dart';
 import '../features/app_start/bloc/app_start_state.dart';
-import '../features/app_start/data/repos/app_start_repo.dart';
+import '../features/app_start/domain/repos/app_start_repo.dart';
 import '../features/app_start/data/repos/app_start_repo_dummy.dart';
 import '../features/auth/view/login_page.dart';
 import '../features/home/view/home_page.dart';
@@ -18,8 +18,9 @@ class AppRoot extends StatefulWidget {
   static Widget withBloc() {
     final storage = LocalStorageService();
     return BlocProvider(
-      create: (_) => AppStartBloc(AppStartRepoDummy(storage))
-        ..add(const AppStartStarted()),
+      create: (_) =>
+          AppStartBloc(AppStartRepoDummy(storage))
+            ..add(const AppStartStarted()),
       child: const AppRoot(),
     );
   }
@@ -35,9 +36,9 @@ class _AppRootState extends State<AppRoot> {
     if (_openingOnboarding) return;
     _openingOnboarding = true;
 
-    await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()));
 
     // When onboarding finishes (page popped), mark completed then re-check flow.
     await LocalStorageService().setHasCompletedOnboarding(true);

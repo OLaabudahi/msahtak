@@ -33,10 +33,7 @@ class PlaceholderCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (trailing != null) ...[
-              AppSpacing.hLg,
-              trailing!,
-            ],
+            if (trailing != null) ...[AppSpacing.hLg, trailing!],
           ],
         ),
       ),

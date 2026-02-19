@@ -41,14 +41,24 @@ class AuthLanguageHeader extends StatelessWidget {
                       stops: [0.0, 1.0],
                     ).createShader(bounds);
                   },
-                  child: const Icon(Icons.language, size: 30, color: Colors.white),
+                  child: const Icon(
+                    Icons.language,
+                    size: 30,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Container(
                   constraints: const BoxConstraints(maxWidth: 140),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFF5A623), width: 2),
+                    border: Border.all(
+                      color: const Color(0xFFF5A623),
+                      width: 2,
+                    ),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -56,13 +66,26 @@ class AuthLanguageHeader extends StatelessWidget {
                       value: state.code,
                       isDense: true,
                       isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down, size: 20, color: Color(0xFFF5A623)),
-                      style: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w600),
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        size: 20,
+                        color: Color(0xFFF5A623),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                       dropdownColor: Colors.white,
                       elevation: 8,
                       borderRadius: BorderRadius.circular(8),
                       items: LanguageService.supported
-                          .map((e) => DropdownMenuItem(value: e.code, child: Text(e.label)))
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e.code,
+                              child: Text(e.label),
+                            ),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v == null) return;

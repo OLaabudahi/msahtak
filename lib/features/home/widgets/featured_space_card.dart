@@ -26,9 +26,7 @@ class FeaturedSpaceCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(imageAsset, fit: BoxFit.cover),
-          ),
+          Positioned.fill(child: Image.asset(imageAsset, fit: BoxFit.cover)),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -65,10 +63,18 @@ class FeaturedSpaceCard extends StatelessWidget {
                           children: [
                             Text(
                               ratingText,
-                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: AppColors.primary),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12.5,
+                                color: AppColors.primary,
+                              ),
                             ),
                             const SizedBox(width: 4),
-                            const Icon(Icons.star, size: 14, color: AppColors.primary),
+                            const Icon(
+                              Icons.star,
+                              size: 14,
+                              color: AppColors.primary,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 2),
@@ -81,17 +87,24 @@ class FeaturedSpaceCard extends StatelessWidget {
                     onTap: onViewTap,
                     borderRadius: BorderRadius.circular(999),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF4E7FB6),
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: const Text(
                         'View',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12.5),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12.5,
+                        ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

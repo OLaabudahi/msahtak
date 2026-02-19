@@ -12,7 +12,9 @@ class AppColors {
   static const Color danger = Color(0xFFFB2020);
 
   static const Color dotActive = Color(0xFFFBAD20);
-  static const Color dotInactive = Color(0xFF5682AF); // bluish dots like screenshot
+  static const Color dotInactive = Color(
+    0xFF5682AF,
+  ); // bluish dots like screenshot
 
   // light surfaces
   static const Color surface2 = Color(0xFFEFF4F8);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 class AppTextStyles {
-
   static const TextStyle h1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w800,
@@ -22,6 +21,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
     color: AppColors.text,
     height: 1.2,
+  );
+  static const TextStyle sectionBarTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w900,
+    color: AppColors.text,
   );
 
   static const TextStyle cardTitle = TextStyle(

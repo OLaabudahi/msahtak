@@ -17,9 +17,18 @@ class PoliciesSheet extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(policies.title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+            Text(
+              policies.title,
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+            ),
             const SizedBox(height: 10),
-            Text(policies.subtitle, style: const TextStyle(color: Color(0xFF6B7280), fontWeight: FontWeight.w600)),
+            Text(
+              policies.subtitle,
+              style: const TextStyle(
+                color: Color(0xFF6B7280),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 14),
             Expanded(
               child: SingleChildScrollView(
@@ -30,12 +39,23 @@ class PoliciesSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(s.title, style: const TextStyle(fontWeight: FontWeight.w900)),
+                          Text(
+                            s.title,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
                           const SizedBox(height: 8),
-                          ...s.bullets.map((b) => Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: Text('• $b', style: const TextStyle(fontWeight: FontWeight.w600, height: 1.25)),
-                          )),
+                          ...s.bullets.map(
+                            (b) => Padding(
+                              padding: const EdgeInsets.only(bottom: 6),
+                              child: Text(
+                                '• $b',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.25,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -48,9 +68,15 @@ class PoliciesSheet extends StatelessWidget {
               width: double.infinity,
               height: 52,
               child: FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red, shape: const StadiumBorder()),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: const StadiumBorder(),
+                ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close', style: TextStyle(fontWeight: FontWeight.w900)),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ),
               ),
             ),
           ],

@@ -63,8 +63,10 @@ class AuthService {
 
       if (user != null) {
         // Get user role from Firestore
-        DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+        DocumentSnapshot userDoc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
         if (userDoc.exists) {
           Map<String, dynamic> userData =
@@ -107,8 +109,10 @@ class AuthService {
 
       if (user != null) {
         // Check if user exists in Firestore
-        DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
+        DocumentSnapshot userDoc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
         if (!userDoc.exists) {
           // Create new user document
@@ -121,8 +125,9 @@ class AuthService {
           });
         }
 
-        Map<String, dynamic> userData =
-            userDoc.exists ? userDoc.data() as Map<String, dynamic> : {};
+        Map<String, dynamic> userData = userDoc.exists
+            ? userDoc.data() as Map<String, dynamic>
+            : {};
         String role = userData['role'] ?? 'user';
 
         return {'success': true, 'user': user, 'role': role};
@@ -137,12 +142,13 @@ class AuthService {
   // Get user role
   Future<String> getUserRole(String uid) async {
     try {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc = await _firestore
+          .collection('users')
+          .doc(uid)
+          .get();
 
       if (userDoc.exists) {
-        Map<String, dynamic> userData =
-            userDoc.data() as Map<String, dynamic>;
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
         return userData['role'] ?? 'user';
       }
 

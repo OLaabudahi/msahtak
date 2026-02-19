@@ -1,4 +1,4 @@
-import '../models/settings_model.dart';
+import '../../data/models/settings_model.dart';
 
 abstract class SettingsRepo {
   /// ✅ دالة: تحميل الإعدادات

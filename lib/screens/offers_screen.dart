@@ -114,7 +114,10 @@ class _OffersScreenState extends State<OffersScreen> {
                 hintText: 'Search offers',
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 12,
+                ),
               ),
             ),
           ),
@@ -172,7 +175,10 @@ class _OffersScreenState extends State<OffersScreen> {
                         painter: _FlagTagPainter(),
                         child: Padding(
                           padding: const EdgeInsets.only(
-                            left: 6, right: 14, top: 4, bottom: 4,
+                            left: 6,
+                            right: 14,
+                            top: 4,
+                            bottom: 4,
                           ),
                           child: Text(
                             '-${deal['discount']}%',
@@ -289,7 +295,11 @@ class _OffersScreenState extends State<OffersScreen> {
               ),
               child: const Text(
                 'Deal',
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

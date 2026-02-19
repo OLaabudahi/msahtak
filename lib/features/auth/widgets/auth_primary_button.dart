@@ -31,10 +31,13 @@ class AuthPrimaryButton extends StatelessWidget {
         onPressed: loading ? null : onPressed,
         child: loading
             ? const SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
-        )
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.black,
+                ),
+              )
             : Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       ),
     );

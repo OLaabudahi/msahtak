@@ -7,10 +7,17 @@ sealed class BookingDetailsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// ✅ حدث: تحميل تفاصيل الحجز
 class BookingDetailsStarted extends BookingDetailsEvent {
   final String bookingId;
   const BookingDetailsStarted(this.bookingId);
+
+  @override
+  List<Object?> get props => [bookingId];
+}
+
+class BookingDetailsRefreshRequested extends BookingDetailsEvent {
+  final String bookingId;
+  const BookingDetailsRefreshRequested(this.bookingId);
 
   @override
   List<Object?> get props => [bookingId];

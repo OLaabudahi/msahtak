@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:masahtak_app/features/home/data/repos/home_repo_dummy.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
@@ -20,16 +21,17 @@ import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 
 import '../widgets/insight_tile.dart';
+import '../widgets/custom_search_bar.dart';
 import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
+  @override
   /// ✅ هذه الدالة عشان تفتح الصفحة ومعها HomeBloc جاهز
   static Widget withBloc() {
     return BlocProvider(
       // إذا عندك HomeStarted خليه، إذا ما عندك احذف ..add
-      create: (_) => HomeBloc()..add(const HomeStarted()),
+      create: (_) => HomeBloc(repo: HomeRepoDummy())..add(const HomeStarted()),
       child: const HomePage(),
     );
   }
@@ -38,10 +40,10 @@ class HomePage extends StatelessWidget {
   Widget _buildBodyForTab(int tabIndex) {
     switch (tabIndex) {
       case 0:
-      // ✅ التبويب الرئيسي (الهوم) ما بدّه withBloc لأنه HomeBloc فوق الصفحة
+        // ✅ التبويب الرئيسي (الهوم) ما بدّه withBloc لأنه HomeBloc فوق الصفحة
         return const _HomeTab();
       case 1:
-        return BookingTabPage.withBloc();
+        return BookingsTabPage.withBloc();
       case 2:
         return ProfileTabPage.withBloc();
       case 3:
@@ -89,9 +91,56 @@ class HomePage extends StatelessWidget {
 
 class _HomeTab extends StatefulWidget {
   const _HomeTab();
-
   @override
   State<_HomeTab> createState() => _HomeTabState();
+}
+
+class MySearchBar extends StatefulWidget {
+  const MySearchBar({super.key});
+
+  @override
+  State<MySearchBar> createState() => _MySearchBarState();
+}
+
+class _MySearchBarState extends State<MySearchBar> {
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _openAiConcierge() {
+    // هنا اعملي Navigation للشات بوت
+    // Navigator.of(context).push(MaterialPageRoute(builder: (_) => AiChatPage.withBloc()));
+    debugPrint('Open AI Concierge');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomSearchBar(
+      controller: _searchController,
+      onAiTap: _openAiConcierge,
+
+      onSearchChanged: (q) {
+        // فلترة UI أو dispatch event للـ Bloc
+        debugPrint('search changed: $q');
+      },
+
+      onSearchSubmitted: (q) {
+        debugPrint('search submit: $q');
+      },
+
+      onSearchTap: () {
+        // لو بدك مثلا تفتحي صفحة Search مستقلة
+        // Navigator.of(context).push(...)
+      },
+
+      // لو بدك تحكمي بمسافة الزر من اليمين
+      aiRightInset: 0,
+    );
+  }
 }
 
 class _HomeTabState extends State<_HomeTab> {
@@ -161,6 +210,7 @@ class _HomeTabState extends State<_HomeTab> {
 
   /// ✅ فتح صفحة تفاصيل المساحة (كارد For You)
   void _openSpaceDetails(BuildContext context, String spaceId) {
+    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SpaceDetailsPage.withBloc(spaceId: spaceId),
@@ -170,10 +220,11 @@ class _HomeTabState extends State<_HomeTab> {
 
   /// ✅ فتح صفحة تفاصيل Insight (كل كارد له صفحة)
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)));
   }
+
 
   /// ✅ بناء تبويب Home بالكامل مثل التصميم
   @override
@@ -195,7 +246,7 @@ class _HomeTabState extends State<_HomeTab> {
               // ========= Top Bar (Home + Bell) =========
               Row(
                 children: [
-                  const Text('Home', style: AppTextStyles.sectionTitle),
+                  const Text('Home', style: AppTextStyles.sectionBarTitle),
                   const Spacer(),
                   InkWell(
                     onTap: () => bloc.add(const HomeNotificationPressed()),
@@ -232,6 +283,7 @@ class _HomeTabState extends State<_HomeTab> {
               AppSpacing.vMd,
 
               // ========= Search + AI Concierge =========
+              /*
               Row(
                 children: [
                   Expanded(
@@ -283,7 +335,8 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                 ],
               ),
-
+*/
+              const MySearchBar(),
               AppSpacing.vMd,
 
               // ========= Chips Row =========
@@ -316,39 +369,39 @@ class _HomeTabState extends State<_HomeTab> {
                 child: featuredCount == 0
                     ? const Center(child: Text('No spaces yet'))
                     : Listener(
-                  onPointerDown: (_) {
-                    // ✅ أول ما يلمس المستخدم -> وقف التحريك
-                    _resumeTimer?.cancel();
-                    _stopAutoSlide();
-                  },
-                  onPointerUp: (_) {
-                    // ✅ لما يترك -> رجع التحريك بعد ثانيتين
-                    _scheduleResumeAutoSlide();
-                  },
-                  onPointerCancel: (_) {
-                    _scheduleResumeAutoSlide();
-                  },
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: featuredCount,
-                    onPageChanged: (i) =>
-                        bloc.add(HomeFeaturedPageChanged(i)),
-                    itemBuilder: (context, index) {
-                      final space = state.featuredSpaces[index];
-                      return FeaturedSpaceCard(
-                        // ✅ هلا asset، لاحقاً API:
-                        // imageUrl: space.imageUrl,
-                        imageAsset: space.imageAsset ?? AppAssets.home,
-                        title: space.title,
-                        ratingText: space.rating.toStringAsFixed(1),
-                        subtitle:
-                        '${space.locationText} • ${space.tags.join(" • ")}',
-                        onViewTap: () =>
-                            _openSpaceDetails(context, space.id),
-                      );
-                    },
-                  ),
-                ),
+                        onPointerDown: (_) {
+                          // ✅ أول ما يلمس المستخدم -> وقف التحريك
+                          _resumeTimer?.cancel();
+                          _stopAutoSlide();
+                        },
+                        onPointerUp: (_) {
+                          // ✅ لما يترك -> رجع التحريك بعد ثانيتين
+                          _scheduleResumeAutoSlide();
+                        },
+                        onPointerCancel: (_) {
+                          _scheduleResumeAutoSlide();
+                        },
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: featuredCount,
+                          onPageChanged: (i) =>
+                              bloc.add(HomeFeaturedPageChanged(i)),
+                          itemBuilder: (context, index) {
+                            final space = state.featuredSpaces[index];
+                            return FeaturedSpaceCard(
+                              // ✅ هلا asset، لاحقاً API:
+                              // imageUrl: space.imageUrl,
+                              imageAsset: space.imageAsset ?? AppAssets.home,
+                              title: space.title,
+                              ratingText: space.rating.toStringAsFixed(1),
+                              subtitle:
+                                  '${space.locationText} • ${space.tags.join(" • ")}',
+                              onViewTap: () =>
+                                  _openSpaceDetails(context, space.id),
+                            );
+                          },
+                        ),
+                      ),
               ),
 
               AppSpacing.vSm,
@@ -366,7 +419,9 @@ class _HomeTabState extends State<_HomeTab> {
                         width: active ? 10 : 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: active ? AppColors.dotInactive : AppColors.border,
+                          color: active
+                              ? AppColors.dotInactive
+                              : AppColors.border,
                           borderRadius: BorderRadius.circular(99),
                         ),
                       );

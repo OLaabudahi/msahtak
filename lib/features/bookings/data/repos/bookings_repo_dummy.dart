@@ -1,6 +1,6 @@
 import '../../../../constants/app_assets.dart';
 import '../models/booking_model.dart';
-import 'bookings_repo.dart';
+import '../../domain/repos/bookings_repo.dart';
 
 class BookingsRepoDummy implements BookingsRepo {
   /// ✅ دالة: داتا وهمية للحجوزات (جاهزة للتشغيل)

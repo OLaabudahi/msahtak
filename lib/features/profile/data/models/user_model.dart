@@ -5,6 +5,9 @@ class UserModel extends Equatable {
   final String userId;
   final String fullName;
   final String email;
+
+  final String? phoneNumber;
+
   final String? avatarAsset;
   final String? avatarUrl;
 
@@ -16,6 +19,7 @@ class UserModel extends Equatable {
     required this.userId,
     required this.fullName,
     required this.email,
+    this.phoneNumber,
     this.avatarAsset,
     this.avatarUrl,
     required this.totalBookings,
@@ -23,12 +27,13 @@ class UserModel extends Equatable {
     required this.savedSpaces,
   });
 
-  /// ✅ API READY (كومنت)
+  /// ✅ API READY
   // factory UserModel.fromJson(Map<String, dynamic> json) {
   //   return UserModel(
   //     userId: json['userId'].toString(),
   //     fullName: json['fullName'] ?? '',
   //     email: json['email'] ?? '',
+  //     phoneNumber: json['phoneNumber'],
   //     avatarUrl: json['avatarUrl'],
   //     totalBookings: json['totalBookings'] ?? 0,
   //     completedBookings: json['completedBookings'] ?? 0,
@@ -41,6 +46,7 @@ class UserModel extends Equatable {
     userId,
     fullName,
     email,
+    phoneNumber,
     avatarAsset,
     avatarUrl,
     totalBookings,

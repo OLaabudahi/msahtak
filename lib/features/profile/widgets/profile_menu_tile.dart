@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/app_colors.dart';
-
 class ProfileMenuTile extends StatelessWidget {
   final String title;
+
+  /// هذا نفس الموجود عندك (لكن الآن بنستخدمه كـ “label” داخل دائرة)
   final IconData icon;
+
   final VoidCallback onTap;
   final bool isDestructive;
+
+  /// ✅ إضافات اختيارية (بدون تغيير الاسم):
+  /// - label داخل الدائرة (مثل P / B / $ / SD)
+  /// - أو icon داخل الدائرة (star/heart)
+  /// - للتحكم بالـ divider
+  final String? leadingText;
+  final IconData? leadingIcon;
+  final bool isLast;
+  final bool showChevronDown;
+  final VoidCallback? onChevronTap;
 
   const ProfileMenuTile({
     super.key,
@@ -14,40 +25,81 @@ class ProfileMenuTile extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.isDestructive = false,
+    this.leadingText,
+    this.leadingIcon,
+    this.isLast = false,
+    this.showChevronDown = false,
+    this.onChevronTap,
   });
 
-  /// ✅ دالة: عنصر قائمة للبروفايل (Edit/Profile/Logout...)
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? const Color(0xFFDC2626) : Colors.black;
+    final titleColor = isDestructive ? const Color(0xFFE53935) : Colors.black;
+    final circleColor = isDestructive
+        ? const Color(0xFFE53935)
+        : const Color(0xFFF5A623);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: color),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.w800, color: color),
+    final trailing = showChevronDown
+        ? Icon(Icons.keyboard_arrow_down, color: Colors.grey[500], size: 22)
+        : Icon(Icons.chevron_right, color: Colors.grey[500], size: 22);
+
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: circleColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: leadingIcon != null
+                        ? Icon(leadingIcon!, color: Colors.black, size: 18)
+                        : Text(
+                            (leadingText ?? title.characters.first)
+                                .toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                  ),
                 ),
-              ),
-              Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.subtext.withOpacity(.8)),
-            ],
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: titleColor,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: onChevronTap,
+                  behavior: HitTestBehavior.opaque,
+                  child: trailing,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        if (!isLast)
+          Divider(
+            height: 1,
+            color: Colors.grey[300],
+            indent: 16,
+            endIndent: 16,
+          ),
+      ],
     );
   }
 }

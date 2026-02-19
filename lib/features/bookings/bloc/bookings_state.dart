@@ -6,42 +6,42 @@ class BookingsState extends Equatable {
   final String? error;
 
   final int segmentIndex; // 0 upcoming, 1 past
-  final List<Booking> all;
+  final List<Booking> bookings;
 
   const BookingsState({
     required this.loading,
     required this.error,
     required this.segmentIndex,
-    required this.all,
+    required this.bookings,
   });
 
   factory BookingsState.initial() => const BookingsState(
     loading: true,
     error: null,
     segmentIndex: 0,
-    all: [],
+    bookings: [],
   );
 
   List<Booking> get upcoming =>
-      all.where((b) => b.status == 'upcoming').toList();
+      bookings.where((b) => b.status == 'upcoming').toList();
 
   List<Booking> get past =>
-      all.where((b) => b.status != 'upcoming').toList();
+      bookings.where((b) => b.status != 'upcoming').toList();
 
   BookingsState copyWith({
     bool? loading,
     String? error,
     int? segmentIndex,
-    List<Booking>? all,
+    List<Booking>? bookings,
   }) {
     return BookingsState(
       loading: loading ?? this.loading,
       error: error,
       segmentIndex: segmentIndex ?? this.segmentIndex,
-      all: all ?? this.all,
+      bookings: bookings ?? this.bookings,
     );
   }
 
   @override
-  List<Object?> get props => [loading, error, segmentIndex, all];
+  List<Object?> get props => [loading, error, segmentIndex, bookings];
 }

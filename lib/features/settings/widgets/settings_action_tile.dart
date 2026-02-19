@@ -1,60 +1,89 @@
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
 
 class SettingsActionTile extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon; // ✅ صار اختياري
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
   final Widget? trailing;
   final bool isDestructive;
+  final bool isLast;
 
   const SettingsActionTile({
     super.key,
-    required this.icon,
+    this.icon,
     required this.title,
     required this.onTap,
     this.subtitle,
     this.trailing,
     this.isDestructive = false,
+    this.isLast = false,
   });
 
-  /// ✅ Tile أكشن (لغة / توقيت / Logout)
+  static const _chevronBlue = Color(0xFF5B8FB9);
+
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? const Color(0xFFDC2626) : Colors.black;
+    final titleColor = isDestructive ? const Color(0xFFDC2626) : Colors.black;
+    final subColor = Colors.grey[600];
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: TextStyle(fontWeight: FontWeight.w900, color: color)),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 6),
-                    Text(subtitle!, style: const TextStyle(color: AppColors.subtext, fontWeight: FontWeight.w600, fontSize: 12.5)),
-                  ],
+    final defaultTrailing = Icon(
+      Icons.chevron_right,
+      color: isDestructive ? const Color(0xFFDC2626) : _chevronBlue,
+      size: 22,
+    );
+
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: titleColor),
+                  const SizedBox(width: 12),
                 ],
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: titleColor,
+                        ),
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          subtitle!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: subColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                trailing ?? defaultTrailing,
+              ],
             ),
-            trailing ?? Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.subtext.withOpacity(.8)),
-          ],
+          ),
         ),
-      ),
+        if (!isLast)
+          Divider(
+            height: 1,
+            color: Colors.white.withOpacity(0.7),
+            indent: 16,
+            endIndent: 16,
+          ),
+      ],
     );
   }
 }

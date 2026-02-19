@@ -9,7 +9,6 @@ import 'features/auth/bloc/auth_bloc.dart';
 import 'features/language/bloc/language_bloc.dart';
 import 'features/auth/data/repos/auth_repo_dummy.dart';
 import 'features/app_start/bloc/app_start_bloc.dart';
-import 'features/app_start/data/repos/app_start_repo.dart';
 import 'features/language/bloc/language_event.dart';
 import 'features/language/bloc/language_state.dart';
 import 'services/language_service.dart';
@@ -28,25 +27,26 @@ void main() {
           create: (_) => AuthBloc(AuthRepoDummy(LocalStorageService())),
         ),
         BlocProvider(
-          create: (_) => AppStartBloc(AppStartRepoDummy(LocalStorageService()))
-            ..add(const AppStartStarted()),
+          create: (_) =>
+              AppStartBloc(AppStartRepoDummy(LocalStorageService()))
+                ..add(const AppStartStarted()),
         ),
         BlocProvider(
-          create: (_) => LanguageBloc(LanguageService(LocalStorageService()))
-            ..add(const LanguageStarted()),
-        ),BlocProvider<LanguageBloc>(
-          create: (_) => LanguageBloc(languageService)..add(const LanguageStarted()),
+          create: (_) =>
+              LanguageBloc(LanguageService(LocalStorageService()))
+                ..add(const LanguageStarted()),
+        ),
+        BlocProvider<LanguageBloc>(
+          create: (_) =>
+              LanguageBloc(languageService)..add(const LanguageStarted()),
         ),
       ],
-      child:  MyApp(),
+      child: MyApp(),
     ),
-
-
   );
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LanguageBloc, LanguageState>(
@@ -55,10 +55,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: Locale(langState.code),
 
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-          ],
+          supportedLocales: const [Locale('en'), Locale('ar')],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

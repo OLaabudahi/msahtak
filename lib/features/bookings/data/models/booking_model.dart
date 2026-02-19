@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 /// ✅ موديل الحجز (Dummy الآن - جاهز للـ API)
 class Booking extends Equatable {
@@ -28,6 +29,14 @@ class Booking extends Equatable {
     this.imageAsset,
     this.imageUrl,
   });
+
+  /// ✅ imageProvider (API-ready)
+  ImageProvider get imageProvider {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return NetworkImage(imageUrl!);
+    }
+    return AssetImage(imageAsset ?? 'assets/images/placeholder.png');
+  }
 
   /// ✅ (API READY - كومنت) من JSON
   // factory Booking.fromJson(Map<String, dynamic> json) {

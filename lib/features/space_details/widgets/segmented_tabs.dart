@@ -4,7 +4,11 @@ class SegmentedTabs extends StatelessWidget {
   final int index;
   final ValueChanged<int> onChanged;
 
-  const SegmentedTabs({super.key, required this.index, required this.onChanged});
+  const SegmentedTabs({
+    super.key,
+    required this.index,
+    required this.onChanged,
+  });
 
   /// ✅ دالة: Tabs بشكل segmented مثل التصميم
   @override
@@ -28,7 +32,9 @@ class SegmentedTabs extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: selected ? const Color(0xFFF8B324) : Colors.transparent,
+                  color: selected
+                      ? const Color(0xFFF8B324)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(

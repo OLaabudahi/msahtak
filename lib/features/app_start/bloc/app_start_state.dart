@@ -1,12 +1,8 @@
 import 'package:equatable/equatable.dart';
-import '../data/repos/app_start_repo.dart';
+import '../domain/repos/app_start_repo.dart';
 
 class AppStartState extends Equatable {
-  const AppStartState({
-    required this.loading,
-    this.decision,
-    this.error,
-  });
+  const AppStartState({required this.loading, this.decision, this.error});
 
   final bool loading;
   final AppStartDecision? decision;

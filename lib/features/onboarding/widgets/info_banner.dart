@@ -42,7 +42,7 @@ class InfoBanner extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -68,7 +68,10 @@ class _IconBadge extends StatelessWidget {
           ? Icon(leadingIcon, color: AppColors.primary, size: 24)
           : Text(
               iconText ?? '',
-              style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900),
+              style: const TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w900,
+              ),
             ),
     );
   }

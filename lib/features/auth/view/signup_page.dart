@@ -21,7 +21,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -65,7 +64,8 @@ class _SignUpPageState extends State<SignUpPage> {
               if (state.status == AuthStatus.success) {
                 _notifyAppRoot(context);
               }
-              if (state.status == AuthStatus.error && state.errorMessage != null) {
+              if (state.status == AuthStatus.error &&
+                  state.errorMessage != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.errorMessage!),
@@ -112,7 +112,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 40),
 
-                    AuthTextField(controller: _name, label: context.t('fullName')),
+                    AuthTextField(
+                      controller: _name,
+                      label: context.t('fullName'),
+                    ),
                     const SizedBox(height: 20),
                     AuthTextField(
                       controller: _email,
@@ -120,9 +123,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 20),
-                    AuthTextField(controller: _password, label: context.t('password'), obscureText: true),
+                    AuthTextField(
+                      controller: _password,
+                      label: context.t('password'),
+                      obscureText: true,
+                    ),
                     const SizedBox(height: 20),
-                    AuthTextField(controller: _confirm, label: context.t('confirmPassword'), obscureText: true),
+                    AuthTextField(
+                      controller: _confirm,
+                      label: context.t('confirmPassword'),
+                      obscureText: true,
+                    ),
 
                     const SizedBox(height: 32),
 
@@ -138,16 +149,16 @@ class _SignUpPageState extends State<SignUpPage> {
                             onPressed: loading
                                 ? null
                                 : () {
-                              FocusScope.of(context).unfocus();
-                              context.read<AuthBloc>().add(
-                                AuthSignUpRequested(
-                                  fullName: _name.text.trim(),
-                                  email: _email.text.trim(),
-                                  password: _password.text,
-                                  confirmPassword: _confirm.text,
-                                ),
-                              );
-                            },
+                                    FocusScope.of(context).unfocus();
+                                    context.read<AuthBloc>().add(
+                                      AuthSignUpRequested(
+                                        fullName: _name.text.trim(),
+                                        email: _email.text.trim(),
+                                        password: _password.text,
+                                        confirmPassword: _confirm.text,
+                                      ),
+                                    );
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF5A623),
                               shape: RoundedRectangleBorder(
@@ -157,21 +168,21 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             child: loading
                                 ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
-                              ),
-                            )
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
                                 : Text(
-                              context.t('signUp'),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
+                                    context.t('signUp'),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         );
                       },
@@ -186,7 +197,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         children: [
                           Text(
                             context.t('youHaveAccount'),
-                            style: const TextStyle(color: Colors.black, fontSize: 13),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () => Navigator.of(context).pop(),
@@ -207,15 +221,22 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     Row(
                       children: [
-                        Expanded(child: Container(height: 1, color: Colors.grey)),
+                        Expanded(
+                          child: Container(height: 1, color: Colors.grey),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             context.t('or'),
-                            style: const TextStyle(color: Colors.black87, fontSize: 14),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                        Expanded(child: Container(height: 1, color: Colors.grey)),
+                        Expanded(
+                          child: Container(height: 1, color: Colors.grey),
+                        ),
                       ],
                     ),
 

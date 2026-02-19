@@ -9,11 +9,7 @@ class InsightsCard extends StatelessWidget {
   final String title;
   final List<String> chips;
 
-  const InsightsCard({
-    super.key,
-    required this.title,
-    required this.chips,
-  });
+  const InsightsCard({super.key, required this.title, required this.chips});
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +30,23 @@ class InsightsCard extends StatelessWidget {
             runSpacing: 10,
             children: chips.map((c) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
                 child: Text(
                   c,
-                  style: AppTextStyles.pillSelected.copyWith(color: Colors.black),
+                  style: AppTextStyles.pillSelected.copyWith(
+                    color: Colors.black,
+                  ),
                 ),
               );
             }).toList(),
-          )
+          ),
         ],
       ),
     );

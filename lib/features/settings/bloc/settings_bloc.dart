@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import '../data/repos/settings_repo.dart';
+import '../domain/repos/settings_repo.dart';
 import '../data/repos/settings_repo_dummy.dart';
 import 'settings_event.dart';
 import 'settings_state.dart';
@@ -9,8 +9,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepo repo;
 
   SettingsBloc({SettingsRepo? repo})
-      : repo = repo ?? SettingsRepoDummy(),
-        super(SettingsState.initial()) {
+    : repo = repo ?? SettingsRepoDummy(),
+      super(SettingsState.initial()) {
     on<SettingsStarted>(_onStarted);
     on<SettingsRefreshRequested>(_onRefresh);
 
@@ -19,11 +19,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsSelectReminderTiming>(_onSelectTiming);
     on<SettingsSelectLanguage>(_onSelectLanguage);
     on<SettingsToggleDarkMode>(_onToggleDarkMode);
-
   }
 
   /// ✅ تحميل الإعدادات أول ما تفتح الصفحة
-  Future<void> _onStarted(SettingsStarted event, Emitter<SettingsState> emit) async {
+  Future<void> _onStarted(
+    SettingsStarted event,
+    Emitter<SettingsState> emit,
+  ) async {
     emit(state.copyWith(loading: true, error: null, goToLogin: false));
     try {
       final s = await repo.fetchSettings();
@@ -34,7 +36,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   /// ✅ Refresh
-  Future<void> _onRefresh(SettingsRefreshRequested event, Emitter<SettingsState> emit) async {
+  Future<void> _onRefresh(
+    SettingsRefreshRequested event,
+    Emitter<SettingsState> emit,
+  ) async {
     try {
       final s = await repo.fetchSettings();
       emit(state.copyWith(settings: s, error: null));
@@ -54,52 +59,68 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   /// ✅ تشغيل/إيقاف إشعارات عامة
   Future<void> _onToggleNotifications(
-      SettingsToggleNotifications event,
-      Emitter<SettingsState> emit,
-      ) async {
+    SettingsToggleNotifications event,
+    Emitter<SettingsState> emit,
+  ) async {
     final s = state.settings;
     if (s == null) return;
-    await _persist(emit, state.copyWith(settings: s.copyWith(notificationsEnabled: event.value)));
+    await _persist(
+      emit,
+      state.copyWith(settings: s.copyWith(notificationsEnabled: event.value)),
+    );
   }
 
   /// ✅ تشغيل/إيقاف تذكير الحجز
   Future<void> _onToggleReminders(
-      SettingsToggleBookingReminders event,
-      Emitter<SettingsState> emit,
-      ) async {
+    SettingsToggleBookingReminders event,
+    Emitter<SettingsState> emit,
+  ) async {
     final s = state.settings;
     if (s == null) return;
-    await _persist(emit, state.copyWith(settings: s.copyWith(bookingRemindersEnabled: event.value)));
+    await _persist(
+      emit,
+      state.copyWith(
+        settings: s.copyWith(bookingRemindersEnabled: event.value),
+      ),
+    );
   }
 
   /// ✅ اختيار توقيت التذكير
   Future<void> _onSelectTiming(
-      SettingsSelectReminderTiming event,
-      Emitter<SettingsState> emit,
-      ) async {
+    SettingsSelectReminderTiming event,
+    Emitter<SettingsState> emit,
+  ) async {
     final s = state.settings;
     if (s == null) return;
-    await _persist(emit, state.copyWith(settings: s.copyWith(reminderTiming: event.timing)));
+    await _persist(
+      emit,
+      state.copyWith(settings: s.copyWith(reminderTiming: event.timing)),
+    );
   }
 
   /// ✅ تغيير اللغة
   Future<void> _onSelectLanguage(
-      SettingsSelectLanguage event,
-      Emitter<SettingsState> emit,
-      ) async {
+    SettingsSelectLanguage event,
+    Emitter<SettingsState> emit,
+  ) async {
     final s = state.settings;
     if (s == null) return;
-    await _persist(emit, state.copyWith(settings: s.copyWith(languageCode: event.languageCode)));
+    await _persist(
+      emit,
+      state.copyWith(settings: s.copyWith(languageCode: event.languageCode)),
+    );
   }
 
   /// ✅ Dark mode (حالياً UI فقط - ممكن تربطيه لاحقاً بـ ThemeBloc)
   Future<void> _onToggleDarkMode(
-      SettingsToggleDarkMode event,
-      Emitter<SettingsState> emit,
-      ) async {
+    SettingsToggleDarkMode event,
+    Emitter<SettingsState> emit,
+  ) async {
     final s = state.settings;
     if (s == null) return;
-    await _persist(emit, state.copyWith(settings: s.copyWith(darkMode: event.value)));
+    await _persist(
+      emit,
+      state.copyWith(settings: s.copyWith(darkMode: event.value)),
+    );
   }
-
 }

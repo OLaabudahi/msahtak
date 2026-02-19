@@ -27,7 +27,11 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 26),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 26,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     const Text(
@@ -63,7 +67,12 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                         children: [
                           const Text(
                             '4.6',
-                            style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold, color: Colors.black, height: 1),
+                            style: TextStyle(
+                              fontSize: 44,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              height: 1,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Column(
@@ -74,14 +83,19 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                                   return Icon(
                                     Icons.star,
                                     size: 18,
-                                    color: i < 5 ? const Color(0xFFF5A623) : Colors.grey[300],
+                                    color: i < 5
+                                        ? const Color(0xFFF5A623)
+                                        : Colors.grey[300],
                                   );
                                 }),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 'Based on 12 reviews',
-                                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[500],
+                                ),
                               ),
                             ],
                           ),
@@ -102,7 +116,11 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                 // Filter
                 const Text(
                   'Filter',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -119,7 +137,11 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                 // Recent reviews
                 const Text(
                   'Recent reviews',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -138,7 +160,8 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
                   name: 'City Study Room',
                   time: '1 week ago',
                   stars: 4,
-                  review: 'Great for studying. Seats were limited at peak hours.',
+                  review:
+                      'Great for studying. Seats were limited at peak hours.',
                   tags: ['Best for study', 'Good value'],
                 ),
                 const SizedBox(height: 14),
@@ -218,7 +241,9 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFF5B8FB9).withOpacity(0.08),
+          color: isSelected
+              ? Colors.white
+              : const Color(0xFF5B8FB9).withOpacity(0.08),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? const Color(0xFFF5A623) : Colors.black87,
@@ -261,7 +286,11 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
             children: [
               Text(
                 name,
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
               Text(
                 time,
@@ -282,17 +311,17 @@ class _ReviewsRatingsScreenState extends State<ReviewsRatingsScreen> {
           ),
           const SizedBox(height: 10),
           // Review text
-          Text(
-            review,
-            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-          ),
+          Text(review, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
           const SizedBox(height: 12),
           // Tags
           Row(
             children: tags.map((tag) {
               return Container(
                 margin: const EdgeInsets.only(right: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),

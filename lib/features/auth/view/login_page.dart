@@ -18,7 +18,6 @@ import 'signup_page.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -50,7 +49,8 @@ class _LoginPageState extends State<LoginPage> {
               if (state.status == AuthStatus.success) {
                 _notifyAppRoot(context);
               }
-              if (state.status == AuthStatus.error && state.errorMessage != null) {
+              if (state.status == AuthStatus.error &&
+                  state.errorMessage != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.errorMessage!),
@@ -125,14 +125,14 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: loading
                                 ? null
                                 : () {
-                              FocusScope.of(context).unfocus();
-                              context.read<AuthBloc>().add(
-                                AuthLoginRequested(
-                                  email: _email.text.trim(),
-                                  password: _password.text,
-                                ),
-                              );
-                            },
+                                    FocusScope.of(context).unfocus();
+                                    context.read<AuthBloc>().add(
+                                      AuthLoginRequested(
+                                        email: _email.text.trim(),
+                                        password: _password.text,
+                                      ),
+                                    );
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFF5A623),
                               shape: RoundedRectangleBorder(
@@ -142,21 +142,21 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: loading
                                 ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2.5,
-                              ),
-                            )
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
                                 : Text(
-                              context.t('login'),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
+                                    context.t('login'),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         );
                       },
@@ -165,11 +165,15 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 12),
 
                     Align(
-                      alignment: context.isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: context.isArabic
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
+                            MaterialPageRoute(
+                              builder: (_) => const ForgotPasswordPage(),
+                            ),
                           );
                         },
                         child: Text(
@@ -186,15 +190,22 @@ class _LoginPageState extends State<LoginPage> {
 
                     Row(
                       children: [
-                        Expanded(child: Container(height: 1, color: Colors.grey)),
+                        Expanded(
+                          child: Container(height: 1, color: Colors.grey),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             context.t('or'),
-                            style: const TextStyle(color: Colors.black87, fontSize: 14),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                        Expanded(child: Container(height: 1, color: Colors.grey)),
+                        Expanded(
+                          child: Container(height: 1, color: Colors.grey),
+                        ),
                       ],
                     ),
 
@@ -211,12 +222,17 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Text(
                             context.t('dontHaveAccount'),
-                            style: const TextStyle(color: Colors.black, fontSize: 13),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const SignUpPage()),
+                                MaterialPageRoute(
+                                  builder: (_) => const SignUpPage(),
+                                ),
                               );
                             },
                             child: Text(

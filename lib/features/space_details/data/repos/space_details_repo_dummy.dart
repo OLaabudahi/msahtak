@@ -1,6 +1,7 @@
 import '../../../../constants/app_assets.dart';
 import '../models/space_details_model.dart';
-import 'space_details_repo.dart';
+import '../../domain/repos/space_details_repo.dart';
+import '../../../booking/domain/entities/booking_request_entity.dart';
 
 class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
   /// ✅ دالة: داتا وهمية جاهزة للتشغيل
@@ -11,23 +12,21 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
     return SpaceDetails(
       id: spaceId,
       name: 'Downtown Hub',
-      imageAssets: const [
-        AppAssets.home,
-        AppAssets.home,
-        AppAssets.home,
-      ],
-      priceText: '₪35 / day',
+      imageAssets: const [AppAssets.home, AppAssets.home, AppAssets.home],
       subtitleLine: 'City Center • Quiet • Fast Wi-Fi',
       rating: 4.8,
       reviewsCount: 64,
       workingHours: 'Sun - Thu, 8:00 AM - 10:00 PM',
       locationAddress: '12 King St, Downtown',
+      pricePerDay: 35,
+      currency: '₪',
 
       // ✅ الرسالة الديناميكية: ممكن تكون null
       alert: const SpaceAlert(
         code: 'limited_availability',
         title: 'Limited availability',
-        message: 'This space may be unavailable today. Please check another date.',
+        message:
+            'This space may be unavailable today. Please check another date.',
         colorHex: '#FDE8E8',
         borderHex: '#FCA5A5',
         textHex: '#B91C1C',
@@ -72,7 +71,8 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
           userName: 'Sarah M.',
           timeAgo: '2 days ago',
           stars: 5,
-          comment: 'Quiet place and very fast internet.\nPerfect for focused work.',
+          comment:
+              'Quiet place and very fast internet.\nPerfect for focused work.',
         ),
         SpaceReview(
           id: 'r2',
@@ -139,16 +139,24 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
           ),
           PolicySection(
             title: 'Equipment & Space Use',
-            bullets: [
-              'Use equipment responsibly.',
-            ],
+            bullets: ['Use equipment responsibly.'],
           ),
         ],
       ),
+
     );
 
     // ✅ API READY (كومنت)
     // final res = await dio.get('/spaces/$spaceId/details');
     // return SpaceDetails.fromJson(res.data);
   }
+  SpaceSummaryEntity mapToBookingSummary(SpaceDetails space) {
+    return SpaceSummaryEntity(
+      id: space.id,
+      name: space.name,
+      basePricePerDay: space.pricePerDay,
+      currency: space.currency,
+    );
+  }
+
 }

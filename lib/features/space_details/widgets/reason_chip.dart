@@ -13,7 +13,10 @@ class ReasonChip extends StatelessWidget {
         color: const Color(0xFFF3F6FB),
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+      ),
     );
   }
 }

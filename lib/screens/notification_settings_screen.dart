@@ -4,10 +4,12 @@ class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({Key? key}) : super(key: key);
 
   @override
-  State<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
+  State<NotificationSettingsScreen> createState() =>
+      _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState extends State<NotificationSettingsScreen> {
+class _NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {
   bool _bookingApproved = true;
   bool _bookingRejected = true;
   bool _bookingReminder = false;
@@ -31,7 +33,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 26),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 26,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     const Text(
@@ -49,7 +55,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 // Stay in control
                 const Text(
                   'Stay in control',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
@@ -70,8 +80,19 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.auto_awesome, color: Color(0xFFF5A623), size: 16),
-                        Text('AI', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                        Icon(
+                          Icons.auto_awesome,
+                          color: Color(0xFFF5A623),
+                          size: 16,
+                        ),
+                        Text(
+                          'AI',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -81,7 +102,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 // Booking alerts
                 const Text(
                   'Booking alerts',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -127,7 +152,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                   children: [
                     const Text(
                       'Reminder timing',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -151,7 +180,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 // Offers & plans
                 const Text(
                   'Offers & plans',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Container(
@@ -185,7 +218,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                     ),
                     child: const Text(
                       'Save',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -198,7 +235,12 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
     );
   }
 
-  Widget _buildToggleItem(String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
+  Widget _buildToggleItem(
+    String title,
+    String subtitle,
+    bool value,
+    ValueChanged<bool> onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -209,7 +251,11 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -239,7 +285,9 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFF5B8FB9).withOpacity(0.08),
+          color: isSelected
+              ? Colors.white
+              : const Color(0xFF5B8FB9).withOpacity(0.08),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? const Color(0xFFF5A623) : Colors.black87,

@@ -25,7 +25,6 @@ class OnboardingPage extends StatefulWidget {
       child: const OnboardingPage(),
     );
   }
-
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
@@ -111,7 +110,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: () => bloc.add(const OnboardingNextPressed()),
+                        onPressed: () =>
+                            bloc.add(const OnboardingNextPressed()),
                         child: Text(buttonText),
                       ),
                     ),
@@ -162,7 +162,11 @@ class _StepRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        StepIndicator(activeIndex: activeIndex, count: total, onDotTap: onDotTap),
+        StepIndicator(
+          activeIndex: activeIndex,
+          count: total,
+          onDotTap: onDotTap,
+        ),
         AppSpacing.hLg,
         Text(stepLabel, style: AppTextStyles.step),
       ],
@@ -199,9 +203,15 @@ class _Step1Content extends StatelessWidget {
             ),
           ),
           AppSpacing.vLg,
-          const Text('Clear info before you book', style: AppTextStyles.sectionTitle),
+          const Text(
+            'Clear info before you book',
+            style: AppTextStyles.sectionTitle,
+          ),
           AppSpacing.vXs,
-          const Text('Price, rating, internet quality, and noise level.', style: AppTextStyles.body),
+          const Text(
+            'Price, rating, internet quality, and noise level.',
+            style: AppTextStyles.body,
+          ),
           AppSpacing.vLg,
           const Text('Why Mashtak', style: AppTextStyles.sectionTitle),
           AppSpacing.vMd,
@@ -209,14 +219,16 @@ class _Step1Content extends StatelessWidget {
             title: 'Book with confidence',
             subtitle: 'Requests are approved before payment.',
             selected: isSelected(WhyChoose.confidence),
-            onTap: () => bloc.add(const OnboardingToggleWhy(WhyChoose.confidence)),
+            onTap: () =>
+                bloc.add(const OnboardingToggleWhy(WhyChoose.confidence)),
           ),
           AppSpacing.vMd,
           CheckOptionCard(
             title: 'Smart suggestions',
             subtitle: 'AI highlights the best spaces for your goal.',
             selected: isSelected(WhyChoose.smartSuggestions),
-            onTap: () => bloc.add(const OnboardingToggleWhy(WhyChoose.smartSuggestions)),
+            onTap: () =>
+                bloc.add(const OnboardingToggleWhy(WhyChoose.smartSuggestions)),
           ),
           AppSpacing.vXl,
         ],
@@ -269,13 +281,19 @@ class _Step2Content extends StatelessWidget {
           AppSpacing.vLg,
           const Text('What are you booking for?', style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text('Select all that apply. We\'ll tailor\nspaces to your needs.', style: AppTextStyles.body),
+          const Text(
+            'Select all that apply. We\'ll tailor\nspaces to your needs.',
+            style: AppTextStyles.body,
+          ),
           AppSpacing.vLg,
           Row(
             children: [
               const Text('Main purpose', style: AppTextStyles.sectionTitle),
               const Spacer(),
-              Text('Select multiple', style: AppTextStyles.caption.copyWith(color: AppColors.subtext)),
+              Text(
+                'Select multiple',
+                style: AppTextStyles.caption.copyWith(color: AppColors.subtext),
+              ),
             ],
           ),
           AppSpacing.vMd,
@@ -294,7 +312,10 @@ class _Step2Content extends StatelessWidget {
           AppSpacing.vLg,
           const Text('What matters most?', style: AppTextStyles.sectionTitle),
           AppSpacing.vXs,
-          const Text('Optional — helps us rank results better.', style: AppTextStyles.body),
+          const Text(
+            'Optional — helps us rank results better.',
+            style: AppTextStyles.body,
+          ),
           AppSpacing.vMd,
           Wrap(
             spacing: 10,
@@ -311,13 +332,18 @@ class _Step2Content extends StatelessWidget {
           AppSpacing.vLg,
           const InsightsCard(
             title: 'You\'ll see insights like',
-            chips: ['Best for study', 'Quiet + strong internet', 'Weekly saves more'],
+            chips: [
+              'Best for study',
+              'Quiet + strong internet',
+              'Weekly saves more',
+            ],
           ),
           AppSpacing.vMd,
           const InfoBanner(
             iconText: 'AI',
             title: 'AI will use your choices',
-            subtitle: 'Smarter suggestions + review summaries\n(not a chatbot).',
+            subtitle:
+                'Smarter suggestions + review summaries\n(not a chatbot).',
             footnote: 'You can change these later in Settings.',
           ),
           AppSpacing.vXl,
@@ -354,7 +380,10 @@ class _Step3Content extends StatelessWidget {
           AppSpacing.vLg,
           const Text('Stay updated', style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text('Choose the alerts you want.\nYou can change them anytime.', style: AppTextStyles.body),
+          const Text(
+            'Choose the alerts you want.\nYou can change them anytime.',
+            style: AppTextStyles.body,
+          ),
           AppSpacing.vLg,
           const Text('Booking alerts', style: AppTextStyles.sectionTitle),
           AppSpacing.vMd,
@@ -368,14 +397,16 @@ class _Step3Content extends StatelessWidget {
                     title: 'Booking approved',
                     subtitle: 'When a space confirms your request.',
                     value: state.bookingApprovedAlert,
-                    onChanged: (_) => bloc.add(const OnboardingToggleApprovedAlert()),
+                    onChanged: (_) =>
+                        bloc.add(const OnboardingToggleApprovedAlert()),
                   ),
                   AppSpacing.vMd,
                   SwitchTile(
                     title: 'Booking rejected',
                     subtitle: 'So you can quickly pick another option.',
                     value: state.bookingRejectedAlert,
-                    onChanged: (_) => bloc.add(const OnboardingToggleRejectedAlert()),
+                    onChanged: (_) =>
+                        bloc.add(const OnboardingToggleRejectedAlert()),
                   ),
                 ],
               ),
@@ -386,7 +417,8 @@ class _Step3Content extends StatelessWidget {
             title: 'Reminder before booking',
             subtitle: 'A quick reminder before your reserved time.',
             value: state.reminderBeforeBooking,
-            onChanged: (_) => bloc.add(const OnboardingToggleReminderBeforeBooking()),
+            onChanged: (_) =>
+                bloc.add(const OnboardingToggleReminderBeforeBooking()),
             withDivider: true,
           ),
           AppSpacing.vSm,
@@ -394,7 +426,10 @@ class _Step3Content extends StatelessWidget {
             children: [
               const Text('Reminder timing', style: AppTextStyles.sectionTitle),
               AppSpacing.hSm,
-              Text('(Optional)', style: AppTextStyles.caption.copyWith(color: AppColors.subtext)),
+              Text(
+                '(Optional)',
+                style: AppTextStyles.caption.copyWith(color: AppColors.subtext),
+              ),
             ],
           ),
           AppSpacing.vMd,
@@ -414,8 +449,10 @@ class _Step3Content extends StatelessWidget {
           const InfoBanner(
             leadingIcon: Icons.notifications_none_rounded,
             title: 'Notifications help you trust bookings',
-            subtitle: 'Get approvals, rejections, and reminders\nright on time.',
-            footnote: 'Tip: You\'ll still see booking status inside the Bookings tab.',
+            subtitle:
+                'Get approvals, rejections, and reminders\nright on time.',
+            footnote:
+                'Tip: You\'ll still see booking status inside the Bookings tab.',
           ),
           AppSpacing.vXl,
         ],

@@ -1,6 +1,6 @@
 import '../../../../constants/app_assets.dart';
 import '../models/user_model.dart';
-import 'profile_repo.dart';
+import '../../domain/repos/profile_repo.dart';
 
 class ProfileRepoDummy implements ProfileRepo {
   @override
@@ -8,13 +8,14 @@ class ProfileRepoDummy implements ProfileRepo {
     await Future.delayed(const Duration(milliseconds: 400));
 
     return const UserModel(
-      userId: 'u_101',
-      fullName: 'Sarah Ahmad',
-      email: 'sarah@example.com',
-      avatarAsset: AppAssets.home,
+      userId: '1',
+      fullName: 'Asma Yazin',
+      email: 'asma_yaza@gmail.com',
+      phoneNumber: '+970 595 959 595',
+      avatarAsset: 'assets/images/home.png',
       totalBookings: 12,
-      completedBookings: 9,
-      savedSpaces: 4,
+      completedBookings: 5,
+      savedSpaces: 7,
     );
 
     // ✅ API READY (كومنت)

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import '../../../../services/local_storage_service.dart';
 import '../models/user_model.dart';
-import 'auth_repo.dart';
+import '../../domain/repos/auth_repo.dart';
 
 class AuthRepoDummy implements AuthRepo {
   AuthRepoDummy(this._storage);
@@ -43,7 +43,8 @@ class AuthRepoDummy implements AuthRepo {
 
     if (fullName.trim().length < 3) throw Exception('Full name is too short');
     if (!_isValidEmail(email)) throw Exception('Invalid email');
-    if (password.length < 6) throw Exception('Password must be at least 6 chars');
+    if (password.length < 6)
+      throw Exception('Password must be at least 6 chars');
 
     await _storage.setIsLoggedIn(true);
     await _storage.setHasCompletedOnboarding(false);

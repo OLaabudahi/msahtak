@@ -8,7 +8,10 @@ class AppSpacing {
   static const double xl = 24;
   static const double xxl = 32;
 
-  static const EdgeInsets screen = EdgeInsets.symmetric(horizontal: 20, vertical: 18);
+  static const EdgeInsets screen = EdgeInsets.symmetric(
+    horizontal: 20,
+    vertical: 18,
+  );
   static const EdgeInsets card = EdgeInsets.all(16);
 
   static const SizedBox vXs = SizedBox(height: xs);

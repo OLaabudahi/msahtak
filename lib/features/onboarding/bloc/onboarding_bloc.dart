@@ -27,7 +27,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     emit(state.copyWith(stepIndex: 0, goHome: false));
   }
 
-  void _onGoToStepFromSwipe(OnboardingGoToStepFromSwipe event, Emitter<OnboardingState> emit) {
+  void _onGoToStepFromSwipe(
+    OnboardingGoToStepFromSwipe event,
+    Emitter<OnboardingState> emit,
+  ) {
     final idx = event.index.clamp(0, state.totalSteps - 1);
     emit(state.copyWith(stepIndex: idx));
   }
@@ -65,7 +68,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     emit(state.copyWith(selectedWhy: next));
   }
 
-  void _onTogglePurpose(OnboardingTogglePurpose event, Emitter<OnboardingState> emit) {
+  void _onTogglePurpose(
+    OnboardingTogglePurpose event,
+    Emitter<OnboardingState> emit,
+  ) {
     final next = Set<BookingPurpose>.from(state.selectedPurposes);
     if (next.contains(event.purpose)) {
       next.remove(event.purpose);
@@ -75,7 +81,10 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     emit(state.copyWith(selectedPurposes: next));
   }
 
-  void _onToggleMatter(OnboardingToggleMatter event, Emitter<OnboardingState> emit) {
+  void _onToggleMatter(
+    OnboardingToggleMatter event,
+    Emitter<OnboardingState> emit,
+  ) {
     final next = Set<WhatMatters>.from(state.selectedMatters);
     if (next.contains(event.matter)) {
       next.remove(event.matter);
@@ -85,19 +94,31 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     emit(state.copyWith(selectedMatters: next));
   }
 
-  void _onToggleApproved(OnboardingToggleApprovedAlert event, Emitter<OnboardingState> emit) {
+  void _onToggleApproved(
+    OnboardingToggleApprovedAlert event,
+    Emitter<OnboardingState> emit,
+  ) {
     emit(state.copyWith(bookingApprovedAlert: !state.bookingApprovedAlert));
   }
 
-  void _onToggleRejected(OnboardingToggleRejectedAlert event, Emitter<OnboardingState> emit) {
+  void _onToggleRejected(
+    OnboardingToggleRejectedAlert event,
+    Emitter<OnboardingState> emit,
+  ) {
     emit(state.copyWith(bookingRejectedAlert: !state.bookingRejectedAlert));
   }
 
-  void _onToggleReminder(OnboardingToggleReminderBeforeBooking event, Emitter<OnboardingState> emit) {
+  void _onToggleReminder(
+    OnboardingToggleReminderBeforeBooking event,
+    Emitter<OnboardingState> emit,
+  ) {
     emit(state.copyWith(reminderBeforeBooking: !state.reminderBeforeBooking));
   }
 
-  void _onSelectTiming(OnboardingSelectReminderTiming event, Emitter<OnboardingState> emit) {
+  void _onSelectTiming(
+    OnboardingSelectReminderTiming event,
+    Emitter<OnboardingState> emit,
+  ) {
     emit(state.copyWith(reminderTiming: event.timing));
   }
 }

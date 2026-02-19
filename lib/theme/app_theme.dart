@@ -47,7 +47,8 @@ class AppTheme {
           return Colors.white;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return AppColors.primary.withOpacity(.45);
+          if (states.contains(WidgetState.selected))
+            return AppColors.primary.withOpacity(.45);
           return AppColors.dotInactive.withOpacity(.35);
         }),
       ),

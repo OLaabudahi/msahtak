@@ -12,11 +12,7 @@ enum AuthStatus {
 }
 
 class AuthState extends Equatable {
-  const AuthState({
-    required this.status,
-    this.user,
-    this.errorMessage,
-  });
+  const AuthState({required this.status, this.user, this.errorMessage});
 
   final AuthStatus status;
   final UserModel? user;

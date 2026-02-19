@@ -30,9 +30,19 @@ class AlertBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(alert.title, style: TextStyle(fontWeight: FontWeight.w900, color: text)),
+          Text(
+            alert.title,
+            style: TextStyle(fontWeight: FontWeight.w900, color: text),
+          ),
           const SizedBox(height: 6),
-          Text(alert.message, style: TextStyle(fontWeight: FontWeight.w600, color: text.withOpacity(.9), height: 1.25)),
+          Text(
+            alert.message,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: text.withOpacity(.9),
+              height: 1.25,
+            ),
+          ),
         ],
       ),
     );

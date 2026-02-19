@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/app_colors.dart';
 
 class CategoryChip extends StatelessWidget {
   final String text;
@@ -35,7 +34,11 @@ class CategoryChip extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12.5),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: 12.5,
+          ),
         ),
       ),
     );

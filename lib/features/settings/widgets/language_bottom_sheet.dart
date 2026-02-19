@@ -10,7 +10,8 @@ class LanguageBottomSheet extends StatelessWidget {
     required this.onSelect,
   });
 
-  /// ✅ BottomSheet لاختيار اللغة
+  static const _accent = Color(0xFF5B8FB9);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,9 +24,15 @@ class LanguageBottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Choose language', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+            const Text(
+              'Choose language',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 14),
-
             _LangRow(
               title: 'English',
               code: 'en',
@@ -45,15 +52,20 @@ class LanguageBottomSheet extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-
             const SizedBox(height: 14),
             SizedBox(
               width: double.infinity,
               height: 52,
               child: FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red, shape: const StadiumBorder()),
+                style: FilledButton.styleFrom(
+                  backgroundColor: _accent,
+                  shape: const StadiumBorder(),
+                ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close', style: TextStyle(fontWeight: FontWeight.w900)),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -76,7 +88,8 @@ class _LangRow extends StatelessWidget {
     required this.onTap,
   });
 
-  /// ✅ عنصر اختيار لغة
+  static const _accent = Color(0xFF5B8FB9);
+
   @override
   Widget build(BuildContext context) {
     final isSelected = code == selected;
@@ -86,14 +99,18 @@ class _LangRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFFF7ED) : const Color(0xFFF3F6FB),
+          color: _accent.withOpacity(isSelected ? 0.12 : 0.08),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? const Color(0xFFF8B324) : const Color(0xFFE6EEF7)),
         ),
         child: Row(
           children: [
-            Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.w900))),
-            if (isSelected) const Icon(Icons.check_circle, color: Color(0xFFF8B324)),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            if (isSelected) const Icon(Icons.check_circle, color: _accent),
           ],
         ),
       ),

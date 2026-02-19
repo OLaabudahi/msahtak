@@ -26,7 +26,8 @@ class SettingsModel extends Equatable {
   }) {
     return SettingsModel(
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-      bookingRemindersEnabled: bookingRemindersEnabled ?? this.bookingRemindersEnabled,
+      bookingRemindersEnabled:
+          bookingRemindersEnabled ?? this.bookingRemindersEnabled,
       reminderTiming: reminderTiming ?? this.reminderTiming,
       languageCode: languageCode ?? this.languageCode,
       darkMode: darkMode ?? this.darkMode,

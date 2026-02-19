@@ -27,7 +27,11 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                   children: [
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 26),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                        size: 26,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     const Text(
@@ -64,7 +68,11 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                     children: [
                       const Text(
                         'Your usage',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -95,7 +103,11 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                     children: [
                       const Text(
                         'Insights',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -115,12 +127,20 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                 // Plan Optimizer
                 const Text(
                   'Plan Optimizer',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 const Text(
                   'Compare plans',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -174,7 +194,11 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                     children: [
                       const Text(
                         'Recommendation',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -201,7 +225,11 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
                     ),
                     child: const Text(
                       'Apply Weekly Plan',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -229,27 +257,44 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
             : const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : const Color(0xFF5B8FB9).withOpacity(0.08),
+          color: isSelected
+              ? Colors.white
+              : const Color(0xFF5B8FB9).withOpacity(0.08),
           borderRadius: BorderRadius.circular(12),
-          border: isSelected ? Border.all(color: Colors.black87, width: 1.5) : null,
+          border: isSelected
+              ? Border.all(color: Colors.black87, width: 1.5)
+              : null,
         ),
         child: Row(
           children: [
             Expanded(
-              child: Text(name, style: const TextStyle(fontSize: 14, color: Colors.black)),
+              child: Text(
+                name,
+                style: const TextStyle(fontSize: 14, color: Colors.black),
+              ),
             ),
-            Text(price, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+            Text(
+              price,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            ),
             if (isBest) ...[
               const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF5A623),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Text(
                   'Best',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],

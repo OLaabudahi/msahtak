@@ -38,7 +38,11 @@ class NotificationsListScreen extends StatelessWidget {
             // Updates for you
             const Text(
               'Updates for you',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -50,7 +54,11 @@ class NotificationsListScreen extends StatelessWidget {
             // TODAY
             Text(
               'TODAY',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[500]),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[500],
+              ),
             ),
             const SizedBox(height: 12),
             Container(
@@ -71,7 +79,12 @@ class NotificationsListScreen extends StatelessWidget {
                     timeColor: const Color(0xFFF5A623),
                     hasInnerCircle: true,
                   ),
-                  Divider(color: Colors.grey[200], height: 1, indent: 16, endIndent: 16),
+                  Divider(
+                    color: Colors.grey[200],
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
                   _buildNotificationItem(
                     icon: Icons.notifications_outlined,
                     iconBg: Colors.grey[200]!,
@@ -83,7 +96,12 @@ class NotificationsListScreen extends StatelessWidget {
                     timeColor: const Color(0xFFF5A623),
                     iconSize: 30,
                   ),
-                  Divider(color: Colors.grey[200], height: 1, indent: 16, endIndent: 16),
+                  Divider(
+                    color: Colors.grey[200],
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
                   _buildNotificationItem(
                     icon: Icons.auto_awesome,
                     iconBg: Colors.black,
@@ -103,7 +121,11 @@ class NotificationsListScreen extends StatelessWidget {
             // EARLIER
             Text(
               'EARLIER',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[500]),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[500],
+              ),
             ),
             const SizedBox(height: 12),
             Container(
@@ -126,7 +148,12 @@ class NotificationsListScreen extends StatelessWidget {
                     innerCircleColor: Colors.red,
                     innerIconColor: Colors.white,
                   ),
-                  Divider(color: Colors.grey[200], height: 1, indent: 16, endIndent: 16),
+                  Divider(
+                    color: Colors.grey[200],
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
                   _buildNotificationItem(
                     icon: Icons.info_outline,
                     iconBg: const Color(0xFF5B8FB9).withOpacity(0.08),
@@ -192,18 +219,18 @@ class NotificationsListScreen extends StatelessWidget {
                     ],
                   )
                 : hasInnerCircle
-                    ? Center(
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: innerCircleColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(icon, color: innerIconColor, size: 16),
-                        ),
-                      )
-                    : Icon(icon, color: iconColor, size: iconSize),
+                ? Center(
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: innerCircleColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, color: innerIconColor, size: 16),
+                    ),
+                  )
+                : Icon(icon, color: iconColor, size: iconSize),
           ),
           const SizedBox(width: 14),
           Expanded(

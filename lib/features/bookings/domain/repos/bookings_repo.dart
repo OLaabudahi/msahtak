@@ -1,4 +1,4 @@
-import '../models/booking_model.dart';
+import '../../data/models/booking_model.dart';
 
 /// ✅ واجهة Repo - عشان وقت API تبدلي implementation بسهولة
 abstract class BookingsRepo {

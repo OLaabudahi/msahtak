@@ -31,7 +31,14 @@ class SpaceAlert extends Equatable {
   // }
 
   @override
-  List<Object?> get props => [code, title, message, colorHex, borderHex, textHex];
+  List<Object?> get props => [
+    code,
+    title,
+    message,
+    colorHex,
+    borderHex,
+    textHex,
+  ];
 }
 
 /// ✅ سياسات المساحة (لـ BottomSheet)
@@ -79,7 +86,14 @@ class ReviewSummary extends Equatable {
   });
 
   @override
-  List<Object?> get props => [header, meta, topPositives, repeatedNegatives, crowdLevel, noise];
+  List<Object?> get props => [
+    header,
+    meta,
+    topPositives,
+    repeatedNegatives,
+    crowdLevel,
+    noise,
+  ];
 }
 
 /// ✅ آخر مراجعات (قسم Latest reviews)
@@ -158,8 +172,10 @@ class SpaceDetails extends Equatable {
 
   final List<String> imageAssets; // هلا assets، لاحقاً imageUrls
 
-  final String priceText; // "₪35 / day"
   final String subtitleLine; // "City Center • Quiet • Fast Wi-Fi"
+  /// ✅ مهم للـ booking logic
+  final int pricePerDay;
+  final String currency;
 
   final double rating;
   final int reviewsCount;
@@ -182,26 +198,6 @@ class SpaceDetails extends Equatable {
   final List<SpaceOffer> offers;
 
   final SpacePolicies policies;
-
-  const SpaceDetails({
-    required this.id,
-    required this.name,
-    required this.imageAssets,
-    required this.priceText,
-    required this.subtitleLine,
-    required this.rating,
-    required this.reviewsCount,
-    required this.workingHours,
-    required this.locationAddress,
-    required this.alert,
-    required this.features,
-    required this.usageStats,
-    required this.whyPeopleComeChips,
-    required this.reviewSummary,
-    required this.latestReviews,
-    required this.offers,
-    required this.policies,
-  });
 
   /// ✅ (API جاهز - كومنت) from JSON
   // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
@@ -226,13 +222,13 @@ class SpaceDetails extends Equatable {
   //     // reviewSummary / latestReviews / offers / policies...
   //   );
   // }
-
   @override
   List<Object?> get props => [
     id,
     name,
     imageAssets,
-    priceText,
+    pricePerDay, // ✅
+    currency, // ✅
     subtitleLine,
     rating,
     reviewsCount,
@@ -246,5 +242,58 @@ class SpaceDetails extends Equatable {
     latestReviews,
     offers,
     policies,
+
   ];
+
+  const SpaceDetails({
+    required this.id,
+    required this.name,
+    required this.imageAssets,
+    required this.pricePerDay,
+    required this.currency,
+    required this.subtitleLine,
+    required this.rating,
+    required this.reviewsCount,
+    required this.workingHours,
+    required this.locationAddress,
+    required this.alert,
+    required this.features,
+    required this.usageStats,
+    required this.whyPeopleComeChips,
+    required this.reviewSummary,
+    required this.latestReviews,
+    required this.offers,
+    required this.policies,
+
+    });
+
+  /// ✅ (API جاهز - كومنت) from JSON
+  // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
+  //   return SpaceDetails(
+  //     id: json['id'].toString(),
+  //     name: json['name'] ?? '',
+  //     imageAssets: const [],
+  //
+  //     // ✅ المنطق الصح للـ API:
+  //     pricePerDay: (json['price_per_day'] ?? 0) as int,
+  //     currency: json['currency'] ?? '₪',
+  //
+  //     // UI:
+  //     priceText: '${json['currency'] ?? '₪'}${json['price_per_day'] ?? 0} / day',
+  //
+  //     subtitleLine: json['subtitleLine'] ?? '',
+  //     rating: (json['rating'] ?? 0).toDouble(),
+  //     reviewsCount: (json['reviewsCount'] ?? 0) as int,
+  //     workingHours: json['workingHours'] ?? '',
+  //     locationAddress: json['locationAddress'] ?? '',
+  //     alert: json['alert'] == null ? null : SpaceAlert.fromJson(json['alert']),
+  //     features: List<String>.from(json['features'] ?? const []),
+  //     usageStats: (json['usageStats'] as List? ?? const [])
+  //         .map((e) => UsageStat(label: e['label'], percent: e['percent']))
+  //         .toList(),
+  //     whyPeopleComeChips: List<String>.from(json['whyPeopleCome'] ?? const []),
+  //     // reviewSummary / latestReviews / offers / policies...
+  //   );
+  // }
+
 }

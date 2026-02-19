@@ -5,10 +5,7 @@ class AppLanguage {
   final String code;
   final String label;
 
-  const AppLanguage({
-    required this.code,
-    required this.label,
-  });
+  const AppLanguage({required this.code, required this.label});
 
   Locale get locale => Locale(code);
 }
@@ -64,7 +61,7 @@ class LanguageService {
       'accountCreated': 'Account created successfully!',
       'passwordResetTitle': 'Password Reset',
       'passwordResetBody':
-      'A reset email has been sent to your address.\nPlease check your inbox and follow the instructions.',
+          'A reset email has been sent to your address.\nPlease check your inbox and follow the instructions.',
       'ok': 'OK',
       'send': 'Send',
       'backToLogin': 'Back to Login',
@@ -89,7 +86,7 @@ class LanguageService {
       'accountCreated': 'تم إنشاء الحساب بنجاح!',
       'passwordResetTitle': 'إعادة تعيين كلمة المرور',
       'passwordResetBody':
-      'تم ارسال بريد الكتروني الى عنوان بريدك.\nقم بتفقد بريدك ومتابعة الاوامر من هناك.',
+          'تم ارسال بريد الكتروني الى عنوان بريدك.\nقم بتفقد بريدك ومتابعة الاوامر من هناك.',
       'ok': 'حسنًا',
       'send': 'إرسال',
       'backToLogin': 'العودة لتسجيل الدخول',

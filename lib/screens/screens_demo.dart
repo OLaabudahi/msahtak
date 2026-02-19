@@ -71,7 +71,7 @@ class ScreensDemo extends StatelessWidget {
               'Bookings',
               Icons.menu_book,
               const BookingsScreen(),
-            ),*//*
+            ),*/ /*
 
             */
 /*const SizedBox(height: 16),
@@ -80,7 +80,7 @@ class ScreensDemo extends StatelessWidget {
               'Profile',
               Icons.person_outline,
               const ProfileScreen(),
-            ),*//*
+            ),*/ /*
 
             const SizedBox(height: 16),
             _buildNavButton(
@@ -96,7 +96,7 @@ class ScreensDemo extends StatelessWidget {
               'Settings',
               Icons.settings_outlined,
               const SettingsScreen(),
-            ),*//*
+            ),*/ /*
 
             const SizedBox(height: 16),
             SizedBox(

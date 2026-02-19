@@ -1,113 +1,318 @@
 import 'package:flutter/material.dart';
-import '../../../../theme/app_colors.dart';
 
 import '../data/models/booking_model.dart';
 
 class BookingListItem extends StatelessWidget {
-  final Booking booking;
-  final VoidCallback onTap;
-
   const BookingListItem({
     super.key,
     required this.booking,
-    required this.onTap,
+    required this.onView,
+    this.onCancel,
+    this.onRebook,
   });
 
-  /// ✅ دالة: لون badge حسب حالة الحجز
-  Color _statusColor() {
-    switch (booking.status) {
-      case 'upcoming':
-        return const Color(0xFF2563EB);
-      case 'completed':
-        return const Color(0xFF16A34A);
-      case 'cancelled':
-      default:
-        return const Color(0xFFDC2626);
-    }
+  final Booking booking;
+  final VoidCallback onView;
+
+  /// ✅ فقط للـ Upcoming
+  final VoidCallback? onCancel;
+
+  /// ✅ فقط للـ Completed
+  final VoidCallback? onRebook;
+
+  static const _blue = Color(0xFF5B8FB9);
+
+  bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming';
+  bool get _isCompleted => booking.status.toLowerCase() == 'completed';
+  bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
+
+  String get _dateLine => '${booking.dateText} • ${booking.timeText}';
+
+  String get _priceLine {
+    final value = booking.totalPrice % 1 == 0
+        ? booking.totalPrice.toStringAsFixed(0)
+        : booking.totalPrice.toStringAsFixed(2);
+    return '${booking.currency}$value/day';
   }
 
-  /// ✅ دالة: نص badge
-  String _statusText() {
-    switch (booking.status) {
-      case 'upcoming':
-        return 'Upcoming';
-      case 'completed':
-        return 'Completed';
-      case 'cancelled':
-      default:
-        return 'Cancelled';
+  Widget _statusChip() {
+    if (_isUpcoming) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE8FFF0),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFF22C55E), width: 1.2),
+        ),
+        child: const Text(
+          'Upcoming',
+          style: TextStyle(
+            color: Color(0xFF16A34A),
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
     }
+
+    if (_isCompleted) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFDFF7F2),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFF2AAE9B), width: 1.0),
+        ),
+        child: const Text(
+          'Completed',
+          style: TextStyle(
+            color: Color(0xFF138A7B),
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFE3E3),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: const Text(
+        'Cancelled',
+        style: TextStyle(
+          color: Color(0xFFE53935),
+          fontWeight: FontWeight.w700,
+          fontSize: 12.5,
+        ),
+      ),
+    );
   }
 
-  /// ✅ دالة: تنسيق السعر
-  String _money() => '${booking.currency}${booking.totalPrice.toStringAsFixed(0)}';
+  Widget _bottomButtons() {
+    if (_isCancelled) {
+      return SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: onView,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _blue,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          ),
+          child: const Text(
+            'View',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (_isUpcoming) {
+      return _TwoButtonsBar(
+        leftText: 'View',
+        leftFilled: true,
+        onLeft: onView,
+        rightText: 'Cancel',
+        rightFilled: false,
+        onRight: onCancel ?? () {},
+      );
+    }
+
+    if (_isCompleted) {
+      return _TwoButtonsBar(
+        leftText: 'Rebook',
+        leftFilled: false,
+        onLeft: onRebook ?? () {},
+        rightText: 'View',
+        rightFilled: true,
+        onRight: onView,
+      );
+    }
+
+    return _TwoButtonsBar(
+      leftText: 'View',
+      leftFilled: true,
+      onLeft: onView,
+      rightText: 'Action',
+      rightFilled: false,
+      onRight: () {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _statusColor();
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE6EEF7)),
-        ),
-        child: Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                booking.imageAsset ?? 'assets/images/home.png',
-                width: 64,
-                height: 64,
-                fit: BoxFit.cover,
-              ),
-              // ✅ API READY (كومنت)
-              // child: booking.imageUrl != null
-              //   ? Image.network(booking.imageUrl!, width: 64, height: 64, fit: BoxFit.cover)
-              //   : Image.asset(booking.imageAsset ?? ..., width: 64, height: 64, fit: BoxFit.cover),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(booking.spaceName, style: const TextStyle(fontWeight: FontWeight.w900)),
-                  const SizedBox(height: 6),
-                  Text(
-                    '${booking.dateText} • ${booking.timeText}',
-                    style: const TextStyle(color: AppColors.subtext, fontWeight: FontWeight.w700, fontSize: 12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image(
+                      image: booking.imageProvider,
+                      width: 92,
+                      height: 72,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: statusColor.withOpacity(.12),
-                          borderRadius: BorderRadius.circular(999),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ✅ Name
+                        Text(
+                          booking.spaceName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
+                          ),
                         ),
-                        child: Text(
-                          _statusText(),
-                          style: TextStyle(color: statusColor, fontWeight: FontWeight.w900, fontSize: 11.5),
+                        const SizedBox(height: 4),
+
+                        // ✅ date/time
+                        Text(
+                          _dateLine,
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        _money(),
-                        style: const TextStyle(fontWeight: FontWeight.w900),
-                      ),
-                    ],
+                        const SizedBox(height: 2),
+
+                        // ✅ booking id
+                        Text(
+                          'Booking ID: ${booking.bookingId}',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // ✅ HERE: Price + Status chip on SAME ROW (like design)
+                        Row(
+                          children: [
+                            Text(
+                              _priceLine,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const Spacer(),
+                            _statusChip(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
+
+            Container(height: 1, color: Colors.grey[200]),
+            _bottomButtons(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TwoButtonsBar extends StatelessWidget {
+  const _TwoButtonsBar({
+    required this.leftText,
+    required this.leftFilled,
+    required this.onLeft,
+    required this.rightText,
+    required this.rightFilled,
+    required this.onRight,
+  });
+
+  final String leftText;
+  final bool leftFilled;
+  final VoidCallback onLeft;
+
+  final String rightText;
+  final bool rightFilled;
+  final VoidCallback onRight;
+
+  static const _blue = Color(0xFF5B8FB9);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: onLeft,
+              child: Container(
+                color: leftFilled ? _blue : Colors.white,
+                alignment: Alignment.center,
+                child: Text(
+                  leftText,
+                  style: TextStyle(
+                    color: leftFilled ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(width: 1, color: Colors.grey[200]),
+          Expanded(
+            child: InkWell(
+              onTap: onRight,
+              child: Container(
+                color: rightFilled ? _blue : Colors.white,
+                alignment: Alignment.center,
+                child: Text(
+                  rightText,
+                  style: TextStyle(
+                    color: rightFilled ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

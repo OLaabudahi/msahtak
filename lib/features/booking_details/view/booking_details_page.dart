@@ -20,8 +20,9 @@ class BookingDetailsPage extends StatelessWidget {
   /// ✅ دالة: فتح الصفحة مع Bloc جاهز (Dummy repo حالياً)
   static Widget withBloc({required String bookingId}) {
     return BlocProvider(
-      create: (_) => BookingDetailsBloc(repo: BookingDetailsRepoDummy())
-        ..add(BookingDetailsStarted(bookingId)),
+      create: (_) =>
+          BookingDetailsBloc(repo: BookingDetailsRepoDummy())
+            ..add(BookingDetailsStarted(bookingId)),
       child: BookingDetailsPage(bookingId: bookingId),
     );
   }
@@ -68,7 +69,9 @@ class BookingDetailsPage extends StatelessWidget {
         final imageAsset = d.imageAsset ?? AppAssets.home;
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Booking Details')),
+          appBar: AppBar(
+            title: Text(d.spaceName, style: AppTextStyles.sectionBarTitle),
+          ),
           body: SafeArea(
             child: Column(
               children: [
@@ -112,7 +115,11 @@ class BookingDetailsPage extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                const Icon(Icons.star, size: 16, color: AppColors.primary),
+                                const Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: AppColors.primary,
+                                ),
                               ],
                             ),
                           ],
@@ -126,7 +133,9 @@ class BookingDetailsPage extends StatelessWidget {
                         Wrap(
                           spacing: 10,
                           runSpacing: 10,
-                          children: d.tags.map((t) => BookingChip(text: t)).toList(),
+                          children: d.tags
+                              .map((t) => BookingChip(text: t))
+                              .toList(),
                         ),
 
                         AppSpacing.vLg,
@@ -144,11 +153,15 @@ class BookingDetailsPage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Date: ${d.dateText}', style: AppTextStyles.body),
+                              Text(
+                                'Date: ${d.dateText}',
+                                style: AppTextStyles.body,
+                              ),
                               const SizedBox(height: 6),
-                              Text('Time: ${d.timeText}', style: AppTextStyles.body),
-                              const SizedBox(height: 6),
-                              Text('Guests: ${d.guestsCount}', style: AppTextStyles.body),
+                              Text(
+                                'Time: ${d.timeText}',
+                                style: AppTextStyles.body,
+                              ),
                             ],
                           ),
                         ),
@@ -173,7 +186,10 @@ class BookingDetailsPage extends StatelessWidget {
                           ),
                           child: Text(
                             _money(d.currency, d.totalPrice),
-                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
 

@@ -1,25 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../app_start/bloc/app_start_bloc.dart';
-import '../../app_start/bloc/app_start_event.dart';
-import '../../auth/bloc/auth_bloc.dart';
-import '../../auth/bloc/auth_event.dart';
-import '../../auth/bloc/auth_state.dart';
-
-import '../../../constants/app_spacing.dart';
+import '../../../theme/app_text_styles.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
-import '../widgets/language_bottom_sheet.dart';
 import '../widgets/settings_action_tile.dart';
 import '../widgets/settings_section_title.dart';
-import '../widgets/settings_switch_tile.dart';
 
 class SettingsTabPage extends StatelessWidget {
   const SettingsTabPage({super.key});
 
-  /// ✅ فتح الصفحة مع BLoC
   static Widget withBloc() {
     return BlocProvider(
       create: (_) => SettingsBloc()..add(const SettingsStarted()),
@@ -27,133 +18,153 @@ class SettingsTabPage extends StatelessWidget {
     );
   }
 
-  /// ✅ فتح BottomSheet اللغة
-  void _openLanguageSheet(BuildContext context, String selected) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) {
-        return LanguageBottomSheet(
-          selected: selected,
-          onSelect: (code) => context.read<SettingsBloc>().add(SettingsSelectLanguage(code)),
-        );
-      },
+  static const _cardBg = Color(0xFFEAF0F6);
+  static const _chevronBlue = Color(0xFF5B8FB9);
+
+  Widget _card(List<Widget> children) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return Row(
+      children: [
+        const SizedBox(width: 8),
+        const Text('Settings', style: AppTextStyles.sectionBarTitle),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listenWhen: (p, c) => p.status != c.status,
-      listener: (context, state) {
-        // ✅ لما ينجح logout
-        if (state.status == AuthStatus.loggedOut) {
-          // ارجعي لأول Route (الروت)
-          Navigator.of(context).popUntil((route) => route.isFirst);
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        final bloc = context.read<SettingsBloc>();
 
-          // خلي AppRoot يعيد القرار ويظهر Login
-          context.read<AppStartBloc>().add(const AppStartStarted());
-        }
-
-        if (state.status == AuthStatus.error && state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage!)),
+        if (state.loading) {
+          return const SafeArea(
+            child: Center(child: CircularProgressIndicator()),
           );
         }
-      },
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          final bloc = context.read<SettingsBloc>();
 
+        if (state.error != null) {
           return SafeArea(
             child: Padding(
-              padding: AppSpacing.screen.copyWith(top: 10),
-              child: state.loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : state.error != null
-                  ? Center(child: Text('Error: ${state.error}'))
-                  : RefreshIndicator(
-                onRefresh: () async => bloc.add(const SettingsRefreshRequested()),
-                child: ListView(
-                  children: [
-                    const Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 18,
-                      ),
-                    ),
-                    AppSpacing.vMd,
-                    const SettingsSectionTitle(text: 'Notifications'),
-                    SettingsSwitchTile(
-                      icon: Icons.notifications_none_rounded,
-                      title: 'Notifications',
-                      subtitle: 'Enable or disable all notifications',
-                      value: state.settings!.notificationsEnabled,
-                      onChanged: (v) => bloc.add(SettingsToggleNotifications(v)),
-                    ),
-                    SettingsSwitchTile(
-                      icon: Icons.alarm_rounded,
-                      title: 'Booking reminders',
-                      subtitle: 'Get a reminder before your booking',
-                      value: state.settings!.bookingRemindersEnabled,
-                      onChanged: (v) => bloc.add(SettingsToggleBookingReminders(v)),
-                    ),
-                    const SettingsSectionTitle(text: 'Preferences'),
-                    SettingsActionTile(
-                      icon: Icons.timer_outlined,
-                      title: 'Reminder timing',
-                      subtitle: state.settings!.reminderTiming,
-                      onTap: () {
-                        const options = ['30 min', '1 hour', 'Same day (9 AM)'];
-                        final current = state.settings!.reminderTiming;
-                        final idx = options.indexOf(current);
-                        final next = options[(idx + 1) % options.length];
-                        bloc.add(SettingsSelectReminderTiming(next));
-                      },
-                      trailing: const Icon(Icons.swap_horiz_rounded),
-                    ),
-                    SettingsActionTile(
-                      icon: Icons.language_outlined,
-                      title: 'Language',
-                      subtitle: state.settings!.languageCode == 'ar' ? 'Arabic' : 'English',
-                      onTap: () => _openLanguageSheet(context, state.settings!.languageCode),
-                    ),
-                    SettingsSwitchTile(
-                      icon: Icons.dark_mode_outlined,
-                      title: 'Dark mode',
-                      subtitle: 'Enable dark theme',
-                      value: state.settings!.darkMode,
-                      onChanged: (v) => bloc.add(SettingsToggleDarkMode(v)),
-                    ),
-                    const SettingsSectionTitle(text: 'Account'),
-                    SettingsActionTile(
-                      icon: Icons.privacy_tip_outlined,
-                      title: 'Privacy Policy',
-                      onTap: () {},
-                    ),
-                    SettingsActionTile(
-                      icon: Icons.info_outline,
-                      title: 'About',
-                      onTap: () {},
-                    ),
-
-                    // ✅ Logout
-                    SettingsActionTile(
-                      icon: Icons.logout,
-                      title: 'Logout',
-                      isDestructive: true,
-                      onTap: () {
-                        context.read<AuthBloc>().add(const AuthLogoutRequested());
-                      },
-                    ),
-                  ],
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _header(context),
+                  const SizedBox(height: 14),
+                  Text('Error: ${state.error}'),
+                  const SizedBox(height: 10),
+                  FilledButton(
+                    onPressed: () => bloc.add(const SettingsRefreshRequested()),
+                    child: const Text('Retry'),
+                  ),
+                ],
               ),
             ),
           );
-        },
-      ),
+        }
+
+        return SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async => bloc.add(const SettingsRefreshRequested()),
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              children: [
+                _header(context),
+                const SizedBox(height: 18),
+
+                const SettingsSectionTitle(text: 'Preferences'),
+                _card([
+                  SettingsActionTile(
+                    icon: null,
+                    title: 'Workspace preferences',
+                    subtitle: 'Study, work, meetings',
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: _chevronBlue,
+                      size: 22,
+                    ),
+                    onTap: () {
+                      // TODO: open workspace preferences page (feature)
+                    },
+                  ),
+                  SettingsActionTile(
+                    icon: null,
+                    title: 'Location',
+                    subtitle: 'Nearby & map search',
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: _chevronBlue,
+                      size: 22,
+                    ),
+                    onTap: () {
+                      // TODO: open location settings page (feature)
+                    },
+                  ),
+                  SettingsActionTile(
+                    icon: null,
+                    title: 'Notifications',
+                    subtitle: 'Booking & offers',
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: _chevronBlue,
+                      size: 22,
+                    ),
+                    isLast: true,
+                    onTap: () {
+                      // TODO: open notifications settings page (feature)
+                    },
+                  ),
+                ]),
+
+                const SizedBox(height: 18),
+
+                const SettingsSectionTitle(text: 'Support'),
+                _card([
+                  SettingsActionTile(
+                    icon: null,
+                    title: 'Help & support',
+                    subtitle: 'FAQs, contact us',
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: _chevronBlue,
+                      size: 22,
+                    ),
+                    onTap: () {
+                      // TODO: open help & support page (feature)
+                    },
+                  ),
+                  SettingsActionTile(
+                    icon: null,
+                    title: 'About Mashtak',
+                    subtitle: 'Version, terms, privacy',
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: _chevronBlue,
+                      size: 22,
+                    ),
+                    isLast: true,
+                    onTap: () {
+                      // TODO: open about page (feature)
+                    },
+                  ),
+                ]),
+
+                const SizedBox(height: 30),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

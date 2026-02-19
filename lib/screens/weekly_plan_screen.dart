@@ -126,10 +126,7 @@ class _WeeklyPlanScreenState extends State<WeeklyPlanScreen> {
                   SizedBox(height: 3),
                   Text(
                     'Unlimited access for 7 days',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ],
               ),
@@ -146,10 +143,7 @@ class _WeeklyPlanScreenState extends State<WeeklyPlanScreen> {
                   ),
                   Text(
                     'per week',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 11),
                   ),
                 ],
               ),
@@ -186,7 +180,9 @@ class _WeeklyPlanScreenState extends State<WeeklyPlanScreen> {
           decoration: BoxDecoration(
             color: const Color(0xFF5B8FB9).withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF5B8FB9).withOpacity(0.25)),
+            border: Border.all(
+              color: const Color(0xFF5B8FB9).withOpacity(0.25),
+            ),
           ),
           child: Column(
             children: features.map((feature) {
@@ -205,7 +201,10 @@ class _WeeklyPlanScreenState extends State<WeeklyPlanScreen> {
                     const SizedBox(width: 12),
                     Text(
                       feature,
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),

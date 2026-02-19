@@ -23,12 +23,20 @@ class InsightDetailsPage extends StatelessWidget {
               AppSpacing.vMd,
               ClipRRect(
                 borderRadius: BorderRadius.circular(18),
-                child: Image.asset(item.imageAsset ?? AppAssets.home, height: 220, width: double.infinity, fit: BoxFit.cover),
+                child: Image.asset(
+                  item.imageAsset ?? AppAssets.home,
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               AppSpacing.vMd,
               Text(item.subtitle, style: AppTextStyles.body),
               AppSpacing.vMd,
-              const Text('هون بتحط تفاصيل الـ insight من الـ API لاحقاً.', style: AppTextStyles.body),
+              const Text(
+                'هون بتحط تفاصيل الـ insight من الـ API لاحقاً.',
+                style: AppTextStyles.body,
+              ),
             ],
           ),
         ),

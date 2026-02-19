@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../domain/entities/home_featured_space_entity.dart';
 
 class FeaturedSpace extends Equatable {
   final String id;
@@ -30,7 +31,15 @@ class FeaturedSpace extends Equatable {
   // );
 
   @override
-  List<Object?> get props => [id, title, rating, locationText, tags, imageAsset, imageUrl];
+  List<Object?> get props => [
+    id,
+    title,
+    rating,
+    locationText,
+    tags,
+    imageAsset,
+    imageUrl,
+  ];
 }
 
 class InsightItem extends Equatable {
@@ -60,6 +69,8 @@ class InsightItem extends Equatable {
   List<Object?> get props => [id, title, subtitle, imageAsset, imageUrl];
 }
 
+enum HomeStatus { initial, loading, ready, failure }
+
 class HomeState extends Equatable {
   final int bottomTabIndex;
 
@@ -72,8 +83,14 @@ class HomeState extends Equatable {
   final List<InsightItem> insights;
 
   final int unreadNotifications;
+  final HomeStatus status;
+  final String? errorMessage;
+  final List<HomeFeaturedSpaceEntity> forYou;
 
   const HomeState({
+    required this.status,
+    required this.errorMessage,
+    required this.forYou,
     required this.bottomTabIndex,
     required this.selectedCategoryIndex,
     required this.searchQuery,
@@ -91,9 +108,16 @@ class HomeState extends Equatable {
     featuredSpaces: [],
     insights: [],
     unreadNotifications: 2,
+    status: HomeStatus.initial,
+    errorMessage: null,
+    forYou: [],
   );
 
   HomeState copyWith({
+    HomeStatus? status,
+    String? errorMessage,
+    List<HomeFeaturedSpaceEntity>? forYou,
+    bool clearError = false,
     int? bottomTabIndex,
     int? selectedCategoryIndex,
     String? searchQuery,
@@ -104,17 +128,24 @@ class HomeState extends Equatable {
   }) {
     return HomeState(
       bottomTabIndex: bottomTabIndex ?? this.bottomTabIndex,
-      selectedCategoryIndex: selectedCategoryIndex ?? this.selectedCategoryIndex,
+      selectedCategoryIndex:
+          selectedCategoryIndex ?? this.selectedCategoryIndex,
       searchQuery: searchQuery ?? this.searchQuery,
       featuredIndex: featuredIndex ?? this.featuredIndex,
       featuredSpaces: featuredSpaces ?? this.featuredSpaces,
       insights: insights ?? this.insights,
       unreadNotifications: unreadNotifications ?? this.unreadNotifications,
+      status: status ?? this.status,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      forYou: forYou ?? this.forYou,
     );
   }
 
   @override
   List<Object?> get props => [
+    status,
+    errorMessage,
+    forYou,
     bottomTabIndex,
     selectedCategoryIndex,
     searchQuery,
@@ -123,4 +154,6 @@ class HomeState extends Equatable {
     insights,
     unreadNotifications,
   ];
+
+
 }

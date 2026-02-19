@@ -1,30 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../constants/app_spacing.dart';
-import '../../booking_details/view/booking_details_page.dart';
+import '../../../theme/app_text_styles.dart';
 import '../bloc/bookings_bloc.dart';
 import '../bloc/bookings_event.dart';
 import '../bloc/bookings_state.dart';
+import '../data/models/booking_model.dart';
 import '../widgets/booking_list_item.dart';
-import '../widgets/bookings_segmented.dart';
+import '../../booking_details/view/booking_details_page.dart';
 
-class BookingTabPage extends StatelessWidget {
-  const BookingTabPage({super.key});
+class BookingsTabPage extends StatefulWidget {
+  const BookingsTabPage({super.key});
 
-  /// ✅ دالة: فتح التاب مع الـ Bloc
   static Widget withBloc() {
     return BlocProvider(
       create: (_) => BookingsBloc()..add(const BookingsStarted()),
-      child: const BookingTabPage(),
+      child: const BookingsTabPage(),
     );
   }
 
-  /// ✅ دالة: تفتح تفاصيل الحجز
-  void _openBookingDetails(BuildContext context, String bookingId) {
+  @override
+  State<BookingsTabPage> createState() => _BookingsTabPageState();
+}
+
+class _BookingsTabPageState extends State<BookingsTabPage> {
+  final _search = TextEditingController();
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  void _openBookingDetails(BuildContext context, Booking booking) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => BookingDetailsPage.withBloc(bookingId: bookingId),
+        builder: (_) =>
+            BookingDetailsPage.withBloc(bookingId: booking.bookingId),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 14, bottom: 10),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w900,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
+  Widget _searchBar() {
+    return Container(
+      height: 46,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F4F7),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.search, color: Colors.grey[500]),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _search,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                border: InputBorder.none,
+                isDense: true,
+              ),
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+          Container(
+            height: 30,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFF5A623), Color(0xFF5B8FB9)],
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'AI Concierge',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -32,68 +105,102 @@ class BookingTabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookingsBloc, BookingsState>(
-      /// ✅ دالة: بناء واجهة Bookings
       builder: (context, state) {
         final bloc = context.read<BookingsBloc>();
-        final list = state.segmentIndex == 0 ? state.upcoming : state.past;
 
-        return SafeArea(
-          child: Padding(
-            padding: AppSpacing.screen.copyWith(top: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Bookings', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
-                AppSpacing.vMd,
+        if (state.loading)
+          return const Center(child: CircularProgressIndicator());
+        if (state.error != null)
+          return Center(child: Text('Error: ${state.error}'));
 
-                BookingsSegmented(
-                  index: state.segmentIndex,
-                  onChanged: (i) => bloc.add(BookingsSegmentChanged(i)),
-                ),
+        final list = state.bookings;
 
-                AppSpacing.vMd,
+        final upcoming = list
+            .where((b) => b.status.toLowerCase() == 'upcoming')
+            .toList();
+        final completed = list
+            .where((b) => b.status.toLowerCase() == 'completed')
+            .toList();
+        final cancelled = list
+            .where((b) => b.status.toLowerCase() == 'cancelled')
+            .toList();
 
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async => bloc.add(const BookingsRefreshRequested()),
-                    child: state.loading
-                        ? const Center(child: CircularProgressIndicator())
-                        : (state.error != null)
-                        ? ListView(
-                      children: [
-                        const SizedBox(height: 120),
-                        Center(child: Text('صار خطأ: ${state.error}')),
-                        const SizedBox(height: 12),
-                        Center(
-                          child: FilledButton(
-                            onPressed: () => bloc.add(const BookingsStarted()),
-                            child: const Text('Retry'),
-                          ),
-                        )
-                      ],
-                    )
-                        : (list.isEmpty)
-                        ? ListView(
-                      children: const [
-                        SizedBox(height: 140),
-                        Center(child: Text('No bookings yet')),
-                      ],
-                    )
-                        : ListView.separated(
-                      itemCount: list.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, i) {
-                        final b = list[i];
-                        return BookingListItem(
-                          booking: b,
-                          onTap: () => _openBookingDetails(context, b.bookingId),
-                        );
-                      },
-                    ),
+        // Search filter (UI فقط)
+        final q = _search.text.trim().toLowerCase();
+        List<Booking> filter(List<Booking> src) {
+          if (q.isEmpty) return src;
+          return src.where((b) {
+            return b.spaceName.toLowerCase().contains(q) ||
+                b.bookingId.toLowerCase().contains(q);
+          }).toList();
+        }
+
+        final upcomingF = filter(upcoming);
+        final completedF = filter(completed);
+        final cancelledF = filter(cancelled);
+
+        return RefreshIndicator(
+          onRefresh: () async => bloc.add(const BookingsRefreshRequested()),
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            children: [
+              const SizedBox(height: 6),
+              const Text('Bookings', style: AppTextStyles.sectionBarTitle),
+              const SizedBox(height: 14),
+              _searchBar(),
+
+              if (upcomingF.isNotEmpty) ...[
+                _sectionTitle('Your Upcoming Bookings'),
+                ...upcomingF.map(
+                  (b) => BookingListItem(
+                    booking: b,
+                    onView: () => _openBookingDetails(context, b),
+                    onCancel: () {
+                      // ✅ منطق الإلغاء لازم يروح للـ Bloc (Event)
+                      // bloc.add(BookingsCancelRequested(bookingId: b.bookingId));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Cancel (dummy)')),
+                      );
+                    },
                   ),
                 ),
               ],
-            ),
+
+              if (completedF.isNotEmpty) ...[
+                _sectionTitle('Past Bookings'),
+                ...completedF.map(
+                  (b) => BookingListItem(
+                    booking: b,
+                    onView: () => _openBookingDetails(context, b),
+                    onRebook: () {
+                      // ✅ منطق rebook يروح للـ Bloc (Event)
+                      // bloc.add(BookingsRebookRequested(spaceId: b.spaceId));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Rebook (dummy)')),
+                      );
+                    },
+                  ),
+                ),
+              ],
+
+              if (cancelledF.isNotEmpty) ...[
+                _sectionTitle('Cancelled Bookings'),
+                ...cancelledF.map(
+                  (b) => BookingListItem(
+                    booking: b,
+                    onView: () => _openBookingDetails(context, b),
+                  ),
+                ),
+              ],
+
+              if (upcomingF.isEmpty && completedF.isEmpty && cancelledF.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 50),
+                  child: Center(child: Text('No bookings yet')),
+                ),
+
+              const SizedBox(height: 20),
+            ],
           ),
         );
       },

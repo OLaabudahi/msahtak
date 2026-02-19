@@ -2,8 +2,4 @@ abstract class AppStartRepo {
   Future<AppStartDecision> decide();
 }
 
-enum AppStartDecision {
-  goLogin,
-  goOnboarding,
-  goHome,
-}
+enum AppStartDecision { goLogin, goOnboarding, goHome }

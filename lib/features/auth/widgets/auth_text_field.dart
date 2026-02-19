@@ -24,9 +24,16 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(fontSize: 15, color: Colors.black54),
-        floatingLabelStyle: const TextStyle(fontSize: 13, color: Colors.black87),
-        border: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+        floatingLabelStyle: const TextStyle(
+          fontSize: 13,
+          color: Colors.black87,
+        ),
+        border: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xFFF5A623), width: 2),
         ),

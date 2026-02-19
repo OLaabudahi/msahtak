@@ -6,7 +6,7 @@ import 'language_state.dart';
 
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   LanguageBloc(this._service)
-      : super(const LanguageState(loading: true, code: 'en')) {
+    : super(const LanguageState(loading: true, code: 'en')) {
     on<LanguageStarted>(_onStarted);
     on<LanguageChanged>(_onChanged);
   }
@@ -14,9 +14,9 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   final LanguageService _service;
 
   Future<void> _onStarted(
-      LanguageStarted event,
-      Emitter<LanguageState> emit,
-      ) async {
+    LanguageStarted event,
+    Emitter<LanguageState> emit,
+  ) async {
     try {
       emit(state.copyWith(loading: true, error: null));
       final lang = await _service.loadLanguage();
@@ -27,9 +27,9 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   }
 
   Future<void> _onChanged(
-      LanguageChanged event,
-      Emitter<LanguageState> emit,
-      ) async {
+    LanguageChanged event,
+    Emitter<LanguageState> emit,
+  ) async {
     try {
       emit(state.copyWith(loading: true, error: null));
       await _service.setLanguage(event.code);

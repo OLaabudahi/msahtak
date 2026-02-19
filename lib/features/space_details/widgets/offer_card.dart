@@ -45,15 +45,34 @@ class OfferCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-            decoration: BoxDecoration(color: badgeBg, borderRadius: BorderRadius.circular(999)),
-            child: Text(offer.badgeText, style: TextStyle(color: badgeTx, fontWeight: FontWeight.w900, fontSize: 12)),
+            decoration: BoxDecoration(
+              color: badgeBg,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              offer.badgeText,
+              style: TextStyle(
+                color: badgeTx,
+                fontWeight: FontWeight.w900,
+                fontSize: 12,
+              ),
+            ),
           ),
           const SizedBox(height: 10),
-          Text(offer.title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+          Text(
+            offer.title,
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
-              Text(offer.priceLine, style: const TextStyle(color: Color(0xFF6B7280), fontWeight: FontWeight.w700)),
+              Text(
+                offer.priceLine,
+                style: const TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(width: 8),
               if (offer.oldPriceText != null) ...[
                 Text(
@@ -66,13 +85,28 @@ class OfferCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
               ],
-              Text(offer.newPriceText, style: const TextStyle(fontWeight: FontWeight.w900)),
+              Text(
+                offer.newPriceText,
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(offer.includesText, style: const TextStyle(color: Color(0xFF6B7280), fontWeight: FontWeight.w700)),
+          Text(
+            offer.includesText,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(offer.validUntilText, style: const TextStyle(color: Color(0xFF111827), fontWeight: FontWeight.w800)),
+          Text(
+            offer.validUntilText,
+            style: const TextStyle(
+              color: Color(0xFF111827),
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ],
       ),
     );

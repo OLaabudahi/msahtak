@@ -1,21 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/repos/app_start_repo.dart';
+import '../domain/repos/app_start_repo.dart';
 import 'app_start_event.dart';
 import 'app_start_state.dart';
 
 class AppStartBloc extends Bloc<AppStartEvent, AppStartState> {
   AppStartBloc(this._repo)
-      : super(const AppStartState(loading: true, decision: null)) {
+    : super(const AppStartState(loading: true, decision: null)) {
     on<AppStartStarted>(_onStarted);
   }
 
   final AppStartRepo _repo;
 
   Future<void> _onStarted(
-      AppStartStarted event,
-      Emitter<AppStartState> emit,
-      ) async {
+    AppStartStarted event,
+    Emitter<AppStartState> emit,
+  ) async {
     try {
       emit(state.copyWith(loading: true, error: null, decision: null));
       final decision = await _repo.decide();

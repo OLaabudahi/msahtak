@@ -12,8 +12,6 @@ import '../widgets/auth_text_field.dart';
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
-
-
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
@@ -35,7 +33,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         title: const Text('Password Reset'),
         content: const Text(
           'تم ارسال بريد الكتروني الى عنوان بريدك.\n'
-              'قم بتفقد بريدك ومتابعة الاوامر من هناك.',
+          'قم بتفقد بريدك ومتابعة الاوامر من هناك.',
         ),
         actions: [
           TextButton(
@@ -84,9 +82,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             }
             if (state.status == AuthStatus.error &&
                 state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
             }
           },
           child: Center(
@@ -97,7 +95,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   const SizedBox(height: 16),
 
                   const Text(
@@ -124,9 +121,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         onPressed: () {
                           FocusScope.of(context).unfocus();
                           context.read<AuthBloc>().add(
-                            AuthForgotPasswordRequested(
-                              email: _email.text,
-                            ),
+                            AuthForgotPasswordRequested(email: _email.text),
                           );
                         },
                       );

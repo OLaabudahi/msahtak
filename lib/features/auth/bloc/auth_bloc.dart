@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/repos/auth_repo.dart';
+import '../domain/repos/auth_repo.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 

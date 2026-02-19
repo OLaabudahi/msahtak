@@ -1,27 +1,36 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/repos/booking_details_repo.dart';
+import '../domain/repos/booking_details_repo.dart';
 import 'booking_details_event.dart';
 import 'booking_details_state.dart';
 
-class BookingDetailsBloc extends Bloc<BookingDetailsEvent, BookingDetailsState> {
-  final BookingDetailsRepo repo;
-
-  BookingDetailsBloc({required this.repo}) : super(BookingDetailsState.initial()) {
-    on<BookingDetailsStarted>(_onStarted);
+class BookingDetailsBloc
+    extends Bloc<BookingDetailsEvent, BookingDetailsState> {
+  BookingDetailsBloc({required this.repo})
+    : super(BookingDetailsState.initial()) {
+    on<BookingDetailsStarted>(_onLoad);
+    on<BookingDetailsRefreshRequested>(_onLoad);
   }
 
-  /// ✅ دالة: تحميل تفاصيل الحجز من repo (Dummy حالياً)
-  Future<void> _onStarted(
-      BookingDetailsStarted event,
-      Emitter<BookingDetailsState> emit,
-      ) async {
-    emit(state.copyWith(loading: true, error: null));
+  final BookingDetailsRepo repo;
+
+  Future<void> _onLoad(
+    BookingDetailsEvent event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final bookingId = switch (event) {
+      BookingDetailsStarted(:final bookingId) => bookingId,
+      BookingDetailsRefreshRequested(:final bookingId) => bookingId,
+      _ => '',
+    };
+
+    emit(state.copyWith(loading: true, clearError: true));
+
     try {
-      final details = await repo.fetchBookingDetails(event.bookingId);
-      emit(state.copyWith(loading: false, data: details, error: null));
+      final data = await repo.fetchBookingDetails(bookingId);
+      emit(state.copyWith(loading: false, data: data));
     } catch (e) {
-      emit(state.copyWith(loading: false, data: null, error: e.toString()));
+      emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
 }

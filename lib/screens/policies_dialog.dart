@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class PoliciesDialog extends StatelessWidget {
   final String hubName;
 
-  const PoliciesDialog({Key? key, this.hubName = 'Downtown Hub'}) : super(key: key);
+  const PoliciesDialog({Key? key, this.hubName = 'Downtown Hub'})
+    : super(key: key);
 
   static void show(BuildContext context, {String hubName = 'Downtown Hub'}) {
     showDialog(
@@ -40,10 +41,7 @@ class PoliciesDialog extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     'Please read before booking. Policies may vary.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red[400],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.red[400]),
                   ),
                   const SizedBox(height: 20),
                   _buildSection('Noise & Calls', [
@@ -120,17 +118,19 @@ class PoliciesDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          ...items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Text(
-                  '* $item',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[800],
-                    height: 1.4,
-                  ),
+          ...items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: Text(
+                '* $item',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[800],
+                  height: 1.4,
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
     );
