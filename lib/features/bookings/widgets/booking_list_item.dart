@@ -158,7 +158,7 @@ class BookingListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: const Color(0x01000000) ,
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),

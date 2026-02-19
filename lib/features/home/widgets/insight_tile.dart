@@ -39,8 +39,8 @@ class InsightTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.black.withOpacity(.55),
-                      Colors.black.withOpacity(.05),
+                      const Color(0x8A000000),
+                      const Color(0x0D000000),
                     ],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -67,7 +67,8 @@ class InsightTile extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(.95),
+                      color: const Color(0xF1ffffff),
+
                       fontWeight: FontWeight.w600,
                       fontSize: 11.5,
                       height: 1.2,

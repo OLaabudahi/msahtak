@@ -114,7 +114,7 @@ class _BestForYouScreenState extends State<BestForYouScreen>
         border: Border.all(color: Colors.grey[200]!),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color:  const Color(0x12000000),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -261,8 +261,8 @@ class _BestForYouScreenState extends State<BestForYouScreen>
                     child: CustomPaint(
                       painter: _FitScorePainter(
                         progress: _scoreAnimation.value,
-                        bgColor: const Color(0xFF5B8FB9).withOpacity(0.35),
-                        fgColor: const Color(0xFFF5A623).withOpacity(0.55),
+                        bgColor: const Color(0x625B8FB9),
+                        fgColor: const Color(0x90F5A623),
                         strokeWidth: 10,
                       ),
                       child: Center(

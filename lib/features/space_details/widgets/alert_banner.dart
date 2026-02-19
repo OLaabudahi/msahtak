@@ -39,7 +39,8 @@ class AlertBanner extends StatelessWidget {
             alert.message,
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: text.withOpacity(.9),
+              color: const Color(0xCAB91C1C),
+
               height: 1.25,
             ),
           ),

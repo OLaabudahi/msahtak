@@ -99,7 +99,7 @@ class _LangRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: _accent.withOpacity(isSelected ? 0.12 : 0.08),
+          color: isSelected ? const Color(0x245B8FB9) : const Color(0x165B8FB9),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(

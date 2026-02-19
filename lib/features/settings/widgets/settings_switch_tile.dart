@@ -20,7 +20,6 @@ class SettingsSwitchTile extends StatelessWidget {
     this.isLast = false,
   });
 
-  static const _accent = Color(0xFF5B8FB9);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class SettingsSwitchTile extends StatelessWidget {
         if (!isLast)
           Divider(
             height: 1,
-            color: _accent.withOpacity(0.15),
+            color: const Color(0x355B8FB9),
             indent: 16,
             endIndent: 16,
           ),

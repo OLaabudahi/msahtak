@@ -259,7 +259,7 @@ class _YourUsageScreenState extends State<YourUsageScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? Colors.white
-              : const Color(0xFF5B8FB9).withOpacity(0.08),
+              : const Color(0x125B8FB9),
           borderRadius: BorderRadius.circular(12),
           border: isSelected
               ? Border.all(color: Colors.black87, width: 1.5)

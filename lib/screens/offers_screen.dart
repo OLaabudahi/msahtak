@@ -141,7 +141,7 @@ class _OffersScreenState extends State<OffersScreen> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: const Color(0x12000000) ,
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -160,7 +160,7 @@ class _OffersScreenState extends State<OffersScreen> {
                       child: Container(
                         width: 110,
                         height: 100,
-                        color: const Color(0xFF5B8FB9).withOpacity(0.3),
+                        color: const Color(0x485B8FB9),
                         child: const Icon(
                           Icons.business,
                           color: Color(0xFF5B8FB9),
@@ -200,7 +200,7 @@ class _OffersScreenState extends State<OffersScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.75),
+                          color:  const Color(0xbb000000),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(

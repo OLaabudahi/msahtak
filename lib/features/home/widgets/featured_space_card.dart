@@ -32,8 +32,8 @@ class FeaturedSpaceCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black.withOpacity(.0),
-                    Colors.black.withOpacity(.25),
+                    Colors.black,
+                  const Color(0x44000000),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

@@ -178,10 +178,10 @@ class _WeeklyPlanScreenState extends State<WeeklyPlanScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF5B8FB9).withOpacity(0.08),
+            color: const Color(0x125B8FB9),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF5B8FB9).withOpacity(0.25),
+              color: const Color(0x445B8FB9),
             ),
           ),
           child: Column(

@@ -47,9 +47,10 @@ class AppTheme {
           return Colors.white;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
-            return AppColors.primary.withOpacity(.45);
-          return AppColors.dotInactive.withOpacity(.35);
+          if (states.contains(WidgetState.selected)) {
+            return  const Color(0x80FBAD20);
+          }
+          return const Color(0x66FBAD20);
         }),
       ),
     );

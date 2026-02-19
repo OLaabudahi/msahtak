@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import '../../../domain/usecases/cancel_booking_request_usecase.dart';
-import '../../../domain/entities/booking_request_entity.dart';
 import '../../../domain/usecases/create_booking_request_usecase.dart';
 import '../../../domain/usecases/get_booking_request_status_usecase.dart';
 import '../../../domain/usecases/refresh_booking_request_status_usecase.dart';

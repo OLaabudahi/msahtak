@@ -114,7 +114,7 @@ class _NotificationSettingsScreenState
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF5B8FB9).withOpacity(0.08),
+                    color: const Color(0x125B8FB9),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -191,7 +191,7 @@ class _NotificationSettingsScreenState
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF5B8FB9).withOpacity(0.08),
+                    color: const Color(0x125B8FB9),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: _buildToggleItem(
@@ -268,7 +268,6 @@ class _NotificationSettingsScreenState
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.white,
             activeTrackColor: const Color(0xFFF5A623),
             inactiveThumbColor: Colors.white,
             inactiveTrackColor: Colors.grey[300],
@@ -287,7 +286,7 @@ class _NotificationSettingsScreenState
         decoration: BoxDecoration(
           color: isSelected
               ? Colors.white
-              : const Color(0xFF5B8FB9).withOpacity(0.08),
+              : const Color(0x125B8FB9),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? const Color(0xFFF5A623) : Colors.black87,

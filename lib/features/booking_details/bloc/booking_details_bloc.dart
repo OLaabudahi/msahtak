@@ -21,7 +21,6 @@ class BookingDetailsBloc
     final bookingId = switch (event) {
       BookingDetailsStarted(:final bookingId) => bookingId,
       BookingDetailsRefreshRequested(:final bookingId) => bookingId,
-      _ => '',
     };
 
     emit(state.copyWith(loading: true, clearError: true));

@@ -137,7 +137,7 @@ class NotificationsListScreen extends StatelessWidget {
                 children: [
                   _buildNotificationItem(
                     icon: Icons.close,
-                    iconBg: const Color(0xFF5B8FB9).withOpacity(0.08),
+                    iconBg: const Color(0x125B8FB9),
                     iconColor: Colors.red,
                     title: 'Booking rejected',
                     titleColor: Colors.black,
@@ -156,7 +156,7 @@ class NotificationsListScreen extends StatelessWidget {
                   ),
                   _buildNotificationItem(
                     icon: Icons.info_outline,
-                    iconBg: const Color(0xFF5B8FB9).withOpacity(0.08),
+                    iconBg: const Color(0x125B8FB9),
                     iconColor: const Color(0xFFF5A623),
                     title: 'Tip',
                     titleColor: Colors.black,

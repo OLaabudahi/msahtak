@@ -26,7 +26,7 @@ class CategoryChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.05),
+              color: Colors.black,
               blurRadius: 10,
               offset: const Offset(0, 6),
             ),

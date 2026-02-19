@@ -79,7 +79,7 @@ class SettingsActionTile extends StatelessWidget {
         if (!isLast)
           Divider(
             height: 1,
-            color: Colors.white.withOpacity(0.7),
+            color: const Color(0xaaffffff),
             indent: 16,
             endIndent: 16,
           ),
