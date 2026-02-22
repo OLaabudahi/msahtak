@@ -3,6 +3,7 @@ import '../../../../constants/app_assets.dart';
 import '../../../../constants/app_spacing.dart';
 import '../../../../theme/app_text_styles.dart';
 import '../../bloc/home_state.dart';
+import '../../domain/entities/insight_item.dart';
 
 class InsightDetailsPage extends StatelessWidget {
   final InsightItem item;

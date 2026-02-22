@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:masahtak_app/features/ai_concierge/view/ai_concierge_page.dart';
 import 'package:masahtak_app/features/home/data/repos/home_repo_dummy.dart';
+import 'package:masahtak_app/features/map/view/map_page.dart';
 
-import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
@@ -17,30 +18,26 @@ import '../../settings/view/settings_tab_page.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
+import '../domain/entities/insight_item.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
-
 import '../widgets/insight_tile.dart';
 import '../widgets/custom_search_bar.dart';
 import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  @override
-  /// ✅ هذه الدالة عشان تفتح الصفحة ومعها HomeBloc جاهز
+
   static Widget withBloc() {
     return BlocProvider(
-      // إذا عندك HomeStarted خليه، إذا ما عندك احذف ..add
       create: (_) => HomeBloc(repo: HomeRepoDummy())..add(const HomeStarted()),
       child: const HomePage(),
     );
   }
 
-  /// ✅ هذه الدالة بتجيب الجسم حسب التبويب السفلي
   Widget _buildBodyForTab(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        // ✅ التبويب الرئيسي (الهوم) ما بدّه withBloc لأنه HomeBloc فوق الصفحة
         return const _HomeTab();
       case 1:
         return BookingsTabPage.withBloc();
@@ -53,7 +50,6 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  /// ✅ بناء الصفحة مع Bottom Navigation
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -91,6 +87,7 @@ class HomePage extends StatelessWidget {
 
 class _HomeTab extends StatefulWidget {
   const _HomeTab();
+
   @override
   State<_HomeTab> createState() => _HomeTabState();
 }
@@ -112,9 +109,9 @@ class _MySearchBarState extends State<MySearchBar> {
   }
 
   void _openAiConcierge() {
-    // هنا اعملي Navigation للشات بوت
-    // Navigator.of(context).push(MaterialPageRoute(builder: (_) => AiChatPage.withBloc()));
-    debugPrint('Open AI Concierge');
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()),
+    );
   }
 
   @override
@@ -122,22 +119,13 @@ class _MySearchBarState extends State<MySearchBar> {
     return CustomSearchBar(
       controller: _searchController,
       onAiTap: _openAiConcierge,
-
       onSearchChanged: (q) {
-        // فلترة UI أو dispatch event للـ Bloc
-        debugPrint('search changed: $q');
+        context.read<HomeBloc>().add(HomeSearchChanged(q));
       },
-
       onSearchSubmitted: (q) {
-        debugPrint('search submit: $q');
+        context.read<HomeBloc>().add(HomeSearchChanged(q));
       },
-
-      onSearchTap: () {
-        // لو بدك مثلا تفتحي صفحة Search مستقلة
-        // Navigator.of(context).push(...)
-      },
-
-      // لو بدك تحكمي بمسافة الزر من اليمين
+      onSearchTap: () {},
       aiRightInset: 0,
     );
   }
@@ -148,7 +136,6 @@ class _HomeTabState extends State<_HomeTab> {
   Timer? _autoSlideTimer;
   Timer? _resumeTimer;
 
-  /// ✅ تشغيل التحريك التلقائي حسب عدد الكروت الموجود حالياً
   void _startAutoSlide() {
     _autoSlideTimer?.cancel();
 
@@ -170,13 +157,11 @@ class _HomeTabState extends State<_HomeTab> {
     });
   }
 
-  /// ✅ إيقاف التحريك التلقائي فوراً
   void _stopAutoSlide() {
     _autoSlideTimer?.cancel();
     _autoSlideTimer = null;
   }
 
-  /// ✅ إعادة التحريك بعد ثانيتين من ترك المستخدم للسلايدر
   void _scheduleResumeAutoSlide() {
     _resumeTimer?.cancel();
     _resumeTimer = Timer(const Duration(seconds: 2), () {
@@ -185,14 +170,12 @@ class _HomeTabState extends State<_HomeTab> {
     });
   }
 
-  /// ✅ تنظيف كل التايمرز
   void _cancelTimers() {
     _stopAutoSlide();
     _resumeTimer?.cancel();
     _resumeTimer = null;
   }
 
-  /// ✅ تهيئة الكنترولر وتشغيل التحريك
   @override
   void initState() {
     super.initState();
@@ -200,7 +183,6 @@ class _HomeTabState extends State<_HomeTab> {
     _startAutoSlide();
   }
 
-  /// ✅ تنظيف الموارد
   @override
   void dispose() {
     _cancelTimers();
@@ -208,9 +190,7 @@ class _HomeTabState extends State<_HomeTab> {
     super.dispose();
   }
 
-  /// ✅ فتح صفحة تفاصيل المساحة (كارد For You)
   void _openSpaceDetails(BuildContext context, String spaceId) {
-    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SpaceDetailsPage.withBloc(spaceId: spaceId),
@@ -218,15 +198,12 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  /// ✅ فتح صفحة تفاصيل Insight (كل كارد له صفحة)
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)),
+    );
   }
 
-
-  /// ✅ بناء تبويب Home بالكامل مثل التصميم
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -243,7 +220,6 @@ class _HomeTabState extends State<_HomeTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ========= Top Bar (Home + Bell) =========
               Row(
                 children: [
                   const Text('Home', style: AppTextStyles.sectionBarTitle),
@@ -282,64 +258,9 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vMd,
 
-              // ========= Search + AI Concierge =========
-              /*
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: AppColors.surface2,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: Icon(Icons.search, color: AppColors.hint),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              onChanged: (v) => bloc.add(HomeSearchChanged(v)),
-                              decoration: const InputDecoration(
-                                hintText: 'Search',
-                                border: InputBorder.none,
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  AppSpacing.hMd,
-                  Container(
-                    height: 48,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [AppColors.primary, Color(0xFF2B6CB0)],
-                      ),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'AI Concierge',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12.5,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-*/
               const MySearchBar(),
               AppSpacing.vMd,
 
-              // ========= Chips Row =========
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -351,7 +272,16 @@ class _HomeTabState extends State<_HomeTab> {
                       child: CategoryChip(
                         text: categories[i],
                         selected: state.selectedCategoryIndex == i,
-                        onTap: () => bloc.add(HomeCategorySelected(i)),
+                        onTap: () {
+                          bloc.add(HomeCategorySelected(i));
+                          if (i == 0) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => MapPage.withBloc(),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     );
                   }),
@@ -360,7 +290,6 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vLg,
 
-              // ========= For You =========
               const Text('For You', style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
 
@@ -369,44 +298,39 @@ class _HomeTabState extends State<_HomeTab> {
                 child: featuredCount == 0
                     ? const Center(child: Text('No spaces yet'))
                     : Listener(
-                        onPointerDown: (_) {
-                          // ✅ أول ما يلمس المستخدم -> وقف التحريك
-                          _resumeTimer?.cancel();
-                          _stopAutoSlide();
-                        },
-                        onPointerUp: (_) {
-                          // ✅ لما يترك -> رجع التحريك بعد ثانيتين
-                          _scheduleResumeAutoSlide();
-                        },
-                        onPointerCancel: (_) {
-                          _scheduleResumeAutoSlide();
-                        },
-                        child: PageView.builder(
-                          controller: _pageController,
-                          itemCount: featuredCount,
-                          onPageChanged: (i) =>
-                              bloc.add(HomeFeaturedPageChanged(i)),
-                          itemBuilder: (context, index) {
-                            final space = state.featuredSpaces[index];
-                            return FeaturedSpaceCard(
-                              // ✅ هلا asset، لاحقاً API:
-                              // imageUrl: space.imageUrl,
-                              imageAsset: space.imageAsset ?? AppAssets.home,
-                              title: space.title,
-                              ratingText: space.rating.toStringAsFixed(1),
-                              subtitle:
-                                  '${space.locationText} • ${space.tags.join(" • ")}',
-                              onViewTap: () =>
-                                  _openSpaceDetails(context, space.id),
-                            );
-                          },
-                        ),
-                      ),
+                  onPointerDown: (_) {
+                    _resumeTimer?.cancel();
+                    _stopAutoSlide();
+                  },
+                  onPointerUp: (_) {
+                    _scheduleResumeAutoSlide();
+                  },
+                  onPointerCancel: (_) {
+                    _scheduleResumeAutoSlide();
+                  },
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: featuredCount,
+                    onPageChanged: (i) =>
+                        bloc.add(HomeFeaturedPageChanged(i)),
+                    itemBuilder: (context, index) {
+                      final space = state.featuredSpaces[index];
+
+                      return FeaturedSpaceCard(
+                        imageAsset: space.imageAsset,
+                        title: space.name,
+                        ratingText: space.ratingText,
+                        subtitle: space.subtitleLine,
+                        onViewTap: () =>
+                            _openSpaceDetails(context, space.id),
+                      );
+                    },
+                  ),
+                ),
               ),
 
               AppSpacing.vSm,
 
-              // ========= Dots =========
               if (featuredCount > 1)
                 Center(
                   child: Row(
@@ -431,7 +355,6 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vLg,
 
-              // ========= Insights =========
               const Text('Insights', style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
 
@@ -451,9 +374,7 @@ class _HomeTabState extends State<_HomeTab> {
                   itemBuilder: (context, index) {
                     final item = state.insights[index];
                     return InsightTile(
-                      // ✅ هلا asset، لاحقاً API:
-                      // imageUrl: item.imageUrl,
-                      imageAsset: item.imageAsset ?? AppAssets.home,
+                      imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
                       title: item.title,
                       subtitle: item.subtitle,
                       onTap: () => _openInsightDetails(context, item),

@@ -1,159 +1,75 @@
 import 'package:equatable/equatable.dart';
 import '../domain/entities/home_featured_space_entity.dart';
-
-class FeaturedSpace extends Equatable {
-  final String id;
-  final String title;
-  final double rating;
-  final String locationText;
-  final List<String> tags;
-  final String? imageAsset;
-  final String? imageUrl; // API-ready
-
-  const FeaturedSpace({
-    required this.id,
-    required this.title,
-    required this.rating,
-    required this.locationText,
-    required this.tags,
-    this.imageAsset,
-    this.imageUrl,
-  });
-
-  /// ✅ API READY (كومنت)
-  // factory FeaturedSpace.fromJson(Map<String, dynamic> json) => FeaturedSpace(
-  //   id: json['id'].toString(),
-  //   title: json['title'] ?? '',
-  //   rating: (json['rating'] ?? 0).toDouble(),
-  //   locationText: json['locationText'] ?? '',
-  //   tags: List<String>.from(json['tags'] ?? []),
-  //   imageUrl: json['imageUrl'],
-  // );
-
-  @override
-  List<Object?> get props => [
-    id,
-    title,
-    rating,
-    locationText,
-    tags,
-    imageAsset,
-    imageUrl,
-  ];
-}
-
-class InsightItem extends Equatable {
-  final String id;
-  final String title;
-  final String subtitle;
-  final String? imageAsset;
-  final String? imageUrl; // API-ready
-
-  const InsightItem({
-    required this.id,
-    required this.title,
-    required this.subtitle,
-    this.imageAsset,
-    this.imageUrl,
-  });
-
-  /// ✅ API READY (كومنت)
-  // factory InsightItem.fromJson(Map<String, dynamic> json) => InsightItem(
-  //   id: json['id'].toString(),
-  //   title: json['title'] ?? '',
-  //   subtitle: json['subtitle'] ?? '',
-  //   imageUrl: json['imageUrl'],
-  // );
-
-  @override
-  List<Object?> get props => [id, title, subtitle, imageAsset, imageUrl];
-}
-
-enum HomeStatus { initial, loading, ready, failure }
+import '../domain/entities/insight_item.dart';
 
 class HomeState extends Equatable {
   final int bottomTabIndex;
 
-  final int selectedCategoryIndex;
-  final String searchQuery;
+  final bool isLoading;
+  final String? error;
 
+  final int selectedCategoryIndex;
+
+  final List<HomeFeaturedSpaceEntity> featuredSpaces;
   final int featuredIndex;
-  final List<FeaturedSpace> featuredSpaces;
 
   final List<InsightItem> insights;
 
   final int unreadNotifications;
-  final HomeStatus status;
-  final String? errorMessage;
-  final List<HomeFeaturedSpaceEntity> forYou;
 
   const HomeState({
-    required this.status,
-    required this.errorMessage,
-    required this.forYou,
     required this.bottomTabIndex,
+    required this.isLoading,
+    required this.error,
     required this.selectedCategoryIndex,
-    required this.searchQuery,
-    required this.featuredIndex,
     required this.featuredSpaces,
+    required this.featuredIndex,
     required this.insights,
     required this.unreadNotifications,
   });
 
   factory HomeState.initial() => const HomeState(
     bottomTabIndex: 0,
+    isLoading: true,
+    error: null,
     selectedCategoryIndex: 0,
-    searchQuery: '',
-    featuredIndex: 0,
     featuredSpaces: [],
+    featuredIndex: 0,
     insights: [],
-    unreadNotifications: 2,
-    status: HomeStatus.initial,
-    errorMessage: null,
-    forYou: [],
+    unreadNotifications: 1,
   );
 
   HomeState copyWith({
-    HomeStatus? status,
-    String? errorMessage,
-    List<HomeFeaturedSpaceEntity>? forYou,
-    bool clearError = false,
     int? bottomTabIndex,
+    bool? isLoading,
+    String? error,
     int? selectedCategoryIndex,
-    String? searchQuery,
+    List<HomeFeaturedSpaceEntity>? featuredSpaces,
     int? featuredIndex,
-    List<FeaturedSpace>? featuredSpaces,
     List<InsightItem>? insights,
     int? unreadNotifications,
   }) {
     return HomeState(
       bottomTabIndex: bottomTabIndex ?? this.bottomTabIndex,
-      selectedCategoryIndex:
-          selectedCategoryIndex ?? this.selectedCategoryIndex,
-      searchQuery: searchQuery ?? this.searchQuery,
-      featuredIndex: featuredIndex ?? this.featuredIndex,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+      selectedCategoryIndex: selectedCategoryIndex ?? this.selectedCategoryIndex,
       featuredSpaces: featuredSpaces ?? this.featuredSpaces,
+      featuredIndex: featuredIndex ?? this.featuredIndex,
       insights: insights ?? this.insights,
       unreadNotifications: unreadNotifications ?? this.unreadNotifications,
-      status: status ?? this.status,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      forYou: forYou ?? this.forYou,
     );
   }
 
   @override
   List<Object?> get props => [
-    status,
-    errorMessage,
-    forYou,
     bottomTabIndex,
+    isLoading,
+    error,
     selectedCategoryIndex,
-    searchQuery,
-    featuredIndex,
     featuredSpaces,
+    featuredIndex,
     insights,
     unreadNotifications,
   ];
-
-
 }

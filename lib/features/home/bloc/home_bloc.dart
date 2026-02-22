@@ -1,134 +1,103 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../constants/app_assets.dart';
+import '../domain/entities/home_featured_space_entity.dart';
+import '../domain/entities/insight_item.dart';
+import '../domain/repos/home_repo.dart';
 import 'home_event.dart';
 import 'home_state.dart';
-import '../domain/repos/home_repo.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final HomeRepo repo;
+
+  // نخزن الأصل عشان البحث ما يضيع الداتا
+  List<HomeFeaturedSpaceEntity> _allFeatured = const [];
+
   HomeBloc({required this.repo}) : super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
-    on<HomeBottomTabChanged>(_onTabChanged);
+    on<HomeBottomTabChanged>(_onBottomTabChanged);
     on<HomeCategorySelected>(_onCategorySelected);
-    on<HomeSearchChanged>(_onSearchChanged);
-    on<HomeFeaturedPageChanged>(_onFeaturedChanged);
     on<HomeNotificationPressed>(_onNotificationPressed);
+    on<HomeSearchChanged>(_onSearchChanged);
+    on<HomeFeaturedPageChanged>(_onFeaturedPageChanged);
   }
 
-  /// ✅ تحميل Dummy data للهوم (جاهزة تتبدل بالـ API لاحقًا)
   Future<void> _onStarted(HomeStarted event, Emitter<HomeState> emit) async {
-    emit(state.copyWith(status: HomeStatus.loading, clearError: true));
-    // Dummy
-    final featured = <FeaturedSpace>[
-      const FeaturedSpace(
-        id: 'space_1',
-        title: 'The WorkHub Space',
-        rating: 4.8,
-        locationText: 'Amman',
-        tags: ['Quiet', 'Fast Wi-Fi'],
-        imageAsset: AppAssets.home, // بدلها بالصور تبعتك لو عندك
-      ),
-      const FeaturedSpace(
-        id: 'space_2',
-        title: 'Cozy Study Corner',
-        rating: 4.6,
-        locationText: 'Irbid',
-        tags: ['Budget', 'Study'],
-        imageAsset: AppAssets.home,
-      ),
-      const FeaturedSpace(
-        id: 'space_3',
-        title: 'Private Office Pro',
-        rating: 4.9,
-        locationText: 'Zarqa',
-        tags: ['Office', 'Meetings'],
-        imageAsset: AppAssets.home,
-      ),
-    ];
-    final insights = <InsightItem>[
-      const InsightItem(
-        id: 'ins_1',
-        title: 'Best for Study',
-        subtitle: 'Quiet • Strong Internet',
-        imageAsset: AppAssets.home,
-      ),
-      const InsightItem(
-        id: 'ins_2',
-        title: 'Weekly saves more',
-        subtitle: 'Save up to 25%',
-        imageAsset: AppAssets.home,
-      ),
-      const InsightItem(
-        id: 'ins_3',
-        title: 'Top rated nearby',
-        subtitle: '4.8+ average',
-        imageAsset: AppAssets.home,
-      ),
-      const InsightItem(
-        id: 'ins_4',
-        title: 'Private Offices',
-        subtitle: 'Focus & calls',
-        imageAsset: AppAssets.home,
-      ),
-    ];
-    emit(
-      state.copyWith(
-        featuredSpaces: featured,
-        insights: insights,
-        featuredIndex: 0,
-      ),
-    );
-
-    // ✅ API READY (كومنت)
-    // final featured = await homeRepo.fetchFeaturedSpaces();
-    // final insights = await homeRepo.fetchInsights();
-    // emit(state.copyWith(featuredSpaces: featured, insights: insights, featuredIndex: 0));
+    emit(state.copyWith(isLoading: true, error: null));
     try {
-      final forYou = await repo.fetchForYou();
-      emit(state.copyWith(status: HomeStatus.ready, forYou: forYou, clearError: true));
+      final featured = await repo.fetchForYou();
+      _allFeatured = featured;
+
+      emit(state.copyWith(
+        isLoading: false,
+        featuredSpaces: featured,
+        featuredIndex: 0,
+        insights: _buildDummyInsights(),
+        unreadNotifications: state.unreadNotifications, // خليها زي ما تحبي
+      ));
     } catch (e) {
-      emit(state.copyWith(status: HomeStatus.failure, errorMessage: e.toString()));
+      emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }
 
-  /// ✅ تغيير bottom tab
-  void _onTabChanged(HomeBottomTabChanged event, Emitter<HomeState> emit) {
+  void _onBottomTabChanged(HomeBottomTabChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(bottomTabIndex: event.index));
   }
 
-  /// ✅ اختيار category
-  void _onCategorySelected(
-    HomeCategorySelected event,
-    Emitter<HomeState> emit,
-  ) {
+  void _onCategorySelected(HomeCategorySelected event, Emitter<HomeState> emit) {
+    // حاليًا: UI بس + Navigate عندك للـ Map لما i==0 من الصفحة نفسها
     emit(state.copyWith(selectedCategoryIndex: event.index));
   }
 
-  /// ✅ البحث
-  void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {
-    emit(state.copyWith(searchQuery: event.query));
-  }
-
-  /// ✅ تغيير صفحة السلايدر
-  void _onFeaturedChanged(
-    HomeFeaturedPageChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(featuredIndex: event.index));
-  }
-
-  /// ✅ ضغط جرس الإشعارات (هلا dummy)
-  void _onNotificationPressed(
-    HomeNotificationPressed event,
-    Emitter<HomeState> emit,
-  ) {
-    // مثال: تصفير unread
+  void _onNotificationPressed(HomeNotificationPressed event, Emitter<HomeState> emit) {
+    // مثال: تصفير النقطة
     emit(state.copyWith(unreadNotifications: 0));
   }
 
-  final HomeRepo repo;
+  void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {
+    final q = event.query.trim().toLowerCase();
+    if (q.isEmpty) {
+      emit(state.copyWith(featuredSpaces: _allFeatured, featuredIndex: 0));
+      return;
+    }
 
+    final filtered = _allFeatured.where((s) {
+      return s.name.toLowerCase().contains(q) ||
+          s.subtitleLine.toLowerCase().contains(q);
+    }).toList();
 
+    emit(state.copyWith(featuredSpaces: filtered, featuredIndex: 0));
+  }
 
+  void _onFeaturedPageChanged(HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
+    emit(state.copyWith(featuredIndex: event.index));
+  }
 
+  List<InsightItem> _buildDummyInsights() {
+    return const [
+      InsightItem(
+        id: 'ins_1',
+        title: 'How to pick the best space?',
+        subtitle: 'Tips for choosing the right vibe.',
+        imageAsset: 'assets/images/home.png',
+      ),
+      InsightItem(
+        id: 'ins_2',
+        title: 'Boost your productivity',
+        subtitle: 'Small habits that work.',
+        imageAsset: 'assets/images/home.png',
+      ),
+      InsightItem(
+        id: 'ins_3',
+        title: 'Quiet vs social spaces',
+        subtitle: 'Which one fits your day?',
+        imageAsset: 'assets/images/home.png',
+      ),
+      InsightItem(
+        id: 'ins_4',
+        title: 'Meeting-ready checklist',
+        subtitle: 'Don’t miss essentials.',
+        imageAsset: 'assets/images/home.png',
+      ),
+    ];
+  }
 }
