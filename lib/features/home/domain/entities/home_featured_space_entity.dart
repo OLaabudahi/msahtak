@@ -11,6 +11,13 @@ class HomeFeaturedSpaceEntity extends Equatable {
   final int pricePerDay;
   final String currency;
 
+  /// ✅ جديد: لدعم الخريطة والـ Nearly (اختياري)
+  final double? lat;
+  final double? lng;
+
+  /// ✅ جديد: مسافة تقريبية (اختياري) – API-ready
+  final double? distanceKm;
+
   const HomeFeaturedSpaceEntity({
     required this.id,
     required this.name,
@@ -19,10 +26,24 @@ class HomeFeaturedSpaceEntity extends Equatable {
     required this.rating,
     required this.pricePerDay,
     required this.currency,
+    this.lat,
+    this.lng,
+    this.distanceKm,
   });
 
   String get ratingText => rating.toStringAsFixed(1);
 
   @override
-  List<Object?> get props => [id, name, imageAsset, subtitleLine, rating, pricePerDay, currency];
+  List<Object?> get props => [
+    id,
+    name,
+    imageAsset,
+    subtitleLine,
+    rating,
+    pricePerDay,
+    currency,
+    lat,
+    lng,
+    distanceKm,
+  ];
 }

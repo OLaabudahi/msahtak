@@ -26,6 +26,7 @@ import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  @override
   /// ✅ هذه الدالة عشان تفتح الصفحة ومعها HomeBloc جاهز
   static Widget withBloc() {
     return BlocProvider(
