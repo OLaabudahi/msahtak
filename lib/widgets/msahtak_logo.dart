@@ -90,7 +90,9 @@ class MsahtakMPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(size.width * 0.15, size.height * 0.95),
       size.width * 0.08,
-      Paint()..color = const Color(0xFF003B73)..style = PaintingStyle.fill,
+      Paint()
+        ..color = const Color(0xFF003B73)
+        ..style = PaintingStyle.fill,
     );
     path.moveTo(size.width * 0.15, size.height * 0.95);
     path.lineTo(size.width * 0.15, size.height * 0.5);
@@ -112,7 +114,9 @@ class MsahtakMPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(size.width * 0.85, size.height * 0.95),
       size.width * 0.08,
-      Paint()..color = const Color(0xFF003B73)..style = PaintingStyle.fill,
+      Paint()
+        ..color = const Color(0xFF003B73)
+        ..style = PaintingStyle.fill,
     );
 
     canvas.drawPath(path, paint);

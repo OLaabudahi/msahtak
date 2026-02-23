@@ -12,8 +12,8 @@ class NearbySpaceCard extends StatelessWidget {
     required this.onView,
   });
 
-  static const _primary = AppColors.primary;
-  static const _secondary = AppColors.dotInactive;
+  static const _primary = AppColors.btnPrimary;
+  static const _secondary = AppColors.btnSecondary;
 
   @override
   Widget build(BuildContext context) {

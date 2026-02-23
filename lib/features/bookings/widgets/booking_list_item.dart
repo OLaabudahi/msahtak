@@ -21,7 +21,7 @@ class BookingListItem extends StatelessWidget {
   /// ✅ فقط للـ Completed
   final VoidCallback? onRebook;
 
-  static const _blue = AppColors.secondary;
+  static const _blue = AppColors.btnSecondary;
 
   bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming';
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
@@ -270,7 +270,7 @@ class _TwoButtonsBar extends StatelessWidget {
   final bool rightFilled;
   final VoidCallback onRight;
 
-  static const _blue = AppColors.secondary;
+  static const _blue = AppColors.btnSecondary;
 
   @override
   Widget build(BuildContext context) {

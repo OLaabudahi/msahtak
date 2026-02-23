@@ -36,6 +36,10 @@ class BookingAddOnSwitchTile extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
+            activeColor: AppColors.switchThumb,
+            activeTrackColor: AppColors.switchActiveTrack,
+            inactiveThumbColor: AppColors.switchThumb,
+            inactiveTrackColor: AppColors.switchInactiveTrack,
           ),
         ],
       ),

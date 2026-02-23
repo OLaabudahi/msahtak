@@ -111,6 +111,29 @@ class AppColors {
 
   static const Color neutralBadgeBg   = Color(0xFFF3F3F3);
 
+  // ── Buttons ───────────────────────────────────────────────────────────────
+  /// Primary CTA button background — orange (e.g. "Continue", "Save", "Activate")
+  static const Color btnPrimary = Color(0xFFF5A623);
+
+  /// Text color on primary button
+  static const Color btnPrimaryText = Color(0xFF000000);
+
+  /// Secondary action button background — blue (e.g. "View", "Deal", "Book")
+  static const Color btnSecondary = Color(0xFF5B8FB9);
+
+  /// Text color on secondary button
+  static const Color btnSecondaryText = Color(0xFFFFFFFF);
+
+  // ── Switch / Toggle ───────────────────────────────────────────────────────
+  /// Active track color (orange)
+  static const Color switchActiveTrack = Color(0xFFF5A623);
+
+  /// Thumb color for both active and inactive states (white)
+  static const Color switchThumb = Color(0xFFFFFFFF);
+
+  /// Inactive track color (grey)
+  static const Color switchInactiveTrack = Color(0xFFE0E0E0);
+
   // ── Misc ─────────────────────────────────────────────────────────────────
   /// Black card background for AI / weekly-plan cards
   static const Color planCardBg = Color(0xFF000000);
