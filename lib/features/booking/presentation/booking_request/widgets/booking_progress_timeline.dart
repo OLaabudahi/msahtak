@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -16,7 +17,7 @@ class BookingProgressTimeline extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Column(
@@ -108,7 +109,7 @@ class _TimelineRow extends StatelessWidget {
               Container(
                 width: 2,
                 height: 34,
-                color: const Color(0xFFEAEAEA),
+                color: AppColors.inputBorder,
               ),
           ],
         ),
@@ -119,7 +120,7 @@ class _TimelineRow extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
               const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(color: Colors.grey[700], fontSize: 12)),
+              Text(subtitle, style: TextStyle(color: AppColors.textDark, fontSize: 12)),
               const SizedBox(height: 14),
             ]),
           ),
@@ -142,11 +143,11 @@ class _TimelineRow extends StatelessWidget {
   Color _colorFor(_StepState s) {
     switch (s) {
       case _StepState.done:
-        return const Color(0xFF2E7D32);
+        return AppColors.approvedText;
       case _StepState.active:
-        return const Color(0xFFF5A623);
+        return AppColors.amber;
       case _StepState.todo:
-        return const Color(0xFF9E9E9E);
+        return AppColors.textMuted;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import '../domain/entities/concierge_message.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -10,7 +11,7 @@ class ChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final isUser = message.sender == ConciergeSender.user;
 
-    final bg = isUser ? const Color(0xFFF5A623) : const Color(0xFF6E8FB5);
+    final bg = isUser ? AppColors.amber : AppColors.secondary;
     final fg = isUser ? Colors.black : Colors.white;
 
     return Align(

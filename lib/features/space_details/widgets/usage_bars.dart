@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class UsageBars extends StatelessWidget {
   final List<Map<String, dynamic>> items; // {label, percent}
@@ -44,7 +45,7 @@ class UsageBars extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
                 child: Container(
                   height: 10,
-                  color: const Color(0xFFE9EFF6), // ✅ الرمادي الفاتح مثل الصورة
+                  color: Color(0xFFE9EFF6), // ✅ الرمادي الفاتح مثل الصورة
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: FractionallySizedBox(
@@ -55,7 +56,7 @@ class UsageBars extends StatelessWidget {
                           gradient: LinearGradient(
                             colors: [
                               Color(0xFF2B6CB0), // ✅ أزرق
-                              Color(0xFFF8B324), // ✅ أصفر
+                              AppColors.amber, // ✅ أصفر
                             ],
                           ),
                         ),

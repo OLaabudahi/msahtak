@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../bloc/ai_concierge_bloc.dart';
@@ -58,7 +59,7 @@ class AiConciergePage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       state.stepMeta,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../booking_feature_routes.dart';
@@ -82,7 +83,7 @@ class PaymentPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: state.canPay ? () => context.read<PaymentBloc>().add(PayNowPressed(requestId)) : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF5A623),
+                        backgroundColor: AppColors.amber,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                       ),
                       child: state.uiStatus == PaymentUiStatus.paying

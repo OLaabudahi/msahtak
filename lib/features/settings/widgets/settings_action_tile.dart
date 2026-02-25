@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class SettingsActionTile extends StatelessWidget {
   final IconData? icon; // ✅ صار اختياري
@@ -20,16 +21,16 @@ class SettingsActionTile extends StatelessWidget {
     this.isLast = false,
   });
 
-  static const _chevronBlue = Color(0xFF5B8FB9);
+  static const _chevronBlue = AppColors.secondary;
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = isDestructive ? const Color(0xFFDC2626) : Colors.black;
-    final subColor = Colors.grey[600];
+    final titleColor = isDestructive ? AppColors.danger : Colors.black;
+    final subColor = AppColors.textSecondary;
 
     final defaultTrailing = Icon(
       Icons.chevron_right,
-      color: isDestructive ? const Color(0xFFDC2626) : _chevronBlue,
+      color: isDestructive ? AppColors.danger : _chevronBlue,
       size: 22,
     );
 

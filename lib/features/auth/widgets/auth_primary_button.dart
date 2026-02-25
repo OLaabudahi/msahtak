@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class AuthPrimaryButton extends StatelessWidget {
   const AuthPrimaryButton({
@@ -14,7 +15,7 @@ class AuthPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = const Color(0xFFF5A623);
+    final bg = AppColors.amber;
 
     return SizedBox(
       height: 48,

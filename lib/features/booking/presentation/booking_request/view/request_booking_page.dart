@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../booking_feature_routes.dart';
@@ -112,7 +113,7 @@ class RequestBookingPage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'Total: ${state.durationValue} ${state.durationUnit.name}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[700]),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textDark),
                     ),
                     const SizedBox(height: 10),
 
@@ -121,7 +122,7 @@ class RequestBookingPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF4E8),
+                        color: AppColors.warningBg,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -200,7 +201,7 @@ class RequestBookingPage extends StatelessWidget {
                             ? () => context.read<BookingRequestBloc>().add(const SubmitBookingRequestPressed())
                             : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF5A623),
+                          backgroundColor: AppColors.amber,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                         ),
                         child: state.uiStatus == BookingRequestUiStatus.submitting
@@ -272,7 +273,7 @@ class _DropdownTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFEAEAEA)),
+          border: Border.all(color: AppColors.inputBorder),
         ),
         child: Row(
           children: [
@@ -280,7 +281,7 @@ class _DropdownTile extends StatelessWidget {
               child: Text(
                 value ?? hint,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: value == null ? Colors.grey[600] : Colors.black87,
+                  color: value == null ? AppColors.textSecondary : Colors.black87,
                 ),
               ),
             ),

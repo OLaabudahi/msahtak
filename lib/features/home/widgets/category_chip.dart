@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 
 class CategoryChip extends StatelessWidget {
@@ -22,7 +23,7 @@ class CategoryChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF4E7FB6) : const Color(0xFF4E7FB6),
+          color: selected ? AppColors.secondary : AppColors.secondary,
           borderRadius: BorderRadius.circular(999),
           boxShadow: [
             BoxShadow(

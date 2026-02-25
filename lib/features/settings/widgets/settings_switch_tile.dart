@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class SettingsSwitchTile extends StatelessWidget {
   final IconData icon;
@@ -20,7 +21,7 @@ class SettingsSwitchTile extends StatelessWidget {
     this.isLast = false,
   });
 
-  static const _accent = Color(0xFF5B8FB9);
+  static const _accent = AppColors.secondary;
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +48,19 @@ class SettingsSwitchTile extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
               ),
-              Switch(value: value, onChanged: onChanged),
+              Switch(
+                value: value,
+                onChanged: onChanged,
+                activeColor: AppColors.switchThumb,
+                activeTrackColor: AppColors.switchActiveTrack,
+                inactiveThumbColor: AppColors.switchThumb,
+                inactiveTrackColor: AppColors.switchInactiveTrack,
+              ),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import '../domain/entities/nearby_space_entity.dart';
 
 class NearbySpaceBottomCard extends StatelessWidget {
@@ -11,8 +12,8 @@ class NearbySpaceBottomCard extends StatelessWidget {
     required this.onView,
   });
 
-  static const _primary = Color(0xFFFBAD20);
-  static const _secondary = Color(0xFF5682AF);
+  static const _primary = AppColors.btnPrimary;
+  static const _secondary = AppColors.btnSecondary;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,11 @@ class NearbySpaceBottomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
             blurRadius: 18,
-            offset: Offset(0, 8),
-            color: Color(0x22000000),
+            offset: const Offset(0, 8),
+            color: AppColors.shadowLight,
           ),
         ],
       ),
@@ -40,7 +41,7 @@ class NearbySpaceBottomCard extends StatelessWidget {
               space.imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
-                color: const Color(0xFFF3F3F3),
+                color: AppColors.neutralBadgeBg,
                 alignment: Alignment.center,
                 child: const Icon(Icons.image_not_supported_outlined),
               ),

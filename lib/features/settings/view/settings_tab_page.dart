@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../theme/app_text_styles.dart';
+import '../../notifications/view/notification_settings_page.dart';
 import '../bloc/settings_bloc.dart';
+import 'about_page.dart';
+import 'help_support_page.dart';
+import 'location_settings_page.dart';
+import 'workspace_preferences_page.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
 import '../widgets/settings_action_tile.dart';
@@ -18,8 +24,8 @@ class SettingsTabPage extends StatelessWidget {
     );
   }
 
-  static const _cardBg = Color(0xFFEAF0F6);
-  static const _chevronBlue = Color(0xFF5B8FB9);
+  static const _cardBg = AppColors.settingCardBg;
+  static const _chevronBlue = AppColors.secondary;
 
   Widget _card(List<Widget> children) {
     return Container(
@@ -93,9 +99,11 @@ class SettingsTabPage extends StatelessWidget {
                       color: _chevronBlue,
                       size: 22,
                     ),
-                    onTap: () {
-                      // TODO: open workspace preferences page (feature)
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const WorkspacePreferencesPage(),
+                      ),
+                    ),
                   ),
                   SettingsActionTile(
                     icon: null,
@@ -106,9 +114,11 @@ class SettingsTabPage extends StatelessWidget {
                       color: _chevronBlue,
                       size: 22,
                     ),
-                    onTap: () {
-                      // TODO: open location settings page (feature)
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const LocationSettingsPage(),
+                      ),
+                    ),
                   ),
                   SettingsActionTile(
                     icon: null,
@@ -120,9 +130,11 @@ class SettingsTabPage extends StatelessWidget {
                       size: 22,
                     ),
                     isLast: true,
-                    onTap: () {
-                      // TODO: open notifications settings page (feature)
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => NotificationSettingsPage.withBloc(),
+                      ),
+                    ),
                   ),
                 ]),
 
@@ -139,9 +151,11 @@ class SettingsTabPage extends StatelessWidget {
                       color: _chevronBlue,
                       size: 22,
                     ),
-                    onTap: () {
-                      // TODO: open help & support page (feature)
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const HelpSupportPage(),
+                      ),
+                    ),
                   ),
                   SettingsActionTile(
                     icon: null,
@@ -153,9 +167,11 @@ class SettingsTabPage extends StatelessWidget {
                       size: 22,
                     ),
                     isLast: true,
-                    onTap: () {
-                      // TODO: open about page (feature)
-                    },
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const AboutPage(),
+                      ),
+                    ),
                   ),
                 ]),
 

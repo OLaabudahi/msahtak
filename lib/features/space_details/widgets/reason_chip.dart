@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class ReasonChip extends StatelessWidget {
   final String text;
@@ -10,7 +11,7 @@ class ReasonChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F6FB),
+        color: AppColors.surface2,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(

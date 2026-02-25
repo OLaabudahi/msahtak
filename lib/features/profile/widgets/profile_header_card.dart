@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 import '../data/models/user_model.dart';
 import 'profile_stat_item.dart';
@@ -16,7 +17,7 @@ class ProfileHeaderCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF5B8FB9).withOpacity(0.1),
+        color: AppColors.secondary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -33,10 +34,10 @@ class ProfileHeaderCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFF5A623),
+                        color: AppColors.amber,
                         width: 3,
                       ),
-                      color: Colors.grey[300],
+                      color: AppColors.borderMedium,
                     ),
                     child: ClipOval(
                       child: avatarAsset != null
@@ -60,7 +61,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       width: 22,
                       height: 22,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFF5A623),
+                        color: AppColors.amber,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -112,7 +113,7 @@ class ProfileHeaderCard extends StatelessWidget {
 
           Text(
             user.email,
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
 
           const SizedBox(height: 1),
@@ -121,7 +122,7 @@ class ProfileHeaderCard extends StatelessWidget {
             const SizedBox(height: 1),
             Text(
               user.phoneNumber!,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
           ],
         ],

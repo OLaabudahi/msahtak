@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 class PaymentMethodTile extends StatelessWidget {
   final String title;
@@ -21,13 +22,13 @@ class PaymentMethodTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: selected ? const Color(0xFFF5A623) : const Color(0xFFEAEAEA)),
+          border: Border.all(color: selected ? AppColors.amber : AppColors.inputBorder),
           color: Colors.white,
         ),
         child: Row(
           children: [
             Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600))),
-            Icon(selected ? Icons.radio_button_checked : Icons.radio_button_off, color: const Color(0xFFF5A623)),
+            Icon(selected ? Icons.radio_button_checked : Icons.radio_button_off, color: AppColors.amber),
           ],
         ),
       ),

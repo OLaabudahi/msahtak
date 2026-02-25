@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class AuthSocialRow extends StatelessWidget {
   const AuthSocialRow({super.key});
@@ -14,8 +15,8 @@ class AuthSocialRow extends StatelessWidget {
           child: Container(
             width: 60,
             height: 60,
-            decoration: const BoxDecoration(
-              color: Color(0xFFD6EAF8),
+            decoration: BoxDecoration(
+              color: AppColors.secondaryTint25,
               shape: BoxShape.circle,
             ),
             child: const Center(
@@ -30,8 +31,8 @@ class AuthSocialRow extends StatelessWidget {
           child: Container(
             width: 60,
             height: 60,
-            decoration: const BoxDecoration(
-              color: Color(0xFFB3E5FC),
+            decoration: BoxDecoration(
+              color: AppColors.secondaryTint25,
               shape: BoxShape.circle,
             ),
             child: const Center(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/payment_summary_entity.dart';
 
@@ -16,7 +17,7 @@ class PaymentBookingSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Column(
@@ -25,13 +26,13 @@ class PaymentBookingSummaryCard extends StatelessWidget {
           const Text('Booking Summary', style: TextStyle(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           if (s == null)
-            Text('—', style: TextStyle(color: Colors.grey[700]))
+            Text('—', style: TextStyle(color: AppColors.textDark))
           else ...[
             ...s.items.map((i) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
-                  Expanded(child: Text(i.label, style: TextStyle(color: Colors.grey[800]))),
+                  Expanded(child: Text(i.label, style: TextStyle(color: AppColors.textDark))),
                   Text('₪${i.amount}', style: const TextStyle(fontWeight: FontWeight.w700)),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class QuickReplyChips extends StatelessWidget {
   final List<String> options;
@@ -22,7 +23,7 @@ class QuickReplyChips extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFF6E8FB5),
+              color: AppColors.secondary,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(

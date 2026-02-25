@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 class BookingOfferDropdown extends StatelessWidget {
   final String? selectedLabel;
@@ -93,7 +94,7 @@ class _DropdownTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFEAEAEA)),
+          border: Border.all(color: AppColors.inputBorder),
         ),
         child: Row(
           children: [
@@ -101,7 +102,7 @@ class _DropdownTile extends StatelessWidget {
               child: Text(
                 value ?? hint,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: value == null ? Colors.grey[600] : Colors.black87,
+                  color: value == null ? AppColors.textSecondary : Colors.black87,
                 ),
               ),
             ),

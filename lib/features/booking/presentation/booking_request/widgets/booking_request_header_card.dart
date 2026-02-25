@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -13,9 +14,9 @@ class BookingRequestHeaderCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFDDE8F3),
+        color: AppColors.settingCardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFBFD2E5)),
+        border: Border.all(color: AppColors.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class BookingRequestHeaderCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'Base price: ₪${space.basePricePerDay} / day',
-            style: TextStyle(color: Colors.grey[700], fontSize: 13),
+            style: TextStyle(color: AppColors.textDark, fontSize: 13),
           ),
         ],
       ),

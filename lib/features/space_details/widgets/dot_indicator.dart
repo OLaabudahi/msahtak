@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class DotIndicator extends StatelessWidget {
   final int count;
@@ -20,7 +21,7 @@ class DotIndicator extends StatelessWidget {
           width: isActive ? 10 : 6,
           height: 6,
           decoration: BoxDecoration(
-            color: isActive ? const Color(0xFF4E7FB6) : const Color(0xFFE6EEF7),
+            color: isActive ? AppColors.secondary : AppColors.surface2,
             borderRadius: BorderRadius.circular(99),
           ),
         );

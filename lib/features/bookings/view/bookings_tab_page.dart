@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../theme/app_text_styles.dart';
@@ -60,12 +61,12 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
       height: 46,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F4F7),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: Colors.grey[500]),
+          Icon(Icons.search, color: AppColors.textMuted),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -84,7 +85,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
               gradient: const LinearGradient(
-                colors: [Color(0xFFF5A623), Color(0xFF5B8FB9)],
+                colors: [AppColors.amber, AppColors.secondary],
               ),
             ),
             alignment: Alignment.center,

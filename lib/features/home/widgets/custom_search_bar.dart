@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
@@ -16,11 +17,7 @@ class CustomSearchBar extends StatelessWidget {
     this.aiButtonWidth = 97,
     this.aiButtonHeight = 38,
     this.aiRightInset = 0,
-    this.aiShadow = const BoxShadow(
-      color: Color(0x33000000), // ظل خفيف
-      blurRadius: 10,
-      offset: Offset(0, 4),
-    ),
+    this.aiShadow,
   });
 
   /// ✅ للتحكم بالنص (search)
@@ -52,7 +49,7 @@ class CustomSearchBar extends StatelessWidget {
   final double aiRightInset;
 
   /// ✅ ظل الزر (خفيف)
-  final BoxShadow aiShadow;
+  final BoxShadow? aiShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +67,7 @@ class CustomSearchBar extends StatelessWidget {
             child: Container(
               width: fieldWidth,
               decoration: BoxDecoration(
-                color: const Color(0xFFEEF3F6),
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(11),
               ),
               alignment: Alignment.center,
@@ -83,7 +80,7 @@ class CustomSearchBar extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: const TextStyle(
-                    color: Color(0xFFA5A5A5),
+                    color: AppColors.textMuted,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -91,7 +88,7 @@ class CustomSearchBar extends StatelessWidget {
                   isDense: true,
                   prefixIcon: const Icon(
                     Icons.search,
-                    color: Color(0xFFA5A5A5),
+                    color: AppColors.textMuted,
                     size: 22,
                   ),
                   prefixIconConstraints: const BoxConstraints(
@@ -134,14 +131,21 @@ class CustomSearchBar extends StatelessWidget {
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                     colors: [
-                      Color(0xFFFBAD20),
-                      Color(0xFFECA92D),
-                      Color(0xFFDAA43C),
-                      Color(0xFF5682AF),
+                      AppColors.primary,
+                      AppColors.amber,
+                      AppColors.amber,
+                      AppColors.dotInactive,
                     ],
                     stops: [0.0, 0.297, 0.467, 1.0],
                   ),
-                  boxShadow: [aiShadow], // ✅ ظل خفيف
+                  boxShadow: [
+                    aiShadow ??
+                        BoxShadow(
+                          color: AppColors.shadowLight,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        )
+                  ], // ✅ ظل خفيف
                 ),
                 alignment: Alignment.center,
                 child: const Text(

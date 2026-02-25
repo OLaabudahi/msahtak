@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 class BookingAddOnSwitchTile extends StatelessWidget {
   final String title;
@@ -20,7 +21,7 @@ class BookingAddOnSwitchTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Row(
@@ -29,12 +30,16 @@ class BookingAddOnSwitchTile extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              Text(subtitle, style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
             ]),
           ),
           Switch(
             value: value,
             onChanged: onChanged,
+            activeColor: AppColors.switchThumb,
+            activeTrackColor: AppColors.switchActiveTrack,
+            inactiveThumbColor: AppColors.switchThumb,
+            inactiveTrackColor: AppColors.switchInactiveTrack,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
   final String selected; // "en" / "ar"
@@ -10,7 +11,7 @@ class LanguageBottomSheet extends StatelessWidget {
     required this.onSelect,
   });
 
-  static const _accent = Color(0xFF5B8FB9);
+  static const _accent = AppColors.secondary;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class _LangRow extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _accent = Color(0xFF5B8FB9);
+  static const _accent = AppColors.secondary;
 
   @override
   Widget build(BuildContext context) {

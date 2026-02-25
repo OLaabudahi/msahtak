@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class ProfileMenuTile extends StatelessWidget {
   final String title;
@@ -34,14 +35,14 @@ class ProfileMenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = isDestructive ? const Color(0xFFE53935) : Colors.black;
+    final titleColor = isDestructive ? AppColors.danger : Colors.black;
     final circleColor = isDestructive
-        ? const Color(0xFFE53935)
-        : const Color(0xFFF5A623);
+        ? AppColors.danger
+        : AppColors.amber;
 
     final trailing = showChevronDown
-        ? Icon(Icons.keyboard_arrow_down, color: Colors.grey[500], size: 22)
-        : Icon(Icons.chevron_right, color: Colors.grey[500], size: 22);
+        ? Icon(Icons.keyboard_arrow_down, color: AppColors.textMuted, size: 22)
+        : Icon(Icons.chevron_right, color: AppColors.textMuted, size: 22);
 
     return Column(
       children: [
@@ -95,7 +96,7 @@ class ProfileMenuTile extends StatelessWidget {
         if (!isLast)
           Divider(
             height: 1,
-            color: Colors.grey[300],
+            color: AppColors.borderMedium,
             indent: 16,
             endIndent: 16,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../theme/app_colors.dart';
 import '../../data/models/space_details_model.dart';
 
 class PoliciesSheet extends StatelessWidget {
@@ -25,7 +26,7 @@ class PoliciesSheet extends StatelessWidget {
             Text(
               policies.subtitle,
               style: const TextStyle(
-                color: Color(0xFF6B7280),
+                color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),

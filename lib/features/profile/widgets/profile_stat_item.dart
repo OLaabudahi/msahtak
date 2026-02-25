@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class ProfileStatItem extends StatelessWidget {
   final String title;
@@ -10,14 +11,14 @@ class ProfileStatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(title, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+        Text(title, style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
         const SizedBox(height: 2),
         Text(
           value,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFFF5A623),
+            color: AppColors.amber,
           ),
         ),
       ],

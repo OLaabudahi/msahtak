@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class ChatInputBar extends StatefulWidget {
   final ValueChanged<String> onSend;
@@ -33,7 +34,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
         decoration: const BoxDecoration(
           color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFEAEAEA))),
+          border: Border(top: BorderSide(color: AppColors.inputBorder)),
         ),
         child: Row(
           children: [
@@ -41,7 +42,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3F6F9),
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(

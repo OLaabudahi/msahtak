@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -33,7 +34,7 @@ class BookingDurationSelector extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFEAEAEA)),
+              border: Border.all(color: AppColors.inputBorder),
               color: Colors.white,
             ),
             child: Row(
@@ -76,7 +77,7 @@ class _UnitDropdown extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: DropdownButtonHideUnderline(
@@ -113,7 +114,7 @@ class _CircleButton extends StatelessWidget {
         width: 36,
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFFF5A623),
+          color: AppColors.amber,
         ),
         child: Icon(icon, color: Colors.black),
       ),

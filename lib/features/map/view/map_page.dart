@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -44,8 +45,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  static const _primary = Color(0xFFFBAD20);
-  static const _secondary = Color(0xFF5682AF);
+  static const _primary = AppColors.primary;
+  static const _secondary = AppColors.dotInactive;
 
   final MapController _mapController = MapController();
   bool _mapReady = false;
@@ -276,11 +277,11 @@ class _MapPageState extends State<MapPage> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(18),
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
                                 blurRadius: 18,
-                                offset: Offset(0, 8),
-                                color: Color(0x22000000),
+                                offset: const Offset(0, 8),
+                                color: AppColors.shadowLight,
                               ),
                             ],
                           ),
@@ -314,13 +315,13 @@ class _TopBar extends StatelessWidget {
     return Container(
       height: 70,
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            offset: Offset(0, 2),
-            color: Color(0x11000000),
+            offset: const Offset(0, 2),
+            color: AppColors.shadowLight,
           ),
         ],
       ),
@@ -367,7 +368,7 @@ class _RadiusChips extends StatelessWidget {
             color: isSelected ? secondary : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isSelected ? secondary : const Color(0xFFE7E7E7),
+              color: isSelected ? secondary : AppColors.borderLight,
             ),
           ),
           child: Text(
@@ -417,7 +418,7 @@ class _ErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: BorderRadius.circular(14),
-      color: const Color(0xFFFFF3F3),
+      color: AppColors.rejectedBg,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(

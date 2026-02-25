@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app_start/bloc/app_start_bloc.dart';
@@ -102,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF5B8FB9),
+                                color: AppColors.secondary,
                               ),
                             ),
                           );
@@ -160,7 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     );
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF5A623),
+                              backgroundColor: AppColors.amber,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25),
                               ),
@@ -207,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: Text(
                               context.t('login'),
                               style: const TextStyle(
-                                color: Color(0xFFF5A623),
+                                color: AppColors.amber,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                               ),

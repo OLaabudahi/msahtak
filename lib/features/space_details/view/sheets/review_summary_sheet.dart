@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../theme/app_colors.dart';
 import '../../data/models/space_details_model.dart';
 
 class ReviewSummarySheet extends StatelessWidget {
@@ -31,7 +32,7 @@ class ReviewSummarySheet extends StatelessWidget {
             Text(
               summary.meta,
               style: const TextStyle(
-                color: Color(0xFF6B7280),
+                color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -46,7 +47,7 @@ class ReviewSummarySheet extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF7ED),
+                color: AppColors.warningBg,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(
@@ -75,7 +76,7 @@ class ReviewSummarySheet extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFEDED),
+                color: AppColors.rejectedBg,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(
@@ -104,7 +105,7 @@ class ReviewSummarySheet extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F6FB),
+                color: AppColors.surface2,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(

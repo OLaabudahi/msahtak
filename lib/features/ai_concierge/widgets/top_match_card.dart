@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import '../domain/entities/concierge_top_match.dart';
 
 class TopMatchCard extends StatelessWidget {
@@ -23,21 +24,21 @@ class TopMatchCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFEAEAEA)),
+          border: Border.all(color: AppColors.inputBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(data.title, style: const TextStyle(fontWeight: FontWeight.w900)),
             const SizedBox(height: 6),
-            Text(data.whyLine, style: TextStyle(color: Colors.grey[700], fontSize: 12)),
+            Text(data.whyLine, style: TextStyle(color: AppColors.textDark, fontSize: 12)),
             const SizedBox(height: 10),
 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF6E8FB5),
+                color: AppColors.secondary,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Column(
@@ -58,7 +59,7 @@ class TopMatchCard extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onContinue,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF5A623),
+                  backgroundColor: AppColors.amber,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                 ),
                 child: const Text('Continue to Booking', style: TextStyle(fontWeight: FontWeight.w900)),

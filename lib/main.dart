@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:masahtak_app/features/app_start/data/repos/app_start_repo_dummy.dart';
 
 import 'app/app_root.dart';
+import 'theme/app_colors.dart';
 import 'features/app_start/bloc/app_start_event.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/language/bloc/language_bloc.dart';
@@ -54,6 +55,37 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           locale: Locale(langState.code),
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            filledButtonTheme: FilledButtonThemeData(
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.btnPrimary,
+                foregroundColor: AppColors.btnPrimaryText,
+                minimumSize: const Size(double.infinity, 52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14)),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.btnPrimary,
+                foregroundColor: AppColors.btnPrimaryText,
+                minimumSize: const Size(double.infinity, 52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(14)),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
 
           supportedLocales: const [Locale('en'), Locale('ar')],
           localizationsDelegates: const [

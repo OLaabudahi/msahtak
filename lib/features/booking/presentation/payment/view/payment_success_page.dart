@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 class PaymentSuccessArgs {
   final String bookingId;
@@ -41,13 +42,13 @@ class PaymentSuccessPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEFF7EE),
+                  color: AppColors.approvedBg,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFBFE2BE)),
+                  border: Border.all(color: AppColors.approvedBorder),
                 ),
                 child: Row(
                   children: const [
-                    Icon(Icons.check_circle, color: Color(0xFF2E7D32), size: 28),
+                    Icon(Icons.check_circle, color: AppColors.approvedText, size: 28),
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -77,7 +78,7 @@ class PaymentSuccessPage extends StatelessWidget {
                     Navigator.of(context).popUntil((r) => r.isFirst);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF5A623),
+                    backgroundColor: AppColors.amber,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                   ),
                   child: const Text('Back to Home', style: TextStyle(fontWeight: FontWeight.w700)),
@@ -112,7 +113,7 @@ class _InfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Column(
@@ -150,7 +151,7 @@ class _InfoCard extends StatelessWidget {
               label: const Text('Download invoice'),
               style: OutlinedButton.styleFrom(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                side: const BorderSide(color: Color(0xFFEAEAEA)),
+                side: const BorderSide(color: AppColors.inputBorder),
               ),
             ),
           ),
@@ -163,7 +164,7 @@ class _InfoCard extends StatelessWidget {
   static Widget _row(String k, String v) {
     return Row(
       children: [
-        Expanded(child: Text(k, style: TextStyle(color: Colors.grey[700]))),
+        Expanded(child: Text(k, style: TextStyle(color: AppColors.textDark))),
         Text(v, style: const TextStyle(fontWeight: FontWeight.w700)),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/i18n/app_i18n.dart';
@@ -37,7 +38,7 @@ class AuthLanguageHeader extends StatelessWidget {
                     return const LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
-                      colors: [Color(0xFF4A90E2), Color(0xFFF5A623)],
+                      colors: [AppColors.secondary, AppColors.amber],
                       stops: [0.0, 1.0],
                     ).createShader(bounds);
                   },
@@ -56,7 +57,7 @@ class AuthLanguageHeader extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: const Color(0xFFF5A623),
+                      color: AppColors.amber,
                       width: 2,
                     ),
                     borderRadius: BorderRadius.circular(6),
@@ -69,7 +70,7 @@ class AuthLanguageHeader extends StatelessWidget {
                       icon: const Icon(
                         Icons.arrow_drop_down,
                         size: 20,
-                        color: Color(0xFFF5A623),
+                        color: AppColors.amber,
                       ),
                       style: const TextStyle(
                         fontSize: 15,

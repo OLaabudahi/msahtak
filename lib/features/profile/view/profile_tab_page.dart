@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../theme/app_text_styles.dart';
@@ -8,6 +9,11 @@ import '../../auth/bloc/auth_bloc.dart';
 import '../../auth/bloc/auth_event.dart';
 import '../../auth/bloc/auth_state.dart';
 import '../../../constants/app_spacing.dart';
+import '../../reviews/view/reviews_page.dart';
+import '../../usage/view/usage_page.dart';
+import 'payments_receipts_page.dart';
+import 'personal_info_page.dart';
+import 'saved_spaces_page.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -37,7 +43,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+          Text(label, style: TextStyle(fontSize: 13, color: AppColors.textDark)),
           Text(
             value,
             style: const TextStyle(fontSize: 13, color: Colors.black),
@@ -57,7 +63,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: AppColors.borderLight,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -102,7 +108,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                   child: Column(
                     children: [
                       _buildPaymentRow('Visa', '*** 123'),
-                      Divider(height: 1, color: Colors.grey[200]),
+                      Divider(height: 1, color: AppColors.borderLight),
                       _buildPaymentRow('Expires date', '08/25'),
                     ],
                   ),
@@ -137,7 +143,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             width: 40,
             height: 40,
             decoration: const BoxDecoration(
-              color: Color(0xFFE53935),
+              color: AppColors.danger,
               shape: BoxShape.circle,
             ),
             child: Transform.scale(
@@ -151,7 +157,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Color(0xFFE53935),
+              color: AppColors.danger,
             ),
           ),
         ],
@@ -207,12 +213,32 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           const SizedBox(height: 20),
 
                           _buildMenuSection(
-                            onPersonalInfo: () {},
-                            onUsage: () {},
-                            onPaymentsReceipts: () {},
+                            onPersonalInfo: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const PersonalInfoPage(),
+                              ),
+                            ),
+                            onUsage: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => UsagePage.withBloc(),
+                              ),
+                            ),
+                            onPaymentsReceipts: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const PaymentsReceiptsPage(),
+                              ),
+                            ),
                             onPaymentDetails: () {},
-                            onReviews: () {},
-                            onSaved: () {},
+                            onReviews: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ReviewsPage.withBloc(),
+                              ),
+                            ),
+                            onSaved: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const SavedSpacesPage(),
+                              ),
+                            ),
                           ),
 
                           const SizedBox(height: 20),

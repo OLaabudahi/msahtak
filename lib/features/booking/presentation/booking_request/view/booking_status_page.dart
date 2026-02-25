@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../booking_feature_routes.dart';
@@ -58,13 +59,13 @@ class BookingStatusPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEFF7EE),
+                        color: AppColors.approvedBg,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFBFE2BE)),
+                        border: Border.all(color: AppColors.approvedBorder),
                       ),
                       child: Row(
                         children: const [
-                          Icon(Icons.verified, color: Color(0xFF2E7D32)),
+                          Icon(Icons.verified, color: AppColors.approvedText),
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -91,7 +92,7 @@ class BookingStatusPage extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () => context.read<BookingRequestBloc>().add(StatusRefreshRequested(requestId)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF5A623),
+                              backgroundColor: AppColors.amber,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                             ),
                             child: const Text('Refresh status'),
@@ -110,7 +111,7 @@ class BookingStatusPage extends StatelessWidget {
                         onPressed: () => context.read<BookingRequestBloc>().add(CancelRequestPressed(requestId)),
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                          side: const BorderSide(color: Color(0xFFEAEAEA)),
+                          side: const BorderSide(color: AppColors.inputBorder),
                         ),
                         child: const Text('Cancel request'),
                       ),
@@ -127,7 +128,7 @@ class BookingStatusPage extends StatelessWidget {
                           BookingFeatureRoutes.payment(requestId: requestId),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF5A623),
+                          backgroundColor: AppColors.amber,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                         ),
                         child: const Text('Go to payment'),
@@ -140,13 +141,13 @@ class BookingStatusPage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEFF7EE),
+                        color: AppColors.approvedBg,
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFBFE2BE)),
+                        border: Border.all(color: AppColors.approvedBorder),
                       ),
                       child: Row(
                         children: const [
-                          Icon(Icons.check_circle, color: Color(0xFF2E7D32)),
+                          Icon(Icons.check_circle, color: AppColors.approvedText),
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
@@ -185,7 +186,7 @@ class _StatusHeaderCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Column(
@@ -215,7 +216,7 @@ class _StatusHeaderCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             request?.statusHint ?? 'Pull to refresh for latest status',
-            style: TextStyle(color: Colors.grey[700], fontSize: 12),
+            style: TextStyle(color: AppColors.textDark, fontSize: 12),
           ),
         ],
       ),
@@ -225,19 +226,19 @@ class _StatusHeaderCard extends StatelessWidget {
   _Badge _badgeFor(BookingRequestStatus? status) {
     switch (status) {
       case BookingRequestStatus.pending:
-        return const _Badge('Pending', Color(0xFFFFF4E8), Color(0xFFB26A00));
+        return const _Badge('Pending', AppColors.warningBg, AppColors.warningText);
       case BookingRequestStatus.underReview:
-        return const _Badge('Under review', Color(0xFFE9F2FF), Color(0xFF1F5FBF));
+        return const _Badge('Under review', AppColors.reviewStatusBg, AppColors.reviewStatusText);
       case BookingRequestStatus.approved:
-        return const _Badge('Approved', Color(0xFFEFF7EE), Color(0xFF2E7D32));
+        return const _Badge('Approved', AppColors.approvedBg, AppColors.approvedText);
       case BookingRequestStatus.rejected:
-        return const _Badge('Rejected', Color(0xFFFFEBEE), Color(0xFFC62828));
+        return const _Badge('Rejected', AppColors.rejectedBg, AppColors.danger);
       case BookingRequestStatus.cancelled:
-        return const _Badge('Cancelled', Color(0xFFF3F3F3), Color(0xFF616161));
+        return const _Badge('Cancelled', AppColors.neutralBadgeBg, AppColors.textDark);
       case BookingRequestStatus.paid:
-        return const _Badge('Paid', Color(0xFFEFF7EE), Color(0xFF2E7D32));
+        return const _Badge('Paid', AppColors.approvedBg, AppColors.approvedText);
       default:
-        return const _Badge('Loading', Color(0xFFF3F3F3), Color(0xFF616161));
+        return const _Badge('Loading', AppColors.neutralBadgeBg, AppColors.textDark);
     }
   }
 }

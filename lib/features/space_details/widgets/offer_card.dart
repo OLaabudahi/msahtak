@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import '../data/models/space_details_model.dart';
 
 class OfferCard extends StatelessWidget {
@@ -9,10 +10,10 @@ class OfferCard extends StatelessWidget {
   Color _badgeColor() {
     switch (offer.badgeType) {
       case 'bonus':
-        return const Color(0xFFE6F0FF);
+        return AppColors.reviewStatusBg;
       case 'limited':
       default:
-        return const Color(0xFFFDE8E8);
+        return AppColors.rejectedBg;
     }
   }
 
@@ -20,10 +21,10 @@ class OfferCard extends StatelessWidget {
   Color _badgeTextColor() {
     switch (offer.badgeType) {
       case 'bonus':
-        return const Color(0xFF2563EB);
+        return AppColors.link;
       case 'limited':
       default:
-        return const Color(0xFFDC2626);
+        return AppColors.danger;
     }
   }
 
@@ -38,7 +39,7 @@ class OfferCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE6EEF7)),
+        border: Border.all(color: AppColors.surface2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +70,7 @@ class OfferCard extends StatelessWidget {
               Text(
                 offer.priceLine,
                 style: const TextStyle(
-                  color: Color(0xFF6B7280),
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -78,7 +79,7 @@ class OfferCard extends StatelessWidget {
                 Text(
                   offer.oldPriceText!,
                   style: const TextStyle(
-                    color: Color(0xFF9CA3AF),
+                    color: AppColors.textMuted,
                     fontWeight: FontWeight.w700,
                     decoration: TextDecoration.lineThrough,
                   ),
@@ -95,7 +96,7 @@ class OfferCard extends StatelessWidget {
           Text(
             offer.includesText,
             style: const TextStyle(
-              color: Color(0xFF6B7280),
+              color: AppColors.textSecondary,
               fontWeight: FontWeight.w700,
             ),
           ),

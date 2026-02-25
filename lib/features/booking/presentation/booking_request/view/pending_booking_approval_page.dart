@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 import '../../../booking_feature_routes.dart';
@@ -46,7 +47,7 @@ class PendingBookingApprovalPage extends StatelessWidget {
                   )
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF5A623),
+                    backgroundColor: AppColors.amber,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                   ),
                   child: const Text(
@@ -66,7 +67,7 @@ class PendingBookingApprovalPage extends StatelessWidget {
                   },
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                    side: const BorderSide(color: Color(0xFFEAEAEA)),
+                    side: const BorderSide(color: AppColors.inputBorder),
                   ),
                   child: const Text('Go to Home'),
                 ),
@@ -92,19 +93,19 @@ class _SuccessCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF7EE),
+        color: AppColors.approvedBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFBFE2BE)),
+        border: Border.all(color: AppColors.approvedBorder),
       ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: Color(0xFF2E7D32)),
+          const Icon(Icons.check_circle, color: AppColors.approvedText),
           const SizedBox(width: 10),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
               const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(color: Colors.grey[700], fontSize: 12)),
+              Text(subtitle, style: TextStyle(color: AppColors.textDark, fontSize: 12)),
             ]),
           ),
         ],

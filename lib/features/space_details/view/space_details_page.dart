@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
@@ -277,7 +278,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2F3542),
+                            color: Color(0xFF2F3542),
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Row(
@@ -293,7 +294,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               const Icon(
                                 Icons.star,
                                 size: 14,
-                                color: Color(0xFFF8B324),
+                                color: AppColors.amber,
                               ),
                             ],
                           ),
@@ -310,7 +311,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           child: Text(
                             d.subtitleLine,
                             style: const TextStyle(
-                              color: Color(0xFF6B7280),
+                              color: AppColors.textSecondary,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -318,7 +319,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                         Text(
                           '${d.reviewsCount} reviews',
                           style: const TextStyle(
-                            color: Color(0xFF6B7280),
+                            color: AppColors.textSecondary,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -377,7 +378,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                     child: Text(
                                       d.workingHours,
                                       style: const TextStyle(
-                                        color: Color(0xFF6B7280),
+                                        color: AppColors.textSecondary,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -388,7 +389,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                     child: const Text(
                                       'View Space Policies',
                                       style: TextStyle(
-                                        color: Color(0xFF2563EB),
+                                        color: AppColors.link,
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
@@ -422,7 +423,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               Text(
                                 d.locationAddress,
                                 style: const TextStyle(
-                                  color: Color(0xFF6B7280),
+                                  color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -434,7 +435,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 child: const Text(
                                   '📍 View location',
                                   style: TextStyle(
-                                    color: Color(0xFFF59E0B),
+                                    color: AppColors.amber,
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
@@ -470,7 +471,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: const Color(0xFFE6EEF7),
+                                    color: AppColors.surface2,
                                   ),
                                 ),
                                 child: Column(
@@ -534,7 +535,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                     child: Text(
                                       'Based on ${d.reviewsCount} reviews',
                                       style: const TextStyle(
-                                        color: Color(0xFF6B7280),
+                                        color: AppColors.textSecondary,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -545,7 +546,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                       style: OutlinedButton.styleFrom(
                                         shape: const StadiumBorder(),
                                         side: const BorderSide(
-                                          color: Color(0xFFF8B324),
+                                          color: AppColors.amber,
                                         ),
                                         backgroundColor: const Color(
                                           0xFFFFF7ED,
@@ -605,7 +606,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               const Text(
                                 'Offers are applied during booking. You can choose or skip any offer later.',
                                 style: TextStyle(
-                                  color: Color(0xFF6B7280),
+                                  color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w700,
                                   height: 1.25,
                                 ),
@@ -636,7 +637,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   width: double.infinity,
                   child: FilledButton(
                     style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFFF8B324),
+                      backgroundColor: AppColors.amber,
                       shape: const StadiumBorder(),
                     ),
                     child: const Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app_start/bloc/app_start_bloc.dart';
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF5B8FB9),
+                                color: AppColors.secondary,
                               ),
                             ),
                           );
@@ -134,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                     );
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF5A623),
+                              backgroundColor: AppColors.amber,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25),
                               ),
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           context.t('forgetPassword'),
                           style: const TextStyle(
-                            color: Color(0xFF5B8FB9),
+                            color: AppColors.secondary,
                             fontSize: 13,
                           ),
                         ),
@@ -238,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               context.t('signUp'),
                               style: const TextStyle(
-                                color: Color(0xFFF5A623),
+                                color: AppColors.amber,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                               ),

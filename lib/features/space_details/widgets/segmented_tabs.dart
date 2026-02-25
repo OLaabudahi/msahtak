@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 class SegmentedTabs extends StatelessWidget {
   final int index;
@@ -19,7 +20,7 @@ class SegmentedTabs extends StatelessWidget {
       height: 44,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE6EEF7),
+        color: AppColors.surface2,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
@@ -33,7 +34,7 @@ class SegmentedTabs extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: selected
-                      ? const Color(0xFFF8B324)
+                      ? AppColors.amber
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(999),
                 ),
@@ -42,7 +43,7 @@ class SegmentedTabs extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 12.5,
-                    color: selected ? Colors.black : const Color(0xFF6B7280),
+                    color: selected ? Colors.black : AppColors.textSecondary,
                   ),
                 ),
               ),

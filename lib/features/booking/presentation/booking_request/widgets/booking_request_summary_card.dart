@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../theme/app_colors.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -14,7 +15,7 @@ class BookingRequestSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(color: AppColors.inputBorder),
         color: Colors.white,
       ),
       child: Column(
@@ -58,7 +59,7 @@ class _RowLine extends StatelessWidget {
     final style = TextStyle(fontWeight: bold ? FontWeight.w800 : FontWeight.w500);
     return Row(
       children: [
-        Expanded(child: Text(label, style: TextStyle(color: Colors.grey[700]))),
+        Expanded(child: Text(label, style: TextStyle(color: AppColors.textDark))),
         Text(value, style: style),
       ],
     );

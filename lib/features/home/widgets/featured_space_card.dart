@@ -92,7 +92,7 @@ class FeaturedSpaceCard extends StatelessWidget {
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF4E7FB6),
+                        color: AppColors.secondary,
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: const Text(

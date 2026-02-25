@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 import '../data/models/booking_model.dart';
 
@@ -20,7 +21,7 @@ class BookingListItem extends StatelessWidget {
   /// ✅ فقط للـ Completed
   final VoidCallback? onRebook;
 
-  static const _blue = Color(0xFF5B8FB9);
+  static const _blue = AppColors.btnSecondary;
 
   bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming';
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
@@ -40,9 +41,9 @@ class BookingListItem extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFE8FFF0),
+          color: Color(0xFFE8FFF0),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFF22C55E), width: 1.2),
+          border: Border.all(color: Color(0xFF22C55E), width: 1.2),
         ),
         child: const Text(
           'Upcoming',
@@ -59,9 +60,9 @@ class BookingListItem extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFDFF7F2),
+          color: Color(0xFFDFF7F2),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFF2AAE9B), width: 1.0),
+          border: Border.all(color: Color(0xFF2AAE9B), width: 1.0),
         ),
         child: const Text(
           'Completed',
@@ -77,13 +78,13 @@ class BookingListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFE3E3),
+        color: Color(0xFFFFE3E3),
         borderRadius: BorderRadius.circular(18),
       ),
       child: const Text(
         'Cancelled',
         style: TextStyle(
-          color: Color(0xFFE53935),
+          color: AppColors.danger,
           fontWeight: FontWeight.w700,
           fontSize: 12.5,
         ),
@@ -205,7 +206,7 @@ class BookingListItem extends StatelessWidget {
                           _dateLine,
                           style: TextStyle(
                             fontSize: 12.5,
-                            color: Colors.grey[700],
+                            color: AppColors.textDark,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -215,7 +216,7 @@ class BookingListItem extends StatelessWidget {
                           'Booking ID: ${booking.bookingId}',
                           style: TextStyle(
                             fontSize: 12.5,
-                            color: Colors.grey[700],
+                            color: AppColors.textDark,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -242,7 +243,7 @@ class BookingListItem extends StatelessWidget {
               ),
             ),
 
-            Container(height: 1, color: Colors.grey[200]),
+            Container(height: 1, color: AppColors.borderLight),
             _bottomButtons(),
           ],
         ),
@@ -269,7 +270,7 @@ class _TwoButtonsBar extends StatelessWidget {
   final bool rightFilled;
   final VoidCallback onRight;
 
-  static const _blue = Color(0xFF5B8FB9);
+  static const _blue = AppColors.btnSecondary;
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +295,7 @@ class _TwoButtonsBar extends StatelessWidget {
               ),
             ),
           ),
-          Container(width: 1, color: Colors.grey[200]),
+          Container(width: 1, color: AppColors.borderLight),
           Expanded(
             child: InkWell(
               onTap: onRight,

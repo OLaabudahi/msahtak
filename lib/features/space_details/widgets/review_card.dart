@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import '../data/models/space_details_model.dart';
 
 class ReviewCard extends StatelessWidget {
@@ -14,7 +15,7 @@ class ReviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE6EEF7)),
+        border: Border.all(color: AppColors.surface2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +28,7 @@ class ReviewCard extends StatelessWidget {
           Text(
             review.timeAgo,
             style: const TextStyle(
-              color: Color(0xFF6B7280),
+              color: AppColors.textSecondary,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
@@ -40,7 +41,7 @@ class ReviewCard extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.star, size: 14, color: Color(0xFFF8B324)),
+              const Icon(Icons.star, size: 14, color: AppColors.amber),
             ],
           ),
           const SizedBox(height: 8),
