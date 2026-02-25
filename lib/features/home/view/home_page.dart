@@ -10,6 +10,7 @@ import '../../../constants/app_spacing.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 
+import '../../search_results/view/search_results_page.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../../bookings/view/bookings_tab_page.dart';
 import '../../profile/view/profile_tab_page.dart';
@@ -109,9 +110,9 @@ class _MySearchBarState extends State<MySearchBar> {
   }
 
   void _openAiConcierge() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()));
   }
 
   @override
@@ -123,6 +124,14 @@ class _MySearchBarState extends State<MySearchBar> {
         context.read<HomeBloc>().add(HomeSearchChanged(q));
       },
       onSearchSubmitted: (q) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SearchResultsPage.withBloc(
+              originKey: q,
+              originTitle: 'Search Result',
+            ),
+          ),
+        );
         context.read<HomeBloc>().add(HomeSearchChanged(q));
       },
       onSearchTap: () {},
@@ -199,9 +208,20 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)),
-    );
+    if (item.id == 'ins_2') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => SearchResultsPage.withBloc(
+            originKey: item.title,
+            originTitle: item.title,
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)));
+    }
   }
 
   @override
@@ -280,6 +300,15 @@ class _HomeTabState extends State<_HomeTab> {
                                 builder: (_) => MapPage.withBloc(),
                               ),
                             );
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => SearchResultsPage.withBloc(
+                                  originKey: categories[i],
+                                  originTitle: categories[i],
+                                ),
+                              ),
+                            );
                           }
                         },
                       ),
@@ -298,35 +327,35 @@ class _HomeTabState extends State<_HomeTab> {
                 child: featuredCount == 0
                     ? const Center(child: Text('No spaces yet'))
                     : Listener(
-                  onPointerDown: (_) {
-                    _resumeTimer?.cancel();
-                    _stopAutoSlide();
-                  },
-                  onPointerUp: (_) {
-                    _scheduleResumeAutoSlide();
-                  },
-                  onPointerCancel: (_) {
-                    _scheduleResumeAutoSlide();
-                  },
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: featuredCount,
-                    onPageChanged: (i) =>
-                        bloc.add(HomeFeaturedPageChanged(i)),
-                    itemBuilder: (context, index) {
-                      final space = state.featuredSpaces[index];
+                        onPointerDown: (_) {
+                          _resumeTimer?.cancel();
+                          _stopAutoSlide();
+                        },
+                        onPointerUp: (_) {
+                          _scheduleResumeAutoSlide();
+                        },
+                        onPointerCancel: (_) {
+                          _scheduleResumeAutoSlide();
+                        },
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: featuredCount,
+                          onPageChanged: (i) =>
+                              bloc.add(HomeFeaturedPageChanged(i)),
+                          itemBuilder: (context, index) {
+                            final space = state.featuredSpaces[index];
 
-                      return FeaturedSpaceCard(
-                        imageAsset: space.imageAsset,
-                        title: space.name,
-                        ratingText: space.ratingText,
-                        subtitle: space.subtitleLine,
-                        onViewTap: () =>
-                            _openSpaceDetails(context, space.id),
-                      );
-                    },
-                  ),
-                ),
+                            return FeaturedSpaceCard(
+                              imageAsset: space.imageAsset,
+                              title: space.name,
+                              ratingText: space.ratingText,
+                              subtitle: space.subtitleLine,
+                              onViewTap: () =>
+                                  _openSpaceDetails(context, space.id),
+                            );
+                          },
+                        ),
+                      ),
               ),
 
               AppSpacing.vSm,

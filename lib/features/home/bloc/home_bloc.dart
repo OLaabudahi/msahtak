@@ -76,26 +76,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     return const [
       InsightItem(
         id: 'ins_1',
-        title: 'How to pick the best space?',
-        subtitle: 'Tips for choosing the right vibe.',
+        title: 'Weekly plan',
+        subtitle: 'Quiet spaces for evening work',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
         id: 'ins_2',
-        title: 'Boost your productivity',
-        subtitle: 'Small habits that work.',
+        title: 'Internet is',
+        subtitle: 'Quiet is average',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
         id: 'ins_3',
-        title: 'Quiet vs social spaces',
-        subtitle: 'Which one fits your day?',
+        title: 'Offers',
+        subtitle: 'Perfect for your budget',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
         id: 'ins_4',
-        title: 'Meeting-ready checklist',
-        subtitle: 'Don’t miss essentials.',
+        title: 'Best for You',
+        subtitle: 'Meeting suggested spaces based on your needs',
         imageAsset: 'assets/images/home.png',
       ),
     ];
