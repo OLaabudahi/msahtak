@@ -42,7 +42,13 @@ class SearchRemovePreferredChip extends SearchResultsEvent {
   @override
   List<Object?> get props => [chipId];
 }
+class SearchSuggestionSelected extends SearchResultsEvent {
+  final String value;
+  const SearchSuggestionSelected(this.value);
 
+  @override
+  List<Object?> get props => [value];
+}
 class SearchRefresh extends SearchResultsEvent {
   const SearchRefresh();
 }

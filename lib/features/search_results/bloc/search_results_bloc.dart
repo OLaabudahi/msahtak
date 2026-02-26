@@ -17,6 +17,7 @@ class SearchResultsBloc extends Bloc<SearchResultsEvent, SearchResultsState> {
     on<SearchApplyFilters>(_onApplyFilters);
     on<SearchRemovePreferredChip>(_onRemoveChip);
     on<SearchRefresh>(_onRefresh);
+    on<SearchSuggestionSelected>(_onSuggestionSelected);
   }
 
   Future<void> _onStarted(
@@ -38,20 +39,50 @@ class SearchResultsBloc extends Bloc<SearchResultsEvent, SearchResultsState> {
 
     emit(state.copyWith(isLoading: false, results: results, errorMessage: null));
   }
-
   Future<void> _onQueryChanged(
       SearchQueryChanged event,
       Emitter<SearchResultsState> emit,
       ) async {
-    emit(state.copyWith(query: event.query, isLoading: true, errorMessage: null));
+    final q = event.query.trim();
+    emit(state.copyWith(query: q, errorMessage: null));
+
+    // Dummy suggestions (API-ready):
+    // لاحقًا: GET /spaces/suggestions?query=q
+    if (q.isEmpty) {
+      emit(state.copyWith(suggestions: const <String>[]));
+    } else {
+      final pool = state.results.map((e) => e.name).toList();
+      final sug = pool
+          .where((name) => name.toLowerCase().contains(q.toLowerCase()))
+          .take(6)
+          .toList();
+      emit(state.copyWith(suggestions: sug));
+    }
+
+    // اعملي بحث فعلي فقط لو بدك "live search" مع كل حرف:
+    emit(state.copyWith(isLoading: true));
+    final results = await searchSpacesUseCase(
+      query: q,
+      selectedFilters: state.selectedFilters,
+      originKey: state.originKey,
+    );
+    emit(state.copyWith(isLoading: false, results: results));
+  }
+
+  Future<void> _onSuggestionSelected(
+      SearchSuggestionSelected event,
+      Emitter<SearchResultsState> emit,
+      ) async {
+    final v = event.value.trim();
+    emit(state.copyWith(query: v, suggestions: const <String>[], isLoading: true));
 
     final results = await searchSpacesUseCase(
-      query: event.query,
+      query: v,
       selectedFilters: state.selectedFilters,
       originKey: state.originKey,
     );
 
-    emit(state.copyWith(isLoading: false, results: results, errorMessage: null));
+    emit(state.copyWith(isLoading: false, results: results));
   }
 
   Future<void> _onApplyFilters(

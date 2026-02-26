@@ -51,6 +51,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _onNotificationPressed(HomeNotificationPressed event, Emitter<HomeState> emit) {
     // مثال: تصفير النقطة
     emit(state.copyWith(unreadNotifications: 0));
+
   }
 
   void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {
@@ -75,25 +76,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   List<InsightItem> _buildDummyInsights() {
     return const [
       InsightItem(
-        id: 'ins_1',
+        id: 'ins_weekly_plan',
         title: 'Weekly plan',
         subtitle: 'Quiet spaces for evening work',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
-        id: 'ins_2',
+        id: 'ins_spacial_Search',
         title: 'Internet is',
         subtitle: 'Quiet is average',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
-        id: 'ins_3',
+        id: 'ins_offers',
         title: 'Offers',
         subtitle: 'Perfect for your budget',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
-        id: 'ins_4',
+        id: 'ins_best_for_you',
         title: 'Best for You',
         subtitle: 'Meeting suggested spaces based on your needs',
         imageAsset: 'assets/images/home.png',

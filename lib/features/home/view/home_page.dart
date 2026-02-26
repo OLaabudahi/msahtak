@@ -10,12 +10,16 @@ import '../../../constants/app_spacing.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 
+import '../../best_for_you/view/best_for_you_page.dart';
+import '../../notifications/view/notifications_list_page.dart';
+import '../../offers/view/offers_page.dart';
 import '../../search_results/view/search_results_page.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../../bookings/view/bookings_tab_page.dart';
 import '../../profile/view/profile_tab_page.dart';
 import '../../settings/view/settings_tab_page.dart';
 
+import '../../weekly_plan/view/weekly_plan_page.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
@@ -23,8 +27,7 @@ import '../domain/entities/insight_item.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 import '../widgets/insight_tile.dart';
-import '../widgets/custom_search_bar.dart';
-import 'screens/insight_details_pages.dart';
+import '../../../core/widgets/custom_search_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -208,20 +211,32 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    if (item.id == 'ins_2') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => SearchResultsPage.withBloc(
-            originKey: item.title,
-            originTitle: item.title,
-          ),
-        ),
-      );
-    } else {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (_) => InsightDetailsPage(item: item)));
+    Widget page;
+    switch (item.id) {
+      case 'ins_best_for_you':
+        page = BestForYouPage.withBloc();
+        _navInsight(page);
+        break;
+      case 'ins_offers':
+        page = OffersPage.withBloc();
+        _navInsight(page);
+        break;
+      case 'ins_weekly_plan':
+        page = WeeklyPlanPage.withBloc();
+        _navInsight(page);
+        break;
+      case 'ins_spacial_Search':
+        page = SearchResultsPage.withBloc(
+          originKey: item.title,
+          originTitle: item.title,
+        );
+        _navInsight(page);
+        break;
     }
+  }
+
+  void _navInsight(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
 
   @override
@@ -245,7 +260,14 @@ class _HomeTabState extends State<_HomeTab> {
                   const Text('Home', style: AppTextStyles.sectionBarTitle),
                   const Spacer(),
                   InkWell(
-                    onTap: () => bloc.add(const HomeNotificationPressed()),
+                    onTap: () {
+                      bloc.add(const HomeNotificationPressed());
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => NotificationsListPage.withBloc(),
+                        ),
+                      );
+                    },
                     customBorder: const CircleBorder(),
                     child: Stack(
                       clipBehavior: Clip.none,

@@ -17,6 +17,9 @@ class SearchResultsState extends Equatable {
   final bool hasAppliedFilters;
   final List<FilterChipEntity> preferredChips;
 
+  /// تظهر تحت حقل البحث كـ dropdown
+  final List<String> suggestions;
+
   const SearchResultsState({
     required this.originKey,
     required this.originTitle,
@@ -27,6 +30,7 @@ class SearchResultsState extends Equatable {
     required this.results,
     required this.hasAppliedFilters,
     required this.preferredChips,
+    required this.suggestions,
   });
 
   factory SearchResultsState.initial() {
@@ -40,6 +44,7 @@ class SearchResultsState extends Equatable {
       results: <SpaceEntity>[],
       hasAppliedFilters: false,
       preferredChips: <FilterChipEntity>[],
+      suggestions: <String>[],
     );
   }
 
@@ -50,9 +55,11 @@ class SearchResultsState extends Equatable {
     Map<String, dynamic>? selectedFilters,
     bool? isLoading,
     String? errorMessage,
+    bool clearErrorMessage = false,
     List<SpaceEntity>? results,
     bool? hasAppliedFilters,
     List<FilterChipEntity>? preferredChips,
+    List<String>? suggestions,
   }) {
     return SearchResultsState(
       originKey: originKey ?? this.originKey,
@@ -60,10 +67,11 @@ class SearchResultsState extends Equatable {
       query: query ?? this.query,
       selectedFilters: selectedFilters ?? this.selectedFilters,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
+      errorMessage: clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
       results: results ?? this.results,
       hasAppliedFilters: hasAppliedFilters ?? this.hasAppliedFilters,
       preferredChips: preferredChips ?? this.preferredChips,
+      suggestions: suggestions ?? this.suggestions,
     );
   }
 
@@ -78,5 +86,6 @@ class SearchResultsState extends Equatable {
     results,
     hasAppliedFilters,
     preferredChips,
+    suggestions,
   ];
 }
