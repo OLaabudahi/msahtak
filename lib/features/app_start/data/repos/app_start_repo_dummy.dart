@@ -1,6 +1,4 @@
 import '../../../../services/local_storage_service.dart';
-import '../../../../services/local_storage_service.dart';
-import '../../../../services/local_storage_service.dart';
 import '../../domain/repos/app_start_repo.dart';
 
 class AppStartRepoDummy implements AppStartRepo {
@@ -10,7 +8,6 @@ class AppStartRepoDummy implements AppStartRepo {
 
   @override
   Future<AppStartDecision> decide() async {
-    // Simulate a splash delay
     await Future.delayed(const Duration(milliseconds: 900));
 
     final isLoggedIn = await _storage.getIsLoggedIn();
@@ -19,11 +16,13 @@ class AppStartRepoDummy implements AppStartRepo {
     final completed = await _storage.getHasCompletedOnboarding();
     if (!completed) return AppStartDecision.goOnboarding;
 
-    return AppStartDecision.goHome;
+    final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
+    if (role.contains('admin')) return AppStartDecision.goAdmin;
 
-    // API-ready example (commented):
-    // final res = await dio.get('/me');
-    // final isLoggedIn = res.statusCode == 200;
-    // ...
+    return AppStartDecision.goHome;
   }
 }
+// API-ready example (commented):
+// final res = await dio.get('/me');
+// final isLoggedIn = res.statusCode == 200;
+// ...

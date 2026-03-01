@@ -1,9 +1,9 @@
-import '../../data/models/user_model.dart';
+import '../entities/user_entity.dart';
 
 abstract class AuthRepo {
-  Future<UserModel> login({required String email, required String password});
+  Future<UserEntity> login({required String email, required String password});
 
-  Future<UserModel> signUp({
+  Future<UserEntity> signUp({
     required String fullName,
     required String email,
     required String password,
