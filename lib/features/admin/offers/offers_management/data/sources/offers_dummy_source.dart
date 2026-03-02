@@ -3,8 +3,77 @@ import '../models/offer_model.dart';
 
 class OffersDummySource implements OffersSource {
   final List<OfferModel> _offers = [
-    const OfferModel(id: 'o1', title: 'Student Week', percent: '15%', duration: '7 days', terms: 'Valid for students only', enabled: true),
-    const OfferModel(id: 'o2', title: 'New Space Promo', percent: '10%', duration: '14 days', terms: 'First booking only', enabled: false),
+    // Fixed price override example: ₪25/day until Sep 30
+    const OfferModel(
+      id: 'o1',
+      title: 'Morning Focus Deal',
+      type: 'fixedPriceOverride',
+      validUntil: 'Sep 30',
+      enabled: true,
+      durationValue: null,
+      durationUnit: null,
+      discountPercent: null,
+      fixedPriceValue: 25,
+      fixedPriceUnit: 'day',
+      packageMonths: null,
+      packageDiscountPercent: null,
+      fixedMonthlyPrice: null,
+      bonusText: null,
+    ),
+
+    // Bonus example
+    const OfferModel(
+      id: 'o2',
+      title: 'Free Meeting Room Hour',
+      type: 'bonus',
+      validUntil: 'Oct 10',
+      enabled: true,
+      durationValue: null,
+      durationUnit: null,
+      discountPercent: null,
+      fixedPriceValue: null,
+      fixedPriceUnit: null,
+      packageMonths: null,
+      packageDiscountPercent: null,
+      fixedMonthlyPrice: null,
+      bonusText: '+ 1 hour free (with day booking)',
+    ),
+
+    // Package months example (3/6/9/12)
+    const OfferModel(
+      id: 'o3',
+      title: '3 Months Package',
+      type: 'packageMonths',
+      validUntil: 'Dec 31',
+      enabled: false,
+      durationValue: null,
+      durationUnit: null,
+      discountPercent: null,
+      fixedPriceValue: null,
+      fixedPriceUnit: null,
+      packageMonths: 3,
+      packageDiscountPercent: 10,
+      fixedMonthlyPrice: null,
+      bonusText: null,
+    ),
+
+    // Discount percent example
+    const OfferModel(
+      id: 'o4',
+      title: 'Student Week',
+      type: 'discountPercent',
+      validUntil: 'Nov 01',
+      enabled: true,
+      durationValue: 7,
+      durationUnit: 'days',
+      discountPercent: 15,
+      fixedPriceValue: null,
+      fixedPriceUnit: null,
+      packageMonths: null,
+      packageDiscountPercent: null,
+      fixedMonthlyPrice: null,
+      bonusText: null,
+    ),
   ];
 
   @override
@@ -21,10 +90,18 @@ class OffersDummySource implements OffersSource {
         _offers[i] = OfferModel(
           id: _offers[i].id,
           title: _offers[i].title,
-          percent: _offers[i].percent,
-          duration: _offers[i].duration,
-          terms: _offers[i].terms,
+          type: _offers[i].type,
+          validUntil: _offers[i].validUntil,
           enabled: enabled,
+          durationValue: _offers[i].durationValue,
+          durationUnit: _offers[i].durationUnit,
+          discountPercent: _offers[i].discountPercent,
+          fixedPriceValue: _offers[i].fixedPriceValue,
+          fixedPriceUnit: _offers[i].fixedPriceUnit,
+          packageMonths: _offers[i].packageMonths,
+          packageDiscountPercent: _offers[i].packageDiscountPercent,
+          fixedMonthlyPrice: _offers[i].fixedMonthlyPrice,
+          bonusText: _offers[i].bonusText,
         );
       }
     }

@@ -8,21 +8,19 @@ class OffersRepoImpl implements OffersRepo {
   const OffersRepoImpl(this.source);
 
   @override
-  Future<List<OfferEntity>> getOffers() async => (await source.fetchOffers()).map((m) => m.toEntity()).toList(growable: false);
+  Future<List<OfferEntity>> getOffers() async {
+    final list = await source.fetchOffers();
+    return list.map((m) => m.toEntity()).toList(growable: false);
+  }
 
   @override
-  Future<void> toggleOffer({required String offerId, required bool enabled}) => source.toggleOffer(offerId: offerId, enabled: enabled);
+  Future<void> toggleOffer({required String offerId, required bool enabled}) {
+    return source.toggleOffer(offerId: offerId, enabled: enabled);
+  }
 
   @override
   Future<void> createOffer({required OfferEntity offer}) {
-    final m = OfferModel(
-      id: offer.id,
-      title: offer.title,
-      percent: offer.percent,
-      duration: offer.duration,
-      terms: offer.terms,
-      enabled: offer.enabled,
-    );
+    final m = OfferModel.fromEntity(offer);
     return source.createOffer(offer: m);
   }
 }

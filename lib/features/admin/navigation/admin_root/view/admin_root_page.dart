@@ -4,7 +4,7 @@ import '../../../_shared/admin_ui.dart';
 import '../../../admin_home/admin_home/view/admin_home_page.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
 import '../../../users/users/view/users_page.dart';
-import '../../../analytics/analytics/view/analytics_page.dart';
+import '../../../settings/admin_settings/view/admin_settings_page.dart';
 
 class AdminRootPage extends StatefulWidget {
   const AdminRootPage({super.key});
@@ -24,7 +24,7 @@ class _AdminRootPageState extends State<AdminRootPage> {
     _TabConfig('Home', 0),
     _TabConfig('Bookings', 1),
     _TabConfig('Users', 2),
-    _TabConfig('Analytics', 3),
+    _TabConfig('Settings', 3),
   ];
 
   @override
@@ -33,7 +33,7 @@ class _AdminRootPageState extends State<AdminRootPage> {
       0 => AdminHomePage.withBloc(),
       1 => BookingRequestsPage.withBloc(),
       2 => UsersPage.withBloc(),
-      _ => AnalyticsPage.withBloc(),
+      _ => AdminSettingsPage.withBloc(),
     };
 
     return Scaffold(
@@ -54,7 +54,7 @@ class _AdminRootPageState extends State<AdminRootPage> {
                 0 => AdminIconMapper.home(),
                 1 => AdminIconMapper.bookings(),
                 2 => AdminIconMapper.users(),
-                _ => AdminIconMapper.analytics(),
+                _ => AdminIconMapper.settings(),
               };
 
               return Expanded(

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../_shared/admin_feedback_widgets.dart';
 
 import '../bloc/users_bloc.dart';
 import '../bloc/users_event.dart';
@@ -84,6 +85,20 @@ class UsersPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: BlocBuilder<UsersBloc, UsersState>(
                       builder: (context, state) {
+                        if (state.status == UsersStatus.loading && state.users.isEmpty) {
+                          return const SizedBox(height: 520, child: AdminListSkeleton(count: 6, height: 92));
+                        }
+                        if (state.users.isEmpty) {
+                          return const SizedBox(
+                            height: 420,
+                            child: AdminEmptyState(
+                              title: 'No users',
+                              subtitle: 'No users found for this filter/search.',
+                              icon: Icons.person_outline,
+                            ),
+                          );
+                        }
+
                         final list = state.users;
                         return ListView.separated(
                           shrinkWrap: true,

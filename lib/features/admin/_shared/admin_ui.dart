@@ -20,7 +20,6 @@ class AdminColors {
 }
 
 class AdminRadii {
-  // theme.css radius ~ 10px :contentReference[oaicite:0]{index=0}
   static const r6 = Radius.circular(6);
   static const r8 = Radius.circular(8);
   static const r10 = Radius.circular(10);
@@ -68,10 +67,11 @@ class AdminText {
 class AdminIconMapper {
   static IconData back() => LucideIcons.arrowLeft;
   static IconData home() => LucideIcons.layoutDashboard;
-  static IconData spaces() => LucideIcons.building2;
   static IconData bookings() => LucideIcons.calendarCheck2;
   static IconData users() => LucideIcons.users;
   static IconData analytics() => LucideIcons.chartLine;
+
+  static IconData settings() => LucideIcons.settings; // NEW
 
   static IconData plus() => LucideIcons.plus;
   static IconData chevronDown() => LucideIcons.chevronDown;
@@ -90,6 +90,7 @@ class AdminIconMapper {
   static IconData phone() => LucideIcons.phone;
   static IconData note() => LucideIcons.stickyNote;
   static IconData export() => LucideIcons.download;
+  static IconData logout() => LucideIcons.logOut; // NEW
 }
 
 class AdminAppBar extends StatelessWidget {
@@ -181,7 +182,7 @@ class AdminButton extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AdminText.body16(color: outline ? fg : fg, w: FontWeight.w600),
+          style: AdminText.body16(color: fg, w: FontWeight.w600),
         ),
       ),
     );
@@ -232,7 +233,12 @@ class AdminTag extends StatelessWidget {
         color: tint,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.label12(color: textColor, w: FontWeight.w500)),
+      child: Text(
+        text,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AdminText.label12(color: textColor, w: FontWeight.w500),
+      ),
     );
   }
 }

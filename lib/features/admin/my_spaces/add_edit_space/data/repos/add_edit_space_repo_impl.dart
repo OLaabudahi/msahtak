@@ -1,4 +1,5 @@
-﻿import '../../domain/entities/space_form_entity.dart';
+﻿import '../../domain/entities/amenity_entity.dart';
+import '../../domain/entities/space_form_entity.dart';
 import '../../domain/repos/add_edit_space_repo.dart';
 import '../models/space_form_model.dart';
 import '../sources/add_edit_space_source.dart';
@@ -15,17 +16,19 @@ class AddEditSpaceRepoImpl implements AddEditSpaceRepo {
 
   @override
   Future<void> saveSpace({required SpaceFormEntity form}) {
-    final model = SpaceFormModel(
-      id: form.id,
-      name: form.name,
-      address: form.address,
-      price: form.price,
-      description: form.description,
-      amenities: form.amenities.map((a) => {'id': a.id, 'name': a.name, 'selected': a.selected}).toList(growable: false),
-      hours: form.hours,
-      policies: form.policies,
-      hidden: form.hidden,
-    );
+    final model = SpaceFormModel.fromEntity(form);
     return source.saveSpace(form: model);
+  }
+
+  @override
+  Future<List<AmenityEntity>> getAmenityCatalog() async {
+    final list = await source.fetchAmenityCatalog();
+    return list.map((m) => m.toEntity()).toList(growable: false);
+  }
+
+  @override
+  Future<AmenityEntity> addAmenity({required String name}) async {
+    final m = await source.createAmenity(name: name);
+    return m.toEntity();
   }
 }

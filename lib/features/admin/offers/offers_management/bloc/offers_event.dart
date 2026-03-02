@@ -1,4 +1,7 @@
 ﻿import 'package:equatable/equatable.dart';
+import '../domain/entities/offer_duration_unit.dart';
+import '../domain/entities/offer_type.dart';
+import '../../../my_spaces/add_edit_space/domain/entities/price_unit.dart';
 
 sealed class OffersEvent extends Equatable {
   const OffersEvent();
@@ -18,13 +21,50 @@ class OffersTogglePressed extends OffersEvent {
   List<Object?> get props => [offerId, enabled];
 }
 
-class OffersCreatePressed extends OffersEvent {
-  final String title;
-  final String percent;
-  final String duration;
-  final String terms;
-  final bool enabled;
-  const OffersCreatePressed(this.title, this.percent, this.duration, this.terms, this.enabled);
+class OffersCreateOpened extends OffersEvent {
+  const OffersCreateOpened();
+}
+
+class OffersCreateClosed extends OffersEvent {
+  const OffersCreateClosed();
+}
+
+class OffersCreateFieldChanged extends OffersEvent {
+  final String field;
+  final String value;
+  const OffersCreateFieldChanged(this.field, this.value);
   @override
-  List<Object?> get props => [title, percent, duration, terms, enabled];
+  List<Object?> get props => [field, value];
+}
+
+class OffersCreateTypeChanged extends OffersEvent {
+  final OfferType type;
+  const OffersCreateTypeChanged(this.type);
+  @override
+  List<Object?> get props => [type];
+}
+
+class OffersCreateDurationUnitChanged extends OffersEvent {
+  final OfferDurationUnit unit;
+  const OffersCreateDurationUnitChanged(this.unit);
+  @override
+  List<Object?> get props => [unit];
+}
+
+class OffersCreateFixedUnitChanged extends OffersEvent {
+  final PriceUnit unit;
+  const OffersCreateFixedUnitChanged(this.unit);
+  @override
+  List<Object?> get props => [unit];
+}
+
+class OffersCreatePackageMonthsChanged extends OffersEvent {
+  final int months; // 3/6/9/12
+  const OffersCreatePackageMonthsChanged(this.months);
+  @override
+  List<Object?> get props => [months];
+}
+
+class OffersCreateSubmitted extends OffersEvent {
+  const OffersCreateSubmitted();
 }

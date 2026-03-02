@@ -1,31 +1,68 @@
 ﻿import 'package:equatable/equatable.dart';
 import 'amenity_entity.dart';
+import 'policy_section_entity.dart';
+import 'price_unit.dart';
+import 'space_location_entity.dart';
+import 'working_hours_entity.dart';
 
 class SpaceFormEntity extends Equatable {
   final String? id;
-  final String name;
-  final String address;
-  final String price;
-  final String description;
-  final List<AmenityEntity> amenities;
-  final String hours;
-  final String policies;
 
-  // NEW:
+  // Basic
+  final String name;
+  final String address; // keep (text)
+  final String description; // keep (optional)
+
+  // OLD compatibility (UI currently uses these)
+  final String price;    // keep
+  final String hours;    // keep
+  final String policies; // keep
+
+  // NEW structured fields (API-ready)
+  final double basePriceValue;
+  final PriceUnit basePriceUnit;
+
+  final SpaceLocationEntity? location; // lat/lng
+  final List<WorkingHoursEntity> workingHours;
+  final List<PolicySectionEntity> policySections;
+
+  final List<AmenityEntity> amenities;
+
+  // Availability
   final bool hidden;
 
   const SpaceFormEntity({
     required this.id,
     required this.name,
     required this.address,
-    required this.price,
     required this.description,
-    required this.amenities,
+    required this.price,
     required this.hours,
     required this.policies,
+    required this.basePriceValue,
+    required this.basePriceUnit,
+    required this.location,
+    required this.workingHours,
+    required this.policySections,
+    required this.amenities,
     required this.hidden,
   });
 
   @override
-  List<Object?> get props => [id, name, address, price, description, amenities, hours, policies, hidden];
+  List<Object?> get props => [
+        id,
+        name,
+        address,
+        description,
+        price,
+        hours,
+        policies,
+        basePriceValue,
+        basePriceUnit,
+        location,
+        workingHours,
+        policySections,
+        amenities,
+        hidden,
+      ];
 }
