@@ -6,9 +6,10 @@ import '../bloc/weekly_plan_bloc.dart';
 import '../bloc/weekly_plan_event.dart';
 import '../bloc/weekly_plan_state.dart';
 import '../data/repos/weekly_plan_repo_dummy.dart';
-import '../data/sources/weekly_plan_remote_source.dart';
+import '../data/sources/weekly_plan_firebase_source.dart';
 import '../domain/usecases/activate_plan_usecase.dart';
 import '../domain/usecases/get_weekly_plan_usecase.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../widgets/feature_list_card.dart';
 import '../widgets/plan_card.dart';
 
@@ -17,7 +18,7 @@ class WeeklyPlanPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeWeeklyPlanSource();
+    final source = WeeklyPlanFirebaseSource();
     final repo = WeeklyPlanRepoDummy(source);
     return BlocProvider(
       create: (_) => WeeklyPlanBloc(
@@ -40,9 +41,9 @@ class WeeklyPlanPage extends StatelessWidget {
               color: Colors.black, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Weekly Plan',
-          style: TextStyle(
+        title: Text(
+          context.t('weeklyPlanTitle'),
+          style: const TextStyle(
               color: Colors.black,
               fontSize: 19,
               fontWeight: FontWeight.bold),
@@ -52,8 +53,8 @@ class WeeklyPlanPage extends StatelessWidget {
         listenWhen: (p, c) => c.isActivated && !p.isActivated,
         listener: (context, state) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Plan activated successfully!'),
+            SnackBar(
+              content: Text(context.t('weeklyPlanActivated')),
               backgroundColor: AppColors.amber,
             ),
           );
@@ -70,16 +71,16 @@ class WeeklyPlanPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Save more with weekly access',
-                  style: TextStyle(
+                Text(
+                  context.t('weeklyPlanSaveMore'),
+                  style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Best option for frequent visits and focused work',
+                  context.t('weeklyPlanSubtitle'),
                   style: TextStyle(
                       color: AppColors.textSecondary, fontSize: 12),
                 ),
@@ -93,9 +94,9 @@ class WeeklyPlanPage extends StatelessWidget {
                 if (plan != null) ...[
                   PlanCard(pricePerWeek: plan.pricePerWeek),
                   const SizedBox(height: 20),
-                  const Text(
-                    'What you get',
-                    style: TextStyle(
+                  Text(
+                    context.t('weeklyPlanWhatYouGet'),
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
@@ -131,9 +132,9 @@ class WeeklyPlanPage extends StatelessWidget {
                             child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: Colors.black))
-                        : const Text(
-                            'Activate plan',
-                            style: TextStyle(
+                        : Text(
+                            context.t('weeklyPlanActivate'),
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600),

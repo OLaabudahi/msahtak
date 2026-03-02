@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class FilterChipEntity extends Equatable {
-  final String id; // unique (e.g. "quiet", "wifi_fast", "price_max_40")
+  final String id;
   final String label;
 
   const FilterChipEntity({

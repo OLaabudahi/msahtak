@@ -6,9 +6,10 @@ import '../bloc/usage_bloc.dart';
 import '../bloc/usage_event.dart';
 import '../bloc/usage_state.dart';
 import '../data/repos/usage_repo_dummy.dart';
-import '../data/sources/usage_remote_source.dart';
+import '../data/sources/usage_firebase_source.dart';
 import '../domain/usecases/apply_plan_usecase.dart';
 import '../domain/usecases/get_usage_usecase.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../widgets/plan_item_tile.dart';
 import '../widgets/usage_stats_card.dart';
 
@@ -17,7 +18,7 @@ class UsagePage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeUsageSource();
+    final source = UsageFirebaseSource();
     final repo = UsageRepoDummy(source);
     return BlocProvider(
       create: (_) => UsageBloc(
@@ -37,8 +38,8 @@ class UsagePage extends StatelessWidget {
           listenWhen: (p, c) => c.isApplied && !p.isApplied,
           listener: (context, state) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Plan applied successfully!'),
+              SnackBar(
+                content: Text(context.t('usagePlanApplied')),
                 backgroundColor: AppColors.amber,
               ),
             );
@@ -65,19 +66,19 @@ class UsagePage extends StatelessWidget {
                               color: Colors.black, size: 26),
                         ),
                         const SizedBox(width: 12),
-                        const Text('Your Usage',
-                            style: TextStyle(
+                        Text(context.t('usagePageTitle'),
+                            style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black)),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 38),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 38),
                       child: Text(
-                        'Based on your last 30 days',
-                        style: TextStyle(
+                        context.t('usageBasedOn'),
+                        style: const TextStyle(
                             fontSize: 13, color: Colors.grey),
                       ),
                     ),
@@ -85,14 +86,14 @@ class UsagePage extends StatelessWidget {
                     if (state.stats != null)
                       UsageStatsCard(stats: state.stats!),
                     const SizedBox(height: 28),
-                    const Text('Plan Optimizer',
-                        style: TextStyle(
+                    Text(context.t('usagePlanOptimizer'),
+                        style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.black)),
                     const SizedBox(height: 4),
-                    const Text('Compare plans',
-                        style: TextStyle(
+                    Text(context.t('usageComparePlans'),
+                        style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
@@ -137,8 +138,8 @@ class UsagePage extends StatelessWidget {
                           crossAxisAlignment:
                               CrossAxisAlignment.start,
                           children: [
-                            const Text('Recommendation',
-                                style: TextStyle(
+                            Text(context.t('usageRecommendation'),
+                                style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -179,9 +180,7 @@ class UsagePage extends StatelessWidget {
                                     strokeWidth: 2,
                                     color: Colors.black))
                             : Text(
-                                state.plans.isNotEmpty
-                                    ? 'Apply ${state.plans[state.selectedPlanIndex].name} Plan'
-                                    : 'Apply Weekly Plan',
+                                context.t('usageApplyPlan'),
                                 style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -23,18 +24,18 @@ class BookingRequestSummaryCard extends StatelessWidget {
         children: [
           Text(request.space.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 10),
-          _RowLine(label: 'Request ID', value: request.requestId),
+          _RowLine(label: context.t('summaryRequestId'), value: request.requestId),
           const SizedBox(height: 8),
-          _RowLine(label: 'Start', value: _fmtDate(request.startDate)),
+          _RowLine(label: context.t('summaryStart'), value: _fmtDate(request.startDate)),
           const SizedBox(height: 8),
-          _RowLine(label: 'Duration', value: '${request.durationValue} ${request.durationUnit.name}'),
+          _RowLine(label: context.t('summaryDuration'), value: '${request.durationValue} ${request.durationUnit.name}'),
           const SizedBox(height: 8),
-          _RowLine(label: 'Purpose', value: request.purposeLabel ?? '—'),
+          _RowLine(label: context.t('summaryPurpose'), value: request.purposeLabel ?? '—'),
           const SizedBox(height: 8),
-          _RowLine(label: 'Offer', value: request.offerLabel ?? '—'),
+          _RowLine(label: context.t('summaryOffer'), value: request.offerLabel ?? '—'),
           const SizedBox(height: 10),
           const Divider(height: 18),
-          _RowLine(label: 'Total', value: '₪${request.totalAmount}', bold: true),
+          _RowLine(label: context.t('summaryTotal'), value: '₪${request.totalAmount}', bold: true),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../domain/entities/notification_item.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/save_notification_settings_usecase.dart';
@@ -24,15 +25,33 @@ class NotificationsBloc
     on<NotificationSettingsSaved>(_onSettingsSaved);
   }
 
-  /// تحميل وتصنيف الإشعارات إلى TODAY وEARLIER
+  /// تحميل الإعدادات أولاً ثم الإشعارات مع تصفية حسب الإعدادات
   Future<void> _onStarted(
       NotificationsStarted event, Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingList: true));
     try {
+      final settings = await getNotificationSettingsUseCase();
       final all = await getNotificationsUseCase();
-      final today = all.where((n) => !n.isRead).toList();
-      final earlier = all.where((n) => n.isRead).toList();
+
+      final filtered = all.where((n) {
+        switch (n.type) {
+          case NotificationType.bookingApproved:
+            return settings.bookingApproved;
+          case NotificationType.bookingRejected:
+            return settings.bookingRejected;
+          case NotificationType.reminder:
+            return settings.bookingReminder;
+          case NotificationType.offerSuggestion:
+            return settings.offerSuggestion;
+          case NotificationType.tip:
+            return true;
+        }
+      }).toList();
+
+      final today = filtered.where((n) => !n.isRead).toList();
+      final earlier = filtered.where((n) => n.isRead).toList();
       emit(state.copyWith(
+          settings: settings,
           todayItems: today,
           earlierItems: earlier,
           isLoadingList: false));

@@ -11,6 +11,7 @@ class CustomSearchBar extends StatefulWidget {
     this.onSearchSubmitted,
     this.onSearchTap,
     this.hintText = 'Search',
+    this.aiButtonLabel = 'AI Concierge',
     this.width,
     this.height = 58,
     this.fieldWidth = 295.958,
@@ -21,43 +22,29 @@ class CustomSearchBar extends StatefulWidget {
     this.aiShadow,
     this.showAiButton = true,
     this.showFilterButton = false,
-
-    // Dropdown
     this.suggestions = const [],
     this.onSuggestionSelected,
     this.maxSuggestions = 6,
   });
 
   final TextEditingController controller;
-
-  /// AI (اختياري)
   final VoidCallback? onAiTap;
   final bool showAiButton;
-
-  /// فلتر (اختياري) — إذا بدك نفس زر الفلاتر تبع SearchResults
   final VoidCallback? onFilterTap;
   final bool showFilterButton;
-
   final ValueChanged<String>? onSearchChanged;
   final ValueChanged<String>? onSearchSubmitted;
   final VoidCallback? onSearchTap;
-
   final String hintText;
-
-  /// عرض/ارتفاع (الـwidth إذا null بياخد عرض المكان)
+  final String aiButtonLabel;
   final double? width;
   final double height;
-
-  /// نفس قياسات SVG تبعتك
   final double fieldWidth;
   final double slotWidth;
   final double aiButtonWidth;
   final double aiButtonHeight;
   final double aiRightInset;
-
   final BoxShadow? aiShadow;
-
-  /// Dropdown suggestions
   final List<String> suggestions;
   final ValueChanged<String>? onSuggestionSelected;
   final int maxSuggestions;
@@ -93,11 +80,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         ? widget.suggestions.take(widget.maxSuggestions).toList()
         : widget.suggestions;
 
-    final shouldShowDropdown =
-        _isFocused &&
-            widget.controller.text.trim().isNotEmpty &&
-            visibleSuggestions.isNotEmpty &&
-            widget.onSuggestionSelected != null;
+    final shouldShowDropdown = _isFocused &&
+        widget.controller.text.trim().isNotEmpty &&
+        visibleSuggestions.isNotEmpty &&
+        widget.onSuggestionSelected != null;
 
     return SizedBox(
       width: widget.width ?? double.infinity,
@@ -107,9 +93,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             height: widget.height,
             child: Stack(
               children: [
-                // 1) حقل البحث الرمادي
-                Positioned(
-                  left: 0,
+                // Search field — start-aligned (left in LTR, right in RTL)
+                PositionedDirectional(
+                  start: 0,
                   top: 0,
                   bottom: 0,
                   child: Container(
@@ -144,16 +130,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                           minWidth: 44,
                           minHeight: 44,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16),
                       ),
                     ),
                   ),
                 ),
 
-                // زر فلتر (اختياري) على يمين الحقل (زي SearchResults)
+                // Filter button (optional) — after the search field
                 if (widget.showFilterButton && widget.onFilterTap != null)
-                  Positioned(
-                    left: widget.fieldWidth + 10,
+                  PositionedDirectional(
+                    start: widget.fieldWidth + 10,
                     top: (widget.height - 44) / 2,
                     child: InkWell(
                       onTap: widget.onFilterTap,
@@ -163,41 +150,44 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         height: 44,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
-                          color: const Color(0xFFF2A23A),
+                          color: AppColors.btnPrimary,
                         ),
                         child: const Icon(Icons.tune, color: Colors.white),
                       ),
                     ),
                   ),
 
-                // 2) الخلفية البيضاء (slot) تحت زر AI
+                // AI button slot background — end-aligned (right in LTR, left in RTL)
                 if (widget.showAiButton)
-                  Positioned(
-                    right: 0,
+                  PositionedDirectional(
+                    end: 0,
                     top: 0,
                     bottom: 0,
                     child: Container(
                       width: widget.slotWidth,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(widget.height / 2),
+                        borderRadius:
+                            BorderRadius.circular(widget.height / 2),
                       ),
                     ),
                   ),
 
-                // 3) زر AI
+                // AI button — end-aligned
                 if (widget.showAiButton && widget.onAiTap != null)
-                  Positioned(
-                    right: widget.aiRightInset,
+                  PositionedDirectional(
+                    end: widget.aiRightInset,
                     top: topInset,
                     child: InkWell(
                       onTap: widget.onAiTap,
-                      borderRadius: BorderRadius.circular(widget.aiButtonHeight / 2),
+                      borderRadius:
+                          BorderRadius.circular(widget.aiButtonHeight / 2),
                       child: Container(
                         width: widget.aiButtonWidth,
                         height: widget.aiButtonHeight,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.aiButtonHeight / 2),
+                          borderRadius:
+                              BorderRadius.circular(widget.aiButtonHeight / 2),
                           gradient: const LinearGradient(
                             begin: Alignment.bottomLeft,
                             end: Alignment.topRight,
@@ -210,18 +200,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                             stops: [0.0, 0.297, 0.467, 1.0],
                           ),
                           boxShadow: [
-                            widget.aiShadow ??
-                                BoxShadow(
-                                  color: AppColors.shadowLight,
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
+                            BoxShadow(
+                              color: AppColors.shadowLight,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
                           ],
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
-                          "AI Concierge",
-                          style: TextStyle(
+                        child: Text(
+                          widget.aiButtonLabel,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
@@ -252,10 +241,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       final s = visibleSuggestions[i];
                       return ListTile(
                         dense: true,
-                        title: Text(s, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        title: Text(s,
+                            maxLines: 1, overflow: TextOverflow.ellipsis),
                         onTap: () {
                           widget.controller.text = s;
-                          widget.controller.selection = TextSelection.collapsed(offset: s.length);
+                          widget.controller.selection =
+                              TextSelection.collapsed(offset: s.length);
                           FocusScope.of(context).unfocus();
                           widget.onSuggestionSelected!(s);
                         },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../app_start/bloc/app_start_bloc.dart';
 import '../../app_start/bloc/app_start_event.dart';
@@ -17,6 +18,7 @@ import 'saved_spaces_page.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
+import '../data/repos/profile_repo_firebase.dart';
 import '../widgets/profile_header_card.dart';
 import '../widgets/profile_menu_tile.dart';
 
@@ -25,7 +27,7 @@ class ProfileTabPage extends StatefulWidget {
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => ProfileBloc()..add(const ProfileStarted()),
+      create: (_) => ProfileBloc(repo: ProfileRepoFirebase())..add(const ProfileStarted()),
       child: const ProfileTabPage(),
     );
   }
@@ -53,7 +55,8 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
     );
   }
 
-  Widget _buildMenuSection({
+  Widget _buildMenuSection(
+    BuildContext context, {
     required VoidCallback onPersonalInfo,
     required VoidCallback onUsage,
     required VoidCallback onPaymentsReceipts,
@@ -69,19 +72,19 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       child: Column(
         children: [
           ProfileMenuTile(
-            title: 'Personal Info',
+            title: context.t('personalInfo'),
             icon: Icons.circle,
             leadingText: 'P',
             onTap: onPersonalInfo,
           ),
           ProfileMenuTile(
-            title: 'Your usage',
+            title: context.t('yourUsage'),
             icon: Icons.circle,
             leadingText: 'B',
             onTap: onUsage,
           ),
           ProfileMenuTile(
-            title: 'Payments & Receipts',
+            title: context.t('paymentsReceipts'),
             icon: Icons.circle,
             leadingText: r'$',
             onTap: onPaymentsReceipts,
@@ -91,7 +94,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
           Column(
             children: [
               ProfileMenuTile(
-                title: 'Payment Details',
+                title: context.t('paymentDetails'),
                 icon: Icons.circle,
                 leadingText: r'$D',
                 showChevronDown: _paymentExpanded,
@@ -117,13 +120,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
           ),
 
           ProfileMenuTile(
-            title: 'Reviews & Ratings',
+            title: context.t('reviewsRatings'),
             icon: Icons.star,
             leadingIcon: Icons.star,
             onTap: onReviews,
           ),
           ProfileMenuTile(
-            title: 'Saved Spaces',
+            title: context.t('savedSpaces'),
             icon: Icons.favorite,
             leadingIcon: Icons.favorite,
             isLast: true,
@@ -152,9 +155,9 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             ),
           ),
           const SizedBox(width: 14),
-          const Text(
-            'Log Out',
-            style: TextStyle(
+          Text(
+            context.t('logOut'),
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: AppColors.danger,
@@ -202,8 +205,8 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          const Text(
-                            'Profile',
+                          Text(
+                            context.t('profileTitle'),
                             style: AppTextStyles.sectionBarTitle,
                           ),
                           const SizedBox(height: 16),
@@ -213,6 +216,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                           const SizedBox(height: 20),
 
                           _buildMenuSection(
+                            context,
                             onPersonalInfo: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => const PersonalInfoPage(),

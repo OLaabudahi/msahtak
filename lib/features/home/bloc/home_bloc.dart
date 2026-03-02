@@ -32,26 +32,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         featuredSpaces: featured,
         featuredIndex: 0,
         insights: _buildDummyInsights(),
-        unreadNotifications: state.unreadNotifications, // خليها زي ما تحبي
+        unreadNotifications: state.unreadNotifications,
       ));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }
 
-  void _onBottomTabChanged(HomeBottomTabChanged event, Emitter<HomeState> emit) {
+  void _onBottomTabChanged(
+      HomeBottomTabChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(bottomTabIndex: event.index));
   }
 
-  void _onCategorySelected(HomeCategorySelected event, Emitter<HomeState> emit) {
-    // حاليًا: UI بس + Navigate عندك للـ Map لما i==0 من الصفحة نفسها
+  void _onCategorySelected(
+      HomeCategorySelected event, Emitter<HomeState> emit) {
     emit(state.copyWith(selectedCategoryIndex: event.index));
   }
 
-  void _onNotificationPressed(HomeNotificationPressed event, Emitter<HomeState> emit) {
-    // مثال: تصفير النقطة
+  void _onNotificationPressed(
+      HomeNotificationPressed event, Emitter<HomeState> emit) {
     emit(state.copyWith(unreadNotifications: 0));
-
   }
 
   void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {
@@ -69,34 +69,43 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(featuredSpaces: filtered, featuredIndex: 0));
   }
 
-  void _onFeaturedPageChanged(HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
+  void _onFeaturedPageChanged(
+      HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(featuredIndex: event.index));
   }
 
   List<InsightItem> _buildDummyInsights() {
     return const [
       InsightItem(
-        id: 'ins_weekly_plan',
-        title: 'Weekly plan',
-        subtitle: 'Quiet spaces for evening work',
-        imageAsset: 'assets/images/home.png',
-      ),
-      InsightItem(
-        id: 'ins_spacial_Search',
-        title: 'Internet is',
-        subtitle: 'Quiet is average',
+        id: 'ins_best_for_you',
+        titleKey: 'insBestForYou',
+        subtitleKey: 'insBestForYouSub',
+        title: 'Best For You',
+        subtitle: 'Find the space that matches your goal.',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
         id: 'ins_offers',
-        title: 'Offers',
-        subtitle: 'Perfect for your budget',
+        titleKey: 'insExclusiveDeals',
+        subtitleKey: 'insExclusiveDealsSub',
+        title: "Today's Offers",
+        subtitle: 'Exclusive deals on top spaces.',
         imageAsset: 'assets/images/home.png',
       ),
       InsightItem(
-        id: 'ins_best_for_you',
-        title: 'Best for You',
-        subtitle: 'Meeting suggested spaces based on your needs',
+        id: 'ins_weekly_plan',
+        titleKey: 'insWeeklyPlan',
+        subtitleKey: 'insWeeklyPlanSub',
+        title: 'Weekly Plan',
+        subtitle: 'Unlock your productivity hub.',
+        imageAsset: 'assets/images/home.png',
+      ),
+      InsightItem(
+        id: 'ins_4',
+        titleKey: 'insMeetingChecklist',
+        subtitleKey: 'insMeetingChecklistSub',
+        title: 'Meeting-ready checklist',
+        subtitle: "Don't miss essentials.",
         imageAsset: 'assets/images/home.png',
       ),
     ];

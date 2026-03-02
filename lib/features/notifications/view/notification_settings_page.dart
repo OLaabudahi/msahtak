@@ -6,10 +6,11 @@ import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
 import '../data/repos/notifications_repo_dummy.dart';
-import '../data/sources/notifications_remote_source.dart';
+import '../data/sources/notifications_firebase_source.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
 import '../domain/usecases/save_notification_settings_usecase.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../widgets/settings_toggle_tile.dart';
 import '../widgets/timing_chip.dart';
 
@@ -18,7 +19,7 @@ class NotificationSettingsPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeNotificationsSource();
+    final source = NotificationsFirebaseSource();
     final repo = NotificationsRepoDummy(source);
     return BlocProvider(
       create: (_) => NotificationsBloc(
@@ -62,9 +63,9 @@ class NotificationSettingsPage extends StatelessWidget {
                               color: Colors.black, size: 26),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
-                          'Notification Settings',
-                          style: TextStyle(
+                        Text(
+                          context.t('notifSettingsTitle'),
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black),
@@ -72,16 +73,16 @@ class NotificationSettingsPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Stay in control',
-                      style: TextStyle(
+                    Text(
+                      context.t('notifSettingsStayInControl'),
+                      style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Choose which updates you want to receive.',
+                      context.t('notifSettingsChooseUpdates'),
                       style: TextStyle(
                           fontSize: 14, color: AppColors.textSecondary),
                     ),
@@ -111,8 +112,8 @@ class NotificationSettingsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 28),
                     // Booking Alerts
-                    const Text('Booking alerts',
-                        style: TextStyle(
+                    Text(context.t('bookingAlerts'),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
@@ -127,9 +128,8 @@ class NotificationSettingsPage extends StatelessWidget {
                       child: Column(
                         children: [
                           SettingsToggleTile(
-                            title: 'Booking approved',
-                            subtitle:
-                                'When a space confirms your request.',
+                            title: context.t('bookingApproved'),
+                            subtitle: context.t('bookingApprovedSubtitle'),
                             value: s.bookingApproved,
                             onChanged: (v) =>
                                 context.read<NotificationsBloc>().add(
@@ -138,9 +138,8 @@ class NotificationSettingsPage extends StatelessWidget {
                           ),
                           Divider(color: AppColors.borderLight, height: 1),
                           SettingsToggleTile(
-                            title: 'Booking rejected',
-                            subtitle:
-                                'So you can quickly pick another option.',
+                            title: context.t('bookingRejected'),
+                            subtitle: context.t('bookingRejectedSubtitle'),
                             value: s.bookingRejected,
                             onChanged: (v) =>
                                 context.read<NotificationsBloc>().add(
@@ -149,9 +148,8 @@ class NotificationSettingsPage extends StatelessWidget {
                           ),
                           Divider(color: AppColors.borderLight, height: 1),
                           SettingsToggleTile(
-                            title: 'Booking reminder',
-                            subtitle:
-                                'Reminder before your reserved time.',
+                            title: context.t('notifSettingsBookingReminder'),
+                            subtitle: context.t('notifSettingsReminderSub'),
                             value: s.bookingReminder,
                             onChanged: (v) =>
                                 context.read<NotificationsBloc>().add(
@@ -165,13 +163,13 @@ class NotificationSettingsPage extends StatelessWidget {
                     // Reminder Timing
                     Row(
                       children: [
-                        const Text('Reminder timing',
-                            style: TextStyle(
+                        Text(context.t('reminderTiming'),
+                            style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black)),
                         const SizedBox(width: 8),
-                        Text('(Optional)',
+                        Text(context.t('optionalLabel'),
                             style: TextStyle(
                                 fontSize: 13, color: AppColors.textMuted)),
                       ],
@@ -181,7 +179,7 @@ class NotificationSettingsPage extends StatelessWidget {
                       spacing: 10,
                       children: [
                         TimingChip(
-                          label: '30 min',
+                          label: context.t('timing30min'),
                           index: 0,
                           selectedIndex: s.reminderTiming,
                           onTap: () =>
@@ -190,7 +188,7 @@ class NotificationSettingsPage extends StatelessWidget {
                                       0)),
                         ),
                         TimingChip(
-                          label: '1 hour',
+                          label: context.t('timing1hour'),
                           index: 1,
                           selectedIndex: s.reminderTiming,
                           onTap: () =>
@@ -199,7 +197,7 @@ class NotificationSettingsPage extends StatelessWidget {
                                       1)),
                         ),
                         TimingChip(
-                          label: 'Same day (9 AM)',
+                          label: context.t('timingSameDay'),
                           index: 2,
                           selectedIndex: s.reminderTiming,
                           onTap: () =>
@@ -211,8 +209,8 @@ class NotificationSettingsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 28),
                     // Offers & Plans
-                    const Text('Offers & plans',
-                        style: TextStyle(
+                    Text(context.t('notifSettingsOffersPlans'),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
@@ -225,9 +223,8 @@ class NotificationSettingsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: SettingsToggleTile(
-                        title: 'Offer / plan suggestion',
-                        subtitle:
-                            'Weekly plan could save you money.',
+                        title: context.t('notifSettingsOfferSuggestion'),
+                        subtitle: context.t('notifSettingsOfferSub'),
                         value: s.offerSuggestion,
                         onChanged: (v) =>
                             context.read<NotificationsBloc>().add(
@@ -251,8 +248,8 @@ class NotificationSettingsPage extends StatelessWidget {
                                   BorderRadius.circular(26)),
                           elevation: 0,
                         ),
-                        child: const Text('Save',
-                            style: TextStyle(
+                        child: Text(context.t('save'),
+                            style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black)),

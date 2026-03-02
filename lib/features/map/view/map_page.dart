@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../../../theme/app_colors.dart';
 import '../../space_details/view/space_details_page.dart';
-
 import '../bloc/map_bloc.dart';
 import '../bloc/map_event.dart';
 import '../bloc/map_state.dart';
@@ -16,6 +14,7 @@ import '../domain/entities/geo_point_entity.dart';
 import '../domain/usecases/get_current_location_usecase.dart';
 import '../domain/usecases/get_nearby_spaces_usecase.dart';
 import '../widgets/map_radius_badge.dart';
+import '../widgets/nearby_space_card.dart';
 import '../widgets/nearby_space_bottom_card.dart';
 
 class MapPage extends StatefulWidget {
@@ -50,26 +49,9 @@ class _MapPageState extends State<MapPage> {
   static const _secondary = AppColors.dotInactive;
 
   final MapController _mapController = MapController();
-
-  late final PageController _cardsController;
-
   bool _mapReady = false;
   double _currentZoom = 14.2;
   LatLng? _pendingMove;
-
-  bool _syncingPage = false; // لمنع loop بين pageChanged و bloc
-
-  @override
-  void initState() {
-    super.initState();
-    _cardsController = PageController(viewportFraction: 0.92);
-  }
-
-  @override
-  void dispose() {
-    _cardsController.dispose();
-    super.dispose();
-  }
 
   void _moveTo(LatLng target) {
     if (!_mapReady) {
@@ -80,54 +62,25 @@ class _MapPageState extends State<MapPage> {
   }
 
   double _zoomForRadius(double radiusKm) {
+    // تقريب بسيط: نصف كم أقرب => زوم أعلى
     if (radiusKm <= 0.5) return 15.0;
     return 14.2;
   }
 
-  void _syncPageToSelected(MapState state) {
-    if (!_cardsController.hasClients) return;
-    if (state.spaces.isEmpty) return;
-    if (state.selectedSpaceId == null) return;
-
-    final targetIndex = state.spaces.indexWhere((s) => s.id == state.selectedSpaceId);
-    if (targetIndex < 0) return;
-
-    final currentPage = (_cardsController.page ?? _cardsController.initialPage.toDouble()).round();
-
-    if (currentPage == targetIndex) return;
-
-    _syncingPage = true;
-    _cardsController.animateToPage(
-      targetIndex,
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOut,
-    ).whenComplete(() {
-      _syncingPage = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewPadding.bottom + 7;
+    final bottomInset = MediaQuery.of(context).viewPadding.bottom;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         bottom: false,
         child: BlocConsumer<MapBloc, MapState>(
-          listenWhen: (p, c) =>
-          p.selectedSpaceId != c.selectedSpaceId ||
-              p.spaces.length != c.spaces.length,
+          listenWhen: (p, c) => p.selectedSpaceId != c.selectedSpaceId,
           listener: (_, state) {
             final s = state.selectedSpace;
-            if (s != null) {
-              _moveTo(LatLng(s.location.lat, s.location.lng));
-            }
-
-            // ✅ خلّي الـ PageView يروح تلقائيًا للكارد المحدد (من Marker أو من أول تحميل)
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _syncPageToSelected(state);
-            });
+            if (s == null) return;
+            _moveTo(LatLng(s.location.lat, s.location.lng));
           },
           builder: (context, state) {
             final center = state.center;
@@ -139,78 +92,96 @@ class _MapPageState extends State<MapPage> {
                   child: center == null
                       ? const SizedBox()
                       : FlutterMap(
-                    mapController: _mapController,
-                    options: MapOptions(
-                      initialCenter: LatLng(center.lat, center.lng),
-                      initialZoom: _zoomForRadius(state.radiusKm),
-                      onTap: (_, __) => FocusScope.of(context).unfocus(),
-                      onMapReady: () {
-                        setState(() => _mapReady = true);
+                          mapController: _mapController,
 
-                        if (_pendingMove != null) {
-                          _mapController.move(_pendingMove!, _currentZoom);
-                          _pendingMove = null;
-                        }
-                      },
-                      onPositionChanged: (pos, _) {
-                        final z = pos.zoom;
-                        if (z != null) _currentZoom = z;
-                      },
-                    ),
-                    children: [
-                      // ✅ Tiles (حل مشاكل 403)
-                      TileLayer(
-                        urlTemplate: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-                        subdomains: const ['a', 'b', 'c'],
-                        userAgentPackageName: 'com.example.masahtak_app',
-                      ),
+                          options: MapOptions(
+                            initialCenter: LatLng(center.lat, center.lng),
+                            initialZoom: _zoomForRadius(state.radiusKm),
+                            onTap: (_, __) => FocusScope.of(context).unfocus(),
+                            onMapReady: () {
+                              setState(() => _mapReady = true);
 
-                      // دائرة الراديوس
-                      CircleLayer(
-                        circles: [
-                          CircleMarker(
-                            point: LatLng(center.lat, center.lng),
-                            radius: state.radiusKm * 1000.0,
-                            useRadiusInMeter: true,
-                            color: _secondary.withOpacity(0.22),
-                            borderStrokeWidth: 0,
+                              // لو كان فيه حركة مؤجلة (جت من Bloc listener)
+                              if (_pendingMove != null) {
+                                _mapController.move(
+                                  _pendingMove!,
+                                  _currentZoom,
+                                );
+                                _pendingMove = null;
+                              }
+                            },
+
+                            onPositionChanged: (pos, _) {
+                              // نحفظ آخر زوم بدل camera
+                              final z = pos.zoom;
+                              if (z != null) _currentZoom = z;
+                            },
                           ),
-                        ],
-                      ),
-
-                      // Markers
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: LatLng(center.lat, center.lng),
-                            width: 44,
-                            height: 44,
-                            child: const Icon(
-                              Icons.my_location,
-                              color: _primary,
-                              size: 30,
+                          children: [
+                            // OpenStreetMap tiles
+                            TileLayer(
+                              urlTemplate:
+                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName:
+                                  'com.example.masahtak_app', // غيّريه لباكيدجك
                             ),
-                          ),
-                          ...state.spaces.map((s) {
-                            final isSelected = s.id == state.selectedSpaceId;
-                            return Marker(
-                              point: LatLng(s.location.lat, s.location.lng),
-                              width: 48,
-                              height: 48,
-                              child: GestureDetector(
-                                onTap: () => context.read<MapBloc>().add(MapMarkerTapped(s.id)),
-                                child: Icon(
-                                  Icons.location_pin,
-                                  size: isSelected ? 42 : 36,
-                                  color: isSelected ? _primary : _secondary,
+
+                            // دائرة الراديوس
+                            CircleLayer(
+                              circles: [
+                                CircleMarker(
+                                  point: LatLng(center.lat, center.lng),
+                                  radius: state.radiusKm * 1000.0,
+                                  // بالمتر
+                                  useRadiusInMeter: true,
+                                  color: _secondary.withOpacity(0.22),
+                                  borderStrokeWidth: 0,
                                 ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ],
-                  ),
+                              ],
+                            ),
+
+                            // Markers
+                            MarkerLayer(
+                              markers: [
+                                // Marker للمركز
+                                Marker(
+                                  point: LatLng(center.lat, center.lng),
+                                  width: 44,
+                                  height: 44,
+                                  child: const Icon(
+                                    Icons.my_location,
+                                    color: _primary,
+                                    size: 30,
+                                  ),
+                                ),
+                                ...state.spaces.map((s) {
+                                  final isSelected =
+                                      s.id == state.selectedSpaceId;
+                                  return Marker(
+                                    point: LatLng(
+                                      s.location.lat,
+                                      s.location.lng,
+                                    ),
+                                    width: 48,
+                                    height: 48,
+                                    child: GestureDetector(
+                                      onTap: () => context.read<MapBloc>().add(
+                                        MapMarkerTapped(s.id),
+                                      ),
+                                      child: Icon(
+                                        Icons.location_pin,
+                                        size: isSelected ? 42 : 36,
+                                        color: isSelected
+                                            ? _primary
+                                            : _secondary,
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ],
+                        ),
                 ),
 
                 // Top bar
@@ -218,6 +189,7 @@ class _MapPageState extends State<MapPage> {
                   top: 0,
                   left: 0,
                   right: 0,
+
                   child: _TopBar(
                     title: 'Look Nearly By Map',
                     onBack: () => Navigator.of(context).pop(),
@@ -238,7 +210,8 @@ class _MapPageState extends State<MapPage> {
                     right: 16,
                     child: _ErrorBanner(
                       text: state.error!,
-                      onRetry: () => context.read<MapBloc>().add(const MapStarted()),
+                      onRetry: () =>
+                          context.read<MapBloc>().add(const MapStarted()),
                     ),
                   ),
 
@@ -246,7 +219,7 @@ class _MapPageState extends State<MapPage> {
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: bottomInset, // ✅ فوق أزرار النظام
+                  bottom: bottomInset, // ✅ يرفع فوق أزرار النظام
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -255,7 +228,8 @@ class _MapPageState extends State<MapPage> {
                       const SizedBox(height: 8),
                       _RadiusChips(
                         selected: state.radiusKm,
-                        onChanged: (v) => context.read<MapBloc>().add(MapRadiusChanged(v)),
+                        onChanged: (v) =>
+                            context.read<MapBloc>().add(MapRadiusChanged(v)),
                         primary: _primary,
                         secondary: _secondary,
                       ),
@@ -263,25 +237,31 @@ class _MapPageState extends State<MapPage> {
 
                       if (state.spaces.isNotEmpty)
                         SizedBox(
-                          height: 170, // ✅ مناسب لكارد التصميم
+                          height: 160, // ✅ ثابت ومناسب للكارد الجديد
                           child: PageView.builder(
-                            controller: _cardsController,
+                            controller: PageController(viewportFraction: 0.92),
                             itemCount: state.spaces.length,
                             onPageChanged: (index) {
-                              if (_syncingPage) return; // ✅ منع loop
                               final id = state.spaces[index].id;
-                              context.read<MapBloc>().add(MapMarkerTapped(id));
+                              context.read<MapBloc>().add(
+                                MapMarkerTapped(id),
+                              ); // ✅ تحديد تلقائي
                             },
                             itemBuilder: (context, index) {
                               final space = state.spaces[index];
                               return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
                                 child: NearbySpaceBottomCard(
                                   space: space,
                                   onView: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) => SpaceDetailsPage.withBloc(spaceId: space.id),
+                                        builder: (_) =>
+                                            SpaceDetailsPage.withBloc(
+                                              spaceId: space.id,
+                                            ),
                                       ),
                                     );
                                   },
@@ -300,7 +280,7 @@ class _MapPageState extends State<MapPage> {
                             boxShadow: [
                               BoxShadow(
                                 blurRadius: 18,
-                                offset: const Offset(0, 6),
+                                offset: const Offset(0, 8),
                                 color: AppColors.shadowLight,
                               ),
                             ],

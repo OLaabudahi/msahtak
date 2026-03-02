@@ -6,8 +6,9 @@ import '../bloc/reviews_bloc.dart';
 import '../bloc/reviews_event.dart';
 import '../bloc/reviews_state.dart';
 import '../data/repos/reviews_repo_dummy.dart';
-import '../data/sources/reviews_remote_source.dart';
+import '../data/sources/reviews_firebase_source.dart';
 import '../domain/usecases/get_reviews_usecase.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../widgets/rating_bar_row.dart';
 import '../widgets/review_card.dart';
 import '../widgets/reviews_filter_chip.dart';
@@ -17,7 +18,7 @@ class ReviewsPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeReviewsSource();
+    final source = ReviewsFirebaseSource();
     final repo = ReviewsRepoDummy(source);
     return BlocProvider(
       create: (_) => ReviewsBloc(
@@ -55,9 +56,9 @@ class ReviewsPage extends StatelessWidget {
                               color: Colors.black, size: 26),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
-                          'Reviews & Ratings',
-                          style: TextStyle(
+                        Text(
+                          context.t('reviewsPageTitle'),
+                          style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black),
@@ -70,8 +71,8 @@ class ReviewsPage extends StatelessWidget {
                       _OverallRatingCard(summary: state.summary!),
                     const SizedBox(height: 24),
                     // Filter
-                    const Text('Filter',
-                        style: TextStyle(
+                    Text(context.t('reviewsFilter'),
+                        style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
@@ -80,7 +81,7 @@ class ReviewsPage extends StatelessWidget {
                       spacing: 10,
                       children: [
                         ReviewsFilterChip(
-                          label: 'All',
+                          label: context.t('reviewsAll'),
                           index: 0,
                           selectedIndex:
                               state.selectedFilterIndex,
@@ -89,7 +90,7 @@ class ReviewsPage extends StatelessWidget {
                                   const ReviewsFilterChanged(0)),
                         ),
                         ReviewsFilterChip(
-                          label: 'My reviews',
+                          label: context.t('reviewsMyReviews'),
                           index: 1,
                           selectedIndex:
                               state.selectedFilterIndex,
@@ -98,7 +99,7 @@ class ReviewsPage extends StatelessWidget {
                                   const ReviewsFilterChanged(1)),
                         ),
                         ReviewsFilterChip(
-                          label: 'Most recent',
+                          label: context.t('reviewsMostRecent'),
                           index: 2,
                           selectedIndex:
                               state.selectedFilterIndex,
@@ -109,8 +110,8 @@ class ReviewsPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 28),
-                    const Text('Recent reviews',
-                        style: TextStyle(
+                    Text(context.t('reviewsRecent'),
+                        style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                             color: Colors.black)),
@@ -126,7 +127,7 @@ class ReviewsPage extends StatelessWidget {
                                 child: ReviewCard(review: r),
                               )),
                     Text(
-                      'Tip: You can edit your reviews from Space',
+                      context.t('reviewsTip'),
                       style: TextStyle(
                           fontSize: 13, color: AppColors.textMuted),
                     ),
@@ -158,7 +159,7 @@ class _OverallRatingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Overall',
+          Text(context.t('reviewsOverall'),
               style:
                   TextStyle(fontSize: 14, color: AppColors.textMuted)),
           const SizedBox(height: 8),
@@ -186,7 +187,7 @@ class _OverallRatingCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Based on ${summary.totalReviews} reviews',
+                    '${context.t('reviewsBasedOn')} ${summary.totalReviews} ${context.t('reviewsBasedOnSuffix')}',
                     style: TextStyle(
                         fontSize: 12, color: AppColors.textMuted),
                   ),

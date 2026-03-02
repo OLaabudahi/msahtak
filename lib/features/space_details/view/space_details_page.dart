@@ -6,10 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
 import '../../booking/booking_feature_routes.dart';
+import '../../booking/domain/entities/booking_request_entity.dart';
 import '../bloc/space_details_bloc.dart';
 import '../bloc/space_details_event.dart';
 import '../bloc/space_details_state.dart';
-import '../data/repos/space_details_repo_dummy.dart';
+import '../data/repos/space_details_repo_firebase.dart';
 import '../widgets/alert_banner.dart';
 import '../widgets/dot_indicator.dart';
 import '../widgets/offer_card.dart';
@@ -29,7 +30,7 @@ class SpaceDetailsPage extends StatefulWidget {
   static Widget withBloc({required String spaceId}) {
     return BlocProvider(
       create: (_) =>
-          SpaceDetailsBloc(repo: SpaceDetailsRepoDummy())
+          SpaceDetailsBloc(repo: SpaceDetailsRepoFirebase())
             ..add(SpaceDetailsStarted(spaceId)),
       child: SpaceDetailsPage(spaceId: spaceId),
     );
@@ -648,9 +649,12 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       ),
                     ),
                     onPressed: () {
-                      final repo = SpaceDetailsRepoDummy();
-
-                      final summary = repo.mapToBookingSummary(d);
+                      final summary = SpaceSummaryEntity(
+                        id: d.id,
+                        name: d.name,
+                        basePricePerDay: d.pricePerDay,
+                        currency: d.currency,
+                      );
 
                       Navigator.of(context).push(
                         BookingFeatureRoutes.requestBooking(space: summary),

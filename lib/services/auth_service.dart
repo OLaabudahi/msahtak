@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // Google Sign-In غير مدعوم على الويب بدون Client ID
+  GoogleSignIn? get _googleSignIn => kIsWeb ? null : GoogleSignIn();
 
   // Get current user
   User? get currentUser => _auth.currentUser;
@@ -33,7 +35,9 @@ class AuthService {
           'uid': user.uid,
           'email': email,
           'fullName': fullName,
-          'role': 'user', // Default role is user
+          'phoneNumber': '',
+          'role': 'user',
+          'status': 'active',
           'createdAt': FieldValue.serverTimestamp(),
         });
 
@@ -89,8 +93,11 @@ class AuthService {
 
   // Sign in with Google
   Future<Map<String, dynamic>> signInWithGoogle() async {
+    if (kIsWeb) {
+      return {'success': false, 'error': 'Google sign-in is not supported on web'};
+    }
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
 
       if (googleUser == null) {
         return {'success': false, 'error': 'Google sign in cancelled'};
@@ -120,7 +127,9 @@ class AuthService {
             'uid': user.uid,
             'email': user.email,
             'fullName': user.displayName ?? '',
+            'phoneNumber': '',
             'role': 'user',
+            'status': 'active',
             'createdAt': FieldValue.serverTimestamp(),
           });
         }
@@ -166,7 +175,7 @@ class AuthService {
 
   // Sign out
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    await _googleSignIn?.signOut();
     await _auth.signOut();
   }
 
@@ -188,19 +197,26 @@ class AuthService {
       case 'user-not-found':
         return 'No user found with this email';
       case 'wrong-password':
-        return 'Wrong password';
+      case 'invalid-credential':
+        return 'Incorrect email or password';
       case 'email-already-in-use':
-        return 'Email is already in use';
+        return 'This email is already registered';
       case 'invalid-email':
         return 'Invalid email address';
       case 'weak-password':
-        return 'Password is too weak';
+        return 'Password must be at least 6 characters';
       case 'user-disabled':
         return 'This account has been disabled';
       case 'too-many-requests':
         return 'Too many attempts. Please try again later';
+      case 'operation-not-allowed':
+        return 'Email/password sign-in is not enabled. Please contact support';
+      case 'network-request-failed':
+        return 'Network error. Check your connection';
+      case 'requires-recent-login':
+        return 'Please log in again to continue';
       default:
-        return 'An error occurred. Please try again';
+        return 'Error ($code). Please try again';
     }
   }
 }

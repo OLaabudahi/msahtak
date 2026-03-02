@@ -7,8 +7,8 @@ abstract class SearchResultsEvent extends Equatable {
 }
 
 class SearchResultsStarted extends SearchResultsEvent {
-  final String originKey;   // e.g. "new_suggestion" / "private_office" / "nearly"
-  final String originTitle; // يظهر كعنوان الصفحة
+  final String originKey;
+  final String originTitle;
 
   const SearchResultsStarted({
     required this.originKey,
@@ -28,7 +28,7 @@ class SearchQueryChanged extends SearchResultsEvent {
 }
 
 class SearchApplyFilters extends SearchResultsEvent {
-  final Map<String, dynamic> selectedFilters; // من شاشة الفلاتر لاحقًا
+  final Map<String, dynamic> selectedFilters;
   const SearchApplyFilters(this.selectedFilters);
 
   @override
@@ -42,6 +42,7 @@ class SearchRemovePreferredChip extends SearchResultsEvent {
   @override
   List<Object?> get props => [chipId];
 }
+
 class SearchSuggestionSelected extends SearchResultsEvent {
   final String value;
   const SearchSuggestionSelected(this.value);
@@ -49,6 +50,7 @@ class SearchSuggestionSelected extends SearchResultsEvent {
   @override
   List<Object?> get props => [value];
 }
+
 class SearchRefresh extends SearchResultsEvent {
   const SearchRefresh();
 }

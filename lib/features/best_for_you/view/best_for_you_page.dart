@@ -7,7 +7,7 @@ import '../bloc/best_for_you_bloc.dart';
 import '../bloc/best_for_you_event.dart';
 import '../bloc/best_for_you_state.dart';
 import '../data/repos/best_for_you_repo_dummy.dart';
-import '../data/sources/best_for_you_remote_source.dart';
+import '../data/sources/best_for_you_firebase_source.dart';
 import '../domain/usecases/get_best_for_you_usecase.dart';
 import '../widgets/fit_score_card.dart';
 import '../widgets/heads_up_card.dart';
@@ -18,7 +18,7 @@ class BestForYouPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeBestForYouSource();
+    final source = BestForYouFirebaseSource();
     final repo = BestForYouRepoDummy(source);
     return BlocProvider(
       create: (_) => BestForYouBloc(

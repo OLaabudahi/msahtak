@@ -5,9 +5,6 @@ class LocalStorageService {
   static const _kHasCompletedOnboarding = 'has_completed_onboarding';
   static const _kLocaleCode = 'locale_code';
 
-  // NEW:
-  static const _kUserRole = 'user_role';
-
   Future<bool> getIsLoggedIn() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getBool(_kIsLoggedIn) ?? false;
@@ -38,20 +35,8 @@ class LocalStorageService {
     await sp.setString(_kLocaleCode, code);
   }
 
-  // ✅ NEW:
-  Future<String?> getUserRole() async {
-    final sp = await SharedPreferences.getInstance();
-    return sp.getString(_kUserRole);
-  }
-
-  Future<void> setUserRole(String role) async {
-    final sp = await SharedPreferences.getInstance();
-    await sp.setString(_kUserRole, role);
-  }
-
   Future<void> clearAuth() async {
     final sp = await SharedPreferences.getInstance();
     await sp.remove(_kIsLoggedIn);
-    await sp.remove(_kUserRole); // NEW
   }
 }

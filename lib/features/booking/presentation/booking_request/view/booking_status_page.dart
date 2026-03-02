@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../booking_feature_routes.dart';
@@ -21,7 +22,7 @@ class BookingStatusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking status'),
+        title: Text(context.t('bookingStatusPageTitle')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -64,13 +65,13 @@ class BookingStatusPage extends StatelessWidget {
                         border: Border.all(color: AppColors.approvedBorder),
                       ),
                       child: Row(
-                        children: const [
-                          Icon(Icons.verified, color: AppColors.approvedText),
-                          SizedBox(width: 10),
+                        children: [
+                          const Icon(Icons.verified, color: AppColors.approvedText),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Booking is approved. Please proceed to payment.',
-                              style: TextStyle(fontWeight: FontWeight.w700),
+                              context.t('bookingStatusApprovedBanner'),
+                              style: const TextStyle(fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -95,7 +96,7 @@ class BookingStatusPage extends StatelessWidget {
                               backgroundColor: AppColors.amber,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                             ),
-                            child: const Text('Refresh status'),
+                            child: Text(context.t('bookingStatusRefreshBtn')),
                           ),
                         ),
                       ),
@@ -113,7 +114,7 @@ class BookingStatusPage extends StatelessWidget {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                           side: const BorderSide(color: AppColors.inputBorder),
                         ),
-                        child: const Text('Cancel request'),
+                        child: Text(context.t('bookingStatusCancelBtn')),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -131,7 +132,7 @@ class BookingStatusPage extends StatelessWidget {
                           backgroundColor: AppColors.amber,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                         ),
-                        child: const Text('Go to payment'),
+                        child: Text(context.t('bookingStatusGoPaymentBtn')),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -146,13 +147,13 @@ class BookingStatusPage extends StatelessWidget {
                         border: Border.all(color: AppColors.approvedBorder),
                       ),
                       child: Row(
-                        children: const [
-                          Icon(Icons.check_circle, color: AppColors.approvedText),
-                          SizedBox(width: 10),
+                        children: [
+                          const Icon(Icons.check_circle, color: AppColors.approvedText),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Paid successfully. You can view booking details from your bookings list.',
-                              style: TextStyle(fontSize: 12),
+                              context.t('bookingStatusPaidMsg'),
+                              style: const TextStyle(fontSize: 12),
                             ),
                           ),
                         ],
@@ -179,7 +180,7 @@ class _StatusHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = request?.status;
-    final badge = _badgeFor(status);
+    final badge = _badgeFor(status, context);
 
     return Container(
       width: double.infinity,
@@ -194,10 +195,10 @@ class _StatusHeaderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Booking request',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                  context.t('bookingStatusHeader'),
+                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                 ),
               ),
               Container(
@@ -215,7 +216,7 @@ class _StatusHeaderCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            request?.statusHint ?? 'Pull to refresh for latest status',
+            request?.statusHint ?? context.t('bookingStatusPullRefresh'),
             style: TextStyle(color: AppColors.textDark, fontSize: 12),
           ),
         ],
@@ -223,22 +224,22 @@ class _StatusHeaderCard extends StatelessWidget {
     );
   }
 
-  _Badge _badgeFor(BookingRequestStatus? status) {
+  _Badge _badgeFor(BookingRequestStatus? status, BuildContext ctx) {
     switch (status) {
       case BookingRequestStatus.pending:
-        return const _Badge('Pending', AppColors.warningBg, AppColors.warningText);
+        return _Badge(ctx.t('statusPending'), AppColors.warningBg, AppColors.warningText);
       case BookingRequestStatus.underReview:
-        return const _Badge('Under review', AppColors.reviewStatusBg, AppColors.reviewStatusText);
+        return _Badge(ctx.t('statusUnderReview'), AppColors.reviewStatusBg, AppColors.reviewStatusText);
       case BookingRequestStatus.approved:
-        return const _Badge('Approved', AppColors.approvedBg, AppColors.approvedText);
+        return _Badge(ctx.t('statusApproved'), AppColors.approvedBg, AppColors.approvedText);
       case BookingRequestStatus.rejected:
-        return const _Badge('Rejected', AppColors.rejectedBg, AppColors.danger);
+        return _Badge(ctx.t('statusRejected'), AppColors.rejectedBg, AppColors.danger);
       case BookingRequestStatus.cancelled:
-        return const _Badge('Cancelled', AppColors.neutralBadgeBg, AppColors.textDark);
+        return _Badge(ctx.t('statusCancelled'), AppColors.neutralBadgeBg, AppColors.textDark);
       case BookingRequestStatus.paid:
-        return const _Badge('Paid', AppColors.approvedBg, AppColors.approvedText);
+        return _Badge(ctx.t('statusPaid'), AppColors.approvedBg, AppColors.approvedText);
       default:
-        return const _Badge('Loading', AppColors.neutralBadgeBg, AppColors.textDark);
+        return _Badge(ctx.t('statusLoading'), AppColors.neutralBadgeBg, AppColors.textDark);
     }
   }
 }

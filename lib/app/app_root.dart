@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/app_start/view/splash_page.dart';
-import '../features/admin/navigation/admin_root/view/admin_root_page.dart';
+
 import '../features/app_start/bloc/app_start_bloc.dart';
 import '../features/app_start/bloc/app_start_event.dart';
 import '../features/app_start/bloc/app_start_state.dart';
@@ -70,7 +70,6 @@ class _AppRootState extends State<AppRoot> {
           // - not logged in => Login
           // - logged in + not onboarding => open onboarding (listener) and keep splash behind
           // - logged in + onboarding done => Home
-
           switch (state.decision!) {
             case AppStartDecision.goLogin:
               return const LoginPage();
@@ -80,9 +79,6 @@ class _AppRootState extends State<AppRoot> {
 
             case AppStartDecision.goHome:
               return HomePage.withBloc();
-
-            case AppStartDecision.goAdmin:
-              return AdminRootPage.withBloc();
           }
         },
       ),

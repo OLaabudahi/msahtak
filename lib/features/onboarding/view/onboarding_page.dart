@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../home/view/home_page.dart';
@@ -70,7 +71,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             builder: (context, state) {
               final bloc = context.read<OnboardingBloc>();
               final isLast = state.stepIndex == state.totalSteps - 1;
-              final buttonText = isLast ? 'Go To Home' : 'Next';
+              final buttonText = isLast ? context.t('goToHome') : context.t('next');
 
               return Column(
                 children: [
@@ -138,7 +139,7 @@ class _TopHeader extends StatelessWidget {
         const Spacer(),
         GestureDetector(
           onTap: onSkip,
-          child: Text('Skip', style: AppTextStyles.link),
+          child: Text(context.t('skip'), style: AppTextStyles.link),
         ),
       ],
     );
@@ -189,12 +190,9 @@ class _Step1Content extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSpacing.vLg,
-          const Text('Find your perfect workspace', style: AppTextStyles.h1),
+          Text(context.t('findPerfectWorkspace'), style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text(
-            'Book work and study spaces with clear\nprices, real insights, and flexible plans.',
-            style: AppTextStyles.body,
-          ),
+          Text(context.t('bookStudySpaces'), style: AppTextStyles.body),
           AppSpacing.vLg,
           Center(
             child: ConstrainedBox(
@@ -203,29 +201,23 @@ class _Step1Content extends StatelessWidget {
             ),
           ),
           AppSpacing.vLg,
-          const Text(
-            'Clear info before you book',
-            style: AppTextStyles.sectionTitle,
-          ),
+          Text(context.t('clearInfoBeforeBook'), style: AppTextStyles.sectionTitle),
           AppSpacing.vXs,
-          const Text(
-            'Price, rating, internet quality, and noise level.',
-            style: AppTextStyles.body,
-          ),
+          Text(context.t('clearInfoSubtitle'), style: AppTextStyles.body),
           AppSpacing.vLg,
-          const Text('Why Mashtak', style: AppTextStyles.sectionTitle),
+          Text(context.t('whyMashtak'), style: AppTextStyles.sectionTitle),
           AppSpacing.vMd,
           CheckOptionCard(
-            title: 'Book with confidence',
-            subtitle: 'Requests are approved before payment.',
+            title: context.t('bookWithConfidence'),
+            subtitle: context.t('bookWithConfidenceSubtitle'),
             selected: isSelected(WhyChoose.confidence),
             onTap: () =>
                 bloc.add(const OnboardingToggleWhy(WhyChoose.confidence)),
           ),
           AppSpacing.vMd,
           CheckOptionCard(
-            title: 'Smart suggestions',
-            subtitle: 'AI highlights the best spaces for your goal.',
+            title: context.t('smartSuggestions'),
+            subtitle: context.t('smartSuggestionsSubtitle'),
             selected: isSelected(WhyChoose.smartSuggestions),
             onTap: () =>
                 bloc.add(const OnboardingToggleWhy(WhyChoose.smartSuggestions)),
@@ -241,31 +233,31 @@ class _Step2Content extends StatelessWidget {
   final OnboardingState state;
   const _Step2Content({required this.state});
 
-  String _purposeLabel(BookingPurpose p) {
+  String _purposeLabel(BuildContext context, BookingPurpose p) {
     switch (p) {
       case BookingPurpose.study:
-        return 'Study';
+        return context.t('purposeStudy');
       case BookingPurpose.deepFocus:
-        return 'Deep Focus';
+        return context.t('purposeDeepFocus');
       case BookingPurpose.meetings:
-        return 'Meetings';
+        return context.t('purposeMeetings');
       case BookingPurpose.teamWork:
-        return 'Team Work';
+        return context.t('purposeTeamWork');
       case BookingPurpose.callsInterviews:
-        return 'Calls / Interviews';
+        return context.t('purposeCallsInterviews');
       case BookingPurpose.creative:
-        return 'Creative';
+        return context.t('purposeCreative');
     }
   }
 
-  String _matterLabel(WhatMatters m) {
+  String _matterLabel(BuildContext context, WhatMatters m) {
     switch (m) {
       case WhatMatters.quiet:
-        return 'Quiet';
+        return context.t('matterQuiet');
       case WhatMatters.fastWifi:
-        return 'Fast Wi-Fi';
+        return context.t('matterFastWifi');
       case WhatMatters.budgetFriendly:
-        return 'Budget friendly';
+        return context.t('matterBudgetFriendly');
     }
   }
 
@@ -279,19 +271,16 @@ class _Step2Content extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSpacing.vLg,
-          const Text('What are you booking for?', style: AppTextStyles.h1),
+          Text(context.t('whatAreYouBookingFor'), style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text(
-            'Select all that apply. We\'ll tailor\nspaces to your needs.',
-            style: AppTextStyles.body,
-          ),
+          Text(context.t('selectAllThatApply'), style: AppTextStyles.body),
           AppSpacing.vLg,
           Row(
             children: [
-              const Text('Main purpose', style: AppTextStyles.sectionTitle),
+              Text(context.t('mainPurpose'), style: AppTextStyles.sectionTitle),
               const Spacer(),
               Text(
-                'Select multiple',
+                context.t('selectMultiple'),
                 style: AppTextStyles.caption.copyWith(color: AppColors.subtext),
               ),
             ],
@@ -303,19 +292,16 @@ class _Step2Content extends StatelessWidget {
             children: BookingPurpose.values.map((p) {
               final selected = state.selectedPurposes.contains(p);
               return SelectPill(
-                text: _purposeLabel(p),
+                text: _purposeLabel(context, p),
                 selected: selected,
                 onTap: () => bloc.add(OnboardingTogglePurpose(p)),
               );
             }).toList(),
           ),
           AppSpacing.vLg,
-          const Text('What matters most?', style: AppTextStyles.sectionTitle),
+          Text(context.t('whatMattersMost'), style: AppTextStyles.sectionTitle),
           AppSpacing.vXs,
-          const Text(
-            'Optional — helps us rank results better.',
-            style: AppTextStyles.body,
-          ),
+          Text(context.t('whatMattersOptional'), style: AppTextStyles.body),
           AppSpacing.vMd,
           Wrap(
             spacing: 10,
@@ -323,28 +309,27 @@ class _Step2Content extends StatelessWidget {
             children: WhatMatters.values.map((m) {
               final selected = state.selectedMatters.contains(m);
               return SelectPill(
-                text: _matterLabel(m),
+                text: _matterLabel(context, m),
                 selected: selected,
                 onTap: () => bloc.add(OnboardingToggleMatter(m)),
               );
             }).toList(),
           ),
           AppSpacing.vLg,
-          const InsightsCard(
-            title: 'You\'ll see insights like',
+          InsightsCard(
+            title: context.t('youllSeeInsightsLike'),
             chips: [
-              'Best for study',
-              'Quiet + strong internet',
-              'Weekly saves more',
+              context.t('insightBestStudy'),
+              context.t('insightQuietInternet'),
+              context.t('insightWeeklySaves'),
             ],
           ),
           AppSpacing.vMd,
-          const InfoBanner(
+          InfoBanner(
             iconText: 'AI',
-            title: 'AI will use your choices',
-            subtitle:
-                'Smarter suggestions + review summaries\n(not a chatbot).',
-            footnote: 'You can change these later in Settings.',
+            title: context.t('aiWillUseYourChoices'),
+            subtitle: context.t('aiSubtitle'),
+            footnote: context.t('aiFootnote'),
           ),
           AppSpacing.vXl,
         ],
@@ -357,14 +342,14 @@ class _Step3Content extends StatelessWidget {
   final OnboardingState state;
   const _Step3Content({required this.state});
 
-  String _timingLabel(ReminderTiming t) {
+  String _timingLabel(BuildContext context, ReminderTiming t) {
     switch (t) {
       case ReminderTiming.min30:
-        return '30 min';
+        return context.t('timing30min');
       case ReminderTiming.hour1:
-        return '1 hour';
+        return context.t('timing1hour');
       case ReminderTiming.sameDay9am:
-        return 'Same day (9 AM)';
+        return context.t('timingSameDay');
     }
   }
 
@@ -378,14 +363,11 @@ class _Step3Content extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppSpacing.vLg,
-          const Text('Stay updated', style: AppTextStyles.h1),
+          Text(context.t('stayUpdated'), style: AppTextStyles.h1),
           AppSpacing.vSm,
-          const Text(
-            'Choose the alerts you want.\nYou can change them anytime.',
-            style: AppTextStyles.body,
-          ),
+          Text(context.t('chooseAlerts'), style: AppTextStyles.body),
           AppSpacing.vLg,
-          const Text('Booking alerts', style: AppTextStyles.sectionTitle),
+          Text(context.t('bookingAlerts'), style: AppTextStyles.sectionTitle),
           AppSpacing.vMd,
           Card(
             color: AppColors.surface2,
@@ -394,16 +376,16 @@ class _Step3Content extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchTile(
-                    title: 'Booking approved',
-                    subtitle: 'When a space confirms your request.',
+                    title: context.t('bookingApproved'),
+                    subtitle: context.t('bookingApprovedSubtitle'),
                     value: state.bookingApprovedAlert,
                     onChanged: (_) =>
                         bloc.add(const OnboardingToggleApprovedAlert()),
                   ),
                   AppSpacing.vMd,
                   SwitchTile(
-                    title: 'Booking rejected',
-                    subtitle: 'So you can quickly pick another option.',
+                    title: context.t('bookingRejected'),
+                    subtitle: context.t('bookingRejectedSubtitle'),
                     value: state.bookingRejectedAlert,
                     onChanged: (_) =>
                         bloc.add(const OnboardingToggleRejectedAlert()),
@@ -414,8 +396,8 @@ class _Step3Content extends StatelessWidget {
           ),
           AppSpacing.vLg,
           SwitchTile(
-            title: 'Reminder before booking',
-            subtitle: 'A quick reminder before your reserved time.',
+            title: context.t('reminderBeforeBooking'),
+            subtitle: context.t('reminderBeforeBookingSubtitle'),
             value: state.reminderBeforeBooking,
             onChanged: (_) =>
                 bloc.add(const OnboardingToggleReminderBeforeBooking()),
@@ -424,10 +406,10 @@ class _Step3Content extends StatelessWidget {
           AppSpacing.vSm,
           Row(
             children: [
-              const Text('Reminder timing', style: AppTextStyles.sectionTitle),
+              Text(context.t('reminderTiming'), style: AppTextStyles.sectionTitle),
               AppSpacing.hSm,
               Text(
-                '(Optional)',
+                context.t('optionalLabel'),
                 style: AppTextStyles.caption.copyWith(color: AppColors.subtext),
               ),
             ],
@@ -439,20 +421,18 @@ class _Step3Content extends StatelessWidget {
             children: ReminderTiming.values.map((t) {
               final selected = state.reminderTiming == t;
               return SelectPill(
-                text: _timingLabel(t),
+                text: _timingLabel(context, t),
                 selected: selected,
                 onTap: () => bloc.add(OnboardingSelectReminderTiming(t)),
               );
             }).toList(),
           ),
           AppSpacing.vLg,
-          const InfoBanner(
+          InfoBanner(
             leadingIcon: Icons.notifications_none_rounded,
-            title: 'Notifications help you trust bookings',
-            subtitle:
-                'Get approvals, rejections, and reminders\nright on time.',
-            footnote:
-                'Tip: You\'ll still see booking status inside the Bookings tab.',
+            title: context.t('notificationsHelp'),
+            subtitle: context.t('notificationsSubtitle'),
+            footnote: context.t('notificationsFootnote'),
           ),
           AppSpacing.vXl,
         ],

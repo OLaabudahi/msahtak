@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:masahtak_app/features/ai_concierge/view/ai_concierge_page.dart';
-import 'package:masahtak_app/features/home/data/repos/home_repo_dummy.dart';
+import 'package:masahtak_app/features/home/data/repos/home_repo_firebase.dart';
 import 'package:masahtak_app/features/map/view/map_page.dart';
 
 import '../../../constants/app_spacing.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 
@@ -15,11 +16,11 @@ import '../../notifications/view/notifications_list_page.dart';
 import '../../offers/view/offers_page.dart';
 import '../../search_results/view/search_results_page.dart';
 import '../../space_details/view/space_details_page.dart';
+import '../../weekly_plan/view/weekly_plan_page.dart';
 import '../../bookings/view/bookings_tab_page.dart';
 import '../../profile/view/profile_tab_page.dart';
 import '../../settings/view/settings_tab_page.dart';
 
-import '../../weekly_plan/view/weekly_plan_page.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
@@ -27,14 +28,15 @@ import '../domain/entities/insight_item.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 import '../widgets/insight_tile.dart';
-import '../../../core/widgets/custom_search_bar.dart';
+import '../widgets/custom_search_bar.dart';
+import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => HomeBloc(repo: HomeRepoDummy())..add(const HomeStarted()),
+      create: (_) => HomeBloc(repo: HomeRepoFirebase())..add(const HomeStarted()),
       child: const HomePage(),
     );
   }
@@ -64,22 +66,22 @@ class HomePage extends StatelessWidget {
             selectedIndex: state.bottomTabIndex,
             onDestinationSelected: (i) =>
                 context.read<HomeBloc>().add(HomeBottomTabChanged(i)),
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                label: 'Home',
+                icon: const Icon(Icons.home_outlined),
+                label: context.t('navHome'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.receipt_long_outlined),
-                label: 'Bookings',
+                icon: const Icon(Icons.receipt_long_outlined),
+                label: context.t('navBookings'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.person_outline),
-                label: 'Profile',
+                icon: const Icon(Icons.person_outline),
+                label: context.t('navProfile'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.settings_outlined),
-                label: 'Settings',
+                icon: const Icon(Icons.settings_outlined),
+                label: context.t('navSettings'),
               ),
             ],
           ),
@@ -97,7 +99,14 @@ class _HomeTab extends StatefulWidget {
 }
 
 class MySearchBar extends StatefulWidget {
-  const MySearchBar({super.key});
+  const MySearchBar({
+    super.key,
+    required this.hintText,
+    required this.aiButtonLabel,
+  });
+
+  final String hintText;
+  final String aiButtonLabel;
 
   @override
   State<MySearchBar> createState() => _MySearchBarState();
@@ -113,9 +122,9 @@ class _MySearchBarState extends State<MySearchBar> {
   }
 
   void _openAiConcierge() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()),
+    );
   }
 
   @override
@@ -123,22 +132,25 @@ class _MySearchBarState extends State<MySearchBar> {
     return CustomSearchBar(
       controller: _searchController,
       onAiTap: _openAiConcierge,
+      hintText: widget.hintText,
+      aiButtonLabel: widget.aiButtonLabel,
       onSearchChanged: (q) {
         context.read<HomeBloc>().add(HomeSearchChanged(q));
       },
       onSearchSubmitted: (q) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => SearchResultsPage.withBloc(
-              originKey: q,
-              originTitle: 'Search Result',
-            ),
-          ),
-        );
         context.read<HomeBloc>().add(HomeSearchChanged(q));
+        if (q.trim().isNotEmpty) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SearchResultsPage.withBloc(
+                originKey: q,
+                originTitle: q,
+              ),
+            ),
+          );
+        }
       },
       onSearchTap: () {},
-      aiRightInset: 0,
     );
   }
 }
@@ -215,27 +227,22 @@ class _HomeTabState extends State<_HomeTab> {
     switch (item.id) {
       case 'ins_best_for_you':
         page = BestForYouPage.withBloc();
-        _navInsight(page);
         break;
       case 'ins_offers':
         page = OffersPage.withBloc();
-        _navInsight(page);
         break;
       case 'ins_weekly_plan':
         page = WeeklyPlanPage.withBloc();
-        _navInsight(page);
         break;
       case 'ins_spacial_Search':
         page = SearchResultsPage.withBloc(
           originKey: item.title,
           originTitle: item.title,
         );
-        _navInsight(page);
         break;
+      default:
+        page = InsightDetailsPage(item: item);
     }
-  }
-
-  void _navInsight(Widget page) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
 
@@ -245,7 +252,7 @@ class _HomeTabState extends State<_HomeTab> {
       builder: (context, state) {
         final bloc = context.read<HomeBloc>();
 
-        const categories = ['Nearly', 'New Suggestion', 'Private Office'];
+        final categories = [context.t('catNearly'), context.t('catNewSuggestion'), context.t('catPrivateOffice')];
 
         final featuredCount = state.featuredSpaces.length;
         final insightsCount = state.insights.length;
@@ -257,7 +264,7 @@ class _HomeTabState extends State<_HomeTab> {
             children: [
               Row(
                 children: [
-                  const Text('Home', style: AppTextStyles.sectionBarTitle),
+                  Text(context.t('homeTitle'), style: AppTextStyles.sectionBarTitle),
                   const Spacer(),
                   InkWell(
                     onTap: () {
@@ -300,7 +307,10 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vMd,
 
-              const MySearchBar(),
+              MySearchBar(
+                hintText: context.t('searchHint'),
+                aiButtonLabel: context.t('aiConcierge'),
+              ),
               AppSpacing.vMd,
 
               SingleChildScrollView(
@@ -308,8 +318,8 @@ class _HomeTabState extends State<_HomeTab> {
                 child: Row(
                   children: List.generate(categories.length, (i) {
                     return Padding(
-                      padding: EdgeInsets.only(
-                        right: i == categories.length - 1 ? 0 : 10,
+                      padding: EdgeInsetsDirectional.only(
+                        end: i == categories.length - 1 ? 0 : 10,
                       ),
                       child: CategoryChip(
                         text: categories[i],
@@ -341,43 +351,43 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vLg,
 
-              const Text('For You', style: AppTextStyles.sectionTitle),
+              Text(context.t('forYou'), style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
 
               SizedBox(
                 height: 260,
                 child: featuredCount == 0
-                    ? const Center(child: Text('No spaces yet'))
+                    ? Center(child: Text(context.t('noSpacesYet')))
                     : Listener(
-                        onPointerDown: (_) {
-                          _resumeTimer?.cancel();
-                          _stopAutoSlide();
-                        },
-                        onPointerUp: (_) {
-                          _scheduleResumeAutoSlide();
-                        },
-                        onPointerCancel: (_) {
-                          _scheduleResumeAutoSlide();
-                        },
-                        child: PageView.builder(
-                          controller: _pageController,
-                          itemCount: featuredCount,
-                          onPageChanged: (i) =>
-                              bloc.add(HomeFeaturedPageChanged(i)),
-                          itemBuilder: (context, index) {
-                            final space = state.featuredSpaces[index];
+                  onPointerDown: (_) {
+                    _resumeTimer?.cancel();
+                    _stopAutoSlide();
+                  },
+                  onPointerUp: (_) {
+                    _scheduleResumeAutoSlide();
+                  },
+                  onPointerCancel: (_) {
+                    _scheduleResumeAutoSlide();
+                  },
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: featuredCount,
+                    onPageChanged: (i) =>
+                        bloc.add(HomeFeaturedPageChanged(i)),
+                    itemBuilder: (context, index) {
+                      final space = state.featuredSpaces[index];
 
-                            return FeaturedSpaceCard(
-                              imageAsset: space.imageAsset,
-                              title: space.name,
-                              ratingText: space.ratingText,
-                              subtitle: space.subtitleLine,
-                              onViewTap: () =>
-                                  _openSpaceDetails(context, space.id),
-                            );
-                          },
-                        ),
-                      ),
+                      return FeaturedSpaceCard(
+                        imageAsset: space.imageAsset,
+                        title: space.name,
+                        ratingText: space.ratingText,
+                        subtitle: space.subtitleLine,
+                        onViewTap: () =>
+                            _openSpaceDetails(context, space.id),
+                      );
+                    },
+                  ),
+                ),
               ),
 
               AppSpacing.vSm,
@@ -406,11 +416,11 @@ class _HomeTabState extends State<_HomeTab> {
 
               AppSpacing.vLg,
 
-              const Text('Insights', style: AppTextStyles.sectionTitle),
+              Text(context.t('insightsSection'), style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
 
               if (insightsCount == 0)
-                const Center(child: Text('No insights yet'))
+                Center(child: Text(context.t('noInsightsYet')))
               else
                 GridView.builder(
                   shrinkWrap: true,
@@ -424,11 +434,19 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                   itemBuilder: (context, index) {
                     final item = state.insights[index];
-                    return InsightTile(
-                      imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
-                      title: item.title,
-                      subtitle: item.subtitle,
-                      onTap: () => _openInsightDetails(context, item),
+                    // Builder ضروري عشان context.t() يستخدم context.select
+                    // وهو ممنوع مباشرة داخل Sliver itemBuilder
+                    return Builder(
+                      builder: (ctx) => InsightTile(
+                        imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
+                        title: item.titleKey != null
+                            ? ctx.t(item.titleKey!)
+                            : item.title,
+                        subtitle: item.subtitleKey != null
+                            ? ctx.t(item.subtitleKey!)
+                            : item.subtitle,
+                        onTap: () => _openInsightDetails(context, item),
+                      ),
                     );
                   },
                 ),

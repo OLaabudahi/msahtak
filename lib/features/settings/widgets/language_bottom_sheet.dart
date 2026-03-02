@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
@@ -25,9 +26,9 @@ class LanguageBottomSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Choose language',
-              style: TextStyle(
+            Text(
+              context.t('chooseLanguage'),
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: Colors.black,
@@ -63,9 +64,9 @@ class LanguageBottomSheet extends StatelessWidget {
                   shape: const StadiumBorder(),
                 ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                child: Text(
+                  context.t('close'),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),

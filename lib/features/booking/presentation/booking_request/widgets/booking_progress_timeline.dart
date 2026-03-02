@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../../../domain/entities/booking_request_entity.dart';
 
@@ -10,7 +11,7 @@ class BookingProgressTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final steps = _steps(status);
+    final steps = _steps(status, context);
 
     return Container(
       width: double.infinity,
@@ -23,7 +24,7 @@ class BookingProgressTimeline extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Progress', style: TextStyle(fontWeight: FontWeight.w800)),
+          Text(context.t('timelineProgress'), style: const TextStyle(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           ...List.generate(steps.length, (i) {
             final s = steps[i];
@@ -40,29 +41,28 @@ class BookingProgressTimeline extends StatelessWidget {
     );
   }
 
-  List<_Step> _steps(BookingRequestStatus? status) {
-    // Map status to steps
-    final sent = _Step('Request sent', 'We received your request', _StepState.done);
+  List<_Step> _steps(BookingRequestStatus? status, BuildContext ctx) {
+    final sent = _Step(ctx.t('timelineRequestSent'), ctx.t('timelineRequestSentSub'), _StepState.done);
 
     if (status == null) {
-      return [sent, const _Step('Under review', 'Checking availability', _StepState.active), const _Step('Approved', 'Proceed to payment', _StepState.todo)];
+      return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewSub'), _StepState.active), _Step(ctx.t('timelineApproved'), ctx.t('timelineApprovedSub'), _StepState.todo)];
     }
 
     switch (status) {
       case BookingRequestStatus.pending:
-        return [sent, const _Step('Under review', 'Waiting to start review', _StepState.todo), const _Step('Approved', 'Proceed to payment', _StepState.todo)];
+        return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewWaiting'), _StepState.todo), _Step(ctx.t('timelineApproved'), ctx.t('timelineApprovedSub'), _StepState.todo)];
       case BookingRequestStatus.underReview:
-        return [sent, const _Step('Under review', 'Checking availability', _StepState.active), const _Step('Approved', 'Proceed to payment', _StepState.todo)];
+        return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewSub'), _StepState.active), _Step(ctx.t('timelineApproved'), ctx.t('timelineApprovedSub'), _StepState.todo)];
       case BookingRequestStatus.approved:
-        return [sent, const _Step('Under review', 'Completed', _StepState.done), const _Step('Approved', 'Proceed to payment', _StepState.active)];
+        return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewCompleted'), _StepState.done), _Step(ctx.t('timelineApproved'), ctx.t('timelineApprovedSub'), _StepState.active)];
       case BookingRequestStatus.paid:
-        return [sent, const _Step('Under review', 'Completed', _StepState.done), const _Step('Approved', 'Payment completed', _StepState.done)];
+        return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewCompleted'), _StepState.done), _Step(ctx.t('timelineApproved'), ctx.t('timelinePaymentCompleted'), _StepState.done)];
       case BookingRequestStatus.cancelled:
-        return [sent, const _Step('Cancelled', 'Request cancelled by user', _StepState.active)];
+        return [sent, _Step(ctx.t('timelineCancelled'), ctx.t('timelineCancelledSub'), _StepState.active)];
       case BookingRequestStatus.rejected:
-        return [sent, const _Step('Rejected', 'Request rejected', _StepState.active)];
+        return [sent, _Step(ctx.t('timelineRejected'), ctx.t('timelineRejectedSub'), _StepState.active)];
       default:
-        return [sent, const _Step('Under review', 'Checking availability', _StepState.active), const _Step('Approved', 'Proceed to payment', _StepState.todo)];
+        return [sent, _Step(ctx.t('timelineUnderReview'), ctx.t('timelineUnderReviewSub'), _StepState.active), _Step(ctx.t('timelineApproved'), ctx.t('timelineApprovedSub'), _StepState.todo)];
     }
   }
 }

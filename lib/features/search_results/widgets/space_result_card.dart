@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../theme/app_colors.dart';
 import '../domain/entities/space_entity.dart';
 
 class SpaceResultCard extends StatelessWidget {
@@ -29,7 +30,7 @@ class SpaceResultCard extends StatelessWidget {
                     child: Container(
                       width: 72,
                       height: 72,
-                      color: const Color(0xFFEFEFEF),
+                      color: AppColors.surface,
                       child: const Icon(Icons.image, size: 28),
                     ),
                   ),
@@ -49,12 +50,12 @@ class SpaceResultCard extends StatelessWidget {
                           '${space.locationName} • ${space.tags.join(' • ')}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12, color: Colors.black54),
+                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           '${space.distanceKm.toStringAsFixed(1)} km',
-                          style: const TextStyle(fontSize: 12, color: Colors.black54),
+                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -69,7 +70,7 @@ class SpaceResultCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
-                      color: Colors.black,
+                      color: AppColors.ratingBadgeBg,
                     ),
                     child: Row(
                       children: [
@@ -91,7 +92,8 @@ class SpaceResultCard extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onView,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4E79A7),
+                  backgroundColor: AppColors.btnSecondary,
+                  foregroundColor: AppColors.btnSecondaryText,
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 child: const Text('View', style: TextStyle(fontWeight: FontWeight.w700)),

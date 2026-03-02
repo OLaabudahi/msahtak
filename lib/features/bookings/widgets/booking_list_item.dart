@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 import '../data/models/booking_model.dart';
@@ -27,16 +28,16 @@ class BookingListItem extends StatelessWidget {
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
   bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
 
-  String get _dateLine => '${booking.dateText} • ${booking.timeText}';
+  String _dateLine() => '${booking.dateText} • ${booking.timeText}';
 
-  String get _priceLine {
+  String _priceLine(BuildContext context) {
     final value = booking.totalPrice % 1 == 0
         ? booking.totalPrice.toStringAsFixed(0)
         : booking.totalPrice.toStringAsFixed(2);
-    return '${booking.currency}$value/day';
+    return '${booking.currency}$value${context.t('pricePerDay')}';
   }
 
-  Widget _statusChip() {
+  Widget _statusChip(BuildContext context) {
     if (_isUpcoming) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -45,9 +46,9 @@ class BookingListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: Color(0xFF22C55E), width: 1.2),
         ),
-        child: const Text(
-          'Upcoming',
-          style: TextStyle(
+        child: Text(
+          context.t('bookingStatusUpcoming'),
+          style: const TextStyle(
             color: Color(0xFF16A34A),
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
@@ -64,9 +65,9 @@ class BookingListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: Color(0xFF2AAE9B), width: 1.0),
         ),
-        child: const Text(
-          'Completed',
-          style: TextStyle(
+        child: Text(
+          context.t('bookingStatusCompleted'),
+          style: const TextStyle(
             color: Color(0xFF138A7B),
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
@@ -81,9 +82,9 @@ class BookingListItem extends StatelessWidget {
         color: Color(0xFFFFE3E3),
         borderRadius: BorderRadius.circular(18),
       ),
-      child: const Text(
-        'Cancelled',
-        style: TextStyle(
+      child: Text(
+        context.t('bookingStatusCancelled'),
+        style: const TextStyle(
           color: AppColors.danger,
           fontWeight: FontWeight.w700,
           fontSize: 12.5,
@@ -92,7 +93,7 @@ class BookingListItem extends StatelessWidget {
     );
   }
 
-  Widget _bottomButtons() {
+  Widget _bottomButtons(BuildContext context) {
     if (_isCancelled) {
       return SizedBox(
         width: double.infinity,
@@ -106,9 +107,9 @@ class BookingListItem extends StatelessWidget {
               borderRadius: BorderRadius.zero,
             ),
           ),
-          child: const Text(
-            'View',
-            style: TextStyle(
+          child: Text(
+            context.t('view'),
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w800,
               fontSize: 16,
@@ -120,10 +121,10 @@ class BookingListItem extends StatelessWidget {
 
     if (_isUpcoming) {
       return _TwoButtonsBar(
-        leftText: 'View',
+        leftText: context.t('view'),
         leftFilled: true,
         onLeft: onView,
-        rightText: 'Cancel',
+        rightText: context.t('cancel'),
         rightFilled: false,
         onRight: onCancel ?? () {},
       );
@@ -131,20 +132,20 @@ class BookingListItem extends StatelessWidget {
 
     if (_isCompleted) {
       return _TwoButtonsBar(
-        leftText: 'Rebook',
+        leftText: context.t('rebook'),
         leftFilled: false,
         onLeft: onRebook ?? () {},
-        rightText: 'View',
+        rightText: context.t('view'),
         rightFilled: true,
         onRight: onView,
       );
     }
 
     return _TwoButtonsBar(
-      leftText: 'View',
+      leftText: context.t('view'),
       leftFilled: true,
       onLeft: onView,
-      rightText: 'Action',
+      rightText: context.t('rebook'),
       rightFilled: false,
       onRight: () {},
     );
@@ -203,7 +204,9 @@ class BookingListItem extends StatelessWidget {
 
                         // ✅ date/time
                         Text(
-                          _dateLine,
+                          _dateLine(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12.5,
                             color: AppColors.textDark,
@@ -213,7 +216,9 @@ class BookingListItem extends StatelessWidget {
 
                         // ✅ booking id
                         Text(
-                          'Booking ID: ${booking.bookingId}',
+                          '${context.t('bookingIdLabel')} ${booking.bookingId}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12.5,
                             color: AppColors.textDark,
@@ -221,19 +226,23 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
 
-                        // ✅ HERE: Price + Status chip on SAME ROW (like design)
+                        // ✅ Price + Status chip
                         Row(
                           children: [
-                            Text(
-                              _priceLine,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.black,
+                            Flexible(
+                              child: Text(
+                                _priceLine(context),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
-                            const Spacer(),
-                            _statusChip(),
+                            const SizedBox(width: 8),
+                            _statusChip(context),
                           ],
                         ),
                       ],
@@ -244,7 +253,7 @@ class BookingListItem extends StatelessWidget {
             ),
 
             Container(height: 1, color: AppColors.borderLight),
-            _bottomButtons(),
+            _bottomButtons(context),
           ],
         ),
       ),

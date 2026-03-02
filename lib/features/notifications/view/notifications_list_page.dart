@@ -6,10 +6,11 @@ import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
 import '../data/repos/notifications_repo_dummy.dart';
-import '../data/sources/notifications_remote_source.dart';
+import '../data/sources/notifications_firebase_source.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
 import '../domain/usecases/save_notification_settings_usecase.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../widgets/notification_group.dart';
 import 'notification_settings_page.dart';
 
@@ -18,7 +19,7 @@ class NotificationsListPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeNotificationsSource();
+    final source = NotificationsFirebaseSource();
     final repo = NotificationsRepoDummy(source);
     return BlocProvider(
       create: (_) => NotificationsBloc(
@@ -44,9 +45,9 @@ class NotificationsListPage extends StatelessWidget {
               color: Colors.black, size: 24),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Notifications',
-          style: TextStyle(
+        title: Text(
+          context.t('notificationsPageTitle'),
+          style: const TextStyle(
               color: Colors.black,
               fontSize: 19,
               fontWeight: FontWeight.bold),
@@ -77,33 +78,35 @@ class NotificationsListPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: 16, vertical: 8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 8),
-                const Text(
-                  'Updates for you',
-                  style: TextStyle(
+                Text(
+                  context.t('notificationsPageHeader'),
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Booking status, reminders, and smart plan tips.',
+                  context.t('notificationsPageSubtitle'),
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 13, color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 20),
                 if (state.todayItems.isNotEmpty) ...[
                   NotificationGroup(
-                    label: 'TODAY',
+                    label: context.t('notifGroupToday'),
                     items: state.todayItems,
                   ),
                   const SizedBox(height: 24),
                 ],
                 if (state.earlierItems.isNotEmpty) ...[
                   NotificationGroup(
-                    label: 'EARLIER',
+                    label: context.t('notifGroupEarlier'),
                     items: state.earlierItems,
                   ),
                   const SizedBox(height: 30),

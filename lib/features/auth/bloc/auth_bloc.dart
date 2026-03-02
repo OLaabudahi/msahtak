@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../domain/repos/auth_repo.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -23,9 +24,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-      emit(state.copyWith(status: AuthStatus.success, user: user, errorMessage: null));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          user: user,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+      );
       emit(state.copyWith(status: AuthStatus.idle));
     }
   }
@@ -45,9 +54,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-      emit(state.copyWith(status: AuthStatus.success, user: user, errorMessage: null));
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          user: user,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+      );
       emit(state.copyWith(status: AuthStatus.idle));
     }
   }
@@ -62,7 +79,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(status: AuthStatus.forgotSent, errorMessage: null));
       emit(state.copyWith(status: AuthStatus.idle));
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+      );
       emit(state.copyWith(status: AuthStatus.idle));
     }
   }
@@ -74,10 +93,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
       await _repo.logout();
+
       emit(const AuthState(status: AuthStatus.loggedOut));
       emit(const AuthState(status: AuthStatus.idle));
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+      );
       emit(state.copyWith(status: AuthStatus.idle));
     }
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../theme/app_colors.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../bloc/search_results_bloc.dart';
 import '../bloc/search_results_event.dart';
 import '../bloc/search_results_state.dart';
-import '../data/repos/search_results_repo_impl.dart';
-import '../data/sources/search_results_remote_source.dart';
+import '../data/repos/search_results_repo_firebase.dart';
 import '../domain/usecases/get_preferred_filter_chips_usecase.dart';
 import '../domain/usecases/search_spaces_usecase.dart';
 import '../widgets/preferred_chips_row.dart';
@@ -25,7 +25,7 @@ class SearchResultsPage extends StatefulWidget {
     required String originKey,
     required String originTitle,
   }) {
-    final repo = SearchResultsRepoImpl(remote: const SearchResultsRemoteSource());
+    final repo = SearchResultsRepoFirebase();
 
     return BlocProvider(
       create: (_) => SearchResultsBloc(
@@ -42,7 +42,6 @@ class SearchResultsPage extends StatefulWidget {
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
   final TextEditingController _controller = TextEditingController();
-
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
 
@@ -63,10 +62,6 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   void _openFilters(BuildContext context) {
-    // API-ready navigation:
-    // لاحقًا: ننتقل لشاشة الفلاتر ونرجع Map<String, dynamic> selectedFilters
-    // ثم: context.read<SearchResultsBloc>().add(SearchApplyFilters(filters));
-    // حاليا: Dummy apply
     context.read<SearchResultsBloc>().add(
       const SearchApplyFilters({'priceMax': 40, 'quiet': true, 'wifi': 'fast'}),
     );
@@ -110,7 +105,8 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                               vertical: 10,
                             ),
                           ),
-                          onChanged: (v) => context.read<SearchResultsBloc>().add(SearchQueryChanged(v)),
+                          onChanged: (v) =>
+                              context.read<SearchResultsBloc>().add(SearchQueryChanged(v)),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -122,7 +118,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                           height: 44,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(18),
-                            color: const Color(0xFFF2A23A),
+                            color: AppColors.btnPrimary,
                           ),
                           child: const Icon(Icons.tune, color: Colors.white),
                         ),
@@ -132,7 +128,9 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                 ),
 
                 // Dropdown suggestions
-                if (_isFocused && state.query.trim().isNotEmpty && state.suggestions.isNotEmpty)
+                if (_isFocused &&
+                    state.query.trim().isNotEmpty &&
+                    state.suggestions.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Material(
@@ -149,14 +147,16 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                             final s = state.suggestions[i];
                             return ListTile(
                               dense: true,
-                              title: Text(s, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              title: Text(s,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis),
                               onTap: () {
                                 _controller.text = s;
-                                _controller.selection = TextSelection.collapsed(offset: s.length);
+                                _controller.selection =
+                                    TextSelection.collapsed(offset: s.length);
                                 FocusScope.of(context).unfocus();
-
-                                // لازم يكون عندك Event اسمها SearchSuggestionSelected بالـBLoC
-                                context.read<SearchResultsBloc>().add(SearchSuggestionSelected(s));
+                                context
+                                    .read<SearchResultsBloc>()
+                                    .add(SearchSuggestionSelected(s));
                               },
                             );
                           },
@@ -165,11 +165,13 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                     ),
                   ),
 
-                // preferred chips (تظهر بعد apply filters فقط)
+                // Preferred chips (shown after apply filters)
                 if (state.hasAppliedFilters && state.preferredChips.isNotEmpty)
                   PreferredChipsRow(
                     chips: state.preferredChips,
-                    onRemove: (id) => context.read<SearchResultsBloc>().add(SearchRemovePreferredChip(id)),
+                    onRemove: (id) => context
+                        .read<SearchResultsBloc>()
+                        .add(SearchRemovePreferredChip(id)),
                   ),
 
                 const SizedBox(height: 10),
@@ -178,24 +180,29 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                   child: state.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : state.results.isEmpty
-                      ? const Center(child: Text('Try adjusting filters to see more spaces'))
-                      : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemBuilder: (_, i) => SpaceResultCard(
-                      space: state.results[i],
-                      onView: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => SpaceDetailsPage.withBloc(
-                              spaceId: state.results[i].id,
+                          ? const Center(
+                              child: Text(
+                                  'Try adjusting filters to see more spaces'))
+                          : ListView.separated(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              itemBuilder: (_, i) => SpaceResultCard(
+                                space: state.results[i],
+                                onView: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          SpaceDetailsPage.withBloc(
+                                        spaceId: state.results[i].id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 12),
+                              itemCount: state.results.length,
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemCount: state.results.length,
-                  ),
                 ),
               ],
             ),

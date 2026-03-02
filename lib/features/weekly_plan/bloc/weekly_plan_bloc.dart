@@ -23,11 +23,20 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
       WeeklyPlanStarted event, Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final result =
-          await getWeeklyPlanUseCase(state.selectedHubId);
+      final result = await getWeeklyPlanUseCase(state.selectedHubId);
+      final hubs = result.hubs;
+      // إذا كان الـ selectedHubId الافتراضي غير موجود في القائمة نستخدم أول عنصر
+      final resolvedId = hubs.isNotEmpty &&
+              !hubs.any((h) => h.id == state.selectedHubId)
+          ? hubs.first.id
+          : state.selectedHubId;
+      final details = resolvedId != state.selectedHubId
+          ? (await getWeeklyPlanUseCase(resolvedId)).details
+          : result.details;
       emit(state.copyWith(
-          hubs: result.hubs,
-          planDetails: result.details,
+          hubs: hubs,
+          selectedHubId: resolvedId,
+          planDetails: details,
           isLoading: false));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));

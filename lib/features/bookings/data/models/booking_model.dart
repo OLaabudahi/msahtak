@@ -35,7 +35,7 @@ class Booking extends Equatable {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return NetworkImage(imageUrl!);
     }
-    return AssetImage(imageAsset ?? 'assets/images/placeholder.png');
+    return AssetImage(imageAsset ?? 'assets/images/home.png');
   }
 
   /// ✅ (API READY - كومنت) من JSON

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_text_styles.dart';
 import '../bloc/bookings_bloc.dart';
 import '../bloc/bookings_event.dart';
 import '../bloc/bookings_state.dart';
 import '../data/models/booking_model.dart';
+import '../data/repos/bookings_repo_firebase.dart';
 import '../widgets/booking_list_item.dart';
 import '../../booking_details/view/booking_details_page.dart';
 
@@ -15,7 +17,7 @@ class BookingsTabPage extends StatefulWidget {
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => BookingsBloc()..add(const BookingsStarted()),
+      create: (_) => BookingsBloc(repo: BookingsRepoFirebase())..add(const BookingsStarted()),
       child: const BookingsTabPage(),
     );
   }
@@ -56,9 +58,9 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
     );
   }
 
-  Widget _searchBar() {
+  Widget _searchBar(String hintText, String aiLabel) {
     return Container(
-      height: 46,
+      height: 54,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -71,16 +73,17 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
           Expanded(
             child: TextField(
               controller: _search,
-              decoration: const InputDecoration(
-                hintText: 'Search',
+              decoration: InputDecoration(
+                hintText: hintText,
                 border: InputBorder.none,
                 isDense: true,
               ),
               style: const TextStyle(fontSize: 14),
             ),
           ),
+          const SizedBox(width: 8),
           Container(
-            height: 30,
+            height: 34,
             padding: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
@@ -89,9 +92,9 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
               ),
             ),
             alignment: Alignment.center,
-            child: const Text(
-              'AI Concierge',
-              style: TextStyle(
+            child: Text(
+              aiLabel,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w800,
                 fontSize: 12,
@@ -146,12 +149,12 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             children: [
               const SizedBox(height: 6),
-              const Text('Bookings', style: AppTextStyles.sectionBarTitle),
+              Text(context.t('navBookings'), style: AppTextStyles.sectionBarTitle),
               const SizedBox(height: 14),
-              _searchBar(),
+              _searchBar(context.t('searchHint'), context.t('aiConcierge')),
 
               if (upcomingF.isNotEmpty) ...[
-                _sectionTitle('Your Upcoming Bookings'),
+                _sectionTitle(context.t('upcomingBookings')),
                 ...upcomingF.map(
                   (b) => BookingListItem(
                     booking: b,
@@ -168,7 +171,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
               ],
 
               if (completedF.isNotEmpty) ...[
-                _sectionTitle('Past Bookings'),
+                _sectionTitle(context.t('pastBookings')),
                 ...completedF.map(
                   (b) => BookingListItem(
                     booking: b,
@@ -185,7 +188,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
               ],
 
               if (cancelledF.isNotEmpty) ...[
-                _sectionTitle('Cancelled Bookings'),
+                _sectionTitle(context.t('cancelledBookings')),
                 ...cancelledF.map(
                   (b) => BookingListItem(
                     booking: b,
@@ -195,9 +198,9 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
               ],
 
               if (upcomingF.isEmpty && completedF.isEmpty && cancelledF.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Center(child: Text('No bookings yet')),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Center(child: Text(context.t('noBookingsYet'))),
                 ),
 
               const SizedBox(height: 20),

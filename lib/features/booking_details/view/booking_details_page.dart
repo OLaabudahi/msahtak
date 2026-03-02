@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../bloc/booking_details_bloc.dart';
 import '../bloc/booking_details_event.dart';
 import '../bloc/booking_details_state.dart';
-import '../data/repos/booking_details_repo_dummy.dart';
+import '../data/repos/booking_details_repo_firebase.dart';
 import '../widgets/booking_chip.dart';
 import '../widgets/booking_section_title.dart';
 
@@ -21,7 +22,7 @@ class BookingDetailsPage extends StatelessWidget {
   static Widget withBloc({required String bookingId}) {
     return BlocProvider(
       create: (_) =>
-          BookingDetailsBloc(repo: BookingDetailsRepoDummy())
+          BookingDetailsBloc(repo: BookingDetailsRepoFirebase())
             ..add(BookingDetailsStarted(bookingId)),
       child: BookingDetailsPage(bookingId: bookingId),
     );
@@ -43,7 +44,7 @@ class BookingDetailsPage extends StatelessWidget {
 
         if (state.error != null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Booking Details')),
+            appBar: AppBar(title: Text(context.t('bookingDetailsTitle'))),
             body: SafeArea(
               child: Padding(
                 padding: AppSpacing.screen,
@@ -140,7 +141,7 @@ class BookingDetailsPage extends StatelessWidget {
 
                         AppSpacing.vLg,
 
-                        const BookingSectionTitle(text: 'Booking info'),
+                        BookingSectionTitle(text: context.t('bookingInfoLabel')),
                         AppSpacing.vSm,
                         Container(
                           width: double.infinity,
@@ -154,12 +155,12 @@ class BookingDetailsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Date: ${d.dateText}',
+                                '${context.t('bookingDateLabel')}: ${d.dateText}',
                                 style: AppTextStyles.body,
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                'Time: ${d.timeText}',
+                                '${context.t('bookingTimeLabel')}: ${d.timeText}',
                                 style: AppTextStyles.body,
                               ),
                             ],
@@ -168,13 +169,13 @@ class BookingDetailsPage extends StatelessWidget {
 
                         AppSpacing.vLg,
 
-                        const BookingSectionTitle(text: 'Notes'),
+                        BookingSectionTitle(text: context.t('bookingNotesLabel')),
                         AppSpacing.vSm,
                         Text(d.notes, style: AppTextStyles.body),
 
                         AppSpacing.vLg,
 
-                        const BookingSectionTitle(text: 'Total'),
+                        BookingSectionTitle(text: context.t('bookingTotalLabel')),
                         AppSpacing.vSm,
                         Container(
                           width: double.infinity,
@@ -214,7 +215,7 @@ class BookingDetailsPage extends StatelessWidget {
                         // ✅ API READY (كومنت)
                         // await bookingRepo.cancelBooking(bookingId);
                       },
-                      child: const Text('Manage booking'),
+                      child: Text(context.t('manageBooking')),
                     ),
                   ),
                 ),

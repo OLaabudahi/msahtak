@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/notification_item.dart';
 
 class NotificationItemTile extends StatelessWidget {
   final NotificationItem item;
   const NotificationItemTile({super.key, required this.item});
+
+  String _translatedTitle(BuildContext context) {
+    switch (item.type) {
+      case NotificationType.bookingApproved:
+        return context.t('notifItemTitleApproved');
+      case NotificationType.bookingRejected:
+        return context.t('notifItemTitleRejected');
+      case NotificationType.reminder:
+        return context.t('notifItemTitleReminder');
+      case NotificationType.offerSuggestion:
+        return context.t('notifItemTitleOffer');
+      case NotificationType.tip:
+        return item.title;
+    }
+  }
+
+  String _translatedSubtitle(BuildContext context) {
+    switch (item.type) {
+      case NotificationType.bookingApproved:
+        return context.t('notifItemSubApproved');
+      case NotificationType.bookingRejected:
+        return context.t('notifItemSubRejected');
+      case NotificationType.reminder:
+        return context.t('notifItemSubReminder');
+      case NotificationType.offerSuggestion:
+        return context.t('notifItemSubOffer');
+      case NotificationType.tip:
+        return item.subtitle;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +57,14 @@ class NotificationItemTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.title,
+                  _translatedTitle(context),
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: titleColor),
                 ),
                 const SizedBox(height: 3),
-                Text(item.subtitle,
+                Text(_translatedSubtitle(context),
                     style:
                         TextStyle(fontSize: 13, color: AppColors.textSecondary)),
               ],

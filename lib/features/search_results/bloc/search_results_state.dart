@@ -5,19 +5,13 @@ import '../domain/entities/space_entity.dart';
 class SearchResultsState extends Equatable {
   final String originKey;
   final String originTitle;
-
   final String query;
   final Map<String, dynamic> selectedFilters;
-
   final bool isLoading;
   final String? errorMessage;
-
   final List<SpaceEntity> results;
-
   final bool hasAppliedFilters;
   final List<FilterChipEntity> preferredChips;
-
-  /// تظهر تحت حقل البحث كـ dropdown
   final List<String> suggestions;
 
   const SearchResultsState({

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/app_colors.dart';
 
 class AppSearchField extends StatefulWidget {
   final TextEditingController controller;
@@ -56,7 +57,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
                 onChanged: widget.onChanged,
               ),
@@ -71,7 +72,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
                   height: 44,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: const Color(0xFFF2A23A),
+                    color: AppColors.btnPrimary,
                   ),
                   child: const Icon(Icons.tune, color: Colors.white),
                 ),

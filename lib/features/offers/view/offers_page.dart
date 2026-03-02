@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
+import '../../../core/i18n/app_i18n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../space_details/view/space_details_page.dart';
@@ -7,7 +8,7 @@ import '../bloc/offers_bloc.dart';
 import '../bloc/offers_event.dart';
 import '../bloc/offers_state.dart';
 import '../data/repos/offers_repo_dummy.dart';
-import '../data/sources/offers_remote_source.dart';
+import '../data/sources/offers_firebase_source.dart';
 import '../domain/usecases/get_offers_usecase.dart';
 import '../domain/usecases/search_offers_usecase.dart';
 import '../widgets/deal_card.dart';
@@ -18,7 +19,7 @@ class OffersPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = FakeOffersSource();
+    final source = OffersFirebaseSource();
     final repo = OffersRepoDummy(source);
     return BlocProvider(
       create: (_) => OffersBloc(
@@ -72,9 +73,9 @@ class _OffersViewState extends State<_OffersView> {
               color: Colors.black, size: 28),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Offers',
-          style: TextStyle(
+        title: Text(
+          context.t('offersPageTitle'),
+          style: const TextStyle(
               color: Colors.black,
               fontSize: 19,
               fontWeight: FontWeight.bold),
@@ -95,12 +96,12 @@ class _OffersViewState extends State<_OffersView> {
                       .add(OffersSearchChanged(q)),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: 10),
                 child: Text(
-                  'Top Deals',
-                  style: TextStyle(
+                  context.t('offersTopDeals'),
+                  style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
@@ -110,6 +111,16 @@ class _OffersViewState extends State<_OffersView> {
                 const Expanded(
                     child: Center(
                         child: CircularProgressIndicator()))
+              else if (state.filteredOffers.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      context.t('offersEmpty'),
+                      style: const TextStyle(
+                          fontSize: 14, color: Colors.grey),
+                    ),
+                  ),
+                )
               else
                 Expanded(
                   child: ListView.builder(

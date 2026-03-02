@@ -7,7 +7,7 @@ class SpaceEntity extends Equatable {
   final double distanceKm;
   final double pricePerDay;
   final double rating;
-  final List<String> tags; // e.g. ["Quiet", "Fast Wi-Fi"]
+  final List<String> tags;
 
   const SpaceEntity({
     required this.id,

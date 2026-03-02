@@ -134,6 +134,10 @@ class AppColors {
   /// Inactive track color (grey)
   static const Color switchInactiveTrack = Color(0xFFE0E0E0);
 
+  // ── Navigation Bar ────────────────────────────────────────────────────────
+  /// Selected tab color in bottom NavigationBar
+  static const Color navSelected = Color(0xFF4A90D9);
+
   // ── Misc ─────────────────────────────────────────────────────────────────
   /// Black card background for AI / weekly-plan cards
   static const Color planCardBg = Color(0xFF000000);
