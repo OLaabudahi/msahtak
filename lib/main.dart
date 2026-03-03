@@ -21,7 +21,17 @@ import 'services/local_storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FlutterError.onError = (details) {
+    // ignore: avoid_print
+    print('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
+  };
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } catch (e, st) {
+    // ignore: avoid_print
+    print('Firebase init error: $e\n$st');
+    return;
+  }
   try { await _seedWorkspacesIfEmpty(); } catch (_) {}
 
   final storage = LocalStorageService();

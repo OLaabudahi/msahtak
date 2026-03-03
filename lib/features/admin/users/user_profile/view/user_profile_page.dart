@@ -6,7 +6,7 @@ import '../bloc/user_profile_bloc.dart';
 import '../bloc/user_profile_event.dart';
 import '../bloc/user_profile_state.dart';
 import '../data/repos/user_profile_repo_impl.dart';
-import '../data/sources/user_profile_dummy_source.dart';
+import '../data/sources/user_profile_firebase_source.dart';
 import '../domain/usecases/add_user_note_usecase.dart';
 import '../domain/usecases/approve_user_usecase.dart';
 import '../domain/usecases/block_user_usecase.dart';
@@ -17,7 +17,7 @@ class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key, required this.userId});
 
   static Widget withBloc({required String userId}) {
-    final source = UserProfileDummySource();
+    final source = UserProfileFirebaseSource();
     final repo = UserProfileRepoImpl(source);
     return BlocProvider(
       create: (_) => UserProfileBloc(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/app_start/view/splash_page.dart';
-
+import '../features/admin/navigation/admin_root/view/admin_root_page.dart';
 import '../features/app_start/bloc/app_start_bloc.dart';
 import '../features/app_start/bloc/app_start_event.dart';
 import '../features/app_start/bloc/app_start_state.dart';
 import '../features/app_start/domain/repos/app_start_repo.dart';
-import '../features/app_start/data/repos/app_start_repo_dummy.dart';
+import '../features/app_start/data/repos/app_start_repo_firebase.dart';
 import '../features/auth/view/login_page.dart';
 import '../features/home/view/home_page.dart';
 import '../features/onboarding/view/onboarding_page.dart';
@@ -19,7 +19,7 @@ class AppRoot extends StatefulWidget {
     final storage = LocalStorageService();
     return BlocProvider(
       create: (_) =>
-          AppStartBloc(AppStartRepoDummy(storage))
+          AppStartBloc(AppStartRepoFirebase(storage))
             ..add(const AppStartStarted()),
       child: const AppRoot(),
     );
@@ -79,6 +79,9 @@ class _AppRootState extends State<AppRoot> {
 
             case AppStartDecision.goHome:
               return HomePage.withBloc();
+
+            case AppStartDecision.goAdmin:
+              return AdminRootPage.withBloc();
           }
         },
       ),

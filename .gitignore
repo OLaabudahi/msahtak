@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Node modules (should never be committed)
+node_modules/
+
+# Firebase service account key (sensitive credentials)
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Environment files
+.env
+.env.*

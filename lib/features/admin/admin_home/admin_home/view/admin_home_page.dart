@@ -6,7 +6,7 @@ import '../bloc/admin_home_bloc.dart';
 import '../bloc/admin_home_event.dart';
 import '../bloc/admin_home_state.dart';
 import '../data/repos/admin_home_repo_impl.dart';
-import '../data/sources/admin_home_dummy_source.dart';
+import '../data/sources/admin_home_firebase_source.dart';
 import '../domain/usecases/get_admin_home_kpis_usecase.dart';
 import '../domain/usecases/get_admin_spaces_usecase.dart';
 import '../widgets/kpi_tile.dart';
@@ -20,7 +20,7 @@ class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
 
   static Widget withBloc() {
-    final source = AdminHomeDummySource();
+    final source = AdminHomeFirebaseSource();
     final repo = AdminHomeRepoImpl(source);
     return BlocProvider(
       create: (_) => AdminHomeBloc(

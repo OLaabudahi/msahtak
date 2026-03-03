@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'data/repos/booking_request_repo_dummy.dart';
+import 'data/repos/booking_request_repo_firebase.dart';
 import 'data/repos/payment_repo_dummy.dart';
 import 'domain/entities/booking_request_entity.dart';
 import 'domain/repos/booking_request_repo.dart';
@@ -25,7 +25,7 @@ import 'presentation/payment/view/payment_success_page.dart';
 class BookingFeatureRoutes {
   BookingFeatureRoutes._();
 
-  static BookingRequestRepo _bookingRepo() => BookingRequestRepoDummy();
+  static BookingRequestRepo _bookingRepo() => BookingRequestRepoFirebase();
   static PaymentRepo _paymentRepo() => PaymentRepoDummy();
 
   static BookingRequestBloc _bookingBloc() {

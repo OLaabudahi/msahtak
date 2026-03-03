@@ -1,13 +1,11 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
-import '../../../_shared/admin_feedback_widgets.dart';
-
 import '../bloc/booking_requests_bloc.dart';
 import '../bloc/booking_requests_event.dart';
 import '../bloc/booking_requests_state.dart';
 import '../data/repos/admin_bookings_repo_impl.dart';
-import '../data/sources/admin_bookings_dummy_source.dart';
+import '../data/sources/admin_bookings_firebase_source.dart';
 import '../domain/entities/booking_status.dart';
 import '../domain/usecases/accept_booking_usecase.dart';
 import '../domain/usecases/get_bookings_usecase.dart';
@@ -21,7 +19,7 @@ class BookingRequestsPage extends StatelessWidget {
   const BookingRequestsPage({super.key});
 
   static Widget withBloc() {
-    final source = AdminBookingsDummySource();
+    final source = AdminBookingsFirebaseSource();
     final repo = AdminBookingsRepoImpl(source);
     return BlocProvider(
       create: (_) => BookingRequestsBloc(
@@ -86,27 +84,29 @@ class BookingRequestsPage extends StatelessWidget {
                 child: BlocBuilder<BookingRequestsBloc, BookingRequestsState>(
                   builder: (context, state) {
                     if (state.status == BookingRequestsLoadStatus.loading && state.bookings.isEmpty) {
-                      return const AdminListSkeleton(count: 5, height: 170);
+                      return const Center(child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)));
                     }
-
                     if (state.bookings.isEmpty) {
-                      return AdminEmptyState(
-                        title: 'No bookings',
-                        subtitle: 'There are no ${_tabLabel(state.activeTab)} requests right now.',
-                        icon: AdminIconMapper.bookings(),
+                      return Center(
+                        child: Text(
+                          'No ${_tabLabel(state.activeTab)} bookings',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AdminText.body16(color: AdminColors.black40),
+                        ),
                       );
                     }
 
                     return ListView.separated(
                       itemCount: state.bookings.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, __) => const SizedBox(height: AdminSpace.s12),
                       itemBuilder: (context, i) {
                         final b = state.bookings[i];
                         return BookingRequestCard(
                           booking: b,
-                          onOpenDetails: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => BookingDetailsPage.withBloc(bookingId: b.id)),
-                          ),
+                          onOpenDetails: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingDetailsPage.withBloc(bookingId: b.id)));
+                          },
                           onAccept: (b.status == BookingStatus.pending) ? () => context.read<BookingRequestsBloc>().add(BookingRequestsAccepted(b.id)) : null,
                           onReject: (b.status == BookingStatus.pending) ? () => context.read<BookingRequestsBloc>().add(BookingRequestsRejected(b.id)) : null,
                         );
@@ -122,9 +122,9 @@ class BookingRequestsPage extends StatelessWidget {
     );
   }
 
-  static String _tabLabel(BookingStatus s) => switch (s) {
-        BookingStatus.pending => 'pending',
-        BookingStatus.approved => 'approved',
-        BookingStatus.canceled => 'canceled',
-      };
+  static String _tabLabel(BookingStatus s) => switch (s) { BookingStatus.pending => 'pending', BookingStatus.approved => 'approved', BookingStatus.canceled => 'canceled' };
+}
+
+extension on AdminSpace {
+  static const s12 = 12.0;
 }
