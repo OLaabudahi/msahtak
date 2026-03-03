@@ -1,13 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
-import '../../../_shared/admin_feedback_widgets.dart';
 
 import '../bloc/users_bloc.dart';
 import '../bloc/users_event.dart';
 import '../bloc/users_state.dart';
 import '../data/repos/users_repo_impl.dart';
-import '../data/sources/users_dummy_source.dart';
+import '../data/sources/users_firebase_source.dart';
 import '../domain/entities/user_flag.dart';
 import '../domain/usecases/search_users_usecase.dart';
 import '../widgets/user_row.dart';
@@ -18,7 +17,7 @@ class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
 
   static Widget withBloc() {
-    final source = UsersDummySource();
+    final source = UsersFirebaseSource();
     final repo = UsersRepoImpl(source);
     return BlocProvider(
       create: (_) => UsersBloc(search: SearchUsersUseCase(repo))..add(const UsersStarted()),
@@ -85,20 +84,6 @@ class UsersPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: BlocBuilder<UsersBloc, UsersState>(
                       builder: (context, state) {
-                        if (state.status == UsersStatus.loading && state.users.isEmpty) {
-                          return const SizedBox(height: 520, child: AdminListSkeleton(count: 6, height: 92));
-                        }
-                        if (state.users.isEmpty) {
-                          return const SizedBox(
-                            height: 420,
-                            child: AdminEmptyState(
-                              title: 'No users',
-                              subtitle: 'No users found for this filter/search.',
-                              icon: Icons.person_outline,
-                            ),
-                          );
-                        }
-
                         final list = state.users;
                         return ListView.separated(
                           shrinkWrap: true,

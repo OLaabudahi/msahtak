@@ -5,7 +5,7 @@ import '../bloc/my_spaces_bloc.dart';
 import '../bloc/my_spaces_event.dart';
 import '../bloc/my_spaces_state.dart';
 import '../data/repos/my_spaces_repo_impl.dart';
-import '../data/sources/my_spaces_dummy_source.dart';
+import '../data/sources/my_spaces_firebase_source.dart';
 import '../domain/usecases/get_my_spaces_usecase.dart';
 import '../domain/usecases/hide_space_usecase.dart';
 import '../widgets/space_card.dart';
@@ -16,7 +16,7 @@ class MySpacesPage extends StatelessWidget {
   const MySpacesPage({super.key});
 
   static Widget withBloc() {
-    final source = MySpacesDummySource();
+    final source = MySpacesFirebaseSource();
     final repo = MySpacesRepoImpl(source);
     return BlocProvider(
       create: (_) => MySpacesBloc(

@@ -6,7 +6,7 @@ import '../bloc/booking_details_bloc.dart';
 import '../bloc/booking_details_event.dart';
 import '../bloc/booking_details_state.dart';
 import '../data/repos/admin_booking_details_repo_impl.dart';
-import '../data/sources/admin_booking_details_dummy_source.dart';
+import '../data/sources/admin_booking_details_firebase_source.dart';
 import '../domain/usecases/cancel_booking_usecase.dart';
 import '../domain/usecases/confirm_booking_usecase.dart';
 import '../domain/usecases/get_booking_details_usecase.dart';
@@ -17,7 +17,7 @@ class BookingDetailsPage extends StatefulWidget {
   const BookingDetailsPage({super.key, required this.bookingId});
 
   static Widget withBloc({required String bookingId}) {
-    final source = AdminBookingDetailsDummySource();
+    final source = AdminBookingDetailsFirebaseSource();
     final repo = AdminBookingDetailsRepoImpl(source);
 
     return BlocProvider(

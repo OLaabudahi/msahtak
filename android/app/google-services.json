@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:698765384610:android:0efac148ad315b28c570fb",
+        "android_client_info": {
+          "package_name": "com.example.masahtak_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpSCsM7rT4FPMNFS_rJyhsXPNozs5pNlo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:698765384610:android:42933242e79a2288c570fb",
         "android_client_info": {
           "package_name": "com.example.msahtak_app"

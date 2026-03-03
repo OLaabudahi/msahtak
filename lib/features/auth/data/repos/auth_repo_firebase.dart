@@ -24,6 +24,8 @@ class AuthRepoFirebase implements AuthRepo {
       await _storage.setIsLoggedIn(true);
       // المستخدم سجّل دخوله = أكمل التسجيل قبل، لا نريه onboarding
       await _storage.setHasCompletedOnboarding(true);
+      // حفظ دور المستخدم لتحديد التوجيه (مستخدم عادي أو أدمن)
+      await _storage.setUserRole(result['role'] as String? ?? 'user');
 
       final doc = await FirebaseFirestore.instance
           .collection('users')

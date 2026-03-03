@@ -35,8 +35,19 @@ class LocalStorageService {
     await sp.setString(_kLocaleCode, code);
   }
 
+  Future<String?> getUserRole() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getString('user_role');
+  }
+
+  Future<void> setUserRole(String role) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString('user_role', role);
+  }
+
   Future<void> clearAuth() async {
     final sp = await SharedPreferences.getInstance();
     await sp.remove(_kIsLoggedIn);
+    await sp.remove('user_role');
   }
 }
