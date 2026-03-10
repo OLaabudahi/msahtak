@@ -71,6 +71,11 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
                 ? (stats!['averageRating'] as num).toDouble()
                 : 0.0;
 
+        final imagesList = (d['images'] as List?)?.cast<String>() ?? const [];
+        final imageUrl = imagesList.isNotEmpty
+            ? imagesList.first
+            : (d['imageUrl'] as String? ?? d['cover'] as String? ?? d['thumbnailUrl'] as String?);
+
         return SpaceEntity(
           id: doc.id,
           name: (d['name'] ?? d['spaceName'] ?? '').toString(),
@@ -79,6 +84,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
           pricePerDay: pricePerDay,
           rating: rating,
           tags: tags,
+          imageUrl: imageUrl,
         );
       }).toList();
 

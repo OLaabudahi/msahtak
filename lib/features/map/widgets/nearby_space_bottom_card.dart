@@ -37,15 +37,21 @@ class NearbySpaceBottomCard extends StatelessWidget {
           SizedBox(
             height: 70,
             width: double.infinity,
-            child: Image.network(
-              space.imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                color: AppColors.neutralBadgeBg,
-                alignment: Alignment.center,
-                child: const Icon(Icons.image_not_supported_outlined),
-              ),
-            ),
+            child: space.imageUrl.isNotEmpty
+                ? Image.network(
+                    space.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: AppColors.neutralBadgeBg,
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.image_not_supported_outlined),
+                    ),
+                  )
+                : Container(
+                    color: AppColors.neutralBadgeBg,
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.image_not_supported_outlined),
+                  ),
           ),
 
           // ✅ محتوى تحت الصورة

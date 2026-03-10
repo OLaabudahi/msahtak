@@ -4,6 +4,7 @@ class HomeFeaturedSpaceEntity extends Equatable {
   final String id;
   final String name;
   final String imageAsset;
+  final String? imageUrl;
   final String subtitleLine;
   final double rating;
 
@@ -18,10 +19,14 @@ class HomeFeaturedSpaceEntity extends Equatable {
   /// ✅ جديد: مسافة تقريبية (اختياري) – API-ready
   final double? distanceKm;
 
+  /// ✅ تاغات المساحة (wifi, parking, quiet, …)
+  final List<String> tags;
+
   const HomeFeaturedSpaceEntity({
     required this.id,
     required this.name,
     required this.imageAsset,
+    this.imageUrl,
     required this.subtitleLine,
     required this.rating,
     required this.pricePerDay,
@@ -29,6 +34,7 @@ class HomeFeaturedSpaceEntity extends Equatable {
     this.lat,
     this.lng,
     this.distanceKm,
+    this.tags = const [],
   });
 
   String get ratingText => rating.toStringAsFixed(1);
@@ -38,6 +44,7 @@ class HomeFeaturedSpaceEntity extends Equatable {
     id,
     name,
     imageAsset,
+    imageUrl,
     subtitleLine,
     rating,
     pricePerDay,
@@ -45,5 +52,6 @@ class HomeFeaturedSpaceEntity extends Equatable {
     lat,
     lng,
     distanceKm,
+    tags,
   ];
 }

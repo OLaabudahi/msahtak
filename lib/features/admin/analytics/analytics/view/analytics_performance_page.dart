@@ -6,7 +6,7 @@ import '../bloc/analytics_bloc.dart';
 import '../bloc/analytics_event.dart';
 import '../bloc/analytics_state.dart';
 import '../data/repos/analytics_repo_impl.dart';
-import '../data/sources/analytics_dummy_source.dart';
+import '../data/sources/analytics_firebase_source.dart';
 import '../domain/usecases/get_analytics_usecase.dart';
 import '../domain/usecases/export_report_usecase.dart';
 
@@ -14,7 +14,7 @@ class AnalyticsPerformancePage extends StatelessWidget {
   const AnalyticsPerformancePage({super.key});
 
   static Widget withBloc() {
-    final source = AnalyticsDummySource();
+    final source = AnalyticsFirebaseSource();
     final repo = AnalyticsRepoImpl(source);
     return BlocProvider(
       create: (_) => AnalyticsBloc(

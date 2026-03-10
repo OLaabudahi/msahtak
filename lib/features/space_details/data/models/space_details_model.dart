@@ -199,6 +199,10 @@ class SpaceDetails extends Equatable {
 
   final SpacePolicies policies;
 
+  // إحداثيات الموقع الجغرافي (اختياريان)
+  final double? lat;
+  final double? lng;
+
   /// ✅ (API جاهز - كومنت) from JSON
   // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
   //   return SpaceDetails(
@@ -242,7 +246,8 @@ class SpaceDetails extends Equatable {
     latestReviews,
     offers,
     policies,
-
+    lat,
+    lng,
   ];
 
   const SpaceDetails({
@@ -264,8 +269,9 @@ class SpaceDetails extends Equatable {
     required this.latestReviews,
     required this.offers,
     required this.policies,
-
-    });
+    this.lat,
+    this.lng,
+  });
 
   /// ✅ (API جاهز - كومنت) from JSON
   // factory SpaceDetails.fromJson(Map<String, dynamic> json) {

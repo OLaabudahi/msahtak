@@ -31,7 +31,7 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
     }
 
     final b = bookingDoc.data()!;
-    final spaceId = b['space_id'] as String? ?? b['spaceId'] as String? ?? '';
+    final spaceId = b['spaceId'] as String? ?? b['space_id'] as String? ?? b['workspaceId'] as String? ?? '';
 
     // جلب تفاصيل المساحة إن وجدت
     Map<String, dynamic> spaceData = {};
@@ -43,13 +43,46 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
       spaceData = spaceDoc.data() ?? {};
     }
 
-    final tags = (b['tags'] as List?)?.cast<String>() ??
-        (spaceData['tags'] as List?)?.cast<String>() ??
-        const ['Wi-Fi', 'Quiet'];
+    // استخراج الأمنيات من Firestore (قد تكون List<String> أو List<Map>)
+    List<String> tags;
+    final rawTags = b['amenities'] ?? b['tags'] ?? spaceData['amenities'] ?? spaceData['tags'];
+    if (rawTags is List) {
+      tags = rawTags.map((e) {
+        if (e is String) return e;
+        if (e is Map) return (e['name'] ?? e['label'] ?? '').toString();
+        return '';
+      }).where((s) => s.isNotEmpty).take(4).toList();
+    } else {
+      tags = const ['Wi-Fi', 'Quiet'];
+    }
+
+    // تحويل Timestamps إلى نصوص
+    final startTs = b['startDate'] as Timestamp?;
+    final endTs = b['endDate'] as Timestamp?;
+
+    String dateText = b['date_text'] as String? ?? b['date'] as String? ?? '--';
+    String timeText = b['time_text'] as String? ?? b['time_slot'] as String? ?? '--';
+
+    if (startTs != null && dateText == '--') {
+      final dt = startTs.toDate();
+      dateText = '${dt.day}/${dt.month}/${dt.year}';
+    }
+    if (startTs != null && timeText == '--') {
+      final st = startTs.toDate();
+      final fmt = '${st.hour.toString().padLeft(2, '0')}:${st.minute.toString().padLeft(2, '0')}';
+      if (endTs != null) {
+        final et = endTs.toDate();
+        timeText = '$fmt – ${et.hour.toString().padLeft(2, '0')}:${et.minute.toString().padLeft(2, '0')}';
+      } else {
+        timeText = fmt;
+      }
+    }
 
     final status = b['status'] as String? ?? 'upcoming';
     final notes = b['notes'] as String? ??
         switch (status) {
+          'approved' || 'confirmed' =>
+            'Please arrive 10 minutes early. Reception will guide you to the room.',
           'upcoming' =>
             'Please arrive 10 minutes early. Reception will guide you to the room.',
           'completed' => 'Thanks for visiting! You can rebook the same space anytime.',
@@ -58,27 +91,39 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
           _ => 'No extra notes.',
         };
 
+    // صورة المساحة
+    final imageUrls = (b['images'] as List?)?.cast<String>() ??
+        (spaceData['images'] as List?)?.cast<String>() ?? const [];
+    final imageUrl = imageUrls.isNotEmpty ? imageUrls.first : null;
+
     return BookingDetails(
       bookingId: bookingId,
       spaceId: spaceId,
-      spaceName: b['space_name'] as String? ?? spaceData['name'] as String? ?? 'Space',
+      spaceName: b['spaceName'] as String? ??
+          b['workspaceName'] as String? ??
+          b['space_name'] as String? ??
+          spaceData['name'] as String? ??
+          'Space',
       rating: (b['rating'] as num?)?.toDouble() ??
           (spaceData['rating'] as num?)?.toDouble() ??
+          (spaceData['stats']?['averageRating'] as num?)?.toDouble() ??
           4.0,
       locationText: b['location_text'] as String? ??
+          spaceData['subtitle'] as String? ??
           spaceData['locationAddress'] as String? ??
           spaceData['location_address'] as String? ??
           '--',
       tags: tags,
-      dateText: b['date_text'] as String? ?? b['date'] as String? ?? '--',
-      timeText: b['time_text'] as String? ?? b['time_slot'] as String? ?? '--',
+      dateText: dateText,
+      timeText: timeText,
       notes: notes,
-      totalPrice: (b['total_price'] as num?)?.toDouble() ??
+      totalPrice: (b['totalAmount'] as num?)?.toDouble() ??
+          (b['total_price'] as num?)?.toDouble() ??
           (b['totalPrice'] as num?)?.toDouble() ??
           0.0,
       currency: b['currency'] as String? ?? '₪',
       imageAsset: AppAssets.home,
-      imageUrl: b['image_url'] as String? ?? spaceData['image_url'] as String?,
+      imageUrl: imageUrl ?? b['image_url'] as String?,
     );
   }
 }

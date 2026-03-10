@@ -13,9 +13,27 @@ import '../domain/usecases/save_notification_settings_usecase.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../widgets/notification_group.dart';
 import 'notification_settings_page.dart';
+import '../domain/entities/notification_item.dart';
+import '../../bookings/view/bookings_tab_page.dart';
+import '../../offers/view/offers_page.dart';
 
 class NotificationsListPage extends StatelessWidget {
   const NotificationsListPage({super.key});
+
+  void _onNotificationTap(BuildContext context, NotificationItem item) {
+    switch (item.type) {
+      case NotificationType.bookingApproved:
+      case NotificationType.bookingRejected:
+      case NotificationType.reminder:
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
+        break;
+      case NotificationType.offerSuggestion:
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => OffersPage.withBloc()));
+        break;
+      case NotificationType.tip:
+        break;
+    }
+  }
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
@@ -101,6 +119,7 @@ class NotificationsListPage extends StatelessWidget {
                   NotificationGroup(
                     label: context.t('notifGroupToday'),
                     items: state.todayItems,
+                    onItemTap: (item) => _onNotificationTap(context, item),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -108,6 +127,7 @@ class NotificationsListPage extends StatelessWidget {
                   NotificationGroup(
                     label: context.t('notifGroupEarlier'),
                     items: state.earlierItems,
+                    onItemTap: (item) => _onNotificationTap(context, item),
                   ),
                   const SizedBox(height: 30),
                 ],

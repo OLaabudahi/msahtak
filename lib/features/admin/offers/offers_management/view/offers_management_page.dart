@@ -7,7 +7,7 @@ import '../bloc/offers_management_bloc.dart';
 import '../bloc/offers_management_event.dart';
 import '../bloc/offers_management_state.dart';
 import '../data/repos/offers_repo_impl.dart';
-import '../data/sources/offers_dummy_source.dart';
+import '../data/sources/offers_firebase_source.dart';
 import '../domain/usecases/create_offer_usecase.dart';
 import '../domain/usecases/get_offers_usecase.dart';
 import '../domain/usecases/toggle_offer_usecase.dart';
@@ -19,7 +19,7 @@ class OffersManagementPage extends StatefulWidget {
   const OffersManagementPage({super.key, required this.fromHome});
 
   static Widget withBloc({bool fromHome = false}) {
-    final source = OffersDummySource();
+    final source = OffersFirebaseSource();
     final repo = OffersRepoImpl(source);
     return BlocProvider(
       create: (_) => OffersManagementBloc(

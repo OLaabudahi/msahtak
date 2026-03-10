@@ -6,12 +6,14 @@ class SpaceCard extends StatelessWidget {
   final SpaceEntity space;
   final VoidCallback onManage;
   final VoidCallback onHide;
+  final VoidCallback onDelete;
 
   const SpaceCard({
     super.key,
     required this.space,
     required this.onManage,
     required this.onHide,
+    required this.onDelete,
   });
 
   @override
@@ -79,6 +81,19 @@ class SpaceCard extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text('Hide', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w600)),
                   ),
+                ),
+              ),
+              const SizedBox(width: AdminSpace.s8),
+              InkWell(
+                onTap: onDelete,
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AdminColors.danger.withOpacity(0.1),
+                  ),
+                  child: Icon(Icons.delete_outline, size: 18, color: AdminColors.danger),
                 ),
               ),
             ],

@@ -27,18 +27,23 @@ class _AdminRootPageState extends State<AdminRootPage> {
     _TabConfig('Settings', 3),
   ];
 
+  // Build pages once and keep them alive with IndexedStack
+  late final List<Widget> _pages = [
+    AdminHomePage.withBloc(),
+    BookingRequestsPage.withBloc(),
+    UsersPage.withBloc(),
+    AdminSettingsPage.withBloc(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final page = switch (_index) {
-      0 => AdminHomePage.withBloc(),
-      1 => BookingRequestsPage.withBloc(),
-      2 => UsersPage.withBloc(),
-      _ => AdminSettingsPage.withBloc(),
-    };
-
     return Scaffold(
       backgroundColor: AdminColors.bg,
-      body: SafeArea(top: true, bottom: false, child: page),
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: IndexedStack(index: _index, children: _pages),
+      ),
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(

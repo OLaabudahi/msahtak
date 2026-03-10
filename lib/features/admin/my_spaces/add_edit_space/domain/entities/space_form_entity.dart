@@ -28,6 +28,9 @@ class SpaceFormEntity extends Equatable {
 
   final List<AmenityEntity> amenities;
 
+  // Images (list of URLs)
+  final List<String> images;
+
   // Availability
   final bool hidden;
 
@@ -45,6 +48,7 @@ class SpaceFormEntity extends Equatable {
     required this.workingHours,
     required this.policySections,
     required this.amenities,
+    this.images = const [],
     required this.hidden,
   });
 
@@ -63,6 +67,7 @@ class SpaceFormEntity extends Equatable {
         workingHours,
         policySections,
         amenities,
+        images,
         hidden,
       ];
 }

@@ -10,6 +10,9 @@ class BestForYouState extends Equatable {
   final bool isLoading;
   final String? error;
 
+  /// قائمة أعلى 5 مساحات تقييماً ضمن 100 متر
+  final List<BestForYouSpace> topSpaces;
+
   const BestForYouState({
     this.space,
     this.fitScore,
@@ -17,6 +20,7 @@ class BestForYouState extends Equatable {
     this.goals = const ['Study', 'Work', 'Meeting', 'Relax'],
     this.isLoading = false,
     this.error,
+    this.topSpaces = const [],
   });
 
   BestForYouState copyWith({
@@ -25,6 +29,7 @@ class BestForYouState extends Equatable {
     String? selectedGoal,
     bool? isLoading,
     String? error,
+    List<BestForYouSpace>? topSpaces,
   }) {
     return BestForYouState(
       space: space ?? this.space,
@@ -33,10 +38,11 @@ class BestForYouState extends Equatable {
       goals: goals,
       isLoading: isLoading ?? this.isLoading,
       error: error,
+      topSpaces: topSpaces ?? this.topSpaces,
     );
   }
 
   @override
   List<Object?> get props =>
-      [space, fitScore, selectedGoal, goals, isLoading, error];
+      [space, fitScore, selectedGoal, goals, isLoading, error, topSpaces];
 }

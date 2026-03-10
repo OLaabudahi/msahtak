@@ -27,11 +27,24 @@ class SpaceResultCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14),
-                    child: Container(
+                    child: SizedBox(
                       width: 72,
                       height: 72,
-                      color: AppColors.surface,
-                      child: const Icon(Icons.image, size: 28),
+                      child: space.imageUrl != null && space.imageUrl!.isNotEmpty
+                          ? Image.network(
+                              space.imageUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: AppColors.surface,
+                                alignment: Alignment.center,
+                                child: const Icon(Icons.image, size: 28),
+                              ),
+                            )
+                          : Container(
+                              color: AppColors.surface,
+                              alignment: Alignment.center,
+                              child: const Icon(Icons.image, size: 28),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 12),

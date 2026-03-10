@@ -40,4 +40,8 @@ class MySpacesFirebaseSource implements MySpacesSource {
       'visible': !current,
     });
   }
+
+  @override
+  Future<void> deleteSpace({required String spaceId}) =>
+      _db.collection('workspaces').doc(spaceId).delete();
 }

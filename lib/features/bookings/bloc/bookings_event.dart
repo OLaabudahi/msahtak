@@ -21,3 +21,10 @@ class BookingsSegmentChanged extends BookingsEvent {
 class BookingsRefreshRequested extends BookingsEvent {
   const BookingsRefreshRequested();
 }
+
+class BookingsCancelRequested extends BookingsEvent {
+  final String bookingId;
+  const BookingsCancelRequested(this.bookingId);
+  @override
+  List<Object?> get props => [bookingId];
+}

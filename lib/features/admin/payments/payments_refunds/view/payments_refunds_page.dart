@@ -6,7 +6,7 @@ import '../bloc/payments_bloc.dart';
 import '../bloc/payments_event.dart';
 import '../bloc/payments_state.dart';
 import '../data/repos/payments_repo_impl.dart';
-import '../data/sources/payments_dummy_source.dart';
+import '../data/sources/payments_firebase_source.dart';
 import '../domain/entities/payment_status.dart';
 import '../domain/usecases/get_payment_details_usecase.dart';
 import '../domain/usecases/get_payments_usecase.dart';
@@ -17,7 +17,7 @@ class PaymentsRefundsPage extends StatelessWidget {
   const PaymentsRefundsPage({super.key, required this.fromHome});
 
   static Widget withBloc({bool fromHome = false}) {
-    final source = PaymentsDummySource();
+    final source = PaymentsFirebaseSource();
     final repo = PaymentsRepoImpl(source);
     return BlocProvider(
       create: (_) => PaymentsBloc(

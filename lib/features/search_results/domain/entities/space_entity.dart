@@ -8,6 +8,7 @@ class SpaceEntity extends Equatable {
   final double pricePerDay;
   final double rating;
   final List<String> tags;
+  final String? imageUrl;
 
   const SpaceEntity({
     required this.id,
@@ -17,8 +18,9 @@ class SpaceEntity extends Equatable {
     required this.pricePerDay,
     required this.rating,
     required this.tags,
+    this.imageUrl,
   });
 
   @override
-  List<Object?> get props => [id, name, locationName, distanceKm, pricePerDay, rating, tags];
+  List<Object?> get props => [id, name, locationName, distanceKm, pricePerDay, rating, tags, imageUrl];
 }

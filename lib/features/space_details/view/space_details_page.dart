@@ -18,6 +18,7 @@ import '../widgets/reason_chip.dart';
 import '../widgets/review_card.dart';
 import '../widgets/segmented_tabs.dart';
 import '../widgets/usage_bars.dart';
+import 'package:masahtak_app/features/admin/my_spaces/add_edit_space/view/location_picker_page.dart';
 import 'sheets/policies_sheet.dart';
 import 'sheets/review_summary_sheet.dart';
 
@@ -107,25 +108,29 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     });
   }
 
-  /// ✅ دالة: فتح BottomSheet سياسات المكان
+  /// ✅ دالة: فتح Dialog سياسات المكان
   void _openPoliciesSheet(BuildContext context, SpaceDetailsState state) {
     final policies = state.details!.policies;
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => PoliciesSheet(policies: policies),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: PoliciesSheet(policies: policies),
+      ),
     );
   }
 
-  /// ✅ دالة: فتح BottomSheet Review Summary
+  /// ✅ دالة: فتح Dialog Review Summary
   void _openReviewSummarySheet(BuildContext context, SpaceDetailsState state) {
     final summary = state.details!.reviewSummary;
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => ReviewSummarySheet(summary: summary),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: ReviewSummarySheet(summary: summary),
+      ),
     );
   }
 
@@ -223,7 +228,9 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
-                      child: AspectRatio(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 240),
+                        child: AspectRatio(
                         aspectRatio: 16 / 9,
                         child: Listener(
                           onPointerDown: (_) {
@@ -239,16 +246,20 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                             onPageChanged: (i) =>
                                 bloc.add(SpaceDetailsCarouselChanged(i)),
                             itemBuilder: (_, i) {
-                              return Image.asset(
-                                d.imageAssets[i],
-                                fit: BoxFit.cover,
-                              );
-
-                              // ✅ API READY (كومنت)
-                              // return Image.network(d.imageUrls[i], fit: BoxFit.cover);
+                              final src = d.imageAssets[i];
+                              if (src.startsWith('http')) {
+                                return Image.network(
+                                  src,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) =>
+                                      const ColoredBox(color: Color(0xFFEEEEEE)),
+                                );
+                              }
+                              return Image.asset(src, fit: BoxFit.cover);
                             },
                           ),
                         ),
+                      ),
                       ),
                     ),
                   ),
@@ -431,7 +442,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               const SizedBox(height: 8),
                               InkWell(
                                 onTap: () {
-                                  // ✅ لاحقاً: تفتح شاشة View location
+                                  if (d.lat != null && d.lng != null) {
+                                    LocationPickerPage.show(
+                                      context,
+                                      lat: d.lat,
+                                      lng: d.lng,
+                                    );
+                                  }
                                 },
                                 child: const Text(
                                   '📍 View location',

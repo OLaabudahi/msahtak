@@ -1,16 +1,19 @@
 ﻿import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_my_spaces_usecase.dart';
 import '../domain/usecases/hide_space_usecase.dart';
+import '../domain/usecases/delete_space_usecase.dart';
 import 'my_spaces_event.dart';
 import 'my_spaces_state.dart';
 
 class MySpacesBloc extends Bloc<MySpacesEvent, MySpacesState> {
   final GetMySpacesUseCase getSpaces;
   final HideSpaceUseCase hideSpace;
+  final DeleteSpaceUseCase deleteSpace;
 
-  MySpacesBloc({required this.getSpaces, required this.hideSpace}) : super(MySpacesState.initial()) {
+  MySpacesBloc({required this.getSpaces, required this.hideSpace, required this.deleteSpace}) : super(MySpacesState.initial()) {
     on<MySpacesStarted>(_onStarted);
     on<MySpacesHidePressed>(_onHide);
+    on<MySpacesDeletePressed>(_onDelete);
   }
 
   Future<void> _onStarted(MySpacesStarted event, Emitter<MySpacesState> emit) async {
@@ -26,5 +29,14 @@ class MySpacesBloc extends Bloc<MySpacesEvent, MySpacesState> {
   Future<void> _onHide(MySpacesHidePressed event, Emitter<MySpacesState> emit) async {
     await hideSpace(spaceId: event.spaceId);
     add(const MySpacesStarted());
+  }
+
+  Future<void> _onDelete(MySpacesDeletePressed event, Emitter<MySpacesState> emit) async {
+    try {
+      await deleteSpace(spaceId: event.spaceId);
+      add(const MySpacesStarted());
+    } catch (e) {
+      emit(state.copyWith(status: MySpacesStatus.failure, error: e.toString()));
+    }
   }
 }

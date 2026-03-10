@@ -6,55 +6,86 @@ class PoliciesSheet extends StatelessWidget {
   final SpacePolicies policies;
   const PoliciesSheet({super.key, required this.policies});
 
-  /// ✅ دالة: BottomSheet لعرض سياسات المكان
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+        color: Colors.white,
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.75,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              policies.title,
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              policies.subtitle,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
+            // Title
+            Center(
+              child: Text(
+                policies.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                ),
               ),
             ),
-            const SizedBox(height: 14),
-            Expanded(
+            if (policies.subtitle.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Center(
+                child: Text(
+                  policies.subtitle,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 20),
+
+            // Sections
+            Flexible(
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: policies.sections.map((s) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.only(bottom: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             s.title,
-                            style: const TextStyle(fontWeight: FontWeight.w900),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          ...s.bullets.map(
-                            (b) => Padding(
-                              padding: const EdgeInsets.only(bottom: 6),
-                              child: Text(
-                                '• $b',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.25,
-                                ),
-                              ),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF5F7FA),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: s.bullets
+                                  .map((b) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 6),
+                                        child: Text(
+                                          '• $b',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
                             ),
                           ),
                         ],
@@ -64,7 +95,10 @@ class PoliciesSheet extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 16),
+
+            // Close button
             SizedBox(
               width: double.infinity,
               height: 52,
@@ -76,7 +110,7 @@ class PoliciesSheet extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
                   'Close',
-                  style: TextStyle(fontWeight: FontWeight.w900),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                 ),
               ),
             ),

@@ -5,7 +5,8 @@ import '../domain/entities/notification_item.dart';
 
 class NotificationItemTile extends StatelessWidget {
   final NotificationItem item;
-  const NotificationItemTile({super.key, required this.item});
+  final VoidCallback? onTap;
+  const NotificationItemTile({super.key, required this.item, this.onTap});
 
   String _translatedTitle(BuildContext context) {
     switch (item.type) {
@@ -46,9 +47,12 @@ class NotificationItemTile extends StatelessWidget {
     final titleColor =
         item.isRead ? Colors.black : AppColors.secondary;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
         children: [
           _buildIcon(showAI, hasInnerCircle),
           const SizedBox(width: 14),
@@ -80,6 +84,7 @@ class NotificationItemTile extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 

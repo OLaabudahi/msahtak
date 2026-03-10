@@ -85,14 +85,19 @@ class BookingDetailsPage extends StatelessWidget {
                         // صورة المساحة
                         ClipRRect(
                           borderRadius: BorderRadius.circular(18),
-                          child: AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: Image.asset(imageAsset, fit: BoxFit.cover),
-
-                            // ✅ API READY (كومنت)
-                            // child: d.imageUrl != null
-                            //     ? Image.network(d.imageUrl!, fit: BoxFit.cover)
-                            //     : Image.asset(imageAsset, fit: BoxFit.cover),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 240),
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: d.imageUrl != null && d.imageUrl!.isNotEmpty
+                                  ? Image.network(
+                                      d.imageUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) =>
+                                          Image.asset(imageAsset, fit: BoxFit.cover),
+                                    )
+                                  : Image.asset(imageAsset, fit: BoxFit.cover),
+                            ),
                           ),
                         ),
 

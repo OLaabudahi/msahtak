@@ -16,4 +16,9 @@ class BestForYouRepoDummy implements BestForYouRepo {
   @override
   Future<FitScore> getFitScore(String spaceId, String goal) =>
       source.getFitScore(spaceId, goal);
+
+  /// جلب أعلى 5 مساحات قريبة من المصدر
+  @override
+  Future<List<BestForYouSpace>> getTopRatedNearby() =>
+      source.getTopRatedNearby();
 }

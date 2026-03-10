@@ -24,7 +24,7 @@ class BookingListItem extends StatelessWidget {
 
   static const _blue = AppColors.btnSecondary;
 
-  bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming';
+  bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming' || booking.status.toLowerCase() == 'confirmed';
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
   bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
 
@@ -38,18 +38,36 @@ class BookingListItem extends StatelessWidget {
   }
 
   Widget _statusChip(BuildContext context) {
+    if (booking.status.toLowerCase() == 'confirmed') {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE8FFF0),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFF22C55E), width: 1.2),
+        ),
+        child: const Text(
+          'Confirmed',
+          style: TextStyle(
+            color: Color(0xFF16A34A),
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
     if (_isUpcoming) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: Color(0xFFE8FFF0),
+          color: const Color(0xFFFEF3C7),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Color(0xFF22C55E), width: 1.2),
+          border: Border.all(color: const Color(0xFFF59E0B), width: 1.2),
         ),
         child: Text(
           context.t('bookingStatusUpcoming'),
           style: const TextStyle(
-            color: Color(0xFF16A34A),
+            color: Color(0xFF92400E),
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),

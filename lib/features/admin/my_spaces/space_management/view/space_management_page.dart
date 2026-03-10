@@ -6,7 +6,7 @@ import '../bloc/space_management_bloc.dart';
 import '../bloc/space_management_event.dart';
 import '../bloc/space_management_state.dart';
 import '../data/repos/space_management_repo_impl.dart';
-import '../data/sources/space_management_dummy_source.dart';
+import '../data/sources/space_management_firebase_source.dart';
 import '../domain/usecases/get_space_management_usecase.dart';
 import '../domain/usecases/set_space_hidden_usecase.dart';
 
@@ -17,7 +17,7 @@ class SpaceManagementPage extends StatelessWidget {
   const SpaceManagementPage({super.key, required this.spaceId});
 
   static Widget withBloc({required String spaceId}) {
-    final source = SpaceManagementDummySource();
+    final source = SpaceManagementFirebaseSource();
     final repo = SpaceManagementRepoImpl(source);
     return BlocProvider(
       create: (_) => SpaceManagementBloc(

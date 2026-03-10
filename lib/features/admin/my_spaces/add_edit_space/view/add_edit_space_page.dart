@@ -6,14 +6,16 @@ import '../bloc/add_edit_space_bloc.dart';
 import '../bloc/add_edit_space_event.dart';
 import '../bloc/add_edit_space_state.dart';
 import '../data/repos/add_edit_space_repo_impl.dart';
-import '../data/sources/add_edit_space_dummy_source.dart';
+import '../data/sources/add_edit_space_firebase_source.dart';
 import '../domain/usecases/add_amenity_usecase.dart';
 import '../domain/usecases/get_amenity_catalog_usecase.dart';
 import '../domain/usecases/get_space_form_usecase.dart';
 import '../domain/usecases/save_space_usecase.dart';
 
 import '../widgets/amenities_editor.dart';
+import '../widgets/images_editor.dart';
 import '../widgets/location_card.dart';
+import 'location_picker_page.dart';
 import '../widgets/policies_editor.dart';
 import '../widgets/price_editor.dart';
 import '../widgets/working_hours_editor.dart';
@@ -23,7 +25,7 @@ class AddEditSpacePage extends StatelessWidget {
   const AddEditSpacePage({super.key, required this.spaceId});
 
   static Widget withBloc({required String? spaceId}) {
-    final source = AddEditSpaceDummySource();
+    final source = AddEditSpaceFirebaseSource();
     final repo = AddEditSpaceRepoImpl(source);
     return BlocProvider(
       create: (_) => AddEditSpaceBloc(
@@ -53,7 +55,28 @@ class AddEditSpacePage extends StatelessWidget {
           builder: (context, state) {
             final f = state.form;
             if (f == null) {
-              return const Center(child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)));
+              if (state.status == AddEditSpaceStatus.failure) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline, size: 48, color: AdminColors.black40),
+                        const SizedBox(height: 12),
+                        Text(state.error ?? 'Failed to load space', style: AdminText.body14(), textAlign: TextAlign.center),
+                        const SizedBox(height: 16),
+                        AdminButton.filled(
+                          label: 'Retry',
+                          onTap: () => context.read<AddEditSpaceBloc>().add(AddEditSpaceStarted(spaceId)),
+                          bg: AdminColors.primaryBlue,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return const Center(child: SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 3)));
             }
 
             final baseText = (f.basePriceValue <= 0) ? '' : (f.basePriceValue % 1 == 0 ? f.basePriceValue.toStringAsFixed(0) : f.basePriceValue.toStringAsFixed(2));
@@ -138,6 +161,14 @@ class AddEditSpacePage extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
+                        ImagesEditor(
+                          images: f.images,
+                          onAdd: (url) => context.read<AddEditSpaceBloc>().add(AddEditSpaceImageAdded(url)),
+                          onRemove: (i) => context.read<AddEditSpaceBloc>().add(AddEditSpaceImageRemoved(i)),
+                        ),
+
+                        const SizedBox(height: 12),
+
                         WorkingHoursEditor(
                           hours: f.workingHours,
                           errorText: state.workingHoursError,
@@ -186,48 +217,8 @@ class AddEditSpacePage extends StatelessWidget {
     );
   }
 
-  static Future<(double, double)?> _pickLatLng(BuildContext context, {double? lat, double? lng}) async {
-    String latText = lat?.toString() ?? '';
-    String lngText = lng?.toString() ?? '';
-
-    return showDialog<(double, double)>(
-      context: context,
-      barrierColor: const Color(0x66000000),
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AdminColors.bg,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Pick Location', style: AdminText.body16(w: FontWeight.w700)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-              onChanged: (v) => latText = v,
-              decoration: const InputDecoration(labelText: 'Latitude'),
-            ),
-            TextField(
-              keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-              onChanged: (v) => lngText = v,
-              decoration: const InputDecoration(labelText: 'Longitude'),
-            ),
-            const SizedBox(height: 8),
-            Text('Map picker will be added later (API-ready).', style: AdminText.label12(color: AdminColors.black40)),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(null), child: Text('Cancel', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700))),
-          TextButton(
-            onPressed: () {
-              final la = double.tryParse(latText.trim());
-              final lo = double.tryParse(lngText.trim());
-              if (la == null || lo == null) return;
-              Navigator.of(ctx).pop((la, lo));
-            },
-            child: Text('Save', style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
-          ),
-        ],
-      ),
-    );
+  static Future<(double, double)?> _pickLatLng(BuildContext context, {double? lat, double? lng}) {
+    return LocationPickerPage.show(context, lat: lat, lng: lng);
   }
 }
 

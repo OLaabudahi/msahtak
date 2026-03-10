@@ -18,6 +18,7 @@ import '../../search_results/view/search_results_page.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../../weekly_plan/view/weekly_plan_page.dart';
 import '../../bookings/view/bookings_tab_page.dart';
+import '../../bookings/view/active_bookings_page.dart';
 import '../../profile/view/profile_tab_page.dart';
 import '../../settings/view/settings_tab_page.dart';
 
@@ -223,6 +224,12 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
+    // Meeting-ready: يفتح صفحة الحجوزات الفعّالة فقط
+    if (item.id == 'ins_4') {
+      Navigator.of(context).push(ActiveBookingsPage.route());
+      return;
+    }
+
     Widget page;
     switch (item.id) {
       case 'ins_best_for_you':
@@ -379,6 +386,7 @@ class _HomeTabState extends State<_HomeTab> {
 
                       return FeaturedSpaceCard(
                         imageAsset: space.imageAsset,
+                        imageUrl: space.imageUrl,
                         title: space.name,
                         ratingText: space.ratingText,
                         subtitle: space.subtitleLine,

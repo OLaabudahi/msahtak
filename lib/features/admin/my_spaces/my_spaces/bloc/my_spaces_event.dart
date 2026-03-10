@@ -16,3 +16,10 @@ class MySpacesHidePressed extends MySpacesEvent {
   @override
   List<Object?> get props => [spaceId];
 }
+
+class MySpacesDeletePressed extends MySpacesEvent {
+  final String spaceId;
+  const MySpacesDeletePressed(this.spaceId);
+  @override
+  List<Object?> get props => [spaceId];
+}

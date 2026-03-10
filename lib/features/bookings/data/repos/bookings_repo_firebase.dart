@@ -46,6 +46,40 @@ class BookingsRepoFirebase implements BookingsRepo {
       return 0;
     });
 
+    // جمع كل spaceIds الفريدة لجلب صور الأماكن
+    final spaceIds = docs
+        .map((doc) {
+          final d = doc.data();
+          return d['space_id'] as String? ??
+              d['spaceId'] as String? ??
+              d['workspaceId'] as String? ??
+              '';
+        })
+        .where((id) => id.isNotEmpty)
+        .toSet()
+        .toList();
+
+    // جلب صور الأماكن من workspaces و spaces
+    final Map<String, String> spaceImages = {};
+    if (spaceIds.isNotEmpty) {
+      final futures = await Future.wait([
+        ...spaceIds.map((id) => FirebaseFirestore.instance.collection('workspaces').doc(id).get()),
+        ...spaceIds.map((id) => FirebaseFirestore.instance.collection('spaces').doc(id).get()),
+      ]);
+      for (final snap in futures) {
+        if (!snap.exists) continue;
+        final d = snap.data()!;
+        final imagesList = (d['images'] as List?)?.cast<String>() ?? const [];
+        final url = imagesList.isNotEmpty
+            ? imagesList.first
+            : (d['imageUrl'] as String? ??
+                d['cover'] as String? ??
+                d['thumbnailUrl'] as String? ??
+                '');
+        if (url.isNotEmpty) spaceImages[snap.id] = url;
+      }
+    }
+
     return docs.map((doc) {
       final d = doc.data();
 
@@ -82,6 +116,11 @@ class BookingsRepoFirebase implements BookingsRepo {
           (d['totalAmount'] as num?)?.toDouble() ??
           0.0;
 
+      // الصورة: من الحجز أولاً، ثم من بيانات المكان
+      final imageUrl = d['image_url'] as String? ??
+          d['imageUrl'] as String? ??
+          spaceImages[spaceId];
+
       return Booking(
         bookingId: doc.id,
         spaceId: spaceId,
@@ -91,9 +130,17 @@ class BookingsRepoFirebase implements BookingsRepo {
         status: _normalizeStatus(d['status'] as String?),
         totalPrice: totalPrice,
         currency: d['currency'] as String? ?? '₪',
-        imageUrl: d['image_url'] as String? ?? d['imageUrl'] as String?,
+        imageUrl: imageUrl,
       );
     }).toList();
+  }
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+      'status': 'cancelled',
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
 
   String _fmt(DateTime dt) =>
@@ -104,7 +151,9 @@ class BookingsRepoFirebase implements BookingsRepo {
     switch (raw?.toLowerCase()) {
       case 'approved':
       case 'confirmed':
+        return 'confirmed';
       case 'pending':
+      case 'under_review':
         return 'upcoming';
       case 'rejected':
       case 'denied':

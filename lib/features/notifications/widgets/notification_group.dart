@@ -6,11 +6,13 @@ import 'notification_item_tile.dart';
 class NotificationGroup extends StatelessWidget {
   final String label;
   final List<NotificationItem> items;
+  final void Function(NotificationItem)? onItemTap;
 
   const NotificationGroup({
     super.key,
     required this.label,
     required this.items,
+    this.onItemTap,
   });
 
   @override
@@ -35,7 +37,7 @@ class NotificationGroup extends StatelessWidget {
             children: List.generate(items.length, (i) {
               return Column(
                 children: [
-                  NotificationItemTile(item: items[i]),
+                  NotificationItemTile(item: items[i], onTap: onItemTap != null ? () => onItemTap!(items[i]) : null),
                   if (i < items.length - 1)
                     Divider(
                         color: AppColors.borderLight,

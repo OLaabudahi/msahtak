@@ -8,6 +8,7 @@ class BestForYouSpaceModel extends BestForYouSpace {
     required super.distance,
     required super.pricePerDay,
     required super.rating,
+    super.imageUrl,
   });
 
   factory BestForYouSpaceModel.fromJson(

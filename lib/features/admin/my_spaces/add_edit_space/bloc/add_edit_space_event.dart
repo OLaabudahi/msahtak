@@ -133,3 +133,18 @@ class AddEditSpacePolicyBulletRemoved extends AddEditSpaceEvent {
 class AddEditSpaceSavePressed extends AddEditSpaceEvent {
   const AddEditSpaceSavePressed();
 }
+
+
+class AddEditSpaceImageAdded extends AddEditSpaceEvent {
+  final String url;
+  const AddEditSpaceImageAdded(this.url);
+  @override
+  List<Object?> get props => [url];
+}
+
+class AddEditSpaceImageRemoved extends AddEditSpaceEvent {
+  final int index;
+  const AddEditSpaceImageRemoved(this.index);
+  @override
+  List<Object?> get props => [index];
+}

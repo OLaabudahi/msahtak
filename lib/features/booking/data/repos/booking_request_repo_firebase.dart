@@ -113,6 +113,18 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
   @override
   Future<BookingRequestEntity> refreshStatus({required String requestId}) async {
     final doc = await _db.collection('bookings').doc(requestId).get();
+    final currentStatus = (doc.data()?['status'] as String? ?? '').toLowerCase();
+
+    // انتقال تلقائي: pending → under_review عند الضغط على Refresh
+    if (currentStatus == 'pending') {
+      await _db.collection('bookings').doc(requestId).update({
+        'status': 'under_review',
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      final updated = await _db.collection('bookings').doc(requestId).get();
+      return _docToEntity(updated);
+    }
+
     return _docToEntity(doc);
   }
 
@@ -158,12 +170,18 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
 
   BookingRequestStatus _parseStatus(String raw) {
     switch (raw.toLowerCase()) {
+      case 'under_review':
+      case 'underreview':
+        return BookingRequestStatus.underReview;
       case 'approved':
       case 'confirmed':
         return BookingRequestStatus.approved;
+      case 'paid':
+        return BookingRequestStatus.paid;
+      case 'rejected':
+        return BookingRequestStatus.rejected;
       case 'cancelled':
       case 'canceled':
-      case 'rejected':
         return BookingRequestStatus.cancelled;
       default:
         return BookingRequestStatus.pending;

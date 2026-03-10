@@ -59,4 +59,7 @@ class BookingsRepoDummy implements BookingsRepo {
     // final res = await dio.get('/bookings');
     // return (res.data as List).map((e) => Booking.fromJson(e)).toList();
   }
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {}
 }

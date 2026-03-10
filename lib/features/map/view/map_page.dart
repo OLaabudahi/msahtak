@@ -22,13 +22,8 @@ class MapPage extends StatefulWidget {
 
   static Widget withBloc() {
     final repo = MapRepoImpl(
-      locationService: DummyLocationService(
-        fixed: const GeoPointEntity(
-          lat: 31.511136495468655,
-          lng: 34.45187681199389,
-        ),
-      ),
-      dataSource: DummyNearbySpacesDataSource(),
+      locationService: GeolocatorLocationService(),
+      dataSource: FirebaseNearbySpacesDataSource(),
     );
 
     return BlocProvider(
@@ -49,9 +44,16 @@ class _MapPageState extends State<MapPage> {
   static const _secondary = AppColors.dotInactive;
 
   final MapController _mapController = MapController();
+  final PageController _pageController = PageController(viewportFraction: 0.92);
   bool _mapReady = false;
   double _currentZoom = 14.2;
   LatLng? _pendingMove;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _moveTo(LatLng target) {
     if (!_mapReady) {
@@ -61,8 +63,21 @@ class _MapPageState extends State<MapPage> {
     _mapController.move(target, _currentZoom);
   }
 
+  void _scrollToSpace(List spaces, String? selectedId) {
+    if (spaces.isEmpty || selectedId == null) return;
+    final index = spaces.indexWhere((s) => s.id == selectedId);
+    if (index < 0) return;
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   double _zoomForRadius(double radiusKm) {
-    // تقريب بسيط: نصف كم أقرب => زوم أعلى
+    if (radiusKm <= 0.1) return 17.0;
     if (radiusKm <= 0.5) return 15.0;
     return 14.2;
   }
@@ -81,6 +96,7 @@ class _MapPageState extends State<MapPage> {
             final s = state.selectedSpace;
             if (s == null) return;
             _moveTo(LatLng(s.location.lat, s.location.lng));
+            _scrollToSpace(state.spaces, state.selectedSpaceId);
           },
           builder: (context, state) {
             final center = state.center;
@@ -239,7 +255,7 @@ class _MapPageState extends State<MapPage> {
                         SizedBox(
                           height: 160, // ✅ ثابت ومناسب للكارد الجديد
                           child: PageView.builder(
-                            controller: PageController(viewportFraction: 0.92),
+                            controller: _pageController,
                             itemCount: state.spaces.length,
                             onPageChanged: (index) {
                               final id = state.spaces[index].id;
@@ -387,9 +403,9 @@ class _RadiusChips extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          chip(0.5),
+          chip(0.1),
           const SizedBox(width: 10),
-          chip(1.0),
+          chip(0.5),
           const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),

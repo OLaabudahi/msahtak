@@ -22,8 +22,9 @@ class MapState extends Equatable {
   factory MapState.initial() => const MapState(
     isLoading: true,
     error: null,
-    center: null,
-    radiusKm: 1.0,
+    // إحداثيات احتياطية حتى يتم جلب الموقع الحقيقي
+    center: GeoPointEntity(lat: 31.511136495468655, lng: 34.45187681199389),
+    radiusKm: 0.1,
     spaces: [],
     selectedSpaceId: null,
   );

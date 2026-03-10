@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
 import '../domain/repos/settings_repo.dart';
-import '../data/repos/settings_repo_dummy.dart';
+import '../data/repos/settings_repo_firebase.dart';
 import 'settings_event.dart';
 import 'settings_state.dart';
 
@@ -9,7 +9,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepo repo;
 
   SettingsBloc({SettingsRepo? repo})
-    : repo = repo ?? SettingsRepoDummy(),
+    : repo = repo ?? SettingsRepoFirebase(),
       super(SettingsState.initial()) {
     on<SettingsStarted>(_onStarted);
     on<SettingsRefreshRequested>(_onRefresh);

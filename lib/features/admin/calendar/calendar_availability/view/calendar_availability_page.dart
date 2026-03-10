@@ -5,7 +5,7 @@ import '../bloc/calendar_bloc.dart';
 import '../bloc/calendar_event.dart';
 import '../bloc/calendar_state.dart';
 import '../data/repos/calendar_repo_impl.dart';
-import '../data/sources/calendar_dummy_source.dart';
+import '../data/sources/calendar_firebase_source.dart';
 import '../domain/usecases/get_day_usecase.dart';
 import '../domain/usecases/save_day_usecase.dart';
 
@@ -14,7 +14,7 @@ class CalendarAvailabilityPage extends StatelessWidget {
   const CalendarAvailabilityPage({super.key, required this.fromHome});
 
   static Widget withBloc({bool fromHome = false}) {
-    final source = CalendarDummySource();
+    final source = CalendarFirebaseSource(spaceId: 'default');
     final repo = CalendarRepoImpl(source);
     return BlocProvider(
       create: (_) => CalendarBloc(

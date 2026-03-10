@@ -6,7 +6,7 @@ import '../bloc/reviews_reports_bloc.dart';
 import '../bloc/reviews_reports_event.dart';
 import '../bloc/reviews_reports_state.dart';
 import '../data/repos/reviews_reports_repo_impl.dart';
-import '../data/sources/reviews_reports_dummy_source.dart';
+import '../data/sources/reviews_reports_firebase_source.dart';
 import '../domain/usecases/get_reports_usecase.dart';
 import '../domain/usecases/get_reviews_usecase.dart';
 import '../domain/usecases/hide_review_usecase.dart';
@@ -17,7 +17,7 @@ class ReviewsReportsPage extends StatelessWidget {
   const ReviewsReportsPage({super.key, required this.fromHome});
 
   static Widget withBloc({bool fromHome = false}) {
-    final source = ReviewsReportsDummySource();
+    final source = ReviewsReportsFirebaseSource();
     final repo = ReviewsReportsRepoImpl(source);
     return BlocProvider(
       create: (_) => ReviewsReportsBloc(

@@ -37,20 +37,13 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _notifyAppRoot(BuildContext context) {
+    // Capture bloc before popping (context becomes invalid after pop)
+    final appStartBloc = context.read<AppStartBloc>();
+    // Pop SignUpPage so onboarding opens cleanly without SignUpPage in the stack
+    if (Navigator.of(context).canPop()) Navigator.of(context).pop();
     // After signup repo sets: isLoggedIn=true, hasCompletedOnboarding=false
     // AppRoot will open Onboarding.
-    BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        print("AUTH STATUS: ${state.status}");
-
-        if (state.status == AuthStatus.success) {
-          context.read<AppStartBloc>().add(const AppStartStarted());
-        }
-      },
-    );
-
-    // context.read<AppStartBloc>().add(const AppStartStarted());
-    // Navigator.of(context).pop(); // يرجع للـ Login (اختياري)، AppRoot رح يفتح Onboarding فوقه
+    appStartBloc.add(const AppStartStarted());
   }
 
   @override

@@ -26,6 +26,7 @@ class SpaceFormModel {
   final List<Map<String, dynamic>> workingHours; // list
   final List<Map<String, dynamic>> policySections; // list
   final List<Map<String, dynamic>> amenities; // list
+  final List<String> images; // list of image URLs
 
   final bool hidden;
 
@@ -43,6 +44,7 @@ class SpaceFormModel {
     required this.workingHours,
     required this.policySections,
     required this.amenities,
+    this.images = const [],
     required this.hidden,
   });
 
@@ -60,6 +62,7 @@ class SpaceFormModel {
         workingHours: (json['workingHours'] as List?)?.map((e) => (e as Map).cast<String, dynamic>()).toList(growable: false) ?? const [],
         policySections: (json['policySections'] as List?)?.map((e) => (e as Map).cast<String, dynamic>()).toList(growable: false) ?? const [],
         amenities: (json['amenities'] as List?)?.map((e) => (e as Map).cast<String, dynamic>()).toList(growable: false) ?? const [],
+        images: (json['images'] as List?)?.cast<String>() ?? const [],
         hidden: (json['hidden'] ?? false) == true,
       );
 
@@ -77,6 +80,7 @@ class SpaceFormModel {
         'workingHours': workingHours,
         'policySections': policySections,
         'amenities': amenities,
+        'images': images,
         'hidden': hidden,
       };
 
@@ -103,6 +107,7 @@ class SpaceFormModel {
       workingHours: wh,
       policySections: ps,
       amenities: am,
+      images: images,
       hidden: hidden,
     );
   }
@@ -124,6 +129,7 @@ class SpaceFormModel {
       workingHours: e.workingHours.map((x) => WorkingHoursModel.fromEntity(x).toJson()).toList(growable: false),
       policySections: e.policySections.map((x) => PolicySectionModel.fromEntity(x).toJson()).toList(growable: false),
       amenities: e.amenities.map((x) => AmenityModel.fromEntity(x).toJson()).toList(growable: false),
+      images: e.images,
       hidden: e.hidden,
     );
   }

@@ -40,19 +40,24 @@ class ProfileHeaderCard extends StatelessWidget {
                       color: AppColors.borderMedium,
                     ),
                     child: ClipOval(
-                      child: avatarAsset != null
-                          ? Image.asset(avatarAsset, fit: BoxFit.cover)
-                          : const Icon(
-                              Icons.person,
-                              size: 48,
-                              color: Colors.grey,
-                            ),
+                      child: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
+                          ? Image.network(
+                              user.avatarUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.person,
+                                size: 48,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : avatarAsset != null
+                              ? Image.asset(avatarAsset, fit: BoxFit.cover)
+                              : const Icon(
+                                  Icons.person,
+                                  size: 48,
+                                  color: Colors.grey,
+                                ),
                     ),
-
-                    // ✅ API READY (comment)
-                    // child: user.avatarUrl != null
-                    //   ? ClipOval(child: Image.network(user.avatarUrl!, fit: BoxFit.cover))
-                    //   : const ClipOval(child: Icon(Icons.person, size: 48, color: Colors.grey)),
                   ),
                   Positioned(
                     bottom: 0,

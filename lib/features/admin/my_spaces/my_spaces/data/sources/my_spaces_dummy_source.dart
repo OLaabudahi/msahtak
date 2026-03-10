@@ -23,4 +23,10 @@ class MySpacesDummySource implements MySpacesSource {
       }
     }
   }
+
+  @override
+  Future<void> deleteSpace({required String spaceId}) async {
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+    _list.removeWhere((s) => s.id == spaceId);
+  }
 }

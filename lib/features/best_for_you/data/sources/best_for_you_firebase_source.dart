@@ -1,20 +1,21 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../../services/location_service.dart';
 import '../../domain/entities/fit_score.dart';
 import '../models/best_for_you_space_model.dart';
 import 'best_for_you_remote_source.dart';
 
 /// ✅ تنفيذ Firebase لـ BestForYouRemoteSource
 class BestForYouFirebaseSource implements BestForYouRemoteSource {
+  static const double _fallbackLat = 31.511136495468655;
+  static const double _fallbackLng = 34.45187681199389;
+
   @override
   Future<BestForYouSpaceModel> getBestSpace(String goal) async {
-    // نجيب أعلى workspace – نرتب client-side لأن rating قد لا يوجد كـ field مستقل
-    final snap = await FirebaseFirestore.instance
-        .collection('workspaces')
-        .limit(20)
-        .get();
-
-    if (snap.docs.isEmpty) {
+    final top = await getTopRatedNearby();
+    if (top.isEmpty) {
       return const BestForYouSpaceModel(
         id: 'unknown',
         name: 'No space found',
@@ -24,63 +25,104 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
         rating: 0,
       );
     }
+    return top.first;
+  }
 
-    // نرتب حسب التقييم (top-level أو stats.averageRating)
-    final sorted = snap.docs.toList()
-      ..sort((a, b) {
-        double rA(Map d) {
-          final stats = d['stats'] as Map?;
-          return (d['rating'] as num?)?.toDouble() ??
-              (stats?['averageRating'] as num?)?.toDouble() ??
-              0.0;
-        }
-        return rA(b.data()).compareTo(rA(a.data()));
-      });
+  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر
+  @override
+  Future<List<BestForYouSpaceModel>> getTopRatedNearby() async {
+    final pos = await LocationService.getCurrentPosition();
+    final double myLat = pos?.latitude ?? _fallbackLat;
+    final double myLng = pos?.longitude ?? _fallbackLng;
+    final bool hasRealLocation = pos != null;
 
-    final doc = sorted.first;
-    final d = doc.data();
+    final snap = await FirebaseFirestore.instance
+        .collection('workspaces')
+        .limit(50)
+        .get();
 
-    // استخراج اسم الموقع
-    final loc = d['location'];
-    String locationStr = d['subtitle'] as String? ??
-        d['location_address'] as String? ??
-        d['description'] as String? ??
-        '';
-    if (locationStr.isEmpty) {
-      if (loc is String) locationStr = loc;
-      else if (loc is Map) {
-        locationStr = (loc['city'] ?? loc['address'] ?? '').toString();
+    if (snap.docs.isEmpty) return [];
+
+    final all = snap.docs.map((doc) {
+      final d = doc.data();
+
+      final loc = d['location'];
+      double? lat;
+      double? lng;
+      if (loc is GeoPoint) {
+        lat = loc.latitude;
+        lng = loc.longitude;
+      } else if (loc is Map) {
+        lat = (loc['lat'] as num?)?.toDouble() ??
+            (loc['latitude'] as num?)?.toDouble();
+        lng = (loc['lng'] as num?)?.toDouble() ??
+            (loc['longitude'] as num?)?.toDouble();
       }
+      final double distKm =
+          (lat != null && lng != null) ? _distanceKm(myLat, myLng, lat, lng) : 999;
+
+      final stats = d['stats'] as Map?;
+      final rating = (d['rating'] as num?)?.toDouble() ??
+          (stats?['averageRating'] as num?)?.toDouble() ??
+          0.0;
+
+      final pricing = d['pricing'] as Map?;
+      final pricePerDay = (d['basePriceValue'] as num?)?.toInt() ??
+          (d['price_per_day'] as num?)?.toInt() ??
+          (d['pricePerDay'] as num?)?.toInt() ??
+          (pricing?['pricePerDay'] as num?)?.toInt() ??
+          (d['pricePerHour'] as num?)?.toInt() ??
+          0;
+
+      final imageUrls = (d['images'] as List?)?.cast<String>() ?? const [];
+      final imageUrl = imageUrls.isNotEmpty ? imageUrls.first : null;
+
+      String locationStr = d['subtitle'] as String? ??
+          d['location_address'] as String? ??
+          d['description'] as String? ??
+          '';
+      if (locationStr.isEmpty) {
+        if (loc is String) locationStr = loc;
+        else if (loc is Map) {
+          locationStr = (loc['city'] ?? loc['address'] ?? '').toString();
+        }
+      }
+      if (locationStr.isEmpty) locationStr = '--';
+
+      final distStr = distKm < 999
+          ? '${(distKm * 1000).toStringAsFixed(0)} m'
+          : '--';
+
+      return _SpaceWithDist(
+        model: BestForYouSpaceModel(
+          id: doc.id,
+          name: d['name'] as String? ?? d['spaceName'] as String? ?? 'Space',
+          location: locationStr,
+          distance: distStr,
+          pricePerDay: pricePerDay,
+          rating: rating,
+          imageUrl: imageUrl,
+        ),
+        distKm: distKm,
+      );
+    }).toList();
+
+    // نصفي بـ 100 متر عند توفر الموقع الحقيقي
+    List<_SpaceWithDist> nearby;
+    if (hasRealLocation) {
+      nearby = all.where((s) => s.distKm <= 0.1).toList();
+      if (nearby.isEmpty) nearby = all; // fallback
+    } else {
+      nearby = all;
     }
-    if (locationStr.isEmpty) locationStr = '--';
 
-    // السعر
-    final pricing = d['pricing'] as Map?;
-    final pricePerDay = (d['price_per_day'] as num?)?.toInt() ??
-        (d['pricePerDay'] as num?)?.toInt() ??
-        (pricing?['pricePerDay'] as num?)?.toInt() ??
-        (d['pricePerHour'] as num?)?.toInt() ??
-        0;
-
-    // التقييم
-    final stats = d['stats'] as Map?;
-    final rating = (d['rating'] as num?)?.toDouble() ??
-        (stats?['averageRating'] as num?)?.toDouble() ??
-        4.0;
-
-    return BestForYouSpaceModel(
-      id: doc.id,
-      name: d['name'] as String? ?? d['spaceName'] as String? ?? 'Space',
-      location: locationStr,
-      distance: '--',
-      pricePerDay: pricePerDay,
-      rating: rating,
-    );
+    // نرتب حسب التقييم (الأعلى أولاً) ونأخذ أول 5
+    nearby.sort((a, b) => b.model.rating.compareTo(a.model.rating));
+    return nearby.take(5).map((s) => s.model).toList();
   }
 
   @override
   Future<FitScore> getFitScore(String spaceId, String goal) async {
-    // محاولة قراءة fit_scores من subcollection
     final doc = await FirebaseFirestore.instance
         .collection('workspaces')
         .doc(spaceId)
@@ -97,7 +139,6 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
       );
     }
 
-    // fallback حسب الهدف
     return switch (goal) {
       'Study' => const FitScore(
           percentage: 0.88,
@@ -121,4 +162,21 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
         ),
     };
   }
+
+  double _distanceKm(double lat1, double lon1, double lat2, double lon2) {
+    const r = 6371.0;
+    final dLat = _degToRad(lat2 - lat1);
+    final dLon = _degToRad(lon2 - lon1);
+    final a = pow(sin(dLat / 2), 2) +
+        cos(_degToRad(lat1)) * cos(_degToRad(lat2)) * pow(sin(dLon / 2), 2);
+    return r * 2 * atan2(sqrt(a), sqrt(1 - a));
+  }
+
+  double _degToRad(double deg) => deg * (pi / 180.0);
+}
+
+class _SpaceWithDist {
+  final BestForYouSpaceModel model;
+  final double distKm;
+  const _SpaceWithDist({required this.model, required this.distKm});
 }

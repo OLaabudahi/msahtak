@@ -3,36 +3,43 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../constants/app_assets.dart';
+import '../../../../services/location_service.dart';
 import '../../domain/entities/home_featured_space_entity.dart';
 import '../../domain/repos/home_repo.dart';
 
 /// ✅ تنفيذ Firebase لـ HomeRepo – يقرأ workspaces collection
 class HomeRepoFirebase implements HomeRepo {
-  static const double _meLat = 31.511136495468655;
-  static const double _meLng = 34.45187681199389;
+  // الإحداثيات الاحتياطية عند عدم توفر الموقع
+  static const double _fallbackLat = 31.511136495468655;
+  static const double _fallbackLng = 34.45187681199389;
 
   @override
   Future<List<HomeFeaturedSpaceEntity>> fetchForYou() async {
+    // نحاول نجيب الموقع الحقيقي
+    final pos = await LocationService.getCurrentPosition();
+    final double myLat = pos?.latitude ?? _fallbackLat;
+    final double myLng = pos?.longitude ?? _fallbackLng;
+
     final snap = await FirebaseFirestore.instance
         .collection('workspaces')
-        .limit(20)
+        .limit(50)
         .get();
 
     final result = snap.docs.map((doc) {
       final d = doc.data();
 
-      // ─── الاسم: الأدمن يكتب spaceName ، التطبيق القديم name ───
+      // ─── الاسم ───
       final name = d['name'] as String? ??
           d['spaceName'] as String? ??
           'Space';
 
-      // ─── الوصف الفرعي: الأدمن يكتب description ، وبعض الداتا subtitle ───
+      // ─── الوصف الفرعي ───
       final subtitle = d['subtitle'] as String? ??
           d['subtitleLine'] as String? ??
           d['description'] as String? ??
           '';
 
-      // ─── الموقع: ممكن GeoPoint أو Map {latitude, longitude} أو string ───
+      // ─── الموقع ───
       final loc = d['location'];
       double? lat;
       double? lng;
@@ -40,32 +47,52 @@ class HomeRepoFirebase implements HomeRepo {
         lat = loc.latitude;
         lng = loc.longitude;
       } else if (loc is Map) {
-        lat = (loc['latitude'] as num?)?.toDouble();
-        lng = (loc['longitude'] as num?)?.toDouble();
+        lat = (loc['lat'] as num?)?.toDouble() ??
+            (loc['latitude'] as num?)?.toDouble();
+        lng = (loc['lng'] as num?)?.toDouble() ??
+            (loc['longitude'] as num?)?.toDouble();
       }
       final double? dist =
-          (lat != null && lng != null) ? _distanceKm(_meLat, _meLng, lat, lng) : null;
+          (lat != null && lng != null) ? _distanceKm(myLat, myLng, lat, lng) : null;
 
-      // ─── السعر: الأدمن يكتب pricePerHour أو pricing.pricePerDay ───
+      // ─── السعر ───
       final pricing = d['pricing'] as Map<String, dynamic>?;
-      final pricePerDay = (d['price_per_day'] as num?)?.toInt() ??
+      final pricePerDay = (d['basePriceValue'] as num?)?.toInt() ??
+          (d['price_per_day'] as num?)?.toInt() ??
           (d['pricePerDay'] as num?)?.toInt() ??
           (pricing?['pricePerDay'] as num?)?.toInt() ??
           (pricing?['price_per_day'] as num?)?.toInt() ??
           (d['pricePerHour'] as num?)?.toInt() ??
-          (d['pricePerDay'] as num?)?.toInt() ??
           0;
 
-      // ─── التقييم: الأدمن يخزنه في stats.averageRating أو rating ───
+      // ─── التقييم ───
       final stats = d['stats'] as Map<String, dynamic>?;
       final rating = (d['rating'] as num?)?.toDouble() ??
           (stats?['averageRating'] as num?)?.toDouble() ??
           4.0;
 
+      // ─── التاغات ───
+      final rawTags = d['tags'];
+      final tags = <String>[];
+      if (rawTags is List) {
+        for (final t in rawTags) {
+          if (t is String) tags.add(t.toLowerCase());
+        }
+      }
+
+      // ─── الصور: يأخذ أول URL من images أو يستخدم imageUrl/cover ───
+      final imagesList = (d['images'] as List?)?.cast<String>() ?? const [];
+      final firstImageUrl = imagesList.isNotEmpty
+          ? imagesList.first
+          : (d['imageUrl'] as String? ??
+              d['cover'] as String? ??
+              d['thumbnailUrl'] as String?);
+
       return HomeFeaturedSpaceEntity(
         id: doc.id,
         name: name,
         imageAsset: AppAssets.home,
+        imageUrl: firstImageUrl,
         subtitleLine: subtitle,
         rating: rating,
         pricePerDay: pricePerDay,
@@ -73,10 +100,12 @@ class HomeRepoFirebase implements HomeRepo {
         lat: lat,
         lng: lng,
         distanceKm: dist,
+        tags: tags,
       );
     }).toList()
       ..sort((a, b) => (a.distanceKm ?? 999).compareTo(b.distanceKm ?? 999));
 
+    // نرجع كل المساحات مرتبة حسب المسافة
     return result;
   }
 

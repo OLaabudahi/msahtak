@@ -2,8 +2,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
 
-import '../../../../app_start/bloc/app_start_bloc.dart';
-import '../../../../app_start/bloc/app_start_event.dart';
+import '../../../../../features/app_start/bloc/app_start_bloc.dart';
+import '../../../../../features/app_start/bloc/app_start_event.dart';
 import '../../../../../services/local_storage_service.dart';
 
 import '../bloc/admin_settings_bloc.dart';
@@ -44,6 +44,8 @@ class AdminSettingsPage extends StatelessWidget {
           listenWhen: (p, n) => p.status != n.status,
           listener: (context, state) {
             if (state.status == AdminSettingsStatus.loggedOut) {
+              // نطلب من AppStartBloc إعادة التحقق — سيرجع goLogin تلقائياً
+              // ويعرض AppRoot.BlocBuilder صفحة الـ LoginPage الصحيحة
               context.read<AppStartBloc>().add(const AppStartStarted());
             }
             if (state.status == AdminSettingsStatus.failure && state.error != null) {

@@ -49,6 +49,8 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     on<AddEditSpacePolicyBulletAdded>(_onPolicyAddBullet);
     on<AddEditSpacePolicyBulletRemoved>(_onPolicyRemoveBullet);
 
+    on<AddEditSpaceImageAdded>(_onImageAdded);
+    on<AddEditSpaceImageRemoved>(_onImageRemoved);
     on<AddEditSpaceSavePressed>(_onSave);
   }
 
@@ -324,6 +326,22 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
   }
 
+  void _onImageAdded(AddEditSpaceImageAdded event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    final url = event.url.trim();
+    if (url.isEmpty) return;
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, images: [...f.images, url]))));
+  }
+
+  void _onImageRemoved(AddEditSpaceImageRemoved event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    final next = List<String>.from(f.images);
+    if (event.index >= 0 && event.index < next.length) next.removeAt(event.index);
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, images: next))));
+  }
+
   Future<void> _onSave(AddEditSpaceSavePressed event, Emitter<AddEditSpaceState> emit) async {
     final f0 = state.form;
     if (f0 == null) return;
@@ -423,6 +441,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     List<WorkingHoursEntity>? workingHours,
     List<PolicySectionEntity>? policySections,
     List<AmenityEntity>? amenities,
+    List<String>? images,
     bool? hidden,
   }) {
     return SpaceFormEntity(
@@ -439,6 +458,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       workingHours: workingHours ?? f.workingHours,
       policySections: policySections ?? f.policySections,
       amenities: amenities ?? f.amenities,
+      images: images ?? f.images,
       hidden: hidden ?? f.hidden,
     );
   }

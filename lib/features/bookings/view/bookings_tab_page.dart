@@ -120,7 +120,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
         final list = state.bookings;
 
         final upcoming = list
-            .where((b) => b.status.toLowerCase() == 'upcoming')
+            .where((b) => b.status.toLowerCase() == 'upcoming' || b.status.toLowerCase() == 'confirmed')
             .toList();
         final completed = list
             .where((b) => b.status.toLowerCase() == 'completed')
@@ -159,12 +159,21 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
                   (b) => BookingListItem(
                     booking: b,
                     onView: () => _openBookingDetails(context, b),
-                    onCancel: () {
-                      // ✅ منطق الإلغاء لازم يروح للـ Bloc (Event)
-                      // bloc.add(BookingsCancelRequested(bookingId: b.bookingId));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Cancel (dummy)')),
+                    onCancel: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Cancel Booking'),
+                          content: const Text('Are you sure you want to cancel this booking?'),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
+                            TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Yes, Cancel')),
+                          ],
+                        ),
                       );
+                      if (confirm == true && context.mounted) {
+                        context.read<BookingsBloc>().add(BookingsCancelRequested(b.bookingId));
+                      }
                     },
                   ),
                 ),

@@ -5,6 +5,9 @@ import '../models/best_for_you_space_model.dart';
 abstract class BestForYouRemoteSource {
   Future<BestForYouSpaceModel> getBestSpace(String goal);
   Future<FitScore> getFitScore(String spaceId, String goal);
+
+  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر من الموقع الحالي
+  Future<List<BestForYouSpaceModel>> getTopRatedNearby();
 }
 
 class FakeBestForYouSource implements BestForYouRemoteSource {
@@ -69,5 +72,11 @@ class FakeBestForYouSource implements BestForYouRemoteSource {
       String spaceId, String goal) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _fitScores[goal] ?? _fitScores['Study']!;
+  }
+
+  @override
+  Future<List<BestForYouSpaceModel>> getTopRatedNearby() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return [_space];
   }
 }

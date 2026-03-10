@@ -14,4 +14,7 @@ class MySpacesRepoImpl implements MySpacesRepo {
 
   @override
   Future<void> hideSpace({required String spaceId}) => source.hideSpace(spaceId: spaceId);
+
+  @override
+  Future<void> deleteSpace({required String spaceId}) => source.deleteSpace(spaceId: spaceId);
 }

@@ -23,10 +23,10 @@ class BookingsState extends Equatable {
   );
 
   List<Booking> get upcoming =>
-      bookings.where((b) => b.status == 'upcoming').toList();
+      bookings.where((b) => b.status == 'upcoming' || b.status == 'confirmed').toList();
 
   List<Booking> get past =>
-      bookings.where((b) => b.status != 'upcoming').toList();
+      bookings.where((b) => b.status != 'upcoming' && b.status != 'confirmed').toList();
 
   BookingsState copyWith({
     bool? loading,

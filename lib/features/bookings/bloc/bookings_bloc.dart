@@ -13,6 +13,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     on<BookingsStarted>(_onStarted);
     on<BookingsSegmentChanged>(_onSegmentChanged);
     on<BookingsRefreshRequested>(_onRefresh);
+    on<BookingsCancelRequested>(_onCancel);
   }
 
   /// ✅ دالة: تحميل الحجوزات أول ما تفتح التاب
@@ -45,6 +46,20 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     Emitter<BookingsState> emit,
   ) async {
     try {
+      final data = await repo.fetchBookings();
+      emit(state.copyWith(bookings: data, error: null));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  /// إلغاء حجز وتحديث القائمة
+  Future<void> _onCancel(
+    BookingsCancelRequested event,
+    Emitter<BookingsState> emit,
+  ) async {
+    try {
+      await repo.cancelBooking(event.bookingId);
       final data = await repo.fetchBookings();
       emit(state.copyWith(bookings: data, error: null));
     } catch (e) {

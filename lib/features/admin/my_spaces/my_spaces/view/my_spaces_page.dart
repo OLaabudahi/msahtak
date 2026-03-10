@@ -8,6 +8,7 @@ import '../data/repos/my_spaces_repo_impl.dart';
 import '../data/sources/my_spaces_firebase_source.dart';
 import '../domain/usecases/get_my_spaces_usecase.dart';
 import '../domain/usecases/hide_space_usecase.dart';
+import '../domain/usecases/delete_space_usecase.dart';
 import '../widgets/space_card.dart';
 
 import '../../add_edit_space/view/add_edit_space_page.dart';
@@ -22,9 +23,30 @@ class MySpacesPage extends StatelessWidget {
       create: (_) => MySpacesBloc(
         getSpaces: GetMySpacesUseCase(repo),
         hideSpace: HideSpaceUseCase(repo),
+        deleteSpace: DeleteSpaceUseCase(repo),
       )..add(const MySpacesStarted()),
       child: const MySpacesPage(),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, String spaceId, String spaceName) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Space'),
+        content: Text('Are you sure you want to delete "$spaceName"? This action cannot be undone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      context.read<MySpacesBloc>().add(MySpacesDeletePressed(spaceId));
+    }
   }
 
   @override
@@ -60,6 +82,7 @@ class MySpacesPage extends StatelessWidget {
                           space: list[i],
                           onManage: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: list[i].id))),
                           onHide: () => context.read<MySpacesBloc>().add(MySpacesHidePressed(list[i].id)),
+                          onDelete: () => _confirmDelete(context, list[i].id, list[i].name),
                         ),
                       );
                     },

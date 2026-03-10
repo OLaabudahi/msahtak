@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/hub_model.dart';
 import '../models/weekly_plan_model.dart';
@@ -8,19 +9,73 @@ import 'weekly_plan_remote_source.dart';
 class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
   @override
   Future<List<HubModel>> getHubs() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    // إذا كان المستخدم مسجل دخول، نجيب مساحاته من آخر أسبوع
+    if (uid != null) {
+      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+      var bookingsSnap = await FirebaseFirestore.instance
+          .collection('bookings')
+          .where('userId', isEqualTo: uid)
+          .where('startDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(weekAgo))
+          .limit(20)
+          .get();
+
+      // محاولة بديلة مع user_id إذا ما في نتائج
+      if (bookingsSnap.docs.isEmpty) {
+        bookingsSnap = await FirebaseFirestore.instance
+            .collection('bookings')
+            .where('user_id', isEqualTo: uid)
+            .where('startDate',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(weekAgo))
+            .limit(20)
+            .get();
+      }
+
+      if (bookingsSnap.docs.isNotEmpty) {
+        final seenIds = <String>{};
+        final workspaceIds = <String>[];
+        for (final doc in bookingsSnap.docs) {
+          final d = doc.data();
+          final wsId = d['workspaceId'] as String? ??
+              d['spaceId'] as String? ??
+              d['workspace_id'] as String? ??
+              '';
+          if (wsId.isNotEmpty && seenIds.add(wsId)) {
+            workspaceIds.add(wsId);
+          }
+        }
+
+        final hubs = <HubModel>[];
+        for (final wsId in workspaceIds) {
+          try {
+            final wsDoc = await FirebaseFirestore.instance
+                .collection('workspaces')
+                .doc(wsId)
+                .get();
+            if (wsDoc.exists) {
+              final name = wsDoc.data()?['name'] as String? ??
+                  wsDoc.data()?['spaceName'] as String? ??
+                  'Space';
+              hubs.add(HubModel(id: wsId, name: name));
+            }
+          } catch (_) {}
+        }
+
+        if (hubs.isNotEmpty) return hubs;
+      }
+    }
+
+    // fallback: مساحات تحتوي على has_weekly_plan=true
     final snap = await FirebaseFirestore.instance
         .collection('workspaces')
         .where('has_weekly_plan', isEqualTo: true)
         .limit(20)
         .get();
 
-    if (snap.docs.isEmpty) {
-      // fallback: إرجاع كل المساحات كـ hubs
-      final allSnap = await FirebaseFirestore.instance
-          .collection('workspaces')
-          .limit(10)
-          .get();
-      return allSnap.docs
+    if (snap.docs.isNotEmpty) {
+      return snap.docs
           .map((doc) => HubModel(
                 id: doc.id,
                 name: doc.data()['name'] as String? ?? 'Space',
@@ -28,7 +83,12 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
           .toList();
     }
 
-    return snap.docs
+    // آخر fallback: كل المساحات
+    final allSnap = await FirebaseFirestore.instance
+        .collection('workspaces')
+        .limit(10)
+        .get();
+    return allSnap.docs
         .map((doc) => HubModel(
               id: doc.id,
               name: doc.data()['name'] as String? ?? 'Space',

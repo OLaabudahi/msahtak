@@ -7,4 +7,7 @@ abstract class BestForYouRepo {
 
   /// جلب درجة التطابق للمساحة مع الهدف المحدد
   Future<FitScore> getFitScore(String spaceId, String goal);
+
+  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر
+  Future<List<BestForYouSpace>> getTopRatedNearby();
 }

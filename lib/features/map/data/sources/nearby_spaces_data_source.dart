@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/geo_point_entity.dart';
 import '../models/nearby_space_model.dart';
 
@@ -107,6 +108,93 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
         cos(_degToRad(lat1)) * cos(_degToRad(lat2)) * pow(sin(dLon / 2), 2);
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return r * c;
+  }
+
+  double _degToRad(double deg) => deg * (pi / 180.0);
+}
+
+/// يقرأ المساحات من Firestore ويصفيها حسب الراديوس من الموقع الحالي
+class FirebaseNearbySpacesDataSource implements NearbySpacesDataSource {
+  @override
+  Future<List<NearbySpaceModel>> fetchNearby({
+    required GeoPointEntity center,
+    required double radiusKm,
+  }) async {
+    // نقرأ من كلا الـ collections: workspaces (موجودة) + spaces (من الأدمن)
+    final results = await Future.wait([
+      FirebaseFirestore.instance.collection('workspaces').limit(50).get(),
+      FirebaseFirestore.instance.collection('spaces').limit(50).get(),
+    ]);
+
+    final allDocs = [
+      ...results[0].docs,
+      ...results[1].docs,
+    ];
+
+    final models = <NearbySpaceModel>[];
+
+    for (final doc in allDocs) {
+      final d = doc.data();
+
+      final loc = d['location'];
+      double? lat;
+      double? lng;
+      if (loc is GeoPoint) {
+        lat = loc.latitude;
+        lng = loc.longitude;
+      } else if (loc is Map) {
+        // يدعم {lat,lng} (من الأدمن) و {latitude,longitude} (من Firebase)
+        lat = (loc['lat'] as num?)?.toDouble() ??
+            (loc['latitude'] as num?)?.toDouble();
+        lng = (loc['lng'] as num?)?.toDouble() ??
+            (loc['longitude'] as num?)?.toDouble();
+      }
+      if (lat == null || lng == null) continue;
+
+      final dist = _distanceKm(center.lat, center.lng, lat, lng);
+      if (dist > radiusKm) continue;
+
+      final name = d['name'] as String? ?? d['spaceName'] as String? ?? 'Space';
+      final subtitle = d['subtitle'] as String? ??
+          d['subtitleLine'] as String? ??
+          d['description'] as String? ??
+          '';
+      final stats = d['stats'] as Map?;
+      final rating = (d['rating'] as num?)?.toDouble() ??
+          (stats?['averageRating'] as num?)?.toDouble() ??
+          0.0;
+
+      final imagesList = (d['images'] as List?)?.cast<String>() ?? const [];
+      final imageUrl = imagesList.isNotEmpty
+          ? imagesList.first
+          : (d['imageUrl'] as String? ??
+              d['cover'] as String? ??
+              d['thumbnailUrl'] as String? ??
+              '');
+
+      models.add(NearbySpaceModel(
+        id: doc.id,
+        name: name,
+        subtitle: subtitle,
+        rating: rating,
+        imageUrl: imageUrl,
+        lat: lat,
+        lng: lng,
+        distanceKm: dist,
+      ));
+    }
+
+    models.sort((a, b) => a.distanceKm.compareTo(b.distanceKm));
+    return models;
+  }
+
+  double _distanceKm(double lat1, double lon1, double lat2, double lon2) {
+    const r = 6371.0;
+    final dLat = _degToRad(lat2 - lat1);
+    final dLon = _degToRad(lon2 - lon1);
+    final a = pow(sin(dLat / 2), 2) +
+        cos(_degToRad(lat1)) * cos(_degToRad(lat2)) * pow(sin(dLon / 2), 2);
+    return r * 2 * atan2(sqrt(a), sqrt(1 - a));
   }
 
   double _degToRad(double deg) => deg * (pi / 180.0);

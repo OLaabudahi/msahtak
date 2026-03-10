@@ -5,6 +5,7 @@ import '../../../theme/app_text_styles.dart';
 
 class FeaturedSpaceCard extends StatelessWidget {
   final String imageAsset;
+  final String? imageUrl;
   final String title;
   final String ratingText;
   final String subtitle;
@@ -13,6 +14,7 @@ class FeaturedSpaceCard extends StatelessWidget {
   const FeaturedSpaceCard({
     super.key,
     required this.imageAsset,
+    this.imageUrl,
     required this.title,
     required this.ratingText,
     required this.subtitle,
@@ -22,11 +24,21 @@ class FeaturedSpaceCard extends StatelessWidget {
   /// ✅ دالة: بناء كارد "For You" الكبير (صورة + كارد أبيض فوقها)
   @override
   Widget build(BuildContext context) {
+    final url = imageUrl;
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
       child: Stack(
         children: [
-          Positioned.fill(child: Image.asset(imageAsset, fit: BoxFit.cover)),
+          Positioned.fill(
+            child: url != null && url.isNotEmpty
+                ? Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        Image.asset(imageAsset, fit: BoxFit.cover),
+                  )
+                : Image.asset(imageAsset, fit: BoxFit.cover),
+          ),
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(

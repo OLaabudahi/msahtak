@@ -8,13 +8,17 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
   @override
   Future<List<BookingRequestModel>> fetchBookings({required String status}) async {
-    // ترتيب client-side لتجنب composite index
-    final snap = await _db
-        .collection('bookings')
-        .where('status', isEqualTo: status)
-        .get();
+    // pending tab يشمل 'pending' و 'under_review'
+    final List<String> statuses = status == 'pending'
+        ? ['pending', 'under_review']
+        : [status];
 
-    final sorted = snap.docs.toList()
+    final snaps = await Future.wait(
+      statuses.map((s) => _db.collection('bookings').where('status', isEqualTo: s).get()),
+    );
+    final allDocs = snaps.expand((s) => s.docs).toList();
+
+    final sorted = allDocs
       ..sort((a, b) {
         final at = (a.data()['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
         final bt = (b.data()['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
