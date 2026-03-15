@@ -155,3 +155,11 @@ class AddEditSpaceSeatsChanged extends AddEditSpaceEvent {
   @override
   List<Object?> get props => [value];
 }
+
+class AddEditSpaceAdminChanged extends AddEditSpaceEvent {
+  final String? adminId;
+  final String? adminName;
+  const AddEditSpaceAdminChanged({this.adminId, this.adminName});
+  @override
+  List<Object?> get props => [adminId, adminName];
+}

@@ -29,6 +29,9 @@ class AuthRepoFirebase implements AuthRepo {
       await _storage.setHasCompletedOnboarding(true);
       // حفظ دور المستخدم لتحديد التوجيه (مستخدم عادي أو أدمن)
       await _storage.setUserRole(result['role'] as String? ?? 'user');
+      // حفظ المساحات المخصصة للمشرف الفرعي
+      final ids = result['assignedSpaceIds'];
+      if (ids is List<String>) await _storage.setAssignedSpaceIds(ids);
 
       Map<String, dynamic> data = {};
       try {

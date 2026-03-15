@@ -30,6 +30,8 @@ class SpaceFormModel {
 
   final bool hidden;
   final int totalSeats;
+  final String? adminId;
+  final String? adminName;
 
   const SpaceFormModel({
     required this.id,
@@ -48,6 +50,8 @@ class SpaceFormModel {
     this.images = const [],
     required this.hidden,
     this.totalSeats = 0,
+    this.adminId,
+    this.adminName,
   });
 
   factory SpaceFormModel.fromJson(Map<String, dynamic> json) => SpaceFormModel(
@@ -67,6 +71,8 @@ class SpaceFormModel {
         images: (json['images'] as List?)?.cast<String>() ?? const [],
         hidden: (json['hidden'] ?? false) == true,
         totalSeats: (json['totalSeats'] as num?)?.toInt() ?? 0,
+        adminId: json['adminId'] as String?,
+        adminName: json['adminName'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,6 +92,8 @@ class SpaceFormModel {
         'images': images,
         'hidden': hidden,
         'totalSeats': totalSeats,
+        'adminId': adminId,
+        'adminName': adminName,
       };
 
   SpaceFormEntity toEntity() {
@@ -114,6 +122,8 @@ class SpaceFormModel {
       images: images,
       hidden: hidden,
       totalSeats: totalSeats,
+      adminId: adminId,
+      adminName: adminName,
     );
   }
 
@@ -137,6 +147,8 @@ class SpaceFormModel {
       images: e.images,
       hidden: e.hidden,
       totalSeats: e.totalSeats,
+      adminId: e.adminId,
+      adminName: e.adminName,
     );
   }
 }

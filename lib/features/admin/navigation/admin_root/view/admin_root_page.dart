@@ -1,17 +1,17 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../_shared/admin_session.dart';
 
 import '../../../admin_home/admin_home/view/admin_home_page.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
 import '../../../users/users/view/users_page.dart';
 import '../../../settings/admin_settings/view/admin_settings_page.dart';
+import '../../../sub_admins/view/sub_admins_page.dart';
 
 class AdminRootPage extends StatefulWidget {
   const AdminRootPage({super.key});
 
-  static Widget withBloc() {
-    return const AdminRootPage();
-  }
+  static Widget withBloc() => const AdminRootPage();
 
   @override
   State<AdminRootPage> createState() => _AdminRootPageState();
@@ -19,30 +19,68 @@ class AdminRootPage extends StatefulWidget {
 
 class _AdminRootPageState extends State<AdminRootPage> {
   int _index = 0;
+  bool _loaded = false;
 
-  final _tabs = const [
-    _TabConfig('Home', 0),
-    _TabConfig('Bookings', 1),
-    _TabConfig('Users', 2),
-    _TabConfig('Settings', 3),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
-  // Build pages once and keep them alive with IndexedStack
-  late final List<Widget> _pages = [
-    AdminHomePage.withBloc(),
-    BookingRequestsPage.withBloc(),
-    UsersPage.withBloc(),
-    AdminSettingsPage.withBloc(),
-  ];
+  Future<void> _init() async {
+    await AdminSession.load();
+    if (mounted) setState(() => _loaded = true);
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_loaded) {
+      return const Scaffold(
+        backgroundColor: AdminColors.bg,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final isSuperAdmin = AdminSession.isSuperAdmin;
+
+    // تاب الأدمن الفرعي: Home, Bookings, Settings (بدون Users)
+    // تاب الأدمن الكامل: Home, Bookings, Users, Sub Admins, Settings
+    final tabs = isSuperAdmin
+        ? const [
+            _TabConfig('Home', 0),
+            _TabConfig('Bookings', 1),
+            _TabConfig('Users', 2),
+            _TabConfig('Sub Admins', 3),
+            _TabConfig('Settings', 4),
+          ]
+        : const [
+            _TabConfig('Home', 0),
+            _TabConfig('Bookings', 1),
+            _TabConfig('Settings', 2),
+          ];
+
+    final pages = isSuperAdmin
+        ? [
+            AdminHomePage.withBloc(),
+            BookingRequestsPage.withBloc(),
+            UsersPage.withBloc(),
+            SubAdminsPage.withBloc(),
+            AdminSettingsPage.withBloc(),
+          ]
+        : [
+            AdminHomePage.withBloc(),
+            BookingRequestsPage.withBloc(),
+            AdminSettingsPage.withBloc(),
+          ];
+
+    final clampedIndex = _index.clamp(0, tabs.length - 1);
+
     return Scaffold(
       backgroundColor: AdminColors.bg,
       body: SafeArea(
         top: true,
         bottom: false,
-        child: IndexedStack(index: _index, children: _pages),
+        child: IndexedStack(index: clampedIndex, children: pages),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
@@ -53,14 +91,9 @@ class _AdminRootPageState extends State<AdminRootPage> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
-            children: _tabs.map((t) {
-              final active = t.index == _index;
-              final icon = switch (t.index) {
-                0 => AdminIconMapper.home(),
-                1 => AdminIconMapper.bookings(),
-                2 => AdminIconMapper.users(),
-                _ => AdminIconMapper.settings(),
-              };
+            children: tabs.map((t) {
+              final active = t.index == clampedIndex;
+              final icon = _iconFor(t.index, isSuperAdmin);
 
               return Expanded(
                 child: InkWell(
@@ -92,6 +125,23 @@ class _AdminRootPageState extends State<AdminRootPage> {
         ),
       ),
     );
+  }
+
+  IconData _iconFor(int index, bool isSuperAdmin) {
+    if (!isSuperAdmin) {
+      return switch (index) {
+        0 => AdminIconMapper.home(),
+        1 => AdminIconMapper.bookings(),
+        _ => AdminIconMapper.settings(),
+      };
+    }
+    return switch (index) {
+      0 => AdminIconMapper.home(),
+      1 => AdminIconMapper.bookings(),
+      2 => AdminIconMapper.users(),
+      3 => Icons.admin_panel_settings_outlined,
+      _ => AdminIconMapper.settings(),
+    };
   }
 }
 

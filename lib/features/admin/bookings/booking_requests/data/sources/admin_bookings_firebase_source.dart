@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_bookings_source.dart';
 import '../models/booking_request_model.dart';
+import '../../../../_shared/admin_session.dart';
 
 /// مصدر Firebase لطلبات الحجز — يقرأ من مجموعة bookings
 class AdminBookingsFirebaseSource implements AdminBookingsSource {
@@ -16,10 +17,17 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       _ => [status],
     };
 
+    final assigned = AdminSession.assignedSpaceIds;
+
     final snaps = await Future.wait(
       statuses.map((s) => _db.collection('bookings').where('status', isEqualTo: s).get()),
     );
-    final allDocs = snaps.expand((s) => s.docs).toList();
+    final allDocs = snaps.expand((s) => s.docs).where((doc) {
+      if (assigned.isEmpty) return true;
+      final d = doc.data();
+      final spaceId = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
+      return assigned.contains(spaceId);
+    }).toList();
 
     final sorted = allDocs
       ..sort((a, b) {

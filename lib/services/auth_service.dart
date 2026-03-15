@@ -76,11 +76,15 @@ class AuthService {
           Map<String, dynamic> userData =
               userDoc.data() as Map<String, dynamic>;
           String role = userData['role'] ?? 'user';
+          final rawIds = userData['assignedSpaceIds'];
+          final assignedSpaceIds = rawIds is List
+              ? rawIds.map((e) => e.toString()).toList()
+              : <String>[];
 
-          return {'success': true, 'user': user, 'role': role};
+          return {'success': true, 'user': user, 'role': role, 'assignedSpaceIds': assignedSpaceIds};
         }
 
-        return {'success': true, 'user': user, 'role': 'user'};
+        return {'success': true, 'user': user, 'role': 'user', 'assignedSpaceIds': <String>[]};
       }
 
       return {'success': false, 'error': 'Failed to sign in'};
