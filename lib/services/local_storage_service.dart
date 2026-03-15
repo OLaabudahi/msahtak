@@ -45,9 +45,22 @@ class LocalStorageService {
     await sp.setString('user_role', role);
   }
 
+  static const _kAssignedSpaceIds = 'assigned_space_ids';
+
+  Future<List<String>> getAssignedSpaceIds() async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.getStringList(_kAssignedSpaceIds) ?? [];
+  }
+
+  Future<void> setAssignedSpaceIds(List<String> ids) async {
+    final sp = await SharedPreferences.getInstance();
+    await sp.setStringList(_kAssignedSpaceIds, ids);
+  }
+
   Future<void> clearAuth() async {
     final sp = await SharedPreferences.getInstance();
     await sp.remove(_kIsLoggedIn);
     await sp.remove('user_role');
+    await sp.remove(_kAssignedSpaceIds);
   }
 }

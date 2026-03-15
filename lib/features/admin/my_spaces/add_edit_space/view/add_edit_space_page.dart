@@ -1,10 +1,12 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
 
 import '../bloc/add_edit_space_bloc.dart';
 import '../bloc/add_edit_space_event.dart';
+import '../../../_shared/admin_session.dart';
 import '../bloc/add_edit_space_state.dart';
 import '../data/repos/add_edit_space_repo_impl.dart';
 import '../data/sources/add_edit_space_firebase_source.dart';
@@ -197,6 +199,15 @@ class AddEditSpacePage extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
+                        if (AdminSession.isSuperAdmin)
+                          _AdminPickerCard(
+                            adminId: f.adminId,
+                            adminName: f.adminName,
+                            onChanged: (id, name) => context.read<AddEditSpaceBloc>().add(AddEditSpaceAdminChanged(adminId: id, adminName: name)),
+                          ),
+
+                        if (AdminSession.isSuperAdmin) const SizedBox(height: 12),
+
                         ImagesEditor(
                           images: f.images,
                           onAdd: (url) => context.read<AddEditSpaceBloc>().add(AddEditSpaceImageAdded(url)),
@@ -255,6 +266,131 @@ class AddEditSpacePage extends StatelessWidget {
 
   static Future<(double, double)?> _pickLatLng(BuildContext context, {double? lat, double? lng}) {
     return LocationPickerPage.show(context, lat: lat, lng: lng);
+  }
+}
+
+class _AdminPickerCard extends StatefulWidget {
+  final String? adminId;
+  final String? adminName;
+  final void Function(String? id, String? name) onChanged;
+
+  const _AdminPickerCard({required this.adminId, required this.adminName, required this.onChanged});
+
+  @override
+  State<_AdminPickerCard> createState() => _AdminPickerCardState();
+}
+
+class _AdminPickerCardState extends State<_AdminPickerCard> {
+  List<({String id, String name})> _subAdmins = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'sub_admin')
+          .get();
+      final list = snap.docs.map((d) {
+        final name = d.data()['fullName'] as String? ?? d.data()['full_name'] as String? ?? 'Unknown';
+        return (id: d.id, name: name);
+      }).toList();
+      if (mounted) setState(() => _subAdmins = list);
+    } catch (_) {}
+  }
+
+  Future<void> _pick() async {
+    final picked = await showDialog<({String? id, String? name})>(
+      context: context,
+      barrierColor: const Color(0x66000000),
+      builder: (_) => AlertDialog(
+        backgroundColor: AdminColors.bg,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Assign Sub Admin', style: AdminText.h2()),
+        content: SizedBox(
+          width: 300,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: Text('None', style: AdminText.body14(color: AdminColors.black40)),
+                onTap: () => Navigator.of(context).pop((id: null, name: null)),
+              ),
+              const Divider(height: 1, color: AdminColors.black15),
+              ..._subAdmins.map((s) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: AdminColors.primaryBlue.withOpacity(0.12),
+                      child: Text(s.name[0].toUpperCase(), style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
+                    ),
+                    title: Text(s.name, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600)),
+                    onTap: () => Navigator.of(context).pop((id: s.id, name: s.name)),
+                  ),
+                  const Divider(height: 1, color: AdminColors.black15),
+                ],
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (picked != null) {
+      widget.onChanged(picked.id, picked.name);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasAdmin = widget.adminId != null && widget.adminId!.isNotEmpty;
+    return AdminCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.admin_panel_settings_outlined, size: 18, color: AdminColors.black75),
+              const SizedBox(width: 8),
+              Text('Space Admin', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: _pick,
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AdminColors.black15),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      hasAdmin ? widget.adminName ?? 'Sub Admin' : 'Select sub admin (optional)',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: hasAdmin
+                          ? AdminText.body14(color: AdminColors.text, w: FontWeight.w600)
+                          : AdminText.body14(),
+                    ),
+                  ),
+                  Icon(AdminIconMapper.chevronDown(), size: 16, color: AdminColors.black40),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

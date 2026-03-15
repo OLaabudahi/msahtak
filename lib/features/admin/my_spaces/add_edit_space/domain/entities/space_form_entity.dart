@@ -37,6 +37,10 @@ class SpaceFormEntity extends Equatable {
   // Seats
   final int totalSeats;
 
+  // Sub Admin
+  final String? adminId;
+  final String? adminName;
+
   const SpaceFormEntity({
     required this.id,
     required this.name,
@@ -54,6 +58,8 @@ class SpaceFormEntity extends Equatable {
     this.images = const [],
     required this.hidden,
     this.totalSeats = 0,
+    this.adminId,
+    this.adminName,
   });
 
   @override
@@ -74,5 +80,7 @@ class SpaceFormEntity extends Equatable {
         images,
         hidden,
         totalSeats,
+        adminId,
+        adminName,
       ];
 }

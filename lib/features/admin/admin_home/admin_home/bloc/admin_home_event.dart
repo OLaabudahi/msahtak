@@ -12,7 +12,8 @@ class AdminHomeStarted extends AdminHomeEvent {
 
 class AdminHomeSpaceChanged extends AdminHomeEvent {
   final String spaceId;
-  const AdminHomeSpaceChanged(this.spaceId);
+  final String spaceName;
+  const AdminHomeSpaceChanged({required this.spaceId, required this.spaceName});
   @override
-  List<Object?> get props => [spaceId];
+  List<Object?> get props => [spaceId, spaceName];
 }

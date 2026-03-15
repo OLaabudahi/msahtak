@@ -80,13 +80,62 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     data['updatedAt'] = FieldValue.serverTimestamp();
 
     if (form.id == null) {
+      // مساحة جديدة
       data['createdAt'] = FieldValue.serverTimestamp();
-      data['availableSeats'] = form.totalSeats; // initialize on creation
-      await _db.collection('workspaces').add(data);
+      data['availableSeats'] = form.totalSeats;
+      final docRef = await _db.collection('workspaces').add(data);
+
+      // تعيين الأدمن الفرعي للمساحة الجديدة
+      if (form.adminId != null && form.adminId!.isNotEmpty) {
+        await _assignSpaceToAdmin(spaceId: docRef.id, newAdminId: form.adminId!, oldAdminId: null);
+      }
     } else {
-      // Don't overwrite availableSeats on edit — it tracks real-time availability
+      // مساحة موجودة — اقرأ الأدمن القديم قبل الحفظ
       data.remove('availableSeats');
+      String? oldAdminId;
+      try {
+        final old = await _db.collection('workspaces').doc(form.id).get();
+        oldAdminId = old.data()?['adminId'] as String?;
+      } catch (_) {}
+
       await _db.collection('workspaces').doc(form.id).set(data, SetOptions(merge: true));
+
+      // تحديث تعيين الأدمن إذا تغيّر
+      final newAdminId = form.adminId;
+      if (oldAdminId != newAdminId) {
+        await _assignSpaceToAdmin(spaceId: form.id!, newAdminId: newAdminId, oldAdminId: oldAdminId);
+      }
+    }
+  }
+
+  /// تحديث assignedSpaceIds للأدمن القديم والجديد
+  Future<void> _assignSpaceToAdmin({
+    required String spaceId,
+    required String? newAdminId,
+    required String? oldAdminId,
+  }) async {
+    // إزالة المساحة من الأدمن القديم
+    if (oldAdminId != null && oldAdminId.isNotEmpty) {
+      try {
+        final oldDoc = await _db.collection('users').doc(oldAdminId).get();
+        if (oldDoc.exists) {
+          final ids = List<String>.from(oldDoc.data()?['assignedSpaceIds'] ?? []);
+          ids.remove(spaceId);
+          await _db.collection('users').doc(oldAdminId).update({'assignedSpaceIds': ids});
+        }
+      } catch (_) {}
+    }
+
+    // إضافة المساحة للأدمن الجديد
+    if (newAdminId != null && newAdminId.isNotEmpty) {
+      try {
+        final newDoc = await _db.collection('users').doc(newAdminId).get();
+        if (newDoc.exists) {
+          final ids = List<String>.from(newDoc.data()?['assignedSpaceIds'] ?? []);
+          if (!ids.contains(spaceId)) ids.add(spaceId);
+          await _db.collection('users').doc(newAdminId).update({'assignedSpaceIds': ids});
+        }
+      } catch (_) {}
     }
   }
 }

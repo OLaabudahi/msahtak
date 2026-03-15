@@ -54,6 +54,7 @@ class MySpacesPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AdminColors.bg,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'my_spaces_fab',
         backgroundColor: AdminColors.primaryBlue,
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: null)));

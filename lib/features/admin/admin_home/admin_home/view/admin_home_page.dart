@@ -9,12 +9,15 @@ import '../data/repos/admin_home_repo_impl.dart';
 import '../data/sources/admin_home_firebase_source.dart';
 import '../domain/usecases/get_admin_home_kpis_usecase.dart';
 import '../domain/usecases/get_admin_spaces_usecase.dart';
+import '../domain/usecases/get_admin_recent_activity_usecase.dart';
 import '../widgets/kpi_tile.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
 import '../../../calendar/calendar_availability/view/calendar_availability_page.dart';
 import '../../../offers/offers_management/view/offers_management_page.dart';
 import '../../../reviews/reviews_reports/view/reviews_reports_page.dart';
 import '../../../my_spaces/add_edit_space/view/add_edit_space_page.dart';
+import '../../../sub_admins/view/sub_admins_page.dart';
+import '../../../_shared/admin_session.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -26,6 +29,7 @@ class AdminHomePage extends StatelessWidget {
       create: (_) => AdminHomeBloc(
         getSpaces: GetAdminSpacesUseCase(repo),
         getKpis: GetAdminHomeKpisUseCase(repo),
+        getActivity: GetAdminRecentActivityUseCase(repo),
       )..add(const AdminHomeStarted()),
       child: const AdminHomePage(),
     );
@@ -36,6 +40,7 @@ class AdminHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AdminColors.bg,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'admin_home_fab',
         backgroundColor: AdminColors.primaryAmber,
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: null)),
@@ -47,7 +52,7 @@ class AdminHomePage extends StatelessWidget {
         bottom: false,
         child: BlocBuilder<AdminHomeBloc, AdminHomeState>(
           builder: (context, state) {
-            final hasSpace = state.activeSpace.isNotEmpty;
+            final hasSpace = state.activeSpaceId.isNotEmpty;
 
             return SingleChildScrollView(
               child: Center(
@@ -71,7 +76,7 @@ class AdminHomePage extends StatelessWidget {
                           onTap: state.spaces.isEmpty
                               ? null
                               : () async {
-                                  final picked = await showDialog<String>(
+                                  final picked = await showDialog<({String id, String name})>(
                                     context: context,
                                     barrierColor: const Color(0x66000000),
                                     builder: (_) => AlertDialog(
@@ -87,8 +92,8 @@ class AdminHomePage extends StatelessWidget {
                                           itemBuilder: (ctx, i) {
                                             final s = state.spaces[i];
                                             return ListTile(
-                                              title: Text(s, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body16(w: FontWeight.w500)),
-                                              onTap: () => Navigator.of(ctx).pop(s),
+                                              title: Text(s.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body16(w: FontWeight.w500)),
+                                              onTap: () => Navigator.of(ctx).pop((id: s.id, name: s.name)),
                                             );
                                           },
                                         ),
@@ -96,8 +101,8 @@ class AdminHomePage extends StatelessWidget {
                                     ),
                                   );
 
-                                  if (picked != null && picked.isNotEmpty) {
-                                    context.read<AdminHomeBloc>().add(AdminHomeSpaceChanged(picked));
+                                  if (picked != null) {
+                                    context.read<AdminHomeBloc>().add(AdminHomeSpaceChanged(spaceId: picked.id, spaceName: picked.name));
                                   }
                                 },
                           borderRadius: BorderRadius.circular(12),
@@ -112,7 +117,7 @@ class AdminHomePage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    hasSpace ? state.activeSpace : 'Select Space',
+                                    hasSpace ? state.activeSpaceName : 'Select Space',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AdminText.body16(w: FontWeight.w600),
@@ -130,7 +135,7 @@ class AdminHomePage extends StatelessWidget {
                         InkWell(
                           onTap: hasSpace
                               ? () => Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: state.activeSpace)),
+                                    MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: state.activeSpaceId)),
                                   )
                               : null,
                           borderRadius: BorderRadius.circular(12),
@@ -157,7 +162,7 @@ class AdminHomePage extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    hasSpace ? 'Manage ${state.activeSpace}' : 'Manage',
+                                    hasSpace ? 'Manage ${state.activeSpaceName}' : 'Manage',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AdminText.body16(w: FontWeight.w700),
@@ -203,7 +208,9 @@ class AdminHomePage extends StatelessWidget {
                           children: [
                             Expanded(child: Text('Recent Activity', style: AdminText.h2())),
                             InkWell(
-                              onTap: () {},
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => BookingRequestsPage.withBloc()),
+                              ),
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -219,23 +226,20 @@ class AdminHomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
 
-                        const _ActivityCard(
-                          name: 'Sarah Johnson',
-                          action: 'booked Room A',
-                          time: '10 min ago',
-                        ),
-                        const SizedBox(height: 10),
-                        const _ActivityCard(
-                          name: 'Mike Chen',
-                          action: 'checked in Hot Desk 3',
-                          time: '25 min ago',
-                        ),
-                        const SizedBox(height: 10),
-                        const _ActivityCard(
-                          name: 'Emily Brown',
-                          action: 'requested Meeting Room B',
-                          time: '1 hour ago',
-                        ),
+                        if (state.recentActivity.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Center(child: Text('No recent activity', style: AdminText.body14(color: AdminColors.black40))),
+                          )
+                        else
+                          ...state.recentActivity.map((item) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _ActivityCard(
+                              name: item.userName,
+                              action: item.actionText,
+                              time: item.timeAgo,
+                            ),
+                          )),
 
                         const SizedBox(height: 18),
 
@@ -285,6 +289,15 @@ class AdminHomePage extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (AdminSession.isSuperAdmin) ...[
+                          const SizedBox(height: 12),
+                          _QuickActionBtn(
+                            label: 'Manage Sub Admins',
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => SubAdminsPage.withBloc()),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),

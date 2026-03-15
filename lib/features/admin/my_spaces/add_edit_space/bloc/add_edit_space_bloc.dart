@@ -52,6 +52,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     on<AddEditSpaceImageAdded>(_onImageAdded);
     on<AddEditSpaceImageRemoved>(_onImageRemoved);
     on<AddEditSpaceSeatsChanged>(_onSeats);
+    on<AddEditSpaceAdminChanged>(_onAdmin);
     on<AddEditSpaceSavePressed>(_onSave);
   }
 
@@ -93,6 +94,8 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       amenities: f.amenities,
       hidden: f.hidden,
       totalSeats: f.totalSeats,
+      adminId: f.adminId,
+      adminName: f.adminName,
     );
   }
 
@@ -351,6 +354,12 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, totalSeats: max(0, v)))));
   }
 
+  void _onAdmin(AddEditSpaceAdminChanged event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, adminId: event.adminId, adminName: event.adminName))));
+  }
+
   Future<void> _onSave(AddEditSpaceSavePressed event, Emitter<AddEditSpaceState> emit) async {
     final f0 = state.form;
     if (f0 == null) return;
@@ -453,6 +462,8 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     List<String>? images,
     bool? hidden,
     int? totalSeats,
+    Object? adminId = _sentinel,
+    Object? adminName = _sentinel,
   }) {
     return SpaceFormEntity(
       id: f.id,
@@ -471,8 +482,12 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       images: images ?? f.images,
       hidden: hidden ?? f.hidden,
       totalSeats: totalSeats ?? f.totalSeats,
+      adminId: adminId == _sentinel ? f.adminId : adminId as String?,
+      adminName: adminName == _sentinel ? f.adminName : adminName as String?,
     );
   }
+
+  static const _sentinel = Object();
 
   SpaceFormEntity _deriveCompat(SpaceFormEntity f) {
     final unit = switch (f.basePriceUnit) { PriceUnit.week => 'week', PriceUnit.month => 'month', _ => 'day' };
