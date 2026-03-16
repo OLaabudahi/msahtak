@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../../../../../features/app_start/bloc/app_start_bloc.dart';
 import '../../../../../features/app_start/bloc/app_start_event.dart';
@@ -63,21 +64,21 @@ class AdminSettingsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Settings', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.h1()),
+                      Text(context.t('adminSettings'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.h1()),
                       const SizedBox(height: 18),
 
 
                       SettingsGroup(
-                        title: 'Analytics',
+                        title: context.t('adminAnalytics'),
                         children: [
                           SettingsRow(
-                            title: 'Performance',
-                            subtitle: 'KPIs & weekly bookings',
+                            title: context.t('adminPerformance'),
+                            subtitle: context.t('adminPerformanceSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnalyticsPerformancePage.withBloc())),
                           ),
                           SettingsRow(
-                            title: 'Top Spaces',
-                            subtitle: 'Top performing + export',
+                            title: context.t('adminTopSpaces'),
+                            subtitle: context.t('adminTopSpacesSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnalyticsTopSpacesPage.withBloc())),
                           ),
                         ],
@@ -87,26 +88,26 @@ class AdminSettingsPage extends StatelessWidget {
 
                       // ADMIN ACTIONS (quick actions)
                       SettingsGroup(
-                        title: 'Admin actions',
+                        title: context.t('adminAdminActions'),
                         children: [
                           SettingsRow(
-                            title: 'View Requests',
-                            subtitle: 'Pending/approved/canceled',
+                            title: context.t('adminViewRequests'),
+                            subtitle: context.t('adminViewRequestsSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingRequestsPage.withBloc())),
                           ),
                           SettingsRow(
-                            title: 'Manage Calendar',
-                            subtitle: 'Closures & special hours',
+                            title: context.t('adminManageCalendar'),
+                            subtitle: context.t('adminManageCalendarSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarAvailabilityPage.withBloc(fromHome: true))),
                           ),
                           SettingsRow(
-                            title: 'Offers Management',
-                            subtitle: 'Discounts & packages',
+                            title: context.t('adminOffersManagement'),
+                            subtitle: context.t('adminOffersManagementSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => OffersManagementPage.withBloc(fromHome: true))),
                           ),
                           SettingsRow(
-                            title: 'Reviews & Reports',
-                            subtitle: 'Moderation & replies',
+                            title: context.t('adminReviewsReports'),
+                            subtitle: context.t('adminReviewsReportsSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ReviewsReportsPage.withBloc(fromHome: true))),
                           ),
                         ],
@@ -116,11 +117,11 @@ class AdminSettingsPage extends StatelessWidget {
 
                       // LOGOUT
                       SettingsGroup(
-                        title: 'Account',
+                        title: context.t('adminAccount'),
                         children: [
                           SettingsRow(
-                            title: 'Logout',
-                            subtitle: 'Sign out of admin account',
+                            title: context.t('adminLogout'),
+                            subtitle: context.t('adminLogoutSubtitle'),
                             onTap: () => context.read<AdminSettingsBloc>().add(const AdminSettingsLogoutPressed()),
                           ),
                         ],

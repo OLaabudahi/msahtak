@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 /// صفحة مراجعة المدفوعات للأدمن
 /// تعرض الحجوزات التي في حالة payment_under_review
@@ -36,7 +37,7 @@ class _PaymentReviewPageState extends State<PaymentReviewPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AdminAppBar(title: 'Payment Review', subtitle: 'Verify incoming payments'),
+            AdminAppBar(title: context.t('adminPaymentReview'), subtitle: context.t('adminPaymentReviewSubtitle')),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: _stream,
@@ -56,7 +57,7 @@ class _PaymentReviewPageState extends State<PaymentReviewPage> {
                     });
                   if (docs.isEmpty) {
                     return Center(
-                      child: Text('No payments pending review', style: AdminText.body16(color: AdminColors.black40)),
+                      child: Text(context.t('adminNoPaymentsPending'), style: AdminText.body16(color: AdminColors.black40)),
                     );
                   }
                   return ListView.separated(
@@ -180,14 +181,14 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(color: const Color(0xFFFFF3CD), borderRadius: BorderRadius.circular(8)),
-              child: Text('Under Review', style: AdminText.label12(color: const Color(0xFFB8860B), w: FontWeight.w600)),
+              child: Text(context.t('adminUnderReview'), style: AdminText.label12(color: const Color(0xFFB8860B), w: FontWeight.w600)),
             ),
           ]),
           const SizedBox(height: 8),
-          _row('User', userName),
-          _row('Amount', '$currency$amount'),
-          _row('Method', method),
-          _row('Paid at', paidAt),
+          _row(context.t('adminPaymentUser'), userName),
+          _row(context.t('adminPaymentAmount'), '$currency$amount'),
+          _row(context.t('adminPaymentMethod'), method),
+          _row(context.t('adminPaymentPaidAt'), paidAt),
           const SizedBox(height: 12),
           if (_loading)
             const Center(child: SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2)))
@@ -200,7 +201,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
                   side: const BorderSide(color: AdminColors.danger),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: const Text('Reject'),
+                child: Text(context.t('adminReject')),
               )),
               const SizedBox(width: 12),
               Expanded(child: ElevatedButton(
@@ -209,7 +210,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
                   backgroundColor: AdminColors.success,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
-                child: const Text('Confirm', style: TextStyle(color: Colors.white)),
+                child: Text(context.t('adminConfirm'), style: const TextStyle(color: Colors.white)),
               )),
             ]),
         ],

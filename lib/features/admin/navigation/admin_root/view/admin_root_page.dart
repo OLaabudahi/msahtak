@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../_shared/admin_session.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../../../admin_home/admin_home/view/admin_home_page.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
@@ -46,17 +47,17 @@ class _AdminRootPageState extends State<AdminRootPage> {
     // تاب الأدمن الفرعي: Home, Bookings, Settings (بدون Users)
     // تاب الأدمن الكامل: Home, Bookings, Users, Sub Admins, Settings
     final tabs = isSuperAdmin
-        ? const [
-            _TabConfig('Home', 0),
-            _TabConfig('Bookings', 1),
-            _TabConfig('Users', 2),
-            _TabConfig('Sub Admins', 3),
-            _TabConfig('Settings', 4),
+        ? [
+            _TabConfig(context.t('adminTabHome'), 0),
+            _TabConfig(context.t('adminTabBookings'), 1),
+            _TabConfig(context.t('adminTabUsers'), 2),
+            _TabConfig(context.t('adminTabSubAdmins'), 3),
+            _TabConfig(context.t('adminTabSettings'), 4),
           ]
-        : const [
-            _TabConfig('Home', 0),
-            _TabConfig('Bookings', 1),
-            _TabConfig('Settings', 2),
+        : [
+            _TabConfig(context.t('adminTabHome'), 0),
+            _TabConfig(context.t('adminTabBookings'), 1),
+            _TabConfig(context.t('adminTabSettings'), 2),
           ];
 
     final pages = isSuperAdmin

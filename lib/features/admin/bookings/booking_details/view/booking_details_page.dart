@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../bloc/booking_details_bloc.dart';
 import '../bloc/booking_details_event.dart';
@@ -66,16 +67,16 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Cancel Booking', style: AdminText.h2()),
+                    Text(context.t('adminCancelBooking'), style: AdminText.h2()),
                     const SizedBox(height: 16),
-                    Text('Please provide a reason for cancellation', style: AdminText.body14(color: AdminColors.black75)),
+                    Text(context.t('adminCancelReason'), style: AdminText.body14(color: AdminColors.black75)),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _reason,
                       maxLines: 4,
                       style: AdminText.body16(),
                       decoration: InputDecoration(
-                        hintText: 'Enter cancellation reason...',
+                        hintText: context.t('adminCancelReasonHint'),
                         hintStyle: AdminText.body16(color: AdminColors.black40),
                         contentPadding: const EdgeInsets.all(16),
                         border: OutlineInputBorder(
@@ -97,7 +98,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       children: [
                         Expanded(
                           child: AdminButton.outline(
-                            label: 'Back',
+                            label: context.t('adminBack'),
                             onTap: () => Navigator.of(ctx).pop(),
                             bg: AdminColors.black15,
                             fg: AdminColors.text,
@@ -106,7 +107,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: AdminButton.filled(
-                            label: 'Confirm Cancel',
+                            label: context.t('adminConfirmCancel'),
                             onTap: () {
                               final r = _reason.text.trim();
                               if (r.isEmpty) return;
@@ -151,14 +152,14 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AdminAppBar(
-                        title: 'Booking Details',
+                        title: context.t('adminBookingDetails'),
                         subtitle: 'ID: ${b.bookingCode}',
                         onBack: () => Navigator.of(context).maybePop(),
                       ),
 
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Customer Information', style: AdminText.h2()),
+                        child: Text(context.t('adminCustomerInfo'), style: AdminText.h2()),
                       ),
                       const SizedBox(height: 8),
                       Padding(
@@ -213,7 +214,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Booking Information', style: AdminText.h2()),
+                        child: Text(context.t('adminBookingInfo'), style: AdminText.h2()),
                       ),
                       const SizedBox(height: 8),
                       Padding(
@@ -234,20 +235,20 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 ),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Text('Field', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600))),
+                                    Expanded(child: Text(context.t('adminField'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600))),
                                     const SizedBox(width: 12),
-                                    Expanded(child: Text('Details', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600))),
+                                    Expanded(child: Text(context.t('adminDetailsCol'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600))),
                                   ],
                                 ),
                               ),
-                              KvRow(label: 'Space', value: b.space, last: false),
-                              KvRow(label: 'Address', value: b.spaceAddress, last: false),
-                              KvRow(label: 'Date', value: b.date, last: false),
-                              KvRow(label: 'Time', value: b.time, last: false),
-                              KvRow(label: 'Duration', value: b.duration, last: false),
-                              KvRow(label: 'Plan', value: b.plan, last: false),
-                              KvRow(label: 'Price', value: b.price, last: false),
-                              KvRow(label: 'Total', value: b.total, last: true),
+                              KvRow(label: context.t('adminKvSpace'), value: b.space, last: false),
+                              KvRow(label: context.t('adminKvAddress'), value: b.spaceAddress, last: false),
+                              KvRow(label: context.t('adminKvDate'), value: b.date, last: false),
+                              KvRow(label: context.t('adminKvTime'), value: b.time, last: false),
+                              KvRow(label: context.t('adminKvDuration'), value: b.duration, last: false),
+                              KvRow(label: context.t('adminKvPlan'), value: b.plan, last: false),
+                              KvRow(label: context.t('adminKvPrice'), value: b.price, last: false),
+                              KvRow(label: context.t('adminKvTotal'), value: b.total, last: true),
                             ],
                           ),
                         ),
@@ -259,7 +260,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                         child: Column(
                           children: [
                             AdminButton.filled(
-                              label: 'Confirm Booking',
+                              label: context.t('adminConfirmBooking'),
                               onTap: () {
                                 context.read<BookingDetailsBloc>().add(BookingDetailsConfirmed(widget.bookingId));
                                 Navigator.of(context).maybePop();
@@ -268,7 +269,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                             ),
                             const SizedBox(height: 12),
                             AdminButton.outline(
-                              label: 'Cancel Booking',
+                              label: context.t('adminCancelBooking'),
                               onTap: () => _openCancelSheet(context),
                               bg: AdminColors.danger,
                               fg: AdminColors.danger,

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../bloc/users_bloc.dart';
 import '../bloc/users_event.dart';
@@ -39,7 +40,7 @@ class UsersPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const AdminAppBar(title: 'Users', subtitle: 'Search and manage users'),
+                  AdminAppBar(title: context.t('adminUsersTitle'), subtitle: context.t('adminUsersSubtitle')),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: AdminCard(
@@ -52,7 +53,7 @@ class UsersPage extends StatelessWidget {
                               onChanged: (v) => context.read<UsersBloc>().add(UsersQueryChanged(v)),
                               style: AdminText.body16(),
                               decoration: InputDecoration.collapsed(
-                                hintText: 'Search users...',
+                                hintText: context.t('adminSearchUsers'),
                                 hintStyle: AdminText.body16(color: AdminColors.black40),
                               ),
                             ),
@@ -69,11 +70,11 @@ class UsersPage extends StatelessWidget {
                       builder: (context, state) {
                         return Row(
                           children: [
-                            _FilterChip(label: 'All', active: state.filter == UserFlag.all, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.all))),
+                            _FilterChip(label: context.t('adminFilterAll'), active: state.filter == UserFlag.all, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.all))),
                             const SizedBox(width: 8),
-                            _FilterChip(label: 'New', active: state.filter == UserFlag.newUsers, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.newUsers))),
+                            _FilterChip(label: context.t('adminFilterNew'), active: state.filter == UserFlag.newUsers, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.newUsers))),
                             const SizedBox(width: 8),
-                            _FilterChip(label: 'Flagged', active: state.filter == UserFlag.flagged, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.flagged))),
+                            _FilterChip(label: context.t('adminFilterFlagged'), active: state.filter == UserFlag.flagged, onTap: () => context.read<UsersBloc>().add(const UsersFilterChanged(UserFlag.flagged))),
                           ],
                         );
                       },

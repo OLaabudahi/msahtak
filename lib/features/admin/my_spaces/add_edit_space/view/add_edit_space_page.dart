@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 import '../bloc/add_edit_space_bloc.dart';
 import '../bloc/add_edit_space_event.dart';
@@ -67,10 +68,10 @@ class AddEditSpacePage extends StatelessWidget {
                       children: [
                         const Icon(Icons.error_outline, size: 48, color: AdminColors.black40),
                         const SizedBox(height: 12),
-                        Text(state.error ?? 'Failed to load space', style: AdminText.body14(), textAlign: TextAlign.center),
+                        Text(state.error ?? context.t('adminFailedLoad'), style: AdminText.body14(), textAlign: TextAlign.center),
                         const SizedBox(height: 16),
                         AdminButton.filled(
-                          label: 'Retry',
+                          label: context.t('adminRetry'),
                           onTap: () => context.read<AddEditSpaceBloc>().add(AddEditSpaceStarted(spaceId)),
                           bg: AdminColors.primaryBlue,
                         ),
@@ -95,8 +96,8 @@ class AddEditSpacePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AdminAppBar(
-                          title: (spaceId == null) ? 'Add Space' : 'Edit Space',
-                          subtitle: 'Update your space info',
+                          title: (spaceId == null) ? context.t('adminAddSpace') : context.t('adminEditSpace'),
+                          subtitle: context.t('adminUpdateSpaceInfo'),
                           onBack: () => Navigator.of(context).maybePop(),
                         ),
 
@@ -107,9 +108,9 @@ class AddEditSpacePage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Availability', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+                                    Text(context.t('adminAvailability'), style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
                                     const SizedBox(height: 4),
-                                    Text(f.hidden ? 'Hidden' : 'Available', style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
+                                    Text(f.hidden ? context.t('adminHidden') : context.t('adminAvailable'), style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
                                   ],
                                 ),
                               ),
@@ -125,17 +126,18 @@ class AddEditSpacePage extends StatelessWidget {
                         const SizedBox(height: 12),
 
                         _Field(
-                          label: 'Name',
+                          label: context.t('adminSpaceName'),
                           value: f.name,
-                          hint: 'Space name',
+                          hint: context.t('adminSpaceNameHint'),
+                          maxLength: 50,
                           errorText: state.nameError,
                           onChanged: (v) => context.read<AddEditSpaceBloc>().add(AddEditSpaceFieldChanged('name', v)),
                         ),
                         const SizedBox(height: 12),
                         _Field(
-                          label: 'Address (text)',
+                          label: context.t('adminAddressLabel'),
                           value: f.address,
-                          hint: 'e.g. 12 King St, Downtown',
+                          hint: context.t('adminAddressHint'),
                           errorText: state.addressError,
                           onChanged: (v) => context.read<AddEditSpaceBloc>().add(AddEditSpaceFieldChanged('address', v)),
                         ),
@@ -172,7 +174,7 @@ class AddEditSpacePage extends StatelessWidget {
                                 children: [
                                   const Icon(Icons.event_seat_outlined, size: 18, color: AdminColors.black75),
                                   const SizedBox(width: 8),
-                                  Text('Total Seats', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+                                  Text(context.t('adminTotalSeats'), style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
                                 ],
                               ),
                               const SizedBox(height: 8),
@@ -183,13 +185,13 @@ class AddEditSpacePage extends StatelessWidget {
                                 onChanged: (v) => context.read<AddEditSpaceBloc>().add(AddEditSpaceSeatsChanged(v)),
                                 style: AdminText.body16(color: AdminColors.text),
                                 decoration: InputDecoration(
-                                  hintText: 'e.g. 20',
+                                  hintText: context.t('adminSeatsHint'),
                                   hintStyle: AdminText.body16(color: AdminColors.black40),
                                   contentPadding: const EdgeInsets.all(14),
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
                                   enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
                                   focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
-                                  suffixText: 'seats',
+                                  suffixText: context.t('adminSeats'),
                                   suffixStyle: AdminText.body14(color: AdminColors.black40),
                                 ),
                               ),
@@ -248,7 +250,7 @@ class AddEditSpacePage extends StatelessWidget {
                         const SizedBox(height: 16),
 
                         AdminButton.filled(
-                          label: (state.status == AddEditSpaceStatus.saving) ? 'Saving...' : 'Save',
+                          label: (state.status == AddEditSpaceStatus.saving) ? context.t('adminSaving') : context.t('save'),
                           onTap: (state.status == AddEditSpaceStatus.saving) ? null : () => context.read<AddEditSpaceBloc>().add(const AddEditSpaceSavePressed()),
                           bg: AdminColors.primaryBlue,
                         ),
@@ -310,14 +312,14 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
       builder: (_) => AlertDialog(
         backgroundColor: AdminColors.bg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Assign Sub Admin', style: AdminText.h2()),
+        title: Text(context.t('adminAssignSubAdmin'), style: AdminText.h2()),
         content: SizedBox(
           width: 300,
           child: ListView(
             shrinkWrap: true,
             children: [
               ListTile(
-                title: Text('None', style: AdminText.body14(color: AdminColors.black40)),
+                title: Text(context.t('adminNone'), style: AdminText.body14(color: AdminColors.black40)),
                 onTap: () => Navigator.of(context).pop((id: null, name: null)),
               ),
               const Divider(height: 1, color: AdminColors.black15),
@@ -357,7 +359,7 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
             children: [
               const Icon(Icons.admin_panel_settings_outlined, size: 18, color: AdminColors.black75),
               const SizedBox(width: 8),
-              Text('Space Admin', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+              Text(context.t('adminSpaceAdmin'), style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 10),
@@ -375,7 +377,7 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
                 children: [
                   Expanded(
                     child: Text(
-                      hasAdmin ? widget.adminName ?? 'Sub Admin' : 'Select sub admin (optional)',
+                      hasAdmin ? widget.adminName ?? context.t('adminSpaceAdmin') : context.t('adminSelectSubAdmin'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: hasAdmin
@@ -400,6 +402,7 @@ class _Field extends StatelessWidget {
   final String hint;
   final String? errorText;
   final ValueChanged<String> onChanged;
+  final int maxLength;
 
   const _Field({
     required this.label,
@@ -407,6 +410,7 @@ class _Field extends StatelessWidget {
     required this.hint,
     required this.errorText,
     required this.onChanged,
+    this.maxLength = 80,
   });
 
   @override
@@ -420,7 +424,7 @@ class _Field extends StatelessWidget {
           TextFormField(
             initialValue: value,
             onChanged: onChanged,
-            maxLength: (label.startsWith('Name')) ? 50 : 80,
+            maxLength: maxLength,
             style: AdminText.body16(color: AdminColors.text),
             decoration: InputDecoration(
               counterText: '',

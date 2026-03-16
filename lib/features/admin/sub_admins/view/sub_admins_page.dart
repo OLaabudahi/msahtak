@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../../_shared/admin_ui.dart';
+import '../../../../core/i18n/app_i18n.dart';
 
 /// صفحة إدارة المشرفين الفرعيين — للأدمن الكامل فقط
 class SubAdminsPage extends StatefulWidget {
@@ -80,11 +81,11 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
             final pass = passCtrl.text.trim();
 
             if (name.isEmpty || email.isEmpty || pass.isEmpty) {
-              setSt(() => errorMsg = 'Please fill all fields');
+              setSt(() => errorMsg = ctx.t('subAdminFillAll'));
               return;
             }
             if (pass.length < 6) {
-              setSt(() => errorMsg = 'Password must be at least 6 characters');
+              setSt(() => errorMsg = ctx.t('passwordLength'));
               return;
             }
 
@@ -123,7 +124,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
           return AlertDialog(
             backgroundColor: AdminColors.bg,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: Text('Create Sub Admin', style: AdminText.h2()),
+            title: Text(ctx.t('subAdminCreate'), style: AdminText.h2()),
             content: SizedBox(
               width: 320,
               child: SingleChildScrollView(
@@ -131,17 +132,17 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _DialogField(ctrl: nameCtrl, hint: 'Full name', label: 'Name'),
+                    _DialogField(ctrl: nameCtrl, hint: ctx.t('subAdminNameHint'), label: ctx.t('subAdminNameLabel')),
                     const SizedBox(height: 10),
-                    _DialogField(ctrl: emailCtrl, hint: 'email@example.com', label: 'Email', keyboardType: TextInputType.emailAddress),
+                    _DialogField(ctrl: emailCtrl, hint: 'email@example.com', label: ctx.t('email'), keyboardType: TextInputType.emailAddress),
                     const SizedBox(height: 10),
-                    _DialogField(ctrl: passCtrl, hint: 'Min 6 characters', label: 'Password', obscure: true),
+                    _DialogField(ctrl: passCtrl, hint: ctx.t('subAdminPasswordHint'), label: ctx.t('password'), obscure: true),
                     if (errorMsg != null) ...[
                       const SizedBox(height: 8),
                       Text(errorMsg!, style: AdminText.label12(color: AdminColors.danger)),
                     ],
                     const SizedBox(height: 16),
-                    Text('Assign Spaces', style: AdminText.body14(w: FontWeight.w600, color: AdminColors.text)),
+                    Text(ctx.t('subAdminAssignSpaces'), style: AdminText.body14(w: FontWeight.w600, color: AdminColors.text)),
                     const SizedBox(height: 8),
                     ..._spaces.map((s) {
                       final checked = selectedIds.contains(s.id);
@@ -173,13 +174,13 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Cancel', style: AdminText.body14(color: AdminColors.black40)),
+                child: Text(ctx.t('cancel'), style: AdminText.body14(color: AdminColors.black40)),
               ),
               TextButton(
                 onPressed: creating ? null : create,
                 child: creating
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text('Create', style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
+                    : Text(ctx.t('subAdminCreate'), style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
               ),
             ],
           );
@@ -209,7 +210,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
           return AlertDialog(
             backgroundColor: AdminColors.bg,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: Text('Edit Sub Admin', style: AdminText.h2()),
+            title: Text(ctx.t('subAdminEdit'), style: AdminText.h2()),
             content: SizedBox(
               width: 320,
               child: Column(
@@ -219,7 +220,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                   Text(item.name, style: AdminText.body16(w: FontWeight.w700)),
                   Text(item.email, style: AdminText.body14()),
                   const SizedBox(height: 16),
-                  Text('Assigned Spaces', style: AdminText.body14(w: FontWeight.w600, color: AdminColors.text)),
+                  Text(ctx.t('subAdminAssignedSpaces'), style: AdminText.body14(w: FontWeight.w600, color: AdminColors.text)),
                   const SizedBox(height: 8),
                   ..._spaces.map((s) {
                     final checked = selectedIds.contains(s.id);
@@ -250,11 +251,11 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Cancel', style: AdminText.body14(color: AdminColors.black40)),
+                child: Text(ctx.t('cancel'), style: AdminText.body14(color: AdminColors.black40)),
               ),
               TextButton(
                 onPressed: save,
-                child: Text('Save', style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
+                child: Text(ctx.t('save'), style: AdminText.body14(color: AdminColors.primaryBlue, w: FontWeight.w700)),
               ),
             ],
           );
@@ -270,13 +271,13 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
       builder: (_) => AlertDialog(
         backgroundColor: AdminColors.bg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Remove Sub Admin', style: AdminText.h2()),
-        content: Text('Remove ${item.name} as sub admin? They will become a regular user.', style: AdminText.body14(color: AdminColors.text)),
+        title: Text(context.t('subAdminRemove'), style: AdminText.h2()),
+        content: Text('${context.t('subAdminRemove')}: ${item.name}?', style: AdminText.body14(color: AdminColors.text)),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text('Cancel', style: AdminText.body14())),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(context.t('cancel'), style: AdminText.body14())),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Remove', style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w700)),
+            child: Text(context.t('adminDelete'), style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w700)),
           ),
         ],
       ),
@@ -325,7 +326,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const AdminAppBar(title: 'Sub Admins', subtitle: 'Manage restricted admin accounts'),
+                  AdminAppBar(title: context.t('subAdminsTitle'), subtitle: context.t('subAdminsSubtitle')),
                   if (_loading)
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 48),
@@ -334,7 +335,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                   else if (_items.isEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 16),
-                      child: Center(child: Text('No sub admins yet. Tap + to create one.', style: AdminText.body14())),
+                      child: Center(child: Text(context.t('subAdminsNoItems'), style: AdminText.body14())),
                     )
                   else
                     Padding(
@@ -449,7 +450,7 @@ class _SubAdminCard extends StatelessWidget {
                   ),
                 ] else ...[
                   const SizedBox(height: 4),
-                  Text('No spaces assigned', style: AdminText.label12(color: AdminColors.danger)),
+                  Text(context.t('subAdminNoSpaces'), style: AdminText.label12(color: AdminColors.danger)),
                 ],
               ],
             ),

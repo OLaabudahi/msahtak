@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/space_entity.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 class SpaceCard extends StatelessWidget {
   final SpaceEntity space;
@@ -31,7 +32,7 @@ class SpaceCard extends StatelessWidget {
               border: Border.all(color: AdminColors.black10, width: 1),
             ),
             alignment: Alignment.center,
-            child: Text('Image', style: AdminText.body14()),
+            child: Text(context.t('adminImage'), style: AdminText.body14()),
           ),
           const SizedBox(height: AdminSpace.s12),
           Text(space.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body16(w: FontWeight.w600)),
@@ -43,7 +44,7 @@ class SpaceCard extends StatelessWidget {
               Text(space.rating, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w500)),
               const Spacer(),
               AdminTag(
-                text: (space.availability == SpaceAvailability.hidden) ? 'Hidden' : 'Available',
+                text: (space.availability == SpaceAvailability.hidden) ? context.t('adminHidden') : context.t('adminAvailable'),
                 tint: (space.availability == SpaceAvailability.hidden) ? AdminColors.black15 : AdminColors.primaryBlue.withOpacity(0.15),
                 textColor: (space.availability == SpaceAvailability.hidden) ? AdminColors.black75 : AdminColors.primaryBlue,
               ),
@@ -63,7 +64,7 @@ class SpaceCard extends StatelessWidget {
                       border: Border.all(color: AdminColors.black15, width: 1),
                     ),
                     alignment: Alignment.center,
-                    child: Text('Manage', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600)),
+                    child: Text(context.t('adminManage'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w600)),
                   ),
                 ),
               ),
@@ -79,7 +80,7 @@ class SpaceCard extends StatelessWidget {
                       border: Border.all(color: AdminColors.danger.withOpacity(0.4), width: 1),
                     ),
                     alignment: Alignment.center,
-                    child: Text('Hide', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w600)),
+                    child: Text(context.t('adminHide'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w600)),
                   ),
                 ),
               ),

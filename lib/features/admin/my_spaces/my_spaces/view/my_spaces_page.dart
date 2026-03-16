@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import '../bloc/my_spaces_bloc.dart';
 import '../bloc/my_spaces_event.dart';
 import '../bloc/my_spaces_state.dart';
@@ -33,13 +34,13 @@ class MySpacesPage extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Space'),
-        content: Text('Are you sure you want to delete "$spaceName"? This action cannot be undone.'),
+        title: Text(context.t('adminDeleteSpace')),
+        content: Text('"$spaceName" — ${context.t('adminDeleteSpaceConfirm')}'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(context.t('cancel'))),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(context.t('adminDelete'), style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -68,7 +69,7 @@ class MySpacesPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AdminAppBar(title: 'My Spaces', subtitle: 'Manage your listed spaces'),
+                AdminAppBar(title: context.t('adminMySpaces'), subtitle: context.t('adminMySpacesSubtitle')),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AdminSpace.s16),
                   child: BlocBuilder<MySpacesBloc, MySpacesState>(

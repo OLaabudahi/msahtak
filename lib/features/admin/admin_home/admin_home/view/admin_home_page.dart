@@ -18,6 +18,7 @@ import '../../../reviews/reviews_reports/view/reviews_reports_page.dart';
 import '../../../my_spaces/add_edit_space/view/add_edit_space_page.dart';
 import '../../../sub_admins/view/sub_admins_page.dart';
 import '../../../_shared/admin_session.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -63,12 +64,12 @@ class AdminHomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Admin Dashboard', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.h1()),
+                        Text(context.t('adminDashboardTitle'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.h1()),
                         const SizedBox(height: 4),
-                        Text('Manage your coworking spaces', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14()),
+                        Text(context.t('adminDashboardSubtitle'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14()),
 
                         const SizedBox(height: 16),
-                        Text('Selected Space', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
+                        Text(context.t('adminSelectedSpace'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
                         const SizedBox(height: 8),
 
                         // dropdown
@@ -82,7 +83,7 @@ class AdminHomePage extends StatelessWidget {
                                     builder: (_) => AlertDialog(
                                       backgroundColor: AdminColors.bg,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                      title: const Text('Select Space', style: TextStyle(fontFamily: 'SF Pro Text', fontWeight: FontWeight.w600)),
+                                      title: Text(context.t('adminSelectSpace'), style: const TextStyle(fontFamily: 'SF Pro Text', fontWeight: FontWeight.w600)),
                                       content: SizedBox(
                                         width: 320,
                                         child: ListView.separated(
@@ -117,7 +118,7 @@ class AdminHomePage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    hasSpace ? state.activeSpaceName : 'Select Space',
+                                    hasSpace ? state.activeSpaceName : context.t('adminSelectSpace'),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AdminText.body16(w: FontWeight.w600),
@@ -162,7 +163,7 @@ class AdminHomePage extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    hasSpace ? 'Manage ${state.activeSpaceName}' : 'Manage',
+                                    hasSpace ? '${context.t('adminManage')} ${state.activeSpaceName}' : context.t('adminManage'),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: AdminText.body16(w: FontWeight.w700),
@@ -206,7 +207,7 @@ class AdminHomePage extends StatelessWidget {
                         // Recent Activity
                         Row(
                           children: [
-                            Expanded(child: Text('Recent Activity', style: AdminText.h2())),
+                            Expanded(child: Text(context.t('adminRecentActivity'), style: AdminText.h2())),
                             InkWell(
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(builder: (_) => BookingRequestsPage.withBloc()),
@@ -219,7 +220,7 @@ class AdminHomePage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: AdminColors.black10, width: 1),
                                 ),
-                                child: Text('More', maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.label12(color: AdminColors.primaryBlue, w: FontWeight.w700)),
+                                child: Text(context.t('adminMore'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.label12(color: AdminColors.primaryBlue, w: FontWeight.w700)),
                               ),
                             ),
                           ],
@@ -229,7 +230,7 @@ class AdminHomePage extends StatelessWidget {
                         if (state.recentActivity.isEmpty)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Center(child: Text('No recent activity', style: AdminText.body14(color: AdminColors.black40))),
+                            child: Center(child: Text(context.t('adminNoRecentActivity'), style: AdminText.body14(color: AdminColors.black40))),
                           )
                         else
                           ...state.recentActivity.map((item) => Padding(
@@ -244,13 +245,13 @@ class AdminHomePage extends StatelessWidget {
                         const SizedBox(height: 18),
 
                         // Quick Actions 2x2
-                        Text('Quick Actions', style: AdminText.h2()),
+                        Text(context.t('adminQuickActions'), style: AdminText.h2()),
                         const SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(
                               child: _QuickActionBtn(
-                                label: 'View Requests',
+                                label: context.t('adminViewRequests'),
                                 onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(builder: (_) => BookingRequestsPage.withBloc()),
                                 ),
@@ -259,7 +260,7 @@ class AdminHomePage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: _QuickActionBtn(
-                                label: 'Manage Calendar',
+                                label: context.t('adminManageCalendar'),
                                 onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(builder: (_) => CalendarAvailabilityPage.withBloc(fromHome: true)),
                                 ),
@@ -272,7 +273,7 @@ class AdminHomePage extends StatelessWidget {
                           children: [
                             Expanded(
                               child: _QuickActionBtn(
-                                label: 'Create Offer',
+                                label: context.t('adminCreateOffer'),
                                 onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(builder: (_) => OffersManagementPage.withBloc(fromHome: true)),
                                 ),
@@ -281,7 +282,7 @@ class AdminHomePage extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: _QuickActionBtn(
-                                label: 'View Reviews',
+                                label: context.t('adminViewReviews'),
                                 onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(builder: (_) => ReviewsReportsPage.withBloc(fromHome: true)),
                                 ),
@@ -292,7 +293,7 @@ class AdminHomePage extends StatelessWidget {
                         if (AdminSession.isSuperAdmin) ...[
                           const SizedBox(height: 12),
                           _QuickActionBtn(
-                            label: 'Manage Sub Admins',
+                            label: context.t('adminManageSubAdmins'),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) => SubAdminsPage.withBloc()),
                             ),

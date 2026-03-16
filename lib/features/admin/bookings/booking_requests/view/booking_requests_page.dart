@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import '../bloc/booking_requests_bloc.dart';
 import '../bloc/booking_requests_event.dart';
 import '../bloc/booking_requests_state.dart';
@@ -42,7 +43,7 @@ class BookingRequestsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AdminAppBar(title: 'Booking Requests', subtitle: 'Manage booking requests'),
+            AdminAppBar(title: context.t('adminBookingRequests'), subtitle: context.t('adminBookingRequestsSubtitle')),
             Container(
               decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: AdminColors.black15, width: 1))),
               padding: const EdgeInsets.all(AdminSpace.s16),
@@ -52,7 +53,7 @@ class BookingRequestsPage extends StatelessWidget {
                   return Row(
                     children: [
                       BookingTabButton(
-                        label: 'Pending',
+                        label: context.t('adminTabPending'),
                         icon: AdminIconMapper.clock(),
                         activeIconColor: AdminColors.primaryAmber,
                         active: state.activeTab == BookingStatus.pending,
@@ -60,7 +61,7 @@ class BookingRequestsPage extends StatelessWidget {
                       ),
                       const SizedBox(width: AdminSpace.s8),
                       BookingTabButton(
-                        label: 'Approved',
+                        label: context.t('adminTabApproved'),
                         icon: AdminIconMapper.checkCircle(),
                         activeIconColor: AdminColors.success,
                         active: state.activeTab == BookingStatus.approved,
@@ -68,7 +69,7 @@ class BookingRequestsPage extends StatelessWidget {
                       ),
                       const SizedBox(width: AdminSpace.s8),
                       BookingTabButton(
-                        label: 'Canceled',
+                        label: context.t('adminTabCanceled'),
                         icon: AdminIconMapper.xCircle(),
                         activeIconColor: AdminColors.danger,
                         active: state.activeTab == BookingStatus.canceled,
@@ -76,7 +77,7 @@ class BookingRequestsPage extends StatelessWidget {
                       ),
                       const SizedBox(width: AdminSpace.s8),
                       BookingTabButton(
-                        label: 'Pay Review',
+                        label: context.t('adminTabPayReview'),
                         icon: Icons.receipt_long,
                         activeIconColor: const Color(0xFFB8860B),
                         active: state.activeTab == BookingStatus.paymentReview,
