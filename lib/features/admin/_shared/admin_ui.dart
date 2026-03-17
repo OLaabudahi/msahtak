@@ -36,10 +36,7 @@ class AdminSpace {
 }
 
 class AdminText {
-  static const _font = 'SF Pro Text';
-
   static TextStyle h1() => const TextStyle(
-        fontFamily: _font,
         fontSize: 28,
         height: 1.5,
         fontWeight: FontWeight.w600,
@@ -47,7 +44,6 @@ class AdminText {
       );
 
   static TextStyle h2() => const TextStyle(
-        fontFamily: _font,
         fontSize: 18,
         height: 1.5,
         fontWeight: FontWeight.w600,
@@ -55,13 +51,13 @@ class AdminText {
       );
 
   static TextStyle body14({Color color = AdminColors.black40, FontWeight w = FontWeight.w400}) =>
-      TextStyle(fontFamily: _font, fontSize: 14, height: 1.5, fontWeight: w, color: color);
+      TextStyle(fontSize: 14, height: 1.5, fontWeight: w, color: color);
 
   static TextStyle body16({Color color = AdminColors.text, FontWeight w = FontWeight.w400}) =>
-      TextStyle(fontFamily: _font, fontSize: 16, height: 1.5, fontWeight: w, color: color);
+      TextStyle(fontSize: 16, height: 1.5, fontWeight: w, color: color);
 
   static TextStyle label12({Color color = AdminColors.black40, FontWeight w = FontWeight.w400}) =>
-      TextStyle(fontFamily: _font, fontSize: 12, height: 1.5, fontWeight: w, color: color);
+      TextStyle(fontSize: 12, height: 1.5, fontWeight: w, color: color);
 }
 
 class AdminIconMapper {

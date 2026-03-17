@@ -25,3 +25,7 @@ class MapMarkerTapped extends MapEvent {
   @override
   List<Object?> get props => [spaceId];
 }
+
+class MapShowAllToggled extends MapEvent {
+  const MapShowAllToggled();
+}

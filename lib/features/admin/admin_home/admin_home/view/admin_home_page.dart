@@ -11,6 +11,7 @@ import '../domain/usecases/get_admin_home_kpis_usecase.dart';
 import '../domain/usecases/get_admin_spaces_usecase.dart';
 import '../domain/usecases/get_admin_recent_activity_usecase.dart';
 import '../widgets/kpi_tile.dart';
+import '../domain/entities/admin_activity_item.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
 import '../../../calendar/calendar_availability/view/calendar_availability_page.dart';
 import '../../../offers/offers_management/view/offers_management_page.dart';
@@ -235,11 +236,7 @@ class AdminHomePage extends StatelessWidget {
                         else
                           ...state.recentActivity.map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: _ActivityCard(
-                              name: item.userName,
-                              action: item.actionText,
-                              time: item.timeAgo,
-                            ),
+                            child: _ActivityCard(item: item),
                           )),
 
                         const SizedBox(height: 18),
@@ -313,14 +310,20 @@ class AdminHomePage extends StatelessWidget {
 }
 
 class _ActivityCard extends StatelessWidget {
-  final String name;
-  final String action;
-  final String time;
-
-  const _ActivityCard({required this.name, required this.action, required this.time});
+  final AdminActivityItem item;
+  const _ActivityCard({required this.item});
 
   @override
   Widget build(BuildContext context) {
+    // نص الفعل مترجم: "[verb] spaceName"
+    final action = '${context.t(item.actionKey)} ${item.spaceName}';
+
+    // الوقت مترجم
+    final td = item.timeAgoData;
+    final time = td.key == 'timeJustNow'
+        ? context.t('timeJustNow')
+        : '${td.n} ${context.t(td.key)}';
+
     return AdminCard(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,7 +332,7 @@ class _ActivityCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w700)),
+                Text(item.userName, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.text, w: FontWeight.w700)),
                 const SizedBox(height: 4),
                 Text(action, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w500)),
               ],

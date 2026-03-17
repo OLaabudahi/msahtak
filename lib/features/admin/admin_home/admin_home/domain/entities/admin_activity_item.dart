@@ -13,25 +13,25 @@ class AdminActivityItem extends Equatable {
     required this.createdAt,
   });
 
-  /// نص الحدث المعروض
-  String get actionText {
+  /// مفتاح ترجمة الفعل — يُستخدم في الـ widget مع context.t()
+  String get actionKey {
     return switch (status) {
-      'pending' => 'requested $spaceName',
-      'approved_waiting_payment' || 'approved' => 'booking approved for $spaceName',
-      'payment_under_review' => 'submitted payment for $spaceName',
-      'confirmed' => 'confirmed booking at $spaceName',
-      'canceled' || 'rejected' || 'expired' => 'booking cancelled at $spaceName',
-      _ => 'booked $spaceName',
+      'pending' => 'activityRequested',
+      'approved_waiting_payment' || 'approved' => 'activityApproved',
+      'payment_under_review' => 'activityPayment',
+      'confirmed' => 'activityConfirmed',
+      'canceled' || 'rejected' || 'expired' => 'activityCancelled',
+      _ => 'activityBooked',
     };
   }
 
-  /// وقت منذ الإنشاء
-  String get timeAgo {
+  /// مدة منذ الإنشاء — (key, n) ليترجمها الـ widget
+  ({String key, int n}) get timeAgoData {
     final diff = DateTime.now().difference(createdAt);
-    if (diff.inSeconds < 60) return 'just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    return '${diff.inDays}d ago';
+    if (diff.inSeconds < 60) return (key: 'timeJustNow', n: 0);
+    if (diff.inMinutes < 60) return (key: 'timeMinAgo', n: diff.inMinutes);
+    if (diff.inHours < 24) return (key: 'timeHoursAgo', n: diff.inHours);
+    return (key: 'timeDaysAgo', n: diff.inDays);
   }
 
   @override

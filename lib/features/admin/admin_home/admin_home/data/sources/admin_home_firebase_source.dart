@@ -102,27 +102,27 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
     return [
       KpiModel(
         id: 'today',
-        title: 'Today Bookings',
+        title: 'kpiTodayTitle',
         value: '$todayCount',
-        delta: 'bookings today',
+        delta: 'kpiTodayDelta',
       ),
       KpiModel(
         id: 'pending',
-        title: 'Pending Requests',
+        title: 'kpiPendingTitle',
         value: '$pendingCount',
-        delta: pendingCount > 0 ? 'Needs review' : 'All clear',
+        delta: pendingCount > 0 ? 'kpiNeedsReview' : 'kpiAllClear',
       ),
       KpiModel(
         id: 'spaces',
-        title: 'Active Spaces',
+        title: 'kpiSpacesTitle',
         value: '$activeSpaces',
-        delta: 'total spaces',
+        delta: 'kpiSpacesDelta',
       ),
       KpiModel(
         id: 'revenue',
-        title: 'Weekly Revenue',
-        value: '\$${weekRevenue.toStringAsFixed(0)}',
-        delta: 'last 7 days',
+        title: 'kpiRevenueTitle',
+        value: '${weekRevenue.toStringAsFixed(0)} ₪',
+        delta: 'kpiRevenueDelta',
       ),
     ];
   }

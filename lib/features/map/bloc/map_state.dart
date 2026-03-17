@@ -9,6 +9,7 @@ class MapState extends Equatable {
   final double radiusKm;
   final List<NearbySpaceEntity> spaces;
   final String? selectedSpaceId;
+  final bool showAll;
 
   const MapState({
     required this.isLoading,
@@ -17,16 +18,17 @@ class MapState extends Equatable {
     required this.radiusKm,
     required this.spaces,
     required this.selectedSpaceId,
+    this.showAll = false,
   });
 
   factory MapState.initial() => const MapState(
     isLoading: true,
     error: null,
-    // إحداثيات احتياطية حتى يتم جلب الموقع الحقيقي
     center: GeoPointEntity(lat: 31.511136495468655, lng: 34.45187681199389),
     radiusKm: 0.1,
     spaces: [],
     selectedSpaceId: null,
+    showAll: false,
   );
 
   MapState copyWith({
@@ -36,6 +38,7 @@ class MapState extends Equatable {
     double? radiusKm,
     List<NearbySpaceEntity>? spaces,
     String? selectedSpaceId,
+    bool? showAll,
   }) {
     return MapState(
       isLoading: isLoading ?? this.isLoading,
@@ -44,6 +47,7 @@ class MapState extends Equatable {
       radiusKm: radiusKm ?? this.radiusKm,
       spaces: spaces ?? this.spaces,
       selectedSpaceId: selectedSpaceId ?? this.selectedSpaceId,
+      showAll: showAll ?? this.showAll,
     );
   }
 
@@ -57,5 +61,5 @@ class MapState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isLoading, error, center, radiusKm, spaces, selectedSpaceId];
+  List<Object?> get props => [isLoading, error, center, radiusKm, spaces, selectedSpaceId, showAll];
 }

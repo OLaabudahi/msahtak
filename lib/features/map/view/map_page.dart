@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
+import '../../../core/i18n/app_i18n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -207,7 +208,7 @@ class _MapPageState extends State<MapPage> {
                   right: 0,
 
                   child: _TopBar(
-                    title: 'Look Nearly By Map',
+                    title: context.t('mapTitle'),
                     onBack: () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -240,12 +241,15 @@ class _MapPageState extends State<MapPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 8),
-                      MapRadiusBadge(radiusKm: state.radiusKm),
+                      if (!state.showAll) MapRadiusBadge(radiusKm: state.radiusKm),
                       const SizedBox(height: 8),
                       _RadiusChips(
                         selected: state.radiusKm,
+                        showAll: state.showAll,
                         onChanged: (v) =>
                             context.read<MapBloc>().add(MapRadiusChanged(v)),
+                        onShowAll: () =>
+                            context.read<MapBloc>().add(const MapShowAllToggled()),
                         primary: _primary,
                         secondary: _secondary,
                       ),
@@ -301,9 +305,9 @@ class _MapPageState extends State<MapPage> {
                               ),
                             ],
                           ),
-                          child: const Text(
-                            'لا توجد نتائج ضمن هذا النطاق.',
-                            style: TextStyle(fontWeight: FontWeight.w700),
+                          child: Text(
+                            context.t('mapNoResults'),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ),
 
@@ -360,13 +364,17 @@ class _TopBar extends StatelessWidget {
 
 class _RadiusChips extends StatelessWidget {
   final double selected;
+  final bool showAll;
   final ValueChanged<double> onChanged;
+  final VoidCallback onShowAll;
   final Color primary;
   final Color secondary;
 
   const _RadiusChips({
     required this.selected,
+    required this.showAll,
     required this.onChanged,
+    required this.onShowAll,
     required this.primary,
     required this.secondary,
   });
@@ -374,7 +382,7 @@ class _RadiusChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget chip(double v) {
-      final isSelected = (selected - v).abs() < 0.001;
+      final isSelected = !showAll && (selected - v).abs() < 0.001;
       return InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () => onChanged(v),
@@ -406,6 +414,29 @@ class _RadiusChips extends StatelessWidget {
           chip(0.1),
           const SizedBox(width: 10),
           chip(0.5),
+          const SizedBox(width: 10),
+          InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: onShowAll,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: showAll ? primary : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: showAll ? primary : AppColors.borderLight,
+                ),
+              ),
+              child: Text(
+                context.t('mapShowAll'),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: showAll ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+          ),
           const Spacer(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -413,9 +444,9 @@ class _RadiusChips extends StatelessWidget {
               color: primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: const Text(
-              'Nearby',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+            child: Text(
+              context.t('mapNearby'),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
             ),
           ),
         ],
