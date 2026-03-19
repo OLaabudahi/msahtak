@@ -45,6 +45,7 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
         policySections: const [],
         amenities: _defaultAmenities,
         hidden: false,
+        paymentMethods: const [],
       );
     }
 

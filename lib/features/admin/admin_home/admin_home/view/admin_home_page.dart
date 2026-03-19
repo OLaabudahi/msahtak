@@ -20,6 +20,8 @@ import '../../../my_spaces/add_edit_space/view/add_edit_space_page.dart';
 import '../../../sub_admins/view/sub_admins_page.dart';
 import '../../../_shared/admin_session.dart';
 import '../../../../../core/i18n/app_i18n.dart';
+import '../../../../../features/language/bloc/language_bloc.dart';
+import '../../../../../services/language_service.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -78,13 +80,15 @@ class AdminHomePage extends StatelessWidget {
                           onTap: state.spaces.isEmpty
                               ? null
                               : () async {
+                                  final lang = context.read<LanguageBloc>().state.code;
+                                  final selectSpaceTitle = LanguageService.tr(lang, 'adminSelectSpace');
                                   final picked = await showDialog<({String id, String name})>(
                                     context: context,
                                     barrierColor: const Color(0x66000000),
                                     builder: (_) => AlertDialog(
                                       backgroundColor: AdminColors.bg,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                      title: Text(context.t('adminSelectSpace'), style: const TextStyle(fontFamily: 'SF Pro Text', fontWeight: FontWeight.w600)),
+                                      title: Text(selectSpaceTitle, style: const TextStyle(fontFamily: 'SF Pro Text', fontWeight: FontWeight.w600)),
                                       content: SizedBox(
                                         width: 320,
                                         child: ListView.separated(

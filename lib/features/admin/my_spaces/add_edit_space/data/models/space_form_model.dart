@@ -32,6 +32,7 @@ class SpaceFormModel {
   final int totalSeats;
   final String? adminId;
   final String? adminName;
+  final List<Map<String, String>> paymentMethods;
 
   const SpaceFormModel({
     required this.id,
@@ -52,6 +53,7 @@ class SpaceFormModel {
     this.totalSeats = 0,
     this.adminId,
     this.adminName,
+    this.paymentMethods = const [],
   });
 
   factory SpaceFormModel.fromJson(Map<String, dynamic> json) => SpaceFormModel(
@@ -73,6 +75,10 @@ class SpaceFormModel {
         totalSeats: (json['totalSeats'] as num?)?.toInt() ?? 0,
         adminId: json['adminId'] as String?,
         adminName: json['adminName'] as String?,
+        paymentMethods: (json['paymentMethods'] as List?)
+                ?.map((e) => (e as Map).map((k, v) => MapEntry(k.toString(), v.toString())))
+                .toList(growable: false) ??
+            const [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -94,6 +100,7 @@ class SpaceFormModel {
         'totalSeats': totalSeats,
         'adminId': adminId,
         'adminName': adminName,
+        'paymentMethods': paymentMethods,
       };
 
   SpaceFormEntity toEntity() {
@@ -124,6 +131,7 @@ class SpaceFormModel {
       totalSeats: totalSeats,
       adminId: adminId,
       adminName: adminName,
+      paymentMethods: paymentMethods,
     );
   }
 
@@ -149,6 +157,7 @@ class SpaceFormModel {
       totalSeats: e.totalSeats,
       adminId: e.adminId,
       adminName: e.adminName,
+      paymentMethods: e.paymentMethods,
     );
   }
 }

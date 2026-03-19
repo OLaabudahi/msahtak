@@ -8,6 +8,8 @@ import '../../../../../core/i18n/app_i18n.dart';
 import '../bloc/add_edit_space_bloc.dart';
 import '../bloc/add_edit_space_event.dart';
 import '../../../_shared/admin_session.dart';
+import '../../../../../features/language/bloc/language_bloc.dart';
+import '../../../../../services/language_service.dart';
 import '../bloc/add_edit_space_state.dart';
 import '../data/repos/add_edit_space_repo_impl.dart';
 import '../data/sources/add_edit_space_firebase_source.dart';
@@ -18,6 +20,7 @@ import '../domain/usecases/save_space_usecase.dart';
 
 import '../widgets/amenities_editor.dart';
 import '../widgets/images_editor.dart';
+import '../widgets/payment_methods_editor.dart';
 import '../widgets/location_card.dart';
 import 'location_picker_page.dart';
 import '../widgets/policies_editor.dart';
@@ -237,6 +240,21 @@ class AddEditSpacePage extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
+                        PaymentMethodsEditor(
+                          selectedMethods: f.paymentMethods,
+                          onAdd: (id, name) => context
+                              .read<AddEditSpaceBloc>()
+                              .add(AddEditSpacePaymentMethodAdded(id: id, name: name)),
+                          onRemove: (id) => context
+                              .read<AddEditSpaceBloc>()
+                              .add(AddEditSpacePaymentMethodRemoved(id: id)),
+                          onFieldChanged: (id, key, val) => context
+                              .read<AddEditSpaceBloc>()
+                              .add(AddEditSpacePaymentFieldChanged(id: id, fieldKey: key, value: val)),
+                        ),
+
+                        const SizedBox(height: 12),
+
                         PoliciesEditor(
                           sections: f.policySections,
                           errorText: state.policiesError,
@@ -306,20 +324,23 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
   }
 
   Future<void> _pick() async {
+    final lang = context.read<LanguageBloc>().state.code;
+    final titleStr = LanguageService.tr(lang, 'adminAssignSubAdmin');
+    final noneStr = LanguageService.tr(lang, 'adminNone');
     final picked = await showDialog<({String? id, String? name})>(
       context: context,
       barrierColor: const Color(0x66000000),
       builder: (_) => AlertDialog(
         backgroundColor: AdminColors.bg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(context.t('adminAssignSubAdmin'), style: AdminText.h2()),
+        title: Text(titleStr, style: AdminText.h2()),
         content: SizedBox(
           width: 300,
           child: ListView(
             shrinkWrap: true,
             children: [
               ListTile(
-                title: Text(context.t('adminNone'), style: AdminText.body14(color: AdminColors.black40)),
+                title: Text(noneStr, style: AdminText.body14(color: AdminColors.black40)),
                 onTap: () => Navigator.of(context).pop((id: null, name: null)),
               ),
               const Divider(height: 1, color: AdminColors.black15),

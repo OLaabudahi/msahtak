@@ -41,6 +41,9 @@ class SpaceFormEntity extends Equatable {
   final String? adminId;
   final String? adminName;
 
+  /// طرق الدفع المتاحة: [{id, name, details}]
+  final List<Map<String, String>> paymentMethods;
+
   const SpaceFormEntity({
     required this.id,
     required this.name,
@@ -60,6 +63,7 @@ class SpaceFormEntity extends Equatable {
     this.totalSeats = 0,
     this.adminId,
     this.adminName,
+    this.paymentMethods = const [],
   });
 
   @override
@@ -82,5 +86,6 @@ class SpaceFormEntity extends Equatable {
         totalSeats,
         adminId,
         adminName,
+        paymentMethods,
       ];
 }

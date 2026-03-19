@@ -53,6 +53,9 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     on<AddEditSpaceImageRemoved>(_onImageRemoved);
     on<AddEditSpaceSeatsChanged>(_onSeats);
     on<AddEditSpaceAdminChanged>(_onAdmin);
+    on<AddEditSpacePaymentMethodAdded>(_onPaymentMethodAdded);
+    on<AddEditSpacePaymentMethodRemoved>(_onPaymentMethodRemoved);
+    on<AddEditSpacePaymentFieldChanged>(_onPaymentFieldChanged);
     on<AddEditSpaceSavePressed>(_onSave);
   }
 
@@ -96,6 +99,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       totalSeats: f.totalSeats,
       adminId: f.adminId,
       adminName: f.adminName,
+      paymentMethods: f.paymentMethods,
     );
   }
 
@@ -360,6 +364,31 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, adminId: event.adminId, adminName: event.adminName))));
   }
 
+  void _onPaymentMethodAdded(AddEditSpacePaymentMethodAdded event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    if (f.paymentMethods.any((m) => m['id'] == event.id)) return; // لا تضف مكرراً
+    final next = [...f.paymentMethods, {'id': event.id, 'name': event.name}];
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+  }
+
+  void _onPaymentMethodRemoved(AddEditSpacePaymentMethodRemoved event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    final next = f.paymentMethods.where((m) => m['id'] != event.id).toList(growable: false);
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+  }
+
+  void _onPaymentFieldChanged(AddEditSpacePaymentFieldChanged event, Emitter<AddEditSpaceState> emit) {
+    final f = state.form;
+    if (f == null) return;
+    final next = f.paymentMethods.map((m) {
+      if (m['id'] != event.id) return m;
+      return {...m, event.fieldKey: event.value};
+    }).toList(growable: false);
+    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+  }
+
   Future<void> _onSave(AddEditSpaceSavePressed event, Emitter<AddEditSpaceState> emit) async {
     final f0 = state.form;
     if (f0 == null) return;
@@ -464,6 +493,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     int? totalSeats,
     Object? adminId = _sentinel,
     Object? adminName = _sentinel,
+    List<Map<String, String>>? paymentMethods,
   }) {
     return SpaceFormEntity(
       id: f.id,
@@ -484,6 +514,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       totalSeats: totalSeats ?? f.totalSeats,
       adminId: adminId == _sentinel ? f.adminId : adminId as String?,
       adminName: adminName == _sentinel ? f.adminName : adminName as String?,
+      paymentMethods: paymentMethods ?? f.paymentMethods,
     );
   }
 

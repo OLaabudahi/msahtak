@@ -163,3 +163,30 @@ class AddEditSpaceAdminChanged extends AddEditSpaceEvent {
   @override
   List<Object?> get props => [adminId, adminName];
 }
+
+/// إضافة طريقة دفع
+class AddEditSpacePaymentMethodAdded extends AddEditSpaceEvent {
+  final String id;
+  final String name;
+  const AddEditSpacePaymentMethodAdded({required this.id, required this.name});
+  @override
+  List<Object?> get props => [id, name];
+}
+
+/// حذف طريقة دفع
+class AddEditSpacePaymentMethodRemoved extends AddEditSpaceEvent {
+  final String id;
+  const AddEditSpacePaymentMethodRemoved({required this.id});
+  @override
+  List<Object?> get props => [id];
+}
+
+/// تعديل حقل معيّن لطريقة دفع (phone, iban, accountName...)
+class AddEditSpacePaymentFieldChanged extends AddEditSpaceEvent {
+  final String id;
+  final String fieldKey;
+  final String value;
+  const AddEditSpacePaymentFieldChanged({required this.id, required this.fieldKey, required this.value});
+  @override
+  List<Object?> get props => [id, fieldKey, value];
+}

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/entities/booking_request_entity.dart';
 import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 import '../../domain/entities/payment_summary_entity.dart';
@@ -18,13 +17,38 @@ class PaymentRepoFirebase implements PaymentRepo {
   PaymentRepoFirebase({Random? random}) : _random = random ?? Random();
 
   @override
-  Future<List<PaymentMethodEntity>> getMethods() async {
-    return const [
-      PaymentMethodEntity(type: PaymentMethodType.card, title: 'Credit / Debit Card'),
-      PaymentMethodEntity(type: PaymentMethodType.palPay, title: 'Pal Pay'),
-      PaymentMethodEntity(type: PaymentMethodType.jawwalPay, title: 'Jawwal Pay'),
-      PaymentMethodEntity(type: PaymentMethodType.bankOfPalestine, title: 'Bank of Palestine'),
-    ];
+  Future<List<PaymentMethodEntity>> getMethods({required String requestId}) async {
+    // جلب بيانات الحجز للحصول على معرّف المساحة
+    final bookingDoc = await _db.collection('bookings').doc(requestId).get();
+    if (!bookingDoc.exists) return [];
+
+    final d = bookingDoc.data()!;
+    final workspaceId = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
+    if (workspaceId.isEmpty) return [];
+
+    // جلب طرق الدفع من المساحة
+    final wsDoc = await _db.collection('workspaces').doc(workspaceId).get();
+    if (!wsDoc.exists) return [];
+
+    final rawMethods = (wsDoc.data()?['paymentMethods'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    return rawMethods
+        .where((m) => (m['id'] as String? ?? '').isNotEmpty)
+        .map((m) {
+          final id = m['id'] as String;
+          final name = m['name'] as String? ?? id;
+          final details = _buildDetails(m);
+          return PaymentMethodEntity(type: id, title: name, details: details);
+        })
+        .toList();
+  }
+
+  /// بناء نص التفاصيل من الحقول المنظّمة
+  String _buildDetails(Map<String, dynamic> m) {
+    final parts = <String>[];
+    if ((m['iban'] as String?)?.isNotEmpty == true) parts.add('IBAN: ${m['iban']}');
+    if ((m['accountName'] as String?)?.isNotEmpty == true) parts.add('Name: ${m['accountName']}');
+    if ((m['phone'] as String?)?.isNotEmpty == true) parts.add('Phone: ${m['phone']}');
+    return parts.join('\n');
   }
 
   @override
@@ -65,6 +89,12 @@ class PaymentRepoFirebase implements PaymentRepo {
   Future<PaymentReceiptEntity> pay({
     required String requestId,
     required PaymentMethodType method,
+    required String methodName,
+    String? receiptUrl,
+    String? cardNumber,
+    String? cardExpiry,
+    String? cardCvv,
+    String? cardHolder,
   }) async {
     final doc = await _db.collection('bookings').doc(requestId).get();
     if (!doc.exists) throw StateError('Booking not found');
@@ -83,14 +113,26 @@ class PaymentRepoFirebase implements PaymentRepo {
     final spaceName = d['spaceName'] as String? ?? d['workspaceName'] as String? ?? 'Space';
     final paidAt = DateTime.now();
 
-    // تحديث الحالة إلى payment_under_review
-    await _db.collection('bookings').doc(requestId).update({
+    // بناء بيانات التحديث — تشمل تفاصيل البطاقة إن وُجدت
+    final updateData = <String, dynamic>{
       'status': 'payment_under_review',
-      'paymentMethod': method.name,
+      'paymentMethod': method,
+      'paymentMethodName': methodName,
+      'paymentReceiptUrl': receiptUrl,
       'paidAt': Timestamp.fromDate(paidAt),
-    });
+    };
+    if (cardNumber != null && cardNumber.isNotEmpty) {
+      // نحفظ آخر 4 أرقام فقط لأسباب أمنية
+      final last4 = cardNumber.replaceAll(' ', '').replaceAll('-', '');
+      updateData['cardLast4'] = last4.length >= 4 ? last4.substring(last4.length - 4) : last4;
+      updateData['cardHolder'] = cardHolder ?? '';
+      updateData['cardExpiry'] = cardExpiry ?? '';
+    }
 
-    // إشعار للأدمن بوصول فاتورة جديدة
+    // تحديث الحالة مع إشعار الدفع
+    await _db.collection('bookings').doc(requestId).update(updateData);
+
+    // إشعار للأدمن
     if (uid.isNotEmpty) {
       await _db.collection('admin_payment_reviews').add({
         'bookingId': requestId,
@@ -98,7 +140,8 @@ class PaymentRepoFirebase implements PaymentRepo {
         'spaceName': spaceName,
         'amount': totalAmount,
         'currency': currency,
-        'paymentMethod': method.name,
+        'paymentMethod': methodName,
+        'paymentReceiptUrl': receiptUrl,
         'paidAt': Timestamp.fromDate(paidAt),
         'status': 'pending_review',
         'createdAt': FieldValue.serverTimestamp(),
@@ -111,7 +154,7 @@ class PaymentRepoFirebase implements PaymentRepo {
       method: method,
       bookingId: requestId,
       paidAt: paidAt,
-      invoiceUrl: null,
+      invoiceUrl: receiptUrl,
     );
   }
 }

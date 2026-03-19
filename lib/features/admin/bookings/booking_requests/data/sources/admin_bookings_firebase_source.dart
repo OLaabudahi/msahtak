@@ -100,31 +100,43 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
   @override
   Future<void> acceptBooking({required String bookingId}) async {
     final deadline = DateTime.now().add(const Duration(hours: 24));
-    // تحديث حالة الحجز
     final bookingRef = _db.collection('bookings').doc(bookingId);
-    await bookingRef.update({
-      'status': 'approved_waiting_payment',
-      'paymentDeadline': Timestamp.fromDate(deadline),
-      'updatedAt': FieldValue.serverTimestamp(),
+
+    // حماية من الموافقة المزدوجة — نتحقق من الحالة داخل Transaction
+    bool alreadyProcessed = false;
+    String spaceId = '';
+
+    await _db.runTransaction((tx) async {
+      final snap = await tx.get(bookingRef);
+      if (!snap.exists) { alreadyProcessed = true; return; }
+      final currentStatus = (snap.data()!['status'] ?? '') as String;
+      // إذا كانت الحالة ليست pending أو under_review فالحجز معالَج مسبقاً
+      if (currentStatus != 'pending' && currentStatus != 'under_review') {
+        alreadyProcessed = true;
+        return;
+      }
+      spaceId = (snap.data()!['workspaceId'] ?? snap.data()!['spaceId'] ?? snap.data()!['space_id'] ?? '') as String;
+      tx.update(bookingRef, {
+        'status': 'approved_waiting_payment',
+        'paymentDeadline': Timestamp.fromDate(deadline),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     });
 
+    if (alreadyProcessed) return;
+
     // تخفيض المقاعد المتاحة في المساحة
-    try {
-      final bookingDoc = await bookingRef.get();
-      if (bookingDoc.exists) {
-        final d = bookingDoc.data()!;
-        final spaceId = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
-        if (spaceId.isNotEmpty) {
-          final wsRef = _db.collection('workspaces').doc(spaceId);
-          await _db.runTransaction((tx) async {
-            final wsSnap = await tx.get(wsRef);
-            if (!wsSnap.exists) return;
-            final current = (wsSnap.data()!['availableSeats'] as num?)?.toInt() ?? 0;
-            tx.update(wsRef, {'availableSeats': current > 0 ? current - 1 : 0});
-          });
-        }
-      }
-    } catch (_) {}
+    if (spaceId.isNotEmpty) {
+      try {
+        final wsRef = _db.collection('workspaces').doc(spaceId);
+        await _db.runTransaction((tx) async {
+          final wsSnap = await tx.get(wsRef);
+          if (!wsSnap.exists) return;
+          final current = (wsSnap.data()!['availableSeats'] as num?)?.toInt() ?? 0;
+          tx.update(wsRef, {'availableSeats': current > 0 ? current - 1 : 0});
+        });
+      } catch (_) {}
+    }
 
     await _createNotification(bookingId: bookingId, type: 'bookingApproved');
   }

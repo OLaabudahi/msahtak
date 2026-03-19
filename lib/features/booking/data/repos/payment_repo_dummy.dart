@@ -19,27 +19,12 @@ class PaymentRepoDummy implements PaymentRepo {
       _random = random ?? Random();
 
   @override
-  Future<List<PaymentMethodEntity>> getMethods() async {
+  Future<List<PaymentMethodEntity>> getMethods({required String requestId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     return const <PaymentMethodEntity>[
-      PaymentMethodEntity(
-        type: PaymentMethodType.card,
-        title: 'Credit / Debit Card',
-      ),
-      PaymentMethodEntity(type: PaymentMethodType.palPay, title: 'Pal Pay'),
-      PaymentMethodEntity(
-        type: PaymentMethodType.jawwalPay,
-        title: 'Jawwal Pay',
-      ),
-      PaymentMethodEntity(
-        type: PaymentMethodType.bankOfPalestine,
-        title: 'Bank of Palestine',
-      ),
+      PaymentMethodEntity(type: 'bank_of_palestine', title: 'Bank of Palestine', details: 'IBAN: PS00XXXX\nAccount: 123456'),
+      PaymentMethodEntity(type: 'jawwal_pay', title: 'Jawwal Pay', details: 'Phone: 059-XXXXXXX'),
     ];
-
-    // API-ready example:
-    // final res = await dio.get('/payments/methods');
-    // return (res.data as List).map((e) => PaymentMethodModel.fromJson(e)).toList();
   }
 
   @override
@@ -47,49 +32,34 @@ class PaymentRepoDummy implements PaymentRepo {
     await Future<void>.delayed(const Duration(milliseconds: 350));
     final req = _store.get(requestId);
     if (req == null) throw StateError('Request not found');
-    if (!req.isApproved)
-      throw StateError('Payment is available only after approval');
+    if (!req.isApproved) throw StateError('Payment is available only after approval');
 
-    // Dummy breakdown to match UI (daily/weekly/monthly can be dynamic later)
     final items = <PaymentLineItemEntity>[
-      PaymentLineItemEntity(
-        label: 'Daily',
-        amount: (req.totalAmount * 0.55).round(),
-      ),
-      PaymentLineItemEntity(
-        label: 'Weekly',
-        amount: (req.totalAmount * 0.35).round(),
-      ),
-      PaymentLineItemEntity(
-        label: 'Monthly',
-        amount: (req.totalAmount * 0.10).round(),
-      ),
+      PaymentLineItemEntity(label: 'Daily', amount: (req.totalAmount * 0.55).round()),
+      PaymentLineItemEntity(label: 'Weekly', amount: (req.totalAmount * 0.35).round()),
+      PaymentLineItemEntity(label: 'Monthly', amount: (req.totalAmount * 0.10).round()),
       const PaymentLineItemEntity(label: 'Service Fee', amount: 8),
     ];
     final total = items.fold<int>(0, (s, e) => s + e.amount);
-
-    return PaymentSummaryModel(
-      items: items,
-      total: total,
-      currency: req.currency,
-    );
-
-    // API-ready example:
-    // final res = await dio.get('/payments/summary?requestId=$requestId');
-    // return PaymentSummaryModel.fromJson(res.data);
+    return PaymentSummaryModel(items: items, total: total, currency: req.currency);
   }
 
   @override
   Future<PaymentReceiptEntity> pay({
     required String requestId,
     required PaymentMethodType method,
+    required String methodName,
+    String? receiptUrl,
+    String? cardNumber,
+    String? cardExpiry,
+    String? cardCvv,
+    String? cardHolder,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 650));
     final req = _store.get(requestId);
     if (req == null) throw StateError('Request not found');
     if (!req.isApproved) throw StateError('Cannot pay before approval');
-    if (req.status == BookingRequestStatus.paid)
-      throw StateError('Already paid');
+    if (req.status == BookingRequestStatus.paid) throw StateError('Already paid');
 
     final bookingId = req.bookingId ?? _generateId(prefix: 'MH');
     final receipt = PaymentReceiptModel(
@@ -98,10 +68,9 @@ class PaymentRepoDummy implements PaymentRepo {
       method: method,
       bookingId: bookingId,
       paidAt: DateTime.now(),
-      invoiceUrl: null, // API-ready: backend will provide URL
+      invoiceUrl: receiptUrl,
     );
 
-    // Update request as paid + attach bookingId for Booking Details linking
     final updated = BookingRequestEntity(
       requestId: req.requestId,
       space: req.space,
@@ -120,12 +89,7 @@ class PaymentRepoDummy implements PaymentRepo {
       bookingId: bookingId,
     );
     _store.put(updated);
-
     return receipt;
-
-    // API-ready example:
-    // final res = await dio.post('/payments/pay', data: {'requestId': requestId, 'method': method.name});
-    // return PaymentReceiptModel.fromJson(res.data);
   }
 
   String _generateId({required String prefix}) {

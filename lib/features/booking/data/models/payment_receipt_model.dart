@@ -15,7 +15,7 @@ class PaymentReceiptModel extends PaymentReceiptEntity {
     return PaymentReceiptModel(
       amountPaid: (json['amountPaid'] as num).toInt(),
       currency: json['currency'] as String,
-      method: PaymentMethodType.values.byName(json['method'] as String),
+      method: json['method'] as String? ?? '',
       bookingId: json['bookingId'] as String,
       paidAt: DateTime.parse(json['paidAt'] as String),
       invoiceUrl: json['invoiceUrl'] as String?,
@@ -25,7 +25,7 @@ class PaymentReceiptModel extends PaymentReceiptEntity {
   Map<String, dynamic> toJson() => {
     'amountPaid': amountPaid,
     'currency': currency,
-    'method': method.name,
+    'method': method,
     'bookingId': bookingId,
     'paidAt': paidAt.toIso8601String(),
     'invoiceUrl': invoiceUrl,
