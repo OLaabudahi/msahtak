@@ -5,8 +5,9 @@ import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
-import '../../booking/booking_feature_routes.dart';
-import '../../booking/domain/entities/booking_request_entity.dart';
+import '../../booking_request/domain/entities/booking_request_entity.dart';
+import '../../booking_request/view/booking_request_routes.dart';
+import '../../../../core/di/app_injector.dart';
 import '../bloc/space_details_bloc.dart';
 import '../bloc/space_details_event.dart';
 import '../bloc/space_details_state.dart';
@@ -37,6 +38,17 @@ class SpaceDetailsPage extends StatefulWidget {
     );
   }
 
+  /*static Widget withBloc({required String spaceId}) {
+    return BlocProvider(
+      create: (_) => SpaceDetailsBloc(
+        repo: SpaceDetailsRepoFirebase(
+          source: SpaceDetailsFirebaseSource(FirestoreApi()),
+        ),
+      )..add(SpaceDetailsStarted(spaceId)),
+      child: SpaceDetailsPage(spaceId: spaceId),
+    );
+  }
+*/
   @override
   State<SpaceDetailsPage> createState() => _SpaceDetailsPageState();
 }
@@ -672,10 +684,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                         basePricePerDay: d.pricePerDay,
                         currency: d.currency,
                       );
-
                       Navigator.of(context).push(
-                        BookingFeatureRoutes.requestBooking(space: summary),
+                        BookingRequestRoutes.requestBooking(
+                          bloc: AppInjector.createBookingBloc(),
+                          space: summary,
+                        ),
                       );
+
                     },
                   ),
                 ),

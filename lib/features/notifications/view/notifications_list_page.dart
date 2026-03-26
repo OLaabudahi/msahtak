@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/di/app_injector.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,7 @@ import 'notification_settings_page.dart';
 import '../domain/entities/notification_item.dart';
 import '../../bookings/view/bookings_tab_page.dart';
 import '../../offers/view/offers_page.dart';
-import '../../booking/booking_feature_routes.dart';
+import '../../booking_request/view/booking_request_routes.dart';
 
 class NotificationsListPage extends StatelessWidget {
   const NotificationsListPage({super.key});
@@ -26,8 +27,10 @@ class NotificationsListPage extends StatelessWidget {
       case NotificationType.bookingApproved:
         if (item.requestId != null) {
           Navigator.of(context).push(
-            BookingFeatureRoutes.bookingStatus(requestId: item.requestId!),
-          );
+            BookingRequestRoutes.bookingStatus(
+              bloc: AppInjector.createBookingBloc(),
+              requestId: item.requestId!,
+            ),          );
         } else {
           Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
         }

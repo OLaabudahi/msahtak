@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:Msahtak/core/services/firestore_api.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
@@ -18,7 +19,7 @@ class MySpacesPage extends StatelessWidget {
   const MySpacesPage({super.key});
 
   static Widget withBloc() {
-    final source = MySpacesFirebaseSource();
+    final source = MySpacesFirebaseSource(FirestoreApi());
     final repo = MySpacesRepoImpl(source);
     return BlocProvider(
       create: (_) => MySpacesBloc(
@@ -100,6 +101,4 @@ class MySpacesPage extends StatelessWidget {
   }
 }
 
-extension on AdminSpace {
-  static const s12 = 12.0;
-}
+

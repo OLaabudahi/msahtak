@@ -1,32 +1,48 @@
 ﻿import '../../domain/entities/space_entity.dart';
 
 class SpaceModel {
-  final String id;
-  final String name;
-  final String rating;
-  final String availability; // available|hidden
-  final String cover;
+  final String spaceId;
+  final String spaceName;
+  final double rating;
+  final bool isActive;
+  final String imageUrl;
 
   const SpaceModel({
-    required this.id,
-    required this.name,
+    required this.spaceId,
+    required this.spaceName,
     required this.rating,
-    required this.availability,
-    required this.cover,
+    required this.isActive,
+    required this.imageUrl,
   });
 
-  factory SpaceModel.fromJson(Map<String, dynamic> json) => SpaceModel(
-        id: (json['id'] ?? '').toString(),
-        name: (json['name'] ?? '').toString(),
-        rating: (json['rating'] ?? '').toString(),
-        availability: (json['availability'] ?? 'available').toString(),
-        cover: (json['cover'] ?? '').toString(),
-      );
+  factory SpaceModel.fromJson(Map<String, dynamic> json) {
+    return SpaceModel(
+      spaceId: (json['spaceId'] ?? json['id'] ?? '').toString(),
+      spaceName: (json['spaceName'] ?? json['name'] ?? '').toString(),
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      isActive: (json['isActive'] ?? true) as bool,
+      imageUrl: (json['imageUrl'] ?? '').toString(),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'rating': rating, 'availability': availability, 'cover': cover};
+  Map<String, dynamic> toJson() {
+    return {
+      'spaceId': spaceId,
+      'spaceName': spaceName,
+      'rating': rating,
+      'isActive': isActive,
+      'imageUrl': imageUrl,
+    };
+  }
 
   SpaceEntity toEntity() {
-    final a = availability == 'hidden' ? SpaceAvailability.hidden : SpaceAvailability.available;
-    return SpaceEntity(id: id, name: name, rating: rating, availability: a, cover: cover);
+    return SpaceEntity(
+      id: spaceId,
+      name: spaceName,
+      rating: rating.toStringAsFixed(1),
+      availability:
+      isActive ? SpaceAvailability.available : SpaceAvailability.hidden,
+      cover: imageUrl,
+    );
   }
 }

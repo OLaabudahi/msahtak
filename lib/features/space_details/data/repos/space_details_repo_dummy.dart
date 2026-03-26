@@ -1,7 +1,7 @@
 import '../../../../constants/app_assets.dart';
+import '../../../booking_request/domain/entities/booking_request_entity.dart';
 import '../models/space_details_model.dart';
 import '../../domain/repos/space_details_repo.dart';
-import '../../../booking/domain/entities/booking_request_entity.dart';
 
 class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
   /// ✅ دالة: داتا وهمية جاهزة للتشغيل

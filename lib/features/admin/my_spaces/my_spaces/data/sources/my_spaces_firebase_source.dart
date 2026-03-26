@@ -1,47 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'my_spaces_source.dart';
+import 'package:Msahtak/features/admin/my_spaces/my_spaces/data/sources/my_spaces_source.dart';
+
+import '../../../../../../core/services/firestore_api.dart';
 import '../models/space_model.dart';
 
-/// مصدر Firebase لمساحات الأدمن — يقرأ من workspaces collection
-class MySpacesFirebaseSource implements MySpacesSource {
-  final _db = FirebaseFirestore.instance;
+class MySpacesFirebaseSource implements MySpacesSource{
+  final FirestoreApi api;
+
+  MySpacesFirebaseSource(this.api);
 
   @override
   Future<List<SpaceModel>> fetchSpaces() async {
-    final snap = await _db.collection('workspaces').get();
+    final data = await api.getCollection(collection: 'spaces');
 
-    return snap.docs.map((doc) {
-      final d = doc.data();
-      final name = d['spaceName'] as String? ?? d['name'] as String? ?? 'Space';
-      final stats = d['stats'] as Map<String, dynamic>?;
-      final rating = (d['rating'] as num?)?.toDouble() ??
-          (stats?['averageRating'] as num?)?.toDouble() ?? 0.0;
-      final isActive = d['isActive'] as bool? ??
-          d['visible'] as bool? ?? true;
-      final cover = d['imageUrl'] as String? ??
-          d['cover'] as String? ??
-          d['thumbnailUrl'] as String? ?? '';
-      return SpaceModel(
-        id: doc.id,
-        name: name,
-        rating: rating.toStringAsFixed(1),
-        availability: isActive ? 'available' : 'hidden',
-        cover: cover,
-      );
-    }).toList();
+    return data.map((e) => SpaceModel.fromJson(e)).toList();
   }
 
   @override
   Future<void> hideSpace({required String spaceId}) async {
-    final doc = await _db.collection('workspaces').doc(spaceId).get();
-    final current = doc.data()?['isActive'] as bool? ?? true;
-    await _db.collection('workspaces').doc(spaceId).update({
-      'isActive': !current,
-      'visible': !current,
-    });
+    final doc = await api.getDoc(collection: 'spaces', docId: spaceId);
+
+    final current = doc?['isActive'] ?? true;
+
+    await api.updateFields(
+      collection: 'spaces',
+      docId: spaceId,
+      data: {'isActive': !current},
+    );
   }
 
   @override
-  Future<void> deleteSpace({required String spaceId}) =>
-      _db.collection('workspaces').doc(spaceId).delete();
+  Future<void> deleteSpace({required String spaceId}) async {
+    await api.delete(collection: 'spaces', docId: spaceId);
+  }
 }

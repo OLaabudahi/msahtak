@@ -1,4 +1,5 @@
-﻿import 'my_spaces_source.dart';
+﻿/*
+import 'my_spaces_source.dart';
 import '../models/space_model.dart';
 
 class MySpacesDummySource implements MySpacesSource {
@@ -30,3 +31,4 @@ class MySpacesDummySource implements MySpacesSource {
     _list.removeWhere((s) => s.id == spaceId);
   }
 }
+*/
