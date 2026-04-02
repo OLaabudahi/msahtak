@@ -40,8 +40,6 @@ class _AppRootState extends State<AppRoot> {
       context,
     ).push(MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()));
 
-    // When onboarding finishes (page popped), mark completed then re-check flow.
-    await LocalStorageService().setHasCompletedOnboarding(true);
 
     if (mounted) {
       context.read<AppStartBloc>().add(const AppStartStarted());
@@ -88,3 +86,5 @@ class _AppRootState extends State<AppRoot> {
     );
   }
 }
+
+

@@ -9,7 +9,7 @@ import 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepo repo;
 
-  // نخزن الأصل عشان البحث ما يضيع الداتا
+  // ظ†ط®ط²ظ† ط§ظ„ط£طµظ„ ط¹ط´ط§ظ† ط§ظ„ط¨ط­ط« ظ…ط§ ظٹط¶ظٹط¹ ط§ظ„ط¯ط§طھط§
   List<HomeFeaturedSpaceEntity> _allFeatured = const [];
 
   HomeBloc({required this.repo}) : super(HomeState.initial()) {
@@ -61,7 +61,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
 
-    // البحث يعرض المساحات التي تحتوي على WiFi وضمن 100 متر وتطابق النص
+    // ط§ظ„ط¨ط­ط« ظٹط¹ط±ط¶ ط§ظ„ظ…ط³ط§ط­ط§طھ ط§ظ„طھظٹ طھط­طھظˆظٹ ط¹ظ„ظ‰ WiFi ظˆط¶ظ…ظ† 100 ظ…طھط± ظˆطھط·ط§ط¨ظ‚ ط§ظ„ظ†طµ
     final filtered = _allFeatured.where((s) {
       final hasWifi = s.tags.any((t) => t.contains('wifi'));
       final withinRange = (s.distanceKm ?? 999) <= 0.1;
@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return hasWifi && withinRange && textMatch;
     }).toList();
 
-    // إذا ما في نتيجة بالفلتر الكامل، نرجع بحث بالنص فقط (fallback)
+    // ط¥ط°ط§ ظ…ط§ ظپظٹ ظ†طھظٹط¬ط© ط¨ط§ظ„ظپظ„طھط± ط§ظ„ظƒط§ظ…ظ„طŒ ظ†ط±ط¬ط¹ ط¨ط­ط« ط¨ط§ظ„ظ†طµ ظپظ‚ط· (fallback)
     if (filtered.isEmpty) {
       final textOnly = _allFeatured.where((s) {
         return s.name.toLowerCase().contains(q) ||
@@ -125,3 +125,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     ];
   }
 }
+
+

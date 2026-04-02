@@ -36,7 +36,7 @@ class LanguageBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             _LangRow(
-              title: 'English',
+              title: context.t('english'),
               code: 'en',
               selected: selected,
               onTap: () {
@@ -119,3 +119,5 @@ class _LangRow extends StatelessWidget {
     );
   }
 }
+
+

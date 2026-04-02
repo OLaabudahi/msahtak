@@ -44,8 +44,8 @@ class _AdminRootPageState extends State<AdminRootPage> {
 
     final isSuperAdmin = AdminSession.isSuperAdmin;
 
-    // تاب الأدمن الفرعي: Home, Bookings, Settings (بدون Users)
-    // تاب الأدمن الكامل: Home, Bookings, Users, Sub Admins, Settings
+    // طھط§ط¨ ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ظپط±ط¹ظٹ: Home, Bookings, Settings (ط¨ط¯ظˆظ† Users)
+    // طھط§ط¨ ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ظƒط§ظ…ظ„: Home, Bookings, Users, Sub Admins, Settings
     final tabs = isSuperAdmin
         ? [
             _TabConfig(context.t('adminTabHome'), 0),
@@ -151,3 +151,5 @@ class _TabConfig {
   final int index;
   const _TabConfig(this.label, this.index);
 }
+
+

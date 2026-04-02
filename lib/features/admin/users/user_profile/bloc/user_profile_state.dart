@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/user_profile_entity.dart';
 
 enum UserProfileStatus { initial, loading, ready, acting, failure }
@@ -23,3 +23,5 @@ class UserProfileState extends Equatable {
   @override
   List<Object?> get props => [status, profile, error];
 }
+
+

@@ -1,4 +1,4 @@
-﻿import '../models/amenity_model.dart';
+import '../models/amenity_model.dart';
 import '../models/space_form_model.dart';
 
 abstract class AddEditSpaceSource {
@@ -9,3 +9,5 @@ abstract class AddEditSpaceSource {
   Future<List<AmenityModel>> fetchAmenityCatalog();
   Future<AmenityModel> createAmenity({required String name});
 }
+
+

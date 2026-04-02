@@ -28,7 +28,7 @@ class SpaceDetailsPage extends StatefulWidget {
 
   const SpaceDetailsPage({super.key, required this.spaceId});
 
-  /// ✅ دالة: فتح الصفحة مع Bloc + Repo (Dummy حالياً)
+  /// âœ… ط¯ط§ظ„ط©: ظپطھط­ ط§ظ„طµظپط­ط© ظ…ط¹ Bloc + Repo (Dummy ط­ط§ظ„ظٹط§ظ‹)
   static Widget withBloc({required String spaceId}) {
     return BlocProvider(
       create: (_) =>
@@ -68,7 +68,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     _tabsController = PageController();
     _imagesController = PageController();
 
-    // ✅ شغّل تحريك الصور تلقائياً كل 3 ثواني
+    // âœ… ط´ط؛ظ‘ظ„ طھط­ط±ظٹظƒ ط§ظ„طµظˆط± طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظƒظ„ 3 ط«ظˆط§ظ†ظٹ
     _startImageAutoSlide();
   }
 
@@ -81,7 +81,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     super.dispose();
   }
 
-  /// ✅ دالة: تشغيل تحريك الصور تلقائياً (كل 3 ثواني)
+  /// âœ… ط¯ط§ظ„ط©: طھط´ط؛ظٹظ„ طھط­ط±ظٹظƒ ط§ظ„طµظˆط± طھظ„ظ‚ط§ط¦ظٹط§ظ‹ (ظƒظ„ 3 ط«ظˆط§ظ†ظٹ)
   void _startImageAutoSlide() {
     _imageAutoTimer?.cancel();
     _imageAutoTimer = Timer.periodic(const Duration(seconds: 3), (_) {
@@ -105,13 +105,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     });
   }
 
-  /// ✅ دالة: إيقاف تحريك الصور فوراً
+  /// âœ… ط¯ط§ظ„ط©: ط¥ظٹظ‚ط§ظپ طھط­ط±ظٹظƒ ط§ظ„طµظˆط± ظپظˆط±ط§ظ‹
   void _stopImageAutoSlide() {
     _imageAutoTimer?.cancel();
     _imageAutoTimer = null;
   }
 
-  /// ✅ دالة: إعادة تحريك الصور بعد ثانيتين من ترك المستخدم
+  /// âœ… ط¯ط§ظ„ط©: ط¥ط¹ط§ط¯ط© طھط­ط±ظٹظƒ ط§ظ„طµظˆط± ط¨ط¹ط¯ ط«ط§ظ†ظٹطھظٹظ† ظ…ظ† طھط±ظƒ ط§ظ„ظ…ط³طھط®ط¯ظ…
   void _scheduleResumeImageAutoSlide() {
     _imageResumeTimer?.cancel();
     _imageResumeTimer = Timer(const Duration(seconds: 2), () {
@@ -120,7 +120,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     });
   }
 
-  /// ✅ دالة: فتح Dialog سياسات المكان
+  /// âœ… ط¯ط§ظ„ط©: ظپطھط­ Dialog ط³ظٹط§ط³ط§طھ ط§ظ„ظ…ظƒط§ظ†
   void _openPoliciesSheet(BuildContext context, SpaceDetailsState state) {
     final policies = state.details!.policies;
     showDialog(
@@ -133,7 +133,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 
-  /// ✅ دالة: فتح Dialog Review Summary
+  /// âœ… ط¯ط§ظ„ط©: ظپطھط­ Dialog Review Summary
   void _openReviewSummarySheet(BuildContext context, SpaceDetailsState state) {
     final summary = state.details!.reviewSummary;
     showDialog(
@@ -146,7 +146,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 
-  /// ✅ دالة: لما نكبس على Tab من segmented، نعمل animate للـ PageView
+  /// âœ… ط¯ط§ظ„ط©: ظ„ظ…ط§ ظ†ظƒط¨ط³ ط¹ظ„ظ‰ Tab ظ…ظ† segmentedطŒ ظ†ط¹ظ…ظ„ animate ظ„ظ„ظ€ PageView
   void _animateToTab(int index) {
     if (!_tabsController.hasClients) return;
     _tabsController.animateToPage(
@@ -161,11 +161,11 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     return BlocListener<SpaceDetailsBloc, SpaceDetailsState>(
       listenWhen: (p, c) => p.tabIndex != c.tabIndex,
       listener: (context, state) {
-        // ✅ لما الـ bloc يغير tabIndex (من tap أو swipe) خلّي الـ PageView يروح لنفس المكان
+        // âœ… ظ„ظ…ط§ ط§ظ„ظ€ bloc ظٹط؛ظٹط± tabIndex (ظ…ظ† tap ط£ظˆ swipe) ط®ظ„ظ‘ظٹ ط§ظ„ظ€ PageView ظٹط±ظˆط­ ظ„ظ†ظپط³ ط§ظ„ظ…ظƒط§ظ†
         _animateToTab(state.tabIndex);
       },
       child: BlocBuilder<SpaceDetailsBloc, SpaceDetailsState>(
-        /// ✅ دالة: بناء الشاشة كاملة حسب state
+        /// âœ… ط¯ط§ظ„ط©: ط¨ظ†ط§ط، ط§ظ„ط´ط§ط´ط© ظƒط§ظ…ظ„ط© ط­ط³ط¨ state
         builder: (context, state) {
           if (state.loading) {
             return const Scaffold(
@@ -182,13 +182,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('صار خطأ: ${state.error ?? "Unknown"}'),
+                      Text('طµط§ط± ط®ط·ط£: ${state.error ?? "Unknown"}'),
                       const SizedBox(height: 12),
                       FilledButton(
                         onPressed: () => context.read<SpaceDetailsBloc>().add(
                           SpaceDetailsStarted(widget.spaceId),
                         ),
-                        child: const Text('إعادة المحاولة'),
+                        child: const Text('ط¥ط¹ط§ط¯ط© ط§ظ„ظ…ط­ط§ظˆظ„ط©'),
                       ),
                     ],
                   ),
@@ -205,7 +205,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
               child: Column(
                 children: [
                   // =========================
-                  // ✅ Header ثابت
+                  // âœ… Header ط«ط§ط¨طھ
                   // =========================
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
@@ -234,7 +234,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   ),
 
                   // =========================
-                  // ✅ صور (تتحرك تلقائياً + توقف باللمس)
+                  // âœ… طµظˆط± (طھطھط­ط±ظƒ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ + طھظˆظ‚ظپ ط¨ط§ظ„ظ„ظ…ط³)
                   // =========================
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -282,7 +282,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                     active: state.carouselIndex,
                   ),
 
-                  // السعر + rating
+                  // ط§ظ„ط³ط¹ط± + rating
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                     child: Row(
@@ -352,23 +352,23 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   ),
 
                   // =========================
-                  // ✅ Tabs ثابتة + Swipe
+                  // âœ… Tabs ط«ط§ط¨طھط© + Swipe
                   // =========================
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
                     child: SegmentedTabs(
                       index: state.tabIndex,
                       onChanged: (i) {
-                        // 1) حدّث الـ bloc
+                        // 1) ط­ط¯ظ‘ط« ط§ظ„ظ€ bloc
                         bloc.add(SpaceDetailsTabChanged(i));
-                        // 2) حرّك الـ PageView
+                        // 2) ط­ط±ظ‘ظƒ ط§ظ„ظ€ PageView
                         _animateToTab(i);
                       },
                     ),
                   ),
 
                   // =========================
-                  // ✅ محتوى المتغير (Swipe بين التابات)
+                  // âœ… ظ…ط­طھظˆظ‰ ط§ظ„ظ…طھط؛ظٹط± (Swipe ط¨ظٹظ† ط§ظ„طھط§ط¨ط§طھ)
                   // =========================
                   Expanded(
                     child: PageView(
@@ -434,7 +434,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      // ✅ placeholder: share
+                                      // âœ… placeholder: share
                                     },
                                     child: const Icon(
                                       Icons.share_outlined,
@@ -463,7 +463,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   }
                                 },
                                 child: const Text(
-                                  '📍 View location',
+                                  'ًں“چ View location',
                                   style: TextStyle(
                                     color: AppColors.amber,
                                     fontWeight: FontWeight.w900,
@@ -473,7 +473,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                               const SizedBox(height: 18),
 
-                              // ✅ Features (لوحدها)
+                              // âœ… Features (ظ„ظˆط­ط¯ظ‡ط§)
                               const Text(
                                 'Features',
                                 style: TextStyle(fontWeight: FontWeight.w900),
@@ -483,7 +483,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 (f) => Padding(
                                   padding: const EdgeInsets.only(bottom: 6),
                                   child: Text(
-                                    '• $f',
+                                    'â€¢ $f',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -493,7 +493,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                               const SizedBox(height: 16),
 
-                              // ✅ Who usually uses this space (نزلناه تحت + Gradient مثل AI)
+                              // âœ… Who usually uses this space (ظ†ط²ظ„ظ†ط§ظ‡ طھط­طھ + Gradient ظ…ط«ظ„ AI)
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(14),
@@ -554,7 +554,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    '${d.rating} ★',
+                                    '${d.rating} âک…',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 22,
@@ -658,7 +658,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
               ),
             ),
 
-            // ✅ زر ثابت تحت
+            // âœ… ط²ط± ط«ط§ط¨طھ طھط­طھ
             bottomNavigationBar: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
@@ -702,3 +702,5 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 }
+
+

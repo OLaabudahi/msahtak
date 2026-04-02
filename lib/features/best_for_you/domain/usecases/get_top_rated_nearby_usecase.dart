@@ -7,3 +7,5 @@ class GetTopRatedNearbyUseCase {
 
   Future<List<BestForYouSpace>> call() => repo.getTopRatedNearby();
 }
+
+

@@ -8,7 +8,7 @@ enum AuthStatus {
   success,
   error,
   forgotSent,
-  loggedOut, // ✅ new
+  loggedOut, // âœ… new
 }
 
 class AuthState extends Equatable {
@@ -33,3 +33,5 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [status, user, errorMessage];
 }
+
+

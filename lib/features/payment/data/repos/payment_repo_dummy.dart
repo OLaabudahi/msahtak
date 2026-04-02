@@ -20,7 +20,7 @@ class PaymentRepoDummy implements PaymentRepo {
       _random = random ?? Random();
 
   @override
-  Future<List<PaymentMethodEntity>> getMethods({required String requestId}) async {
+  Future<List<PaymentMethodEntity>> getMethods({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     return const <PaymentMethodEntity>[
       PaymentMethodEntity(type: 'bank_of_palestine', title: 'Bank of Palestine', details: 'IBAN: PS00XXXX\nAccount: 123456'),
@@ -29,9 +29,9 @@ class PaymentRepoDummy implements PaymentRepo {
   }
 
   @override
-  Future<PaymentSummaryEntity> getSummary({required String requestId}) async {
+  Future<PaymentSummaryEntity> getSummary({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
-    final req = _store.get(requestId);
+    final req = _store.get(bookingId);
     if (req == null) throw StateError('Request not found');
     if (!req.isApproved) throw StateError('Payment is available only after approval');
 
@@ -47,7 +47,7 @@ class PaymentRepoDummy implements PaymentRepo {
 
   @override
   Future<PaymentReceiptEntity> pay({
-    required String requestId,
+    required String bookingId,
     required PaymentMethodType method,
     required String methodName,
     String? receiptUrl,
@@ -59,12 +59,11 @@ class PaymentRepoDummy implements PaymentRepo {
     String? receiptFileName,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 650));
-    final req = _store.get(requestId);
+    final req = _store.get(bookingId);
     if (req == null) throw StateError('Request not found');
     if (!req.isApproved) throw StateError('Cannot pay before approval');
     if (req.status == BookingRequestStatus.paid) throw StateError('Already paid');
 
-    final bookingId = req.bookingId ?? _generateId(prefix: 'MH');
     final receipt = PaymentReceiptModel(
       amountPaid: req.totalAmount,
       currency: req.currency,
@@ -75,7 +74,7 @@ class PaymentRepoDummy implements PaymentRepo {
     );
 
     final updated = BookingRequestEntity(
-      requestId: req.requestId,
+      bookingId: req.bookingId,
       space: req.space,
       startDate: req.startDate,
       durationUnit: req.durationUnit,
@@ -89,7 +88,7 @@ class PaymentRepoDummy implements PaymentRepo {
       statusHint: 'Payment successful',
       totalAmount: req.totalAmount,
       currency: req.currency,
-      bookingId: bookingId,
+
     );
     _store.put(updated);
     return receipt;
@@ -100,3 +99,5 @@ class PaymentRepoDummy implements PaymentRepo {
     return '$prefix-$n';
   }
 }
+
+

@@ -6,12 +6,12 @@ abstract class OffersEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل العروض عند فتح الصفحة
+/// طھط­ظ…ظٹظ„ ط§ظ„ط¹ط±ظˆط¶ ط¹ظ†ط¯ ظپطھط­ ط§ظ„طµظپط­ط©
 class OffersStarted extends OffersEvent {
   const OffersStarted();
 }
 
-/// تحديث نص البحث
+/// طھط­ط¯ظٹط« ظ†طµ ط§ظ„ط¨ط­ط«
 class OffersSearchChanged extends OffersEvent {
   final String query;
   const OffersSearchChanged(this.query);
@@ -19,10 +19,12 @@ class OffersSearchChanged extends OffersEvent {
   List<Object?> get props => [query];
 }
 
-/// الضغط على زر Deal لعرض تفاصيل العرض
+/// ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ ط²ط± Deal ظ„ط¹ط±ط¶ طھظپط§طµظٹظ„ ط§ظ„ط¹ط±ط¶
 class OfferDealPressed extends OffersEvent {
   final String offerId;
   const OfferDealPressed(this.offerId);
   @override
   List<Object?> get props => [offerId];
 }
+
+

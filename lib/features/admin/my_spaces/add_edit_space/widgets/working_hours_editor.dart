@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/week_day.dart';
 import '../domain/entities/working_hours_entity.dart';
@@ -194,3 +194,5 @@ class _Row extends StatelessWidget {
     );
   }
 }
+
+

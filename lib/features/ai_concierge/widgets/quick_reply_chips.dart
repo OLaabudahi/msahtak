@@ -36,3 +36,4 @@ class QuickReplyChips extends StatelessWidget {
     );
   }
 }
+

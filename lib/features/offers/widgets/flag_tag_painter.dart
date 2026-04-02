@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
-/// رسام شكل علامة الخصم (flag shape)
+/// ط±ط³ط§ظ… ط´ظƒظ„ ط¹ظ„ط§ظ…ط© ط§ظ„ط®طµظ… (flag shape)
 class FlagTagPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,3 +36,5 @@ class FlagTagPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/i18n/app_i18n.dart';
+
 class PoliciesDialog extends StatelessWidget {
   final String hubName;
 
@@ -30,7 +32,7 @@ class PoliciesDialog extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      '$hubName Policies',
+                      hubName+context.t('policies'),
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -136,3 +138,5 @@ class PoliciesDialog extends StatelessWidget {
     );
   }
 }
+
+

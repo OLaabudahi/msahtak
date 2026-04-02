@@ -80,7 +80,7 @@ class PaymentSuccessPage extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    // لو بدك: افتحي Booking Details بالـ bookingId
+                    // ظ„ظˆ ط¨ط¯ظƒ: ط§ظپطھط­ظٹ Booking Details ط¨ط§ظ„ظ€ bookingId
                     // Navigator.pushNamed(context, '/booking-details', arguments: args.bookingId);
                     Navigator.of(context).popUntil((r) => r.isFirst);
                   },
@@ -130,7 +130,7 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 10),
           _row('Booking ID', bookingId),
           const SizedBox(height: 8),
-          _row('Amount paid', '₪$amountPaid'),
+          _row('Amount paid', 'â‚ھ$amountPaid'),
           const SizedBox(height: 8),
           _row('Paid at', paid),
           const SizedBox(height: 12),
@@ -214,4 +214,6 @@ class _InfoCard extends StatelessWidget {
     return '$dd/$mm/${d.year}  $hh:$mi';
   }
 }
+
+
 

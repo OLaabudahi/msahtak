@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
 
@@ -263,7 +263,7 @@ class ReviewsReportsPage extends StatelessWidget {
     );
   }
 
-  // ✅ no controller (fix disposed error)
+  // ? no controller (fix disposed error)
   static Future<String?> _askReply(BuildContext context) async {
     String text = '';
     return showDialog<String>(
@@ -340,3 +340,4 @@ class _SegTab extends StatelessWidget {
     );
   }
 }
+

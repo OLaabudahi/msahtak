@@ -1,14 +1,11 @@
 import 'package:geolocator/geolocator.dart';
 
-/// خدمة الموقع – تعيد موقع الجهاز الحالي مع التخزين المؤقت
+/// ط®ط¯ظ…ط© ط§ظ„ظ…ظˆظ‚ط¹ â€“ طھط¹ظٹط¯ ظ…ظˆظ‚ط¹ ط§ظ„ط¬ظ‡ط§ط² ط§ظ„ط­ط§ظ„ظٹ ظ…ط¹ ط§ظ„طھط®ط²ظٹظ† ط§ظ„ظ…ط¤ظ‚طھ
 class LocationService {
   static Position? _cached;
 
-  /// إعادة تعيين الموقع المؤقت (للاختبار أو التحديث الإجباري)
   static void clearCache() => _cached = null;
 
-  /// جلب الموقع الحالي للجهاز
-  /// تُعيد null إذا رُفضت الصلاحية أو حدث خطأ
   static Future<Position?> getCurrentPosition() async {
     if (_cached != null) return _cached;
     try {
@@ -30,3 +27,5 @@ class LocationService {
     }
   }
 }
+
+

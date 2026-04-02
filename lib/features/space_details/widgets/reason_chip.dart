@@ -5,7 +5,7 @@ class ReasonChip extends StatelessWidget {
   final String text;
   const ReasonChip({super.key, required this.text});
 
-  /// ✅ دالة: Chip رمادي مثل "Why people come here"
+  /// âœ… ط¯ط§ظ„ط©: Chip ط±ظ…ط§ط¯ظٹ ظ…ط«ظ„ "Why people come here"
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,3 +21,5 @@ class ReasonChip extends StatelessWidget {
     );
   }
 }
+
+

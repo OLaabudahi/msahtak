@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import 'week_day.dart';
 
 class WorkingHoursEntity extends Equatable {
@@ -17,3 +17,5 @@ class WorkingHoursEntity extends Equatable {
   @override
   List<Object?> get props => [day, open, close, closed];
 }
+
+

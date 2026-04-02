@@ -23,9 +23,11 @@ abstract class BookingRequestRepo {
     required List<AddOnEntity> addOns,
   });
 
-  Future<BookingRequestEntity> getStatus({required String requestId});
+  Future<BookingRequestEntity> getStatus({required String bookingId});
 
-  Future<BookingRequestEntity> refreshStatus({required String requestId});
+  Future<BookingRequestEntity> refreshStatus({required String bookingId});
 
-  Future<BookingRequestEntity> cancel({required String requestId});
+  Future<BookingRequestEntity> cancel({required String bookingId});
 }
+
+

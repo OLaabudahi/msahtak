@@ -16,3 +16,4 @@ class AdminDashboardStats extends Equatable {
   @override
   List<Object?> get props => [todaysBookings, pendingRequests, occupancyPercent, weekRevenue];
 }
+

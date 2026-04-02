@@ -1,4 +1,4 @@
-﻿import '../entities/space_form_entity.dart';
+import '../entities/space_form_entity.dart';
 import '../repos/add_edit_space_repo.dart';
 
 class GetSpaceFormUseCase {
@@ -7,3 +7,5 @@ class GetSpaceFormUseCase {
 
   Future<SpaceFormEntity> call({required String? spaceId}) => repo.getSpaceForm(spaceId: spaceId);
 }
+
+

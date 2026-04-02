@@ -60,7 +60,7 @@ class SpaceResultCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${space.locationName} • ${space.tags.join(' • ')}',
+                          '${space.locationName} â€¢ ${space.tags.join(' â€¢ ')}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
@@ -72,7 +72,7 @@ class SpaceResultCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          '₪${space.pricePerDay.toStringAsFixed(0)}/day',
+                          'â‚ھ${space.pricePerDay.toStringAsFixed(0)}/day',
                           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                         ),
                       ],
@@ -118,3 +118,5 @@ class SpaceResultCard extends StatelessWidget {
     );
   }
 }
+
+

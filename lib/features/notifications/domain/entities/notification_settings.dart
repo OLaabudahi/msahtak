@@ -6,7 +6,7 @@ class NotificationSettings extends Equatable {
   final bool bookingReminder;
   final bool offerSuggestion;
 
-  /// 0 = 30 دقيقة، 1 = ساعة، 2 = نفس اليوم
+  /// 0 = 30 ط¯ظ‚ظٹظ‚ط©طŒ 1 = ط³ط§ط¹ط©طŒ 2 = ظ†ظپط³ ط§ظ„ظٹظˆظ…
   final int reminderTiming;
 
   const NotificationSettings({
@@ -42,3 +42,5 @@ class NotificationSettings extends Equatable {
         reminderTiming,
       ];
 }
+
+

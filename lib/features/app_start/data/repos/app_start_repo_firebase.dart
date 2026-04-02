@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../../../../services/local_storage_service.dart';
 import '../../domain/repos/app_start_repo.dart';
 
-/// ✅ تنفيذ Firebase لـ AppStartRepo – يعتمد على FirebaseAuth بدل SharedPreferences
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ AppStartRepo â€“ ظٹط¹طھظ…ط¯ ط¹ظ„ظ‰ FirebaseAuth ط¨ط¯ظ„ SharedPreferences
 class AppStartRepoFirebase implements AppStartRepo {
   AppStartRepoFirebase(this._storage);
 
@@ -14,24 +14,25 @@ class AppStartRepoFirebase implements AppStartRepo {
   Future<AppStartDecision> decide() async {
     await Future.delayed(const Duration(milliseconds: 600));
 
-    // نستخدم currentUser أولاً، وإن لم يتوفر ننتظر أول إصدار من authStateChanges
+    // ظ†ط³طھط®ط¯ظ… currentUser ط£ظˆظ„ط§ظ‹طŒ ظˆط¥ظ† ظ„ظ… ظٹطھظˆظپط± ظ†ظ†طھط¸ط± ط£ظˆظ„ ط¥طµط¯ط§ط± ظ…ظ† authStateChanges
     final user = FirebaseAuth.instance.currentUser ??
         await FirebaseAuth.instance.authStateChanges().first;
-    final isLoggedIn = await _storage.getIsLoggedIn();
 
-    debugPrint('[AppStart] decide: user=${user?.uid}, isLoggedIn=$isLoggedIn');
+    debugPrint('[AppStart] decide: user=${user?.uid}');
 
-    if (user == null || !isLoggedIn) return AppStartDecision.goLogin;
+    if (user == null) return AppStartDecision.goLogin;
 
     final completed = await _storage.getHasCompletedOnboarding();
     debugPrint('[AppStart] decide: completed=$completed');
     if (!completed) return AppStartDecision.goOnboarding;
 
-    // إذا كان المستخدم أدمن يُوجَّه لواجهة الإدارة
+    // ط¥ط°ط§ ظƒط§ظ† ط§ظ„ظ…ط³طھط®ط¯ظ… ط£ط¯ظ…ظ† ظٹظڈظˆط¬ظژظ‘ظ‡ ظ„ظˆط§ط¬ظ‡ط© ط§ظ„ط¥ط¯ط§ط±ط©
     final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
-    debugPrint('[AppStart] decide: role=$role → decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
+    debugPrint('[AppStart] decide: role=$role â†’ decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
     if (role.contains('admin')) return AppStartDecision.goAdmin;
 
     return AppStartDecision.goHome;
   }
 }
+
+

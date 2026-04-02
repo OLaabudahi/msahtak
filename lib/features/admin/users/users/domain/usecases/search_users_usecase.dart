@@ -1,4 +1,4 @@
-﻿import '../entities/user_entity.dart';
+import '../entities/user_entity.dart';
 import '../entities/user_flag.dart';
 import '../repos/users_repo.dart';
 
@@ -10,3 +10,5 @@ class SearchUsersUseCase {
     return repo.searchUsers(query: query, filter: filter);
   }
 }
+
+

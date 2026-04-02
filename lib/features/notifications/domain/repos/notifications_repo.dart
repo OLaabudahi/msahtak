@@ -2,12 +2,14 @@ import '../entities/notification_item.dart';
 import '../entities/notification_settings.dart';
 
 abstract class NotificationsRepo {
-  /// جلب قائمة الإشعارات
+  /// ط¬ظ„ط¨ ظ‚ط§ط¦ظ…ط© ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
   Future<List<NotificationItem>> getNotifications();
 
-  /// جلب إعدادات الإشعارات
+  /// ط¬ظ„ط¨ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
   Future<NotificationSettings> getNotificationSettings();
 
-  /// حفظ إعدادات الإشعارات
+  /// ط­ظپط¸ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
   Future<void> saveNotificationSettings(NotificationSettings settings);
 }
+
+

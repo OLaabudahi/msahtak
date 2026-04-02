@@ -1,4 +1,4 @@
-﻿import '../entities/admin_dashboard_data_entity.dart';
+import '../entities/admin_dashboard_data_entity.dart';
 import '../repos/admin_dashboard_repo.dart';
 
 class GetAdminDashboardDataUseCase {
@@ -10,3 +10,5 @@ class GetAdminDashboardDataUseCase {
     return repo.getDashboardData();
   }
 }
+
+

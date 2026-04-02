@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class PolicySectionEntity extends Equatable {
   final String id;
@@ -14,3 +14,5 @@ class PolicySectionEntity extends Equatable {
   @override
   List<Object?> get props => [id, title, bullets];
 }
+
+

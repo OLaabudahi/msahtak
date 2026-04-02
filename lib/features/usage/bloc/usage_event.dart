@@ -6,12 +6,12 @@ abstract class UsageEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل بيانات الاستخدام عند فتح الصفحة
+/// طھط­ظ…ظٹظ„ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط§ط³طھط®ط¯ط§ظ… ط¹ظ†ط¯ ظپطھط­ ط§ظ„طµظپط­ط©
 class UsageStarted extends UsageEvent {
   const UsageStarted();
 }
 
-/// اختيار باقة من قائمة الباقات
+/// ط§ط®طھظٹط§ط± ط¨ط§ظ‚ط© ظ…ظ† ظ‚ط§ط¦ظ…ط© ط§ظ„ط¨ط§ظ‚ط§طھ
 class UsagePlanSelected extends UsageEvent {
   final int index;
   const UsagePlanSelected(this.index);
@@ -19,7 +19,9 @@ class UsagePlanSelected extends UsageEvent {
   List<Object?> get props => [index];
 }
 
-/// تطبيق الباقة المختارة
+/// طھط·ط¨ظٹظ‚ ط§ظ„ط¨ط§ظ‚ط© ط§ظ„ظ…ط®طھط§ط±ط©
 class UsagePlanApplied extends UsageEvent {
   const UsagePlanApplied();
 }
+
+

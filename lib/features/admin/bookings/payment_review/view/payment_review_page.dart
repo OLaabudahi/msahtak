@@ -1,11 +1,9 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 
-/// صفحة مراجعة المدفوعات للأدمن
-/// تعرض الحجوزات التي في حالة payment_under_review
 class PaymentReviewPage extends StatefulWidget {
   const PaymentReviewPage({super.key});
 
@@ -16,7 +14,6 @@ class PaymentReviewPage extends StatefulWidget {
 }
 
 class _PaymentReviewPageState extends State<PaymentReviewPage> {
-  // الـ stream يُنشأ مرة واحدة فقط في initState — لا يتأثر بإعادة بناء الـ widget
   late final Stream<QuerySnapshot<Map<String, dynamic>>> _stream;
 
   @override
@@ -49,7 +46,6 @@ class _PaymentReviewPageState extends State<PaymentReviewPage> {
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}', style: AdminText.body14(color: AdminColors.danger)));
                   }
-                  // ترتيب محلي بـ paidAt تنازلياً بدون Composite Index
                   final docs = List.of(snapshot.data?.docs ?? [])
                     ..sort((a, b) {
                       final at = (a.data()['paidAt'] as dynamic)?.millisecondsSinceEpoch ?? 0;
@@ -95,7 +91,6 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
         'status': 'confirmed',
         'updatedAt': FieldValue.serverTimestamp(),
       });
-      // إشعار لليوزر
       final d = widget.doc.data();
       final uid = d['userId'] as String? ?? '';
       final spaceName = d['spaceName'] as String? ?? d['workspaceName'] as String? ?? 'Space';
@@ -124,11 +119,10 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
         'updatedAt': FieldValue.serverTimestamp(),
       });
       final d = widget.doc.data();
-      // إعادة المقعد للمساحة عند رفض الدفع
       final spaceId = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
       if (spaceId.isNotEmpty) {
         try {
-          final wsRef = db.collection('workspaces').doc(spaceId);
+          final wsRef = db.collection('spaces').doc(spaceId);
           await db.runTransaction((tx) async {
             final wsSnap = await tx.get(wsRef);
             if (!wsSnap.exists) return;
@@ -162,7 +156,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
     final spaceName = d['spaceName'] as String? ?? d['workspaceName'] as String? ?? 'Space';
     final userName = d['userName'] as String? ?? 'User';
     final amount = d['totalAmount']?.toString() ?? '-';
-    final currency = d['currency'] as String? ?? '₪';
+    final currency = d['currency'] as String? ?? 'â‚ھ';
     final method = d['paymentMethodName'] as String? ?? d['paymentMethod'] as String? ?? '-';
     final paidTs = d['paidAt'] as Timestamp?;
     final paidAt = paidTs != null ? _fmt(paidTs.toDate()) : '-';
@@ -195,7 +189,6 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
           _row(context.t('adminPaymentMethod'), method),
           _row(context.t('adminPaymentPaidAt'), paidAt),
           const SizedBox(height: 8),
-          // ── بيانات البطاقة أو إشعار الدفع ──
           if (cardLast4 != null && cardLast4.isNotEmpty)
             _CardInfoSection(cardLast4: cardLast4, cardHolder: cardHolder, cardExpiry: cardExpiry)
           else
@@ -249,7 +242,6 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
 
 }
 
-/// ويدجت عرض بيانات البطاقة في كارد مراجعة الأدمن
 class _CardInfoSection extends StatelessWidget {
   final String cardLast4;
   final String? cardHolder;
@@ -288,7 +280,6 @@ class _CardInfoSection extends StatelessWidget {
   }
 }
 
-/// ويدجت عرض إشعار الدفع في كارد مراجعة الأدمن
 class _ReceiptSection extends StatelessWidget {
   final String? receiptUrl;
   const _ReceiptSection({this.receiptUrl});
@@ -354,3 +345,5 @@ class _ReceiptSection extends StatelessWidget {
     );
   }
 }
+
+

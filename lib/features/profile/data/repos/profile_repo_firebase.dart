@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/repos/profile_repo.dart';
 import '../models/user_model.dart';
 
-/// ✅ تنفيذ Firebase لـ ProfileRepo – يقرأ users/{uid}
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ ProfileRepo â€“ ظٹظ‚ط±ط£ users/{uid}
 class ProfileRepoFirebase implements ProfileRepo {
   @override
   Future<UserModel> fetchProfile() async {
@@ -34,3 +34,5 @@ class ProfileRepoFirebase implements ProfileRepo {
     );
   }
 }
+
+

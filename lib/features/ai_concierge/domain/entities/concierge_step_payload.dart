@@ -6,7 +6,7 @@ import 'concierge_top_match.dart';
 class ConciergeStepPayload extends Equatable {
   final int stepIndex; // 1..4
   final int totalSteps; // 4
-  final String stepMeta; // Step 1 of 4 • 30 sec
+  final String stepMeta; // Step 1 of 4 â€¢ 30 sec
 
   final List<ConciergeMessage> newMessages;
   final List<String> quickReplies;
@@ -34,3 +34,4 @@ class ConciergeStepPayload extends Equatable {
     showContinueButton,
   ];
 }
+

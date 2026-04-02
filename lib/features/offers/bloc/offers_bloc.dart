@@ -18,7 +18,7 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     on<OfferDealPressed>(_onDealPressed);
   }
 
-  /// تحميل جميع العروض من الـ use case
+  /// طھط­ظ…ظٹظ„ ط¬ظ…ظٹط¹ ط§ظ„ط¹ط±ظˆط¶ ظ…ظ† ط§ظ„ظ€ use case
   Future<void> _onStarted(
       OffersStarted event, Emitter<OffersState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -31,7 +31,7 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     }
   }
 
-  /// فلترة العروض بناءً على نص البحث
+  /// ظپظ„طھط±ط© ط§ظ„ط¹ط±ظˆط¶ ط¨ظ†ط§ط،ظ‹ ط¹ظ„ظ‰ ظ†طµ ط§ظ„ط¨ط­ط«
   Future<void> _onSearchChanged(
       OffersSearchChanged event, Emitter<OffersState> emit) async {
     emit(state.copyWith(searchQuery: event.query));
@@ -43,9 +43,11 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     }
   }
 
-  /// معالجة الضغط على Deal – يمكن إضافة navigation هنا
+  /// ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ Deal â€“ ظٹظ…ظƒظ† ط¥ط¶ط§ظپط© navigation ظ‡ظ†ط§
   void _onDealPressed(
       OfferDealPressed event, Emitter<OffersState> emit) {
     // TODO: navigate to offer details or booking page
   }
 }
+
+

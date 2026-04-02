@@ -1,4 +1,4 @@
-﻿import '../entities/amenity_entity.dart';
+import '../entities/amenity_entity.dart';
 import '../entities/space_form_entity.dart';
 
 abstract class AddEditSpaceRepo {
@@ -9,3 +9,5 @@ abstract class AddEditSpaceRepo {
   Future<List<AmenityEntity>> getAmenityCatalog();
   Future<AmenityEntity> addAmenity({required String name});
 }
+
+

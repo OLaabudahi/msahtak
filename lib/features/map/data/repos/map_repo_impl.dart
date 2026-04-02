@@ -25,3 +25,4 @@ class MapRepoImpl implements MapRepo {
     return models.map((m) => m.toEntity()).toList();
   }
 }
+

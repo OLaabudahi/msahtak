@@ -45,3 +45,4 @@ class AdminActivityCard extends StatelessWidget {
     );
   }
 }
+

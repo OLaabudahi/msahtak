@@ -1,4 +1,4 @@
-﻿import '../repos/reviews_reports_repo.dart';
+import '../repos/reviews_reports_repo.dart';
 
 class HideReviewUseCase {
   final ReviewsReportsRepo repo;
@@ -6,3 +6,5 @@ class HideReviewUseCase {
 
   Future<void> call({required String reviewId}) => repo.hideReview(reviewId: reviewId);
 }
+
+

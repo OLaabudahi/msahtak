@@ -45,3 +45,5 @@ class SpaceDetailsState extends Equatable {
   @override
   List<Object?> get props => [loading, error, details, tabIndex, carouselIndex];
 }
+
+

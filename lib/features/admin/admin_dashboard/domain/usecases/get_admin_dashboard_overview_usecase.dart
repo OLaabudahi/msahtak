@@ -12,3 +12,4 @@ class GetAdminDashboardOverviewUseCase {
     return repo.getOverview(spaceId: spaceId);
   }
 }
+

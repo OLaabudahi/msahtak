@@ -13,7 +13,7 @@ class AdminActivityItem extends Equatable {
     required this.createdAt,
   });
 
-  /// مفتاح ترجمة الفعل — يُستخدم في الـ widget مع context.t()
+  /// ظ…ظپطھط§ط­ طھط±ط¬ظ…ط© ط§ظ„ظپط¹ظ„ â€” ظٹظڈط³طھط®ط¯ظ… ظپظٹ ط§ظ„ظ€ widget ظ…ط¹ context.t()
   String get actionKey {
     return switch (status) {
       'pending' => 'activityRequested',
@@ -25,7 +25,7 @@ class AdminActivityItem extends Equatable {
     };
   }
 
-  /// مدة منذ الإنشاء — (key, n) ليترجمها الـ widget
+  /// ظ…ط¯ط© ظ…ظ†ط° ط§ظ„ط¥ظ†ط´ط§ط، â€” (key, n) ظ„ظٹطھط±ط¬ظ…ظ‡ط§ ط§ظ„ظ€ widget
   ({String key, int n}) get timeAgoData {
     final diff = DateTime.now().difference(createdAt);
     if (diff.inSeconds < 60) return (key: 'timeJustNow', n: 0);
@@ -37,3 +37,5 @@ class AdminActivityItem extends Equatable {
   @override
   List<Object?> get props => [userName, spaceName, status, createdAt];
 }
+
+

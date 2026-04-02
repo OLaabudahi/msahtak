@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../../../../my_spaces/add_edit_space/domain/entities/price_unit.dart';
 import 'offer_duration_unit.dart';
 import 'offer_type.dart';
@@ -66,3 +66,5 @@ class OfferEntity extends Equatable {
         bonusText,
       ];
 }
+
+

@@ -125,7 +125,7 @@ class _FitScoreCardState extends State<FitScoreCard>
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              const Text('• ',
+                              const Text('â€¢ ',
                                   style:
                                       TextStyle(fontSize: 11)),
                               Expanded(
@@ -147,3 +147,5 @@ class _FitScoreCardState extends State<FitScoreCard>
     );
   }
 }
+
+

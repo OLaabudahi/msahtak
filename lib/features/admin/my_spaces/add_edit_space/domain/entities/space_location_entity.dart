@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class SpaceLocationEntity extends Equatable {
   final double lat;
@@ -9,3 +9,5 @@ class SpaceLocationEntity extends Equatable {
   @override
   List<Object?> get props => [lat, lng];
 }
+
+

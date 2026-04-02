@@ -6,17 +6,17 @@ abstract class NotificationsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل قائمة الإشعارات
+/// طھط­ظ…ظٹظ„ ظ‚ط§ط¦ظ…ط© ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
 class NotificationsStarted extends NotificationsEvent {
   const NotificationsStarted();
 }
 
-/// تحميل إعدادات الإشعارات
+/// طھط­ظ…ظٹظ„ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
 class NotificationSettingsStarted extends NotificationsEvent {
   const NotificationSettingsStarted();
 }
 
-/// تغيير قيمة إعداد معين
+/// طھط؛ظٹظٹط± ظ‚ظٹظ…ط© ط¥ط¹ط¯ط§ط¯ ظ…ط¹ظٹظ†
 class NotificationSettingToggled extends NotificationsEvent {
   // field: 'bookingApproved' | 'bookingRejected' | 'bookingReminder' | 'offerSuggestion'
   final String field;
@@ -26,7 +26,7 @@ class NotificationSettingToggled extends NotificationsEvent {
   List<Object?> get props => [field, value];
 }
 
-/// تغيير توقيت التذكير (0=30min, 1=1hour, 2=same day)
+/// طھط؛ظٹظٹط± طھظˆظ‚ظٹطھ ط§ظ„طھط°ظƒظٹط± (0=30min, 1=1hour, 2=same day)
 class NotificationReminderTimingChanged extends NotificationsEvent {
   final int index;
   const NotificationReminderTimingChanged(this.index);
@@ -34,7 +34,9 @@ class NotificationReminderTimingChanged extends NotificationsEvent {
   List<Object?> get props => [index];
 }
 
-/// حفظ الإعدادات
+/// ط­ظپط¸ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ
 class NotificationSettingsSaved extends NotificationsEvent {
   const NotificationSettingsSaved();
 }
+
+

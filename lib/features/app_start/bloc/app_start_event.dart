@@ -10,3 +10,5 @@ abstract class AppStartEvent extends Equatable {
 class AppStartStarted extends AppStartEvent {
   const AppStartStarted();
 }
+
+

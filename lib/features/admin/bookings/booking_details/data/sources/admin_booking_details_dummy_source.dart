@@ -1,4 +1,4 @@
-﻿import 'admin_booking_details_source.dart';
+import 'admin_booking_details_source.dart';
 import '../models/booking_details_model.dart';
 
 class AdminBookingDetailsDummySource implements AdminBookingDetailsSource {
@@ -34,3 +34,5 @@ class AdminBookingDetailsDummySource implements AdminBookingDetailsSource {
     await Future<void>.delayed(const Duration(milliseconds: 140));
   }
 }
+
+

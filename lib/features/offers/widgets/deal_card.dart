@@ -55,7 +55,7 @@ class DealCard extends StatelessWidget {
                 color: AppColors.secondary, size: 32),
           ),
         ),
-        // علامة الخصم
+        // ط¹ظ„ط§ظ…ط© ط§ظ„ط®طµظ…
         Positioned(
           top: 10,
           left: 0,
@@ -74,7 +74,7 @@ class DealCard extends StatelessWidget {
             ),
           ),
         ),
-        // تقييم النجوم
+        // طھظ‚ظٹظٹظ… ط§ظ„ظ†ط¬ظˆظ…
         Positioned(
           bottom: 8,
           right: 8,
@@ -118,7 +118,7 @@ class DealCard extends StatelessWidget {
                 TextStyle(color: AppColors.textSecondary, fontSize: 12)),
         const SizedBox(height: 8),
         Text(
-          '₪${offer.originalPrice}/day',
+          'â‚ھ${offer.originalPrice}/day',
           style: const TextStyle(
             color: Color(0xFF5B8FB9),
             fontSize: 12,
@@ -130,7 +130,7 @@ class DealCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              '₪${offer.discountedPrice}',
+              'â‚ھ${offer.discountedPrice}',
               style: const TextStyle(
                   color: Color(0xFFF5A623),
                   fontWeight: FontWeight.bold,
@@ -170,3 +170,5 @@ class DealCard extends StatelessWidget {
     );
   }
 }
+
+

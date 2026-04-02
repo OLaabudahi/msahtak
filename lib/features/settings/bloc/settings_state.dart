@@ -7,7 +7,7 @@ class SettingsState extends Equatable {
 
   final SettingsModel? settings;
 
-  /// ✅ للإشعار باللوج آوت (Navigation)
+  /// âœ… ظ„ظ„ط¥ط´ط¹ط§ط± ط¨ط§ظ„ظ„ظˆط¬ ط¢ظˆطھ (Navigation)
 
   const SettingsState({
     required this.loading,
@@ -34,3 +34,5 @@ class SettingsState extends Equatable {
   @override
   List<Object?> get props => [loading, error, settings];
 }
+
+

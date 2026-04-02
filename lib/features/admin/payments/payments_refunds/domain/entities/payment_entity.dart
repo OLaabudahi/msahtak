@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import 'payment_status.dart';
 
 class PaymentEntity extends Equatable {
@@ -21,3 +21,5 @@ class PaymentEntity extends Equatable {
   @override
   List<Object?> get props => [id, date, amount, status, userName, bookingId];
 }
+
+

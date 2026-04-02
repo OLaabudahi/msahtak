@@ -4,7 +4,7 @@ import 'reviews_reports_source.dart';
 import '../models/review_model.dart';
 import '../models/report_model.dart';
 
-/// مصدر Firebase للمراجعات والتقارير — يقرأ/يكتب من reviews collection
+/// ظ…طµط¯ط± Firebase ظ„ظ„ظ…ط±ط§ط¬ط¹ط§طھ ظˆط§ظ„طھظ‚ط§ط±ظٹط± â€” ظٹظ‚ط±ط£/ظٹظƒطھط¨ ظ…ظ† reviews collection
 class ReviewsReportsFirebaseSource implements ReviewsReportsSource {
   final _db = FirebaseFirestore.instance;
 
@@ -68,3 +68,5 @@ class ReviewsReportsFirebaseSource implements ReviewsReportsSource {
     }
   }
 }
+
+

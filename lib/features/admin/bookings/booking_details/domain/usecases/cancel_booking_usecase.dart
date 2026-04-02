@@ -1,4 +1,4 @@
-﻿import '../repos/admin_booking_details_repo.dart';
+import '../repos/admin_booking_details_repo.dart';
 
 class CancelBookingUseCase {
   final AdminBookingDetailsRepo repo;
@@ -8,3 +8,5 @@ class CancelBookingUseCase {
     return repo.cancelBooking(bookingId: bookingId, reason: reason);
   }
 }
+
+

@@ -16,7 +16,7 @@ import '../widgets/usage_stats_card.dart';
 class UsagePage extends StatelessWidget {
   const UsagePage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  /// ط¥ظ†ط´ط§ط، ط§ظ„طµظپط­ط© ظ…ط¹ BLoC ط®ط§طµ ط¨ظ‡ط§
   static Widget withBloc() {
     final source = UsageFirebaseSource();
     final repo = UsageRepoDummy(source);
@@ -199,3 +199,5 @@ class UsagePage extends StatelessWidget {
     );
   }
 }
+
+

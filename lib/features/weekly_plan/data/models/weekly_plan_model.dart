@@ -27,3 +27,5 @@ class WeeklyPlanModel extends WeeklyPlanDetails {
         'tip': tip,
       };
 }
+
+

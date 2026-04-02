@@ -7,3 +7,4 @@ class GetCurrentLocationUseCase {
 
   Future<GeoPointEntity> call() => repo.getCurrentLocation();
 }
+

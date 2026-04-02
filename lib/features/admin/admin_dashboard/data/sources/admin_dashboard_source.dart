@@ -5,3 +5,4 @@ abstract class AdminDashboardSource {
   /// Implement using Dio/http later, keep this file as the single gateway.
   Future<AdminDashboardOverviewModel> fetchOverview({String? spaceId});
 }
+

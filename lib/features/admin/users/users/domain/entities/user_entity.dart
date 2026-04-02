@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 enum UserStatus { active, blocked }
 
@@ -20,3 +20,5 @@ class UserEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, avatar, status, flagged];
 }
+
+

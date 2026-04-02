@@ -77,7 +77,7 @@ class PoliciesSheet extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(bottom: 6),
                                         child: Text(
-                                          '• $b',
+                                          'â€¢ $b',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
@@ -120,3 +120,5 @@ class PoliciesSheet extends StatelessWidget {
     );
   }
 }
+
+

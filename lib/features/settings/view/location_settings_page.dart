@@ -25,7 +25,7 @@ class LocationSettingsPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Nearby & map search — coming soon.',
+              'Nearby & map search â€” coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -34,3 +34,5 @@ class LocationSettingsPage extends StatelessWidget {
     );
   }
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/analytics_entity.dart';
 
 enum AnalyticsStatus { initial, loading, ready, failure }
@@ -23,3 +23,5 @@ class AnalyticsState extends Equatable {
   @override
   List<Object?> get props => [status, data, error];
 }
+
+

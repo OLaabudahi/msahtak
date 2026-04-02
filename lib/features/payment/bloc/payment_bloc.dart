@@ -31,8 +31,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   ) async {
     emit(state.copyWith(uiStatus: PaymentUiStatus.loading, clearError: true));
     try {
-      final methods = await _repo.getMethods(requestId: event.requestId);
-      final summary = await _getSummaryUseCase.call(event.requestId);
+      final methods = await _repo.getMethods(bookingId: event.bookingId);
+      final summary = await _getSummaryUseCase.call(event.bookingId);
 
       emit(
         state.copyWith(
@@ -105,7 +105,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
 
       final selectedEntity = state.selectedMethodEntity;
       final receipt = await _payUseCase.call(
-        requestId: event.requestId,
+        bookingId: event.bookingId,
         method: state.selectedMethod!,
         methodName: selectedEntity?.title ?? state.selectedMethod!,
         receiptBytes: state.receiptBytes,
@@ -132,3 +132,5 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
   }
 }
+
+

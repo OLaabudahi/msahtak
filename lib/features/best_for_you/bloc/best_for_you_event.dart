@@ -6,12 +6,12 @@ abstract class BestForYouEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل البيانات عند فتح الصفحة بالهدف الافتراضي
+/// طھط­ظ…ظٹظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ ط¹ظ†ط¯ ظپطھط­ ط§ظ„طµظپط­ط© ط¨ط§ظ„ظ‡ط¯ظپ ط§ظ„ط§ظپطھط±ط§ط¶ظٹ
 class BestForYouStarted extends BestForYouEvent {
   const BestForYouStarted();
 }
 
-/// تغيير الهدف المختار (Study / Work / Meeting / Relax)
+/// طھط؛ظٹظٹط± ط§ظ„ظ‡ط¯ظپ ط§ظ„ظ…ط®طھط§ط± (Study / Work / Meeting / Relax)
 class BestForYouGoalChanged extends BestForYouEvent {
   final String goal;
   const BestForYouGoalChanged(this.goal);
@@ -19,7 +19,9 @@ class BestForYouGoalChanged extends BestForYouEvent {
   List<Object?> get props => [goal];
 }
 
-/// الضغط على زر "Continue to Booking"
+/// ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ ط²ط± "Continue to Booking"
 class BestForYouContinuePressed extends BestForYouEvent {
   const BestForYouContinuePressed();
 }
+
+

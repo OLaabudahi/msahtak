@@ -22,3 +22,5 @@ class BookingDetailsRefreshRequested extends BookingDetailsEvent {
   @override
   List<Object?> get props => [bookingId];
 }
+
+

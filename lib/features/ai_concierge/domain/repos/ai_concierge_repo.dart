@@ -11,3 +11,4 @@ abstract class AiConciergeRepo {
     required String reply,
   });
 }
+

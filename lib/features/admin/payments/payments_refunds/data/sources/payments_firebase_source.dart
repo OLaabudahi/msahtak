@@ -4,7 +4,7 @@ import 'payments_source.dart';
 import '../models/payment_model.dart';
 import '../models/payment_details_model.dart';
 
-/// مصدر Firebase للمدفوعات — يقرأ من bookings collection
+/// ظ…طµط¯ط± Firebase ظ„ظ„ظ…ط¯ظپظˆط¹ط§طھ â€” ظٹظ‚ط±ط£ ظ…ظ† bookings collection
 class PaymentsFirebaseSource implements PaymentsSource {
   final _db = FirebaseFirestore.instance;
 
@@ -76,3 +76,5 @@ class PaymentsFirebaseSource implements PaymentsSource {
     }
   }
 }
+
+

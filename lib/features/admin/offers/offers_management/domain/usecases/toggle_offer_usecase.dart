@@ -1,4 +1,4 @@
-﻿import '../repos/offers_repo.dart';
+import '../repos/offers_repo.dart';
 
 class ToggleOfferUseCase {
   final OffersRepo repo;
@@ -6,3 +6,5 @@ class ToggleOfferUseCase {
 
   Future<void> call({required String offerId, required bool enabled}) => repo.toggleOffer(offerId: offerId, enabled: enabled);
 }
+
+

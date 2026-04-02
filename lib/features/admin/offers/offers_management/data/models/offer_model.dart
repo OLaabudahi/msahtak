@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/offer_duration_unit.dart';
+import '../../domain/entities/offer_duration_unit.dart';
 import '../../domain/entities/offer_entity.dart';
 import '../../domain/entities/offer_type.dart';
 import '../../../../my_spaces/add_edit_space/domain/entities/price_unit.dart';
@@ -148,3 +148,5 @@ class OfferModel {
     }
   }
 }
+
+

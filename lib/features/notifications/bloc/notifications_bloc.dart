@@ -25,7 +25,7 @@ class NotificationsBloc
     on<NotificationSettingsSaved>(_onSettingsSaved);
   }
 
-  /// تحميل الإعدادات أولاً ثم الإشعارات مع تصفية حسب الإعدادات
+  /// طھط­ظ…ظٹظ„ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ ط£ظˆظ„ط§ظ‹ ط«ظ… ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ظ…ط¹ طھطµظپظٹط© ط­ط³ط¨ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ
   Future<void> _onStarted(
       NotificationsStarted event, Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingList: true));
@@ -60,7 +60,7 @@ class NotificationsBloc
     }
   }
 
-  /// تحميل إعدادات الإشعارات الحالية
+  /// طھط­ظ…ظٹظ„ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ط§ظ„ط­ط§ظ„ظٹط©
   Future<void> _onSettingsStarted(NotificationSettingsStarted event,
       Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingSettings: true));
@@ -72,7 +72,7 @@ class NotificationsBloc
     }
   }
 
-  /// تبديل قيمة إعداد معين
+  /// طھط¨ط¯ظٹظ„ ظ‚ظٹظ…ط© ط¥ط¹ط¯ط§ط¯ ظ…ط¹ظٹظ†
   void _onSettingToggled(
       NotificationSettingToggled event, Emitter<NotificationsState> emit) {
     final s = state.settings;
@@ -86,7 +86,7 @@ class NotificationsBloc
     emit(state.copyWith(settings: updated, isSaved: false));
   }
 
-  /// تحديث توقيت التذكير
+  /// طھط­ط¯ظٹط« طھظˆظ‚ظٹطھ ط§ظ„طھط°ظƒظٹط±
   void _onReminderTimingChanged(NotificationReminderTimingChanged event,
       Emitter<NotificationsState> emit) {
     emit(state.copyWith(
@@ -94,7 +94,7 @@ class NotificationsBloc
         isSaved: false));
   }
 
-  /// حفظ الإعدادات عبر الـ use case
+  /// ط­ظپط¸ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ ط¹ط¨ط± ط§ظ„ظ€ use case
   Future<void> _onSettingsSaved(
       NotificationSettingsSaved event, Emitter<NotificationsState> emit) async {
     try {
@@ -105,3 +105,5 @@ class NotificationsBloc
     }
   }
 }
+
+

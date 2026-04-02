@@ -23,3 +23,4 @@ class NearbySpaceEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, subtitle, rating, imageUrl, location, distanceKm];
 }
+

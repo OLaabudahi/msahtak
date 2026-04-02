@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/space_form_entity.dart';
 
 enum AddEditSpaceStatus { initial, loading, ready, saving, saved, failure }
@@ -82,3 +82,5 @@ class AddEditSpaceState extends Equatable {
         policiesError,
       ];
 }
+
+

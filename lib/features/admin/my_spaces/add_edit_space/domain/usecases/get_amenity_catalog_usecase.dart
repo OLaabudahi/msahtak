@@ -1,4 +1,4 @@
-﻿import '../entities/amenity_entity.dart';
+import '../entities/amenity_entity.dart';
 import '../repos/add_edit_space_repo.dart';
 
 class GetAmenityCatalogUseCase {
@@ -7,3 +7,5 @@ class GetAmenityCatalogUseCase {
 
   Future<List<AmenityEntity>> call() => repo.getAmenityCatalog();
 }
+
+

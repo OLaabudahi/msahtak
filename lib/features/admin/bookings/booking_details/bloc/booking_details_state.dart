@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/booking_details_entity.dart';
 
 enum BookingDetailsStatus { initial, loading, success, failure, acting }
@@ -35,3 +35,5 @@ class BookingDetailsState extends Equatable {
   @override
   List<Object?> get props => [status, details, error];
 }
+
+

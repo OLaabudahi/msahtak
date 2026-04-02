@@ -1,4 +1,4 @@
-﻿import '../entities/review_entity.dart';
+import '../entities/review_entity.dart';
 import '../repos/reviews_reports_repo.dart';
 
 class GetReviewsUseCase {
@@ -7,3 +7,5 @@ class GetReviewsUseCase {
 
   Future<List<ReviewEntity>> call() => repo.getReviews();
 }
+
+

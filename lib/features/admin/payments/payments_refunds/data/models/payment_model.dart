@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/payment_entity.dart';
+import '../../domain/entities/payment_entity.dart';
 import '../../domain/entities/payment_status.dart';
 
 class PaymentModel {
@@ -51,3 +51,5 @@ class PaymentModel {
         _ => PaymentStatus.paid,
       };
 }
+
+

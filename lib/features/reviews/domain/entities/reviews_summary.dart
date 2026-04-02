@@ -4,7 +4,7 @@ class ReviewsSummary extends Equatable {
   final double overallRating;
   final int totalReviews;
 
-  /// مفتاح = عدد النجوم (5,4,3,2,1)، قيمة = عدد التقييمات
+  /// ظ…ظپطھط§ط­ = ط¹ط¯ط¯ ط§ظ„ظ†ط¬ظˆظ… (5,4,3,2,1)طŒ ظ‚ظٹظ…ط© = ط¹ط¯ط¯ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ
   final Map<int, int> ratingBreakdown;
 
   const ReviewsSummary({
@@ -17,3 +17,5 @@ class ReviewsSummary extends Equatable {
   List<Object?> get props =>
       [overallRating, totalReviews, ratingBreakdown];
 }
+
+

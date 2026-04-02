@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../../../_shared/admin_ui.dart';
 
-/// محرر قائمة صور المساحة — رفع من الجهاز أو إدخال URL
+/// ظ…ط­ط±ط± ظ‚ط§ط¦ظ…ط© طµظˆط± ط§ظ„ظ…ط³ط§ط­ط© â€” ط±ظپط¹ ظ…ظ† ط§ظ„ط¬ظ‡ط§ط² ط£ظˆ ط¥ط¯ط®ط§ظ„ URL
 class ImagesEditor extends StatefulWidget {
   final List<String> images;
   final ValueChanged<String> onAdd;
@@ -41,7 +41,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
     _ctrl.clear();
   }
 
-  /// يفتح منتقي الصور من الجهاز ثم يرفعها إلى Supabase Storage
+  /// ظٹظپطھط­ ظ…ظ†طھظ‚ظٹ ط§ظ„طµظˆط± ظ…ظ† ط§ظ„ط¬ظ‡ط§ط² ط«ظ… ظٹط±ظپط¹ظ‡ط§ ط¥ظ„ظ‰ Supabase Storage
   Future<void> _pickAndUpload() async {
     final picker = ImagePicker();
     final XFile? file = await picker.pickImage(
@@ -96,7 +96,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
               style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
           const SizedBox(height: 8),
 
-          // الصور الحالية
+          // ط§ظ„طµظˆط± ط§ظ„ط­ط§ظ„ظٹط©
           if (widget.images.isNotEmpty) ...[
             SizedBox(
               height: 90,
@@ -147,7 +147,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
             const SizedBox(height: 10),
           ],
 
-          // زر رفع من الجهاز
+          // ط²ط± ط±ظپط¹ ظ…ظ† ط§ظ„ط¬ظ‡ط§ط²
           InkWell(
             onTap: _uploading ? null : _pickAndUpload,
             borderRadius: BorderRadius.circular(10),
@@ -187,7 +187,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
 
           const SizedBox(height: 8),
 
-          // إدخال URL يدوياً (خيار ثانوي)
+          // ط¥ط¯ط®ط§ظ„ URL ظٹط¯ظˆظٹط§ظ‹ (ط®ظٹط§ط± ط«ط§ظ†ظˆظٹ)
           Row(
             children: [
               Expanded(
@@ -195,7 +195,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
                   controller: _ctrl,
                   style: AdminText.body14(color: AdminColors.text),
                   decoration: InputDecoration(
-                    hintText: 'Or paste image URL…',
+                    hintText: 'Or paste image URLâ€¦',
                     hintStyle: AdminText.body14(color: AdminColors.black40),
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -243,3 +243,5 @@ class _ImagesEditorState extends State<ImagesEditor> {
     );
   }
 }
+
+

@@ -1,17 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 enum BookingRequestStatus {
-  pending,              // بانتظار موافقة الأدمن
-  underReview,          // الأدمن يراجع الطلب
-  approvedWaitingPayment, // تمت الموافقة، بانتظار الدفع خلال 24 ساعة
-  paymentUnderReview,   // تم إرسال الدفع، بانتظار تأكيد الأدمن
-  confirmed,            // تم تأكيد الحجز نهائياً
-  rejected,             // تم الرفض
-  cancelled,            // تم الإلغاء
-  expired,              // انتهت مهلة الدفع
-  // legacy aliases
-  approved,             // قديم → approvedWaitingPayment
-  paid,                 // قديم → confirmed
+  pending,
+  underReview,
+  approvedWaitingPayment,
+  paymentUnderReview,
+  confirmed,
+  rejected,
+  cancelled,
+  expired,
+  approved,
+  paid,
 }
 
 enum DurationUnit { days, weeks, months }
@@ -63,7 +62,7 @@ class AddOnEntity extends Equatable {
 }
 
 class BookingRequestEntity extends Equatable {
-  final String requestId;
+  final String bookingId;
   final SpaceSummaryEntity space;
   final DateTime startDate;
   final DurationUnit durationUnit;
@@ -85,14 +84,11 @@ class BookingRequestEntity extends Equatable {
   final int totalAmount;
   final String currency;
 
-  /// Present after payment (to link to Booking Details feature)
-  final String? bookingId;
-
-  /// مهلة الدفع: 24 ساعة من وقت الموافقة
   final DateTime? paymentDeadline;
+  final DateTime? createdAt;
 
   const BookingRequestEntity({
-    required this.requestId,
+    required this.bookingId,
     required this.space,
     required this.startDate,
     required this.durationUnit,
@@ -106,8 +102,8 @@ class BookingRequestEntity extends Equatable {
     required this.statusHint,
     required this.totalAmount,
     required this.currency,
-    required this.bookingId,
     this.paymentDeadline,
+    this.createdAt,
   });
 
   bool get canCancelBeforeApproval =>
@@ -128,7 +124,7 @@ class BookingRequestEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    requestId,
+    bookingId,
     space,
     startDate,
     durationUnit,
@@ -146,3 +142,5 @@ class BookingRequestEntity extends Equatable {
     paymentDeadline,
   ];
 }
+
+

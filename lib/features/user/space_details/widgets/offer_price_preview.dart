@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../admin/_shared/admin_ui.dart'; // using same SF Pro text + spacing/colors
 import '../../../../core/pricing/price_calc.dart';
 import '../../../../core/pricing/pricing_enums.dart';
@@ -147,3 +147,5 @@ class _Tag extends StatelessWidget {
     );
   }
 }
+
+

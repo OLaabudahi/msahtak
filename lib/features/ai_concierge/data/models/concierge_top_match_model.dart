@@ -5,9 +5,9 @@ class ConciergeTopMatchModel extends Equatable {
   final String title; // "Top Match: Space A"
   final String whyLine; // "Why: very quiet..."
   final String planLine; // "Plan suggestion: ..."
-  final String priceLine; // "Daily ... • Weekly ..."
+  final String priceLine; // "Daily ... â€¢ Weekly ..."
 
-  /// asset الآن - API ready
+  /// asset ط§ظ„ط¢ظ† - API ready
   final String imageAsset;
 
   const ConciergeTopMatchModel({
@@ -22,3 +22,4 @@ class ConciergeTopMatchModel extends Equatable {
   @override
   List<Object?> get props => [spaceId, title, whyLine, planLine, priceLine, imageAsset];
 }
+

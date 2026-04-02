@@ -27,3 +27,5 @@ class BookingPriceQuoteModel extends BookingPriceQuoteEntity {
     'currency': currency,
   };
 }
+
+

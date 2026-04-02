@@ -5,7 +5,7 @@ class BookingChip extends StatelessWidget {
   final String text;
   const BookingChip({super.key, required this.text});
 
-  /// ✅ دالة: Chip صغير للمعلومات (Quiet / Fast Wi-Fi ...)
+  /// âœ… ط¯ط§ظ„ط©: Chip طµط؛ظٹط± ظ„ظ„ظ…ط¹ظ„ظˆظ…ط§طھ (Quiet / Fast Wi-Fi ...)
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,3 +22,5 @@ class BookingChip extends StatelessWidget {
     );
   }
 }
+
+

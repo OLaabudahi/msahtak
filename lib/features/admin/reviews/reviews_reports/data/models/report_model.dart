@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/report_entity.dart';
+import '../../domain/entities/report_entity.dart';
 
 class ReportModel {
   final String id;
@@ -21,3 +21,5 @@ class ReportModel {
 
   ReportModel toEntityModel() => ReportModel(id: id, subject: subject, reason: reason);
 }
+
+

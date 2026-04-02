@@ -5,6 +5,8 @@ class GetOffersUseCase {
   final OffersRepo repo;
   GetOffersUseCase(this.repo);
 
-  /// جلب قائمة العروض كاملة
+  /// ط¬ظ„ط¨ ظ‚ط§ط¦ظ…ط© ط§ظ„ط¹ط±ظˆط¶ ظƒط§ظ…ظ„ط©
   Future<List<Offer>> call() => repo.getOffers();
 }
+
+

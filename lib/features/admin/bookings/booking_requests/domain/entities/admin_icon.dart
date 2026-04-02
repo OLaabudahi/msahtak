@@ -1,1 +1,3 @@
-﻿enum AdminIcon { clock, checkCircle, xCircle }
+enum AdminIcon { clock, checkCircle, xCircle }
+
+

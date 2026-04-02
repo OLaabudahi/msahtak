@@ -4,7 +4,7 @@ import '../../../../constants/app_assets.dart';
 import '../../domain/repos/booking_details_repo.dart';
 import '../models/booking_details_model.dart';
 
-/// ✅ تنفيذ Firebase لـ BookingDetailsRepo
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ BookingDetailsRepo
 class BookingDetailsRepoFirebase implements BookingDetailsRepo {
   @override
   Future<BookingDetails> fetchBookingDetails(String bookingId) async {
@@ -25,7 +25,7 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
         timeText: '--',
         notes: 'No details found for this booking.',
         totalPrice: 0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       );
     }
@@ -33,17 +33,17 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
     final b = bookingDoc.data()!;
     final spaceId = b['spaceId'] as String? ?? b['space_id'] as String? ?? b['workspaceId'] as String? ?? '';
 
-    // جلب تفاصيل المساحة إن وجدت
+    // ط¬ظ„ط¨ طھظپط§طµظٹظ„ ط§ظ„ظ…ط³ط§ط­ط© ط¥ظ† ظˆط¬ط¯طھ
     Map<String, dynamic> spaceData = {};
     if (spaceId.isNotEmpty) {
       final spaceDoc = await FirebaseFirestore.instance
-          .collection('workspaces')
+          .collection('spaces')
           .doc(spaceId)
           .get();
       spaceData = spaceDoc.data() ?? {};
     }
 
-    // استخراج الأمنيات من Firestore (قد تكون List<String> أو List<Map>)
+    // ط§ط³طھط®ط±ط§ط¬ ط§ظ„ط£ظ…ظ†ظٹط§طھ ظ…ظ† Firestore (ظ‚ط¯ طھظƒظˆظ† List<String> ط£ظˆ List<Map>)
     List<String> tags;
     final rawTags = b['amenities'] ?? b['tags'] ?? spaceData['amenities'] ?? spaceData['tags'];
     if (rawTags is List) {
@@ -56,7 +56,7 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
       tags = const ['Wi-Fi', 'Quiet'];
     }
 
-    // تحويل Timestamps إلى نصوص
+    // طھط­ظˆظٹظ„ Timestamps ط¥ظ„ظ‰ ظ†طµظˆطµ
     final startTs = b['startDate'] as Timestamp?;
     final endTs = b['endDate'] as Timestamp?;
 
@@ -72,7 +72,7 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
       final fmt = '${st.hour.toString().padLeft(2, '0')}:${st.minute.toString().padLeft(2, '0')}';
       if (endTs != null) {
         final et = endTs.toDate();
-        timeText = '$fmt – ${et.hour.toString().padLeft(2, '0')}:${et.minute.toString().padLeft(2, '0')}';
+        timeText = '$fmt â€“ ${et.hour.toString().padLeft(2, '0')}:${et.minute.toString().padLeft(2, '0')}';
       } else {
         timeText = fmt;
       }
@@ -91,7 +91,7 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
           _ => 'No extra notes.',
         };
 
-    // صورة المساحة
+    // طµظˆط±ط© ط§ظ„ظ…ط³ط§ط­ط©
     final imageUrls = (b['images'] as List?)?.cast<String>() ??
         (spaceData['images'] as List?)?.cast<String>() ?? const [];
     final imageUrl = imageUrls.isNotEmpty ? imageUrls.first : null;
@@ -121,9 +121,11 @@ class BookingDetailsRepoFirebase implements BookingDetailsRepo {
           (b['total_price'] as num?)?.toDouble() ??
           (b['totalPrice'] as num?)?.toDouble() ??
           0.0,
-      currency: b['currency'] as String? ?? '₪',
+      currency: b['currency'] as String? ?? 'â‚ھ',
       imageAsset: AppAssets.home,
       imageUrl: imageUrl ?? b['image_url'] as String?,
     );
   }
 }
+
+

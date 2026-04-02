@@ -58,7 +58,7 @@ class ReviewSummarySheet extends StatelessWidget {
                 children: summary.topPositives
                     .map((t) => Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text('• $t',
+                          child: Text('â€¢ $t',
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14)),
                         ))
@@ -89,7 +89,7 @@ class ReviewSummarySheet extends StatelessWidget {
                 children: summary.repeatedNegatives
                     .map((t) => Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text('• $t',
+                          child: Text('â€¢ $t',
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14)),
                         ))
@@ -155,3 +155,5 @@ class _CrowdRow extends StatelessWidget {
     );
   }
 }
+
+

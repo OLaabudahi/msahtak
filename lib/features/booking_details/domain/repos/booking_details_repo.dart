@@ -1,7 +1,9 @@
 import '../../data/models/booking_details_model.dart';
 
-/// ✅ واجهة Repo (وقت الـ API بس بتبدّل implementation)
+/// âœ… ظˆط§ط¬ظ‡ط© Repo (ظˆظ‚طھ ط§ظ„ظ€ API ط¨ط³ ط¨طھط¨ط¯ظ‘ظ„ implementation)
 abstract class BookingDetailsRepo {
-  /// ✅ تجيب تفاصيل الحجز حسب bookingId
+  /// âœ… طھط¬ظٹط¨ طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط² ط­ط³ط¨ bookingId
   Future<BookingDetails> fetchBookingDetails(String bookingId);
 }
+
+

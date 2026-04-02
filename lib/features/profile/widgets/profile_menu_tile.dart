@@ -4,16 +4,16 @@ import '../../../theme/app_colors.dart';
 class ProfileMenuTile extends StatelessWidget {
   final String title;
 
-  /// هذا نفس الموجود عندك (لكن الآن بنستخدمه كـ “label” داخل دائرة)
+  /// ظ‡ط°ط§ ظ†ظپط³ ط§ظ„ظ…ظˆط¬ظˆط¯ ط¹ظ†ط¯ظƒ (ظ„ظƒظ† ط§ظ„ط¢ظ† ط¨ظ†ط³طھط®ط¯ظ…ظ‡ ظƒظ€ â€œlabelâ€‌ ط¯ط§ط®ظ„ ط¯ط§ط¦ط±ط©)
   final IconData icon;
 
   final VoidCallback onTap;
   final bool isDestructive;
 
-  /// ✅ إضافات اختيارية (بدون تغيير الاسم):
-  /// - label داخل الدائرة (مثل P / B / $ / SD)
-  /// - أو icon داخل الدائرة (star/heart)
-  /// - للتحكم بالـ divider
+  /// âœ… ط¥ط¶ط§ظپط§طھ ط§ط®طھظٹط§ط±ظٹط© (ط¨ط¯ظˆظ† طھط؛ظٹظٹط± ط§ظ„ط§ط³ظ…):
+  /// - label ط¯ط§ط®ظ„ ط§ظ„ط¯ط§ط¦ط±ط© (ظ…ط«ظ„ P / B / $ / SD)
+  /// - ط£ظˆ icon ط¯ط§ط®ظ„ ط§ظ„ط¯ط§ط¦ط±ط© (star/heart)
+  /// - ظ„ظ„طھط­ظƒظ… ط¨ط§ظ„ظ€ divider
   final String? leadingText;
   final IconData? leadingIcon;
   final bool isLast;
@@ -104,3 +104,5 @@ class ProfileMenuTile extends StatelessWidget {
     );
   }
 }
+
+

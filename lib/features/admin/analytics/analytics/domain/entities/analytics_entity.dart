@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class AnalyticsEntity extends Equatable {
   final String occupancy;
@@ -22,3 +22,5 @@ class AnalyticsEntity extends Equatable {
   @override
   List<Object?> get props => [occupancy, revenue, avgRating, weekLabels, weekValues, topSpaces];
 }
+
+

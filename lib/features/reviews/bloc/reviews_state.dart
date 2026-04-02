@@ -38,3 +38,5 @@ class ReviewsState extends Equatable {
   List<Object?> get props =>
       [summary, reviews, selectedFilterIndex, isLoading, error];
 }
+
+

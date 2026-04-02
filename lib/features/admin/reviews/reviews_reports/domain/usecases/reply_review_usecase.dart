@@ -1,4 +1,4 @@
-﻿import '../repos/reviews_reports_repo.dart';
+import '../repos/reviews_reports_repo.dart';
 
 class ReplyReviewUseCase {
   final ReviewsReportsRepo repo;
@@ -6,3 +6,5 @@ class ReplyReviewUseCase {
 
   Future<void> call({required String reviewId, required String reply}) => repo.replyReview(reviewId: reviewId, reply: reply);
 }
+
+

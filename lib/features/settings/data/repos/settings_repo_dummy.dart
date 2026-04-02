@@ -1,7 +1,7 @@
 import '../models/settings_model.dart';
 import '../../domain/repos/settings_repo.dart';
 
-/// ✅ Dummy repo (جاهز للاستبدال بالـ API أو Local storage)
+/// âœ… Dummy repo (ط¬ط§ظ‡ط² ظ„ظ„ط§ط³طھط¨ط¯ط§ظ„ ط¨ط§ظ„ظ€ API ط£ظˆ Local storage)
 class SettingsRepoDummy implements SettingsRepo {
   SettingsModel _cache = const SettingsModel(
     notificationsEnabled: true,
@@ -16,11 +16,11 @@ class SettingsRepoDummy implements SettingsRepo {
     await Future.delayed(const Duration(milliseconds: 350));
     return _cache;
 
-    // ✅ API READY (كومنت)
+    // âœ… API READY (ظƒظˆظ…ظ†طھ)
     // final res = await dio.get('/settings');
     // return SettingsModel.fromJson(res.data);
 
-    // ✅ Local storage READY (كومنت)
+    // âœ… Local storage READY (ظƒظˆظ…ظ†طھ)
     // final json = await storage.read('settings');
     // return SettingsModel.fromJson(json);
   }
@@ -30,10 +30,12 @@ class SettingsRepoDummy implements SettingsRepo {
     await Future.delayed(const Duration(milliseconds: 200));
     _cache = settings;
 
-    // ✅ API READY (كومنت)
+    // âœ… API READY (ظƒظˆظ…ظ†طھ)
     // await dio.put('/settings', data: settings.toJson());
 
-    // ✅ Local storage READY (كومنت)
+    // âœ… Local storage READY (ظƒظˆظ…ظ†طھ)
     // await storage.write('settings', settings.toJson());
   }
 }
+
+

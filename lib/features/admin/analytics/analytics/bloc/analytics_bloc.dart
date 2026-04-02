@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/export_report_usecase.dart';
 import '../domain/usecases/get_analytics_usecase.dart';
 import 'analytics_event.dart';
@@ -27,3 +27,5 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     await export();
   }
 }
+
+

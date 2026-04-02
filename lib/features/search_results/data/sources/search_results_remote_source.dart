@@ -2,7 +2,7 @@
 class SearchResultsRemoteSource {
   const SearchResultsRemoteSource();
 
-  /// GET /spaces/search?query=... مع body/params للفلاتر + originKey
+  /// GET /spaces/search?query=... ظ…ط¹ body/params ظ„ظ„ظپظ„ط§طھط± + originKey
   Future<List<Map<String, dynamic>>> searchSpacesRaw({
     required String query,
     required Map<String, dynamic> selectedFilters,
@@ -20,3 +20,5 @@ class SearchResultsRemoteSource {
     return <Map<String, dynamic>>[];
   }
 }
+
+

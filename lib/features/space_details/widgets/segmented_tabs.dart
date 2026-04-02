@@ -11,7 +11,7 @@ class SegmentedTabs extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// ✅ دالة: Tabs بشكل segmented مثل التصميم
+  /// âœ… ط¯ط§ظ„ط©: Tabs ط¨ط´ظƒظ„ segmented ظ…ط«ظ„ ط§ظ„طھطµظ…ظٹظ…
   @override
   Widget build(BuildContext context) {
     const tabs = ['Overview', 'Reviews', 'Offers'];
@@ -54,3 +54,5 @@ class SegmentedTabs extends StatelessWidget {
     );
   }
 }
+
+

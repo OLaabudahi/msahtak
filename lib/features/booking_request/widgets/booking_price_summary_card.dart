@@ -29,15 +29,15 @@ class BookingPriceSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _RowLine(label: 'Space ($durationValue days)', value: q == null ? '—' : '₪${q.spaceSubtotal}'),
+          _RowLine(label: 'Space ($durationValue days)', value: q == null ? 'â€”' : 'â‚ھ${q.spaceSubtotal}'),
           const SizedBox(height: 8),
-          _RowLine(label: 'Offer discount', value: q == null ? '—' : '-₪${q.offerDiscount}'),
+          _RowLine(label: 'Offer discount', value: q == null ? 'â€”' : '-â‚ھ${q.offerDiscount}'),
           const SizedBox(height: 8),
-          _RowLine(label: 'Add-ons', value: q == null ? '—' : '₪${q.addOnsTotal}'),
+          _RowLine(label: 'Add-ons', value: q == null ? 'â€”' : 'â‚ھ${q.addOnsTotal}'),
           const Divider(height: 20),
           _RowLine(
             label: 'Total',
-            value: q == null ? '—' : '₪${q.total}',
+            value: q == null ? 'â€”' : 'â‚ھ${q.total}',
             bold: true,
           ),
         ],
@@ -68,3 +68,5 @@ class _RowLine extends StatelessWidget {
     );
   }
 }
+
+

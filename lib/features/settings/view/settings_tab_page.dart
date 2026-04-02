@@ -144,7 +144,7 @@ class SettingsTabPage extends StatelessWidget {
                     builder: (context, langState) => SettingsActionTile(
                       icon: null,
                       title: context.t('appLanguage'),
-                      subtitle: langState.code == 'ar' ? 'العربية' : 'English',
+                      subtitle: langState.code == 'ar' ? context.t('arabic') : context.t('english'),
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: _chevronBlue,
@@ -213,3 +213,5 @@ class SettingsTabPage extends StatelessWidget {
     );
   }
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class UserProfileEvent extends Equatable {
   const UserProfileEvent();
@@ -34,3 +34,5 @@ class UserProfileAddNotePressed extends UserProfileEvent {
   @override
   List<Object?> get props => [userId, note];
 }
+
+

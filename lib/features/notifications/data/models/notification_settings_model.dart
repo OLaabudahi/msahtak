@@ -9,7 +9,7 @@ class NotificationSettingsModel extends NotificationSettings {
     super.reminderTiming = 0,
   });
 
-  /// تحويل JSON إلى Model
+  /// طھط­ظˆظٹظ„ JSON ط¥ظ„ظ‰ Model
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) {
     return NotificationSettingsModel(
       bookingApproved: json['bookingApproved'] as bool? ?? true,
@@ -20,7 +20,7 @@ class NotificationSettingsModel extends NotificationSettings {
     );
   }
 
-  /// تحويل Model إلى JSON
+  /// طھط­ظˆظٹظ„ Model ط¥ظ„ظ‰ JSON
   Map<String, dynamic> toJson() => {
         'bookingApproved': bookingApproved,
         'bookingRejected': bookingRejected,
@@ -29,3 +29,5 @@ class NotificationSettingsModel extends NotificationSettings {
         'reminderTiming': reminderTiming,
       };
 }
+
+

@@ -118,7 +118,7 @@ class _MapPageState extends State<MapPage> {
                             onMapReady: () {
                               setState(() => _mapReady = true);
 
-                              // لو كان فيه حركة مؤجلة (جت من Bloc listener)
+                              // ظ„ظˆ ظƒط§ظ† ظپظٹظ‡ ط­ط±ظƒط© ظ…ط¤ط¬ظ„ط© (ط¬طھ ظ…ظ† Bloc listener)
                               if (_pendingMove != null) {
                                 _mapController.move(
                                   _pendingMove!,
@@ -129,7 +129,7 @@ class _MapPageState extends State<MapPage> {
                             },
 
                             onPositionChanged: (pos, _) {
-                              // نحفظ آخر زوم بدل camera
+                              // ظ†ط­ظپط¸ ط¢ط®ط± ط²ظˆظ… ط¨ط¯ظ„ camera
                               final z = pos.zoom;
                               if (z != null) _currentZoom = z;
                             },
@@ -140,16 +140,16 @@ class _MapPageState extends State<MapPage> {
                               urlTemplate:
                                   'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                               userAgentPackageName:
-                                  'com.example.masahtak_app', // غيّريه لباكيدجك
+                                  'com.example.masahtak_app', // ط؛ظٹظ‘ط±ظٹظ‡ ظ„ط¨ط§ظƒظٹط¯ط¬ظƒ
                             ),
 
-                            // دائرة الراديوس
+                            // ط¯ط§ط¦ط±ط© ط§ظ„ط±ط§ط¯ظٹظˆط³
                             CircleLayer(
                               circles: [
                                 CircleMarker(
                                   point: LatLng(center.lat, center.lng),
                                   radius: state.radiusKm * 1000.0,
-                                  // بالمتر
+                                  // ط¨ط§ظ„ظ…طھط±
                                   useRadiusInMeter: true,
                                   color: _secondary.withOpacity(0.22),
                                   borderStrokeWidth: 0,
@@ -160,7 +160,7 @@ class _MapPageState extends State<MapPage> {
                             // Markers
                             MarkerLayer(
                               markers: [
-                                // Marker للمركز
+                                // Marker ظ„ظ„ظ…ط±ظƒط²
                                 Marker(
                                   point: LatLng(center.lat, center.lng),
                                   width: 44,
@@ -236,7 +236,7 @@ class _MapPageState extends State<MapPage> {
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: bottomInset, // ✅ يرفع فوق أزرار النظام
+                  bottom: bottomInset, // âœ… ظٹط±ظپط¹ ظپظˆظ‚ ط£ط²ط±ط§ط± ط§ظ„ظ†ط¸ط§ظ…
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -257,7 +257,7 @@ class _MapPageState extends State<MapPage> {
 
                       if (state.spaces.isNotEmpty)
                         SizedBox(
-                          height: 160, // ✅ ثابت ومناسب للكارد الجديد
+                          height: 160, // âœ… ط«ط§ط¨طھ ظˆظ…ظ†ط§ط³ط¨ ظ„ظ„ظƒط§ط±ط¯ ط§ظ„ط¬ط¯ظٹط¯
                           child: PageView.builder(
                             controller: _pageController,
                             itemCount: state.spaces.length,
@@ -265,7 +265,7 @@ class _MapPageState extends State<MapPage> {
                               final id = state.spaces[index].id;
                               context.read<MapBloc>().add(
                                 MapMarkerTapped(id),
-                              ); // ✅ تحديد تلقائي
+                              ); // âœ… طھط­ط¯ظٹط¯ طھظ„ظ‚ط§ط¦ظٹ
                             },
                             itemBuilder: (context, index) {
                               final space = state.spaces[index];
@@ -488,3 +488,5 @@ class _ErrorBanner extends StatelessWidget {
     );
   }
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/kpi_entity.dart';
 import '../domain/entities/admin_space_item.dart';
 import '../domain/entities/admin_activity_item.dart';
@@ -57,3 +57,5 @@ class AdminHomeState extends Equatable {
   @override
   List<Object?> get props => [status, spaces, activeSpaceId, activeSpaceName, kpis, recentActivity, error];
 }
+
+

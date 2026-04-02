@@ -5,14 +5,14 @@ import '../models/plan_option_model.dart';
 import '../models/usage_stats_model.dart';
 import 'usage_remote_source.dart';
 
-/// ✅ تنفيذ Firebase لـ UsageRemoteSource
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ UsageRemoteSource
 class UsageFirebaseSource implements UsageRemoteSource {
   @override
   Future<UsageStatsModel> getUsageStats() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return _defaultStats();
 
-    // محاولة قراءة stats من users/{uid}
+    // ظ…ط­ط§ظˆظ„ط© ظ‚ط±ط§ط،ط© stats ظ…ظ† users/{uid}
     final doc = await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -32,7 +32,7 @@ class UsageFirebaseSource implements UsageRemoteSource {
       );
     }
 
-    // احتساب الإحصاءات من الحجوزات
+    // ط§ط­طھط³ط§ط¨ ط§ظ„ط¥ط­طµط§ط،ط§طھ ظ…ظ† ط§ظ„ط­ط¬ظˆط²ط§طھ
     final snap = await FirebaseFirestore.instance
         .collection('bookings')
         .where('user_id', isEqualTo: uid)
@@ -62,11 +62,11 @@ class UsageFirebaseSource implements UsageRemoteSource {
 
     if (snap.docs.isEmpty) {
       return const [
-        PlanOptionModel(id: 'daily', name: 'Daily', priceLabel: '₪10/day'),
+        PlanOptionModel(id: 'daily', name: 'Daily', priceLabel: 'â‚ھ10/day'),
         PlanOptionModel(
-            id: 'weekly', name: 'Weekly', priceLabel: '₪58/week', isBest: true),
+            id: 'weekly', name: 'Weekly', priceLabel: 'â‚ھ58/week', isBest: true),
         PlanOptionModel(
-            id: 'monthly', name: 'Monthly', priceLabel: '₪199/month'),
+            id: 'monthly', name: 'Monthly', priceLabel: 'â‚ھ199/month'),
       ];
     }
 
@@ -100,3 +100,5 @@ class UsageFirebaseSource implements UsageRemoteSource {
         recommendation: '',
       );
 }
+
+

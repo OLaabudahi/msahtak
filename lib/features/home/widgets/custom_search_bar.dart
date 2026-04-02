@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
-/// شريط بحث الصفحة الرئيسية — تصميم Row يتعامل مع RTL تلقائياً
+/// ط´ط±ظٹط· ط¨ط­ط« ط§ظ„طµظپط­ط© ط§ظ„ط±ط¦ظٹط³ظٹط© â€” طھطµظ…ظٹظ… Row ظٹطھط¹ط§ظ…ظ„ ظ…ط¹ RTL طھظ„ظ‚ط§ط¦ظٹط§ظ‹
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
     super.key,
@@ -85,3 +85,5 @@ class CustomSearchBar extends StatelessWidget {
     );
   }
 }
+
+

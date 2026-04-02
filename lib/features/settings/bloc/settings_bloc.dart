@@ -21,7 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsToggleDarkMode>(_onToggleDarkMode);
   }
 
-  /// ✅ تحميل الإعدادات أول ما تفتح الصفحة
+  /// âœ… طھط­ظ…ظٹظ„ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ ط£ظˆظ„ ظ…ط§ طھظپطھط­ ط§ظ„طµظپط­ط©
   Future<void> _onStarted(
     SettingsStarted event,
     Emitter<SettingsState> emit,
@@ -35,7 +35,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  /// ✅ Refresh
+  /// âœ… Refresh
   Future<void> _onRefresh(
     SettingsRefreshRequested event,
     Emitter<SettingsState> emit,
@@ -53,11 +53,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     try {
       await repo.saveSettings(next.settings!);
     } catch (_) {
-      // ما منوقف UI لو فشل الحفظ، بس ممكن تضيفي toast لاحقاً
+      // ظ…ط§ ظ…ظ†ظˆظ‚ظپ UI ظ„ظˆ ظپط´ظ„ ط§ظ„ط­ظپط¸طŒ ط¨ط³ ظ…ظ…ظƒظ† طھط¶ظٹظپظٹ toast ظ„ط§ط­ظ‚ط§ظ‹
     }
   }
 
-  /// ✅ تشغيل/إيقاف إشعارات عامة
+  /// âœ… طھط´ط؛ظٹظ„/ط¥ظٹظ‚ط§ظپ ط¥ط´ط¹ط§ط±ط§طھ ط¹ط§ظ…ط©
   Future<void> _onToggleNotifications(
     SettingsToggleNotifications event,
     Emitter<SettingsState> emit,
@@ -70,7 +70,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  /// ✅ تشغيل/إيقاف تذكير الحجز
+  /// âœ… طھط´ط؛ظٹظ„/ط¥ظٹظ‚ط§ظپ طھط°ظƒظٹط± ط§ظ„ط­ط¬ط²
   Future<void> _onToggleReminders(
     SettingsToggleBookingReminders event,
     Emitter<SettingsState> emit,
@@ -85,7 +85,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  /// ✅ اختيار توقيت التذكير
+  /// âœ… ط§ط®طھظٹط§ط± طھظˆظ‚ظٹطھ ط§ظ„طھط°ظƒظٹط±
   Future<void> _onSelectTiming(
     SettingsSelectReminderTiming event,
     Emitter<SettingsState> emit,
@@ -98,7 +98,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  /// ✅ تغيير اللغة
+  /// âœ… طھط؛ظٹظٹط± ط§ظ„ظ„ط؛ط©
   Future<void> _onSelectLanguage(
     SettingsSelectLanguage event,
     Emitter<SettingsState> emit,
@@ -111,7 +111,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  /// ✅ Dark mode (حالياً UI فقط - ممكن تربطيه لاحقاً بـ ThemeBloc)
+  /// âœ… Dark mode (ط­ط§ظ„ظٹط§ظ‹ UI ظپظ‚ط· - ظ…ظ…ظƒظ† طھط±ط¨ط·ظٹظ‡ ظ„ط§ط­ظ‚ط§ظ‹ ط¨ظ€ ThemeBloc)
   Future<void> _onToggleDarkMode(
     SettingsToggleDarkMode event,
     Emitter<SettingsState> emit,
@@ -124,3 +124,5 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
+
+

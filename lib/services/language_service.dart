@@ -42,7 +42,7 @@ class LanguageService {
 
   static final Map<String, Map<String, String>> translations = {
     'en': {
-      // ── Auth ──
+      // â”€â”€ Auth â”€â”€
       'login': 'Login',
       'signUp': 'Sign Up',
       'email': 'Email',
@@ -54,7 +54,8 @@ class LanguageService {
       'youHaveAccount': 'You have an account? ',
       'or': 'or',
       'english': 'English',
-      'arabic': 'العربية',
+      'arabic': 'Arabic',
+      'msahtak':'Msahtak',
       'pleaseWait': 'Please wait...',
       'pleaseFillAllFields': 'Please fill all fields',
       'passwordsDoNotMatch': 'Passwords do not match',
@@ -66,11 +67,11 @@ class LanguageService {
       'ok': 'OK',
       'send': 'Send',
       'backToLogin': 'Back to Login',
-      // ── Onboarding common ──
+      // â”€â”€ Onboarding common â”€â”€
       'skip': 'Skip',
       'next': 'Next',
       'goToHome': 'Go To Home',
-      // ── Onboarding Step 1 ──
+      // â”€â”€ Onboarding Step 1 â”€â”€
       'findPerfectWorkspace': 'Find your perfect workspace',
       'bookStudySpaces':
           'Book work and study spaces with clear\nprices, real insights, and flexible plans.',
@@ -80,15 +81,16 @@ class LanguageService {
       'bookWithConfidence': 'Book with confidence',
       'bookWithConfidenceSubtitle': 'Requests are approved before payment.',
       'smartSuggestions': 'Smart suggestions',
-      'smartSuggestionsSubtitle': 'AI highlights the best spaces for your goal.',
-      // ── Onboarding Step 2 ──
+      'smartSuggestionsSubtitle':
+          'AI highlights the best spaces for your goal.',
+      // â”€â”€ Onboarding Step 2 â”€â”€
       'whatAreYouBookingFor': 'What are you booking for?',
       'selectAllThatApply':
           "Select all that apply. We'll tailor\nspaces to your needs.",
       'mainPurpose': 'Main purpose',
       'selectMultiple': 'Select multiple',
       'whatMattersMost': 'What matters most?',
-      'whatMattersOptional': 'Optional — helps us rank results better.',
+      'whatMattersOptional': 'Optional â€” helps us rank results better.',
       'youllSeeInsightsLike': "You'll see insights like",
       'insightBestStudy': 'Best for study',
       'insightQuietInternet': 'Quiet + strong internet',
@@ -96,20 +98,21 @@ class LanguageService {
       'aiWillUseYourChoices': 'AI will use your choices',
       'aiSubtitle': 'Smarter suggestions + review summaries\n(not a chatbot).',
       'aiFootnote': 'You can change these later in Settings.',
-      // ── Onboarding Step 2 — Purposes ──
+      // â”€â”€ Onboarding Step 2 â€” Purposes â”€â”€
       'purposeStudy': 'Study',
       'purposeDeepFocus': 'Deep Focus',
       'purposeMeetings': 'Meetings',
       'purposeTeamWork': 'Team Work',
       'purposeCallsInterviews': 'Calls / Interviews',
       'purposeCreative': 'Creative',
-      // ── Onboarding Step 2 — Matters ──
+      // â”€â”€ Onboarding Step 2 â€” Matters â”€â”€
       'matterQuiet': 'Quiet',
       'matterFastWifi': 'Fast Wi-Fi',
       'matterBudgetFriendly': 'Budget friendly',
-      // ── Onboarding Step 3 ──
+      // â”€â”€ Onboarding Step 3 â”€â”€
       'stayUpdated': 'Stay updated',
-      'chooseAlerts': 'Choose the alerts you want.\nYou can change them anytime.',
+      'chooseAlerts':
+          'Choose the alerts you want.\nYou can change them anytime.',
       'bookingAlerts': 'Booking alerts',
       'bookingApproved': 'Booking approved',
       'bookingApprovedSubtitle': 'When a space confirms your request.',
@@ -125,16 +128,16 @@ class LanguageService {
           'Get approvals, rejections, and reminders\nright on time.',
       'notificationsFootnote':
           "Tip: You'll still see booking status inside the Bookings tab.",
-      // ── Onboarding — Reminder timings ──
+      // â”€â”€ Onboarding â€” Reminder timings â”€â”€
       'timing30min': '30 min',
       'timing1hour': '1 hour',
       'timingSameDay': 'Same day (9 AM)',
-      // ── Bottom Navigation ──
+      // â”€â”€ Bottom Navigation â”€â”€
       'navHome': 'Home',
       'navBookings': 'Bookings',
       'navProfile': 'Profile',
       'navSettings': 'Settings',
-      // ── Home Tab ──
+      // â”€â”€ Home Tab â”€â”€
       'homeTitle': 'Home',
       'searchHint': 'Search',
       'aiConcierge': 'AI Concierge',
@@ -146,7 +149,7 @@ class LanguageService {
       'insightsSection': 'Insights',
       'noInsightsYet': 'No insights yet',
       'view': 'View',
-      // ── Home Insights ──
+      // â”€â”€ Home Insights â”€â”€
       'insBestForYou': 'Best For You',
       'insBestForYouSub': 'Find the space that matches your goal.',
       'insExclusiveDeals': 'Exclusive Deals',
@@ -155,11 +158,11 @@ class LanguageService {
       'insWeeklyPlanSub': 'Unlock your productivity hub.',
       'insMeetingChecklist': 'Meeting-ready checklist',
       'insMeetingChecklistSub': "Don't miss the essentials.",
-      // ── Offers Page ──
+      // â”€â”€ Offers Page â”€â”€
       'offersPageTitle': 'Offers',
       'offersTopDeals': 'Top Deals',
       'offersEmpty': 'No offers available right now.',
-      // ── Bookings Tab ──
+      // â”€â”€ Bookings Tab â”€â”€
       'upcomingBookings': 'Your Upcoming Bookings',
       'pastBookings': 'Past Bookings',
       'cancelledBookings': 'Cancelled Bookings',
@@ -178,7 +181,7 @@ class LanguageService {
       'bookingNotesLabel': 'Notes',
       'bookingTotalLabel': 'Total',
       'bookingDetailsTitle': 'Booking Details',
-      // ── Profile Tab ──
+      // â”€â”€ Profile Tab â”€â”€
       'profileTitle': 'Profile',
       'saved': 'Saved',
       'reviews': 'Reviews',
@@ -189,7 +192,7 @@ class LanguageService {
       'reviewsRatings': 'Reviews & Ratings',
       'savedSpaces': 'Saved Spaces',
       'logOut': 'Log Out',
-      // ── Settings Tab ──
+      // â”€â”€ Settings Tab â”€â”€
       'settingsTitle': 'Settings',
       'preferences': 'Preferences',
       'workspacePreferences': 'Workspace preferences',
@@ -208,22 +211,22 @@ class LanguageService {
       'aboutMashtak': 'About Mashtak',
       'aboutMashatakSub': 'Version, terms, privacy',
       'retry': 'Retry',
-      // ── Notifications Page ──
+      // â”€â”€ Notifications Page â”€â”€
       'notificationsPageTitle': 'Notifications',
       'notificationsPageHeader': 'Updates for you',
-      'notificationsPageSubtitle': 'Booking status, reminders, and smart plan tips.',
+      'notificationsPageSubtitle':
+          'Booking status, reminders, and smart plan tips.',
       'notifGroupToday': 'TODAY',
       'notifGroupEarlier': 'EARLIER',
-      // ── Notification Item Content ──
       'notifItemTitleApproved': 'Booking Approved! 🎉',
+      'notifItemTitleReminder': 'Booking Reminder ⏰',
+      'notifItemTitleOffer': 'New Weekly Deal 🔥',
       'notifItemSubApproved': 'Your booking has been confirmed.',
       'notifItemTitleRejected': 'Booking Rejected',
-      'notifItemSubRejected': 'Your request could not be accepted. Try another space.',
-      'notifItemTitleReminder': 'Booking Reminder ⏰',
+      'notifItemSubRejected':
+          'Your request could not be accepted. Try another space.',
       'notifItemSubReminder': 'Your session is starting soon. Get ready!',
-      'notifItemTitleOffer': 'New Weekly Deal 🔥',
       'notifItemSubOffer': 'Save more with the weekly pass. Limited spots!',
-      // ── Notification Settings Page ──
       'notifSettingsTitle': 'Notification Settings',
       'notifSettingsStayInControl': 'Stay in control',
       'notifSettingsChooseUpdates': 'Choose which updates you want to receive.',
@@ -233,7 +236,7 @@ class LanguageService {
       'notifSettingsOfferSuggestion': 'Offer / plan suggestion',
       'notifSettingsOfferSub': 'Weekly plan could save you money.',
       'save': 'Save',
-      // ── Usage Page ──
+      // â”€â”€ Usage Page â”€â”€
       'usagePageTitle': 'Your Usage',
       'usageBasedOn': 'Based on your last 30 days',
       'usagePlanOptimizer': 'Plan Optimizer',
@@ -241,7 +244,7 @@ class LanguageService {
       'usageRecommendation': 'Recommendation',
       'usageApplyPlan': 'Apply Plan',
       'usagePlanApplied': 'Plan applied successfully!',
-      // ── Reviews Page ──
+      // â”€â”€ Reviews Page â”€â”€
       'reviewsPageTitle': 'Reviews & Ratings',
       'reviewsFilter': 'Filter',
       'reviewsAll': 'All',
@@ -252,23 +255,25 @@ class LanguageService {
       'reviewsOverall': 'Overall',
       'reviewsBasedOn': 'Based on',
       'reviewsBasedOnSuffix': 'reviews',
-      // ── Weekly Plan Page ──
+      // â”€â”€ Weekly Plan Page â”€â”€
       'weeklyPlanTitle': 'Weekly Plan',
       'weeklyPlanSaveMore': 'Save more with weekly access',
       'weeklyPlanSubtitle': 'Best option for frequent visits and focused work',
       'weeklyPlanWhatYouGet': 'What you get',
       'weeklyPlanActivate': 'Activate plan',
       'weeklyPlanActivated': 'Plan activated successfully!',
-      // ── Booking Status Page ──
+      // â”€â”€ Booking Status Page â”€â”€
       'bookingStatusPageTitle': 'Booking status',
       'bookingStatusHeader': 'Booking request',
       'bookingStatusPullRefresh': 'Pull to refresh for latest status',
-      'bookingStatusApprovedBanner': 'Booking is approved. Please proceed to payment.',
+      'bookingStatusApprovedBanner':
+          'Booking is approved. Please proceed to payment.',
       'bookingStatusRefreshBtn': 'Refresh status',
       'bookingStatusCancelBtn': 'Cancel request',
       'bookingStatusGoPaymentBtn': 'Go to payment',
-      'bookingStatusPaidMsg': 'Paid successfully. You can view booking details from your bookings list.',
-      // ── Booking Timeline ──
+      'bookingStatusPaidMsg':
+          'Paid successfully. You can view booking details from your bookings list.',
+      // â”€â”€ Booking Timeline â”€â”€
       'timelineProgress': 'Progress',
       'timelineRequestSent': 'Request sent',
       'timelineRequestSentSub': 'We received your request',
@@ -283,14 +288,14 @@ class LanguageService {
       'timelineCancelledSub': 'Request cancelled by user',
       'timelineRejected': 'Rejected',
       'timelineRejectedSub': 'Request rejected',
-      // ── Booking Summary Card ──
+      // â”€â”€ Booking Summary Card â”€â”€
       'summaryRequestId': 'Request ID',
       'summaryStart': 'Start',
       'summaryDuration': 'Duration',
       'summaryPurpose': 'Purpose',
       'summaryOffer': 'Offer',
       'summaryTotal': 'Total',
-      // ── Status Badges ──
+      // â”€â”€ Status Badges â”€â”€
       'statusPending': 'Pending',
       'statusUnderReview': 'Under review',
       'statusApproved': 'Approved',
@@ -298,7 +303,7 @@ class LanguageService {
       'statusCancelled': 'Cancelled',
       'statusPaid': 'Paid',
       'statusLoading': 'Loading',
-      // ── KPI Tiles ──
+      // â”€â”€ KPI Tiles â”€â”€
       'kpiTodayTitle': 'Today Bookings',
       'kpiTodayDelta': 'bookings today',
       'kpiPendingTitle': 'Pending Requests',
@@ -308,24 +313,24 @@ class LanguageService {
       'kpiSpacesDelta': 'total spaces',
       'kpiRevenueTitle': 'Weekly Revenue',
       'kpiRevenueDelta': 'last 7 days',
-      // ── Activity ──
+      // â”€â”€ Activity â”€â”€
       'activityRequested': 'requested booking at',
       'activityApproved': 'booking approved for',
       'activityPayment': 'submitted payment for',
       'activityConfirmed': 'confirmed booking at',
       'activityCancelled': 'booking cancelled at',
       'activityBooked': 'booked',
-      // ── Time Ago ──
+      // â”€â”€ Time Ago â”€â”€
       'timeJustNow': 'just now',
       'timeMinAgo': 'min ago',
       'timeHoursAgo': 'h ago',
       'timeDaysAgo': 'd ago',
-      // ── Map ──
+      // â”€â”€ Map â”€â”€
       'mapShowAll': 'Show All',
       'mapNearby': 'Nearby',
       'mapNoResults': 'No results in this area.',
       'mapTitle': 'Explore Spaces on Map',
-      // ── Admin ──
+      // â”€â”€ Admin â”€â”€
       'adminTabHome': 'Home',
       'adminTabBookings': 'Bookings',
       'adminTabUsers': 'Users',
@@ -401,7 +406,8 @@ class LanguageService {
       'adminMySpaces': 'My Spaces',
       'adminMySpacesSubtitle': 'Manage your listed spaces',
       'adminDeleteSpace': 'Delete Space',
-      'adminDeleteSpaceConfirm': 'Are you sure you want to delete this space? This action cannot be undone.',
+      'adminDeleteSpaceConfirm':
+          'Are you sure you want to delete this space? This action cannot be undone.',
       // Add/Edit Space
       'adminAddSpace': 'Add Space',
       'adminEditSpace': 'Edit Space',
@@ -431,7 +437,8 @@ class LanguageService {
       'adminNoReceipt': 'No receipt uploaded',
       // Payment Methods (add/edit space)
       'adminPaymentMethodsTitle': 'Available Payment Methods',
-      'adminPaymentMethodsSubtitle': 'Select methods and enter account details for each',
+      'adminPaymentMethodsSubtitle':
+          'Select methods and enter account details for each',
       'adminPaymentAccountDetails': 'Account Details',
       'adminPaymentAccountDetailsHint': 'Account number, IBAN, owner name...',
       'adminSelectPaymentMethod': 'Select payment method...',
@@ -439,7 +446,8 @@ class LanguageService {
       'adminPaymentAccountName': 'Account Holder Name',
       'adminPaymentAccountNameHint': 'Full name of account owner',
       'adminPaymentPhone': 'Phone Number',
-      'adminPaymentCardNote': 'Card payment is processed through the space\'s point-of-sale terminal upon arrival.',
+      'adminPaymentCardNote':
+          'Card payment is processed through the space\'s point-of-sale terminal upon arrival.',
       // Payment page (user side)
       'paymentMethodTitle': 'Payment Method',
       'paymentMethodDetails': 'Transfer Details',
@@ -478,7 +486,153 @@ class LanguageService {
       'adminFilterAll': 'All',
       'adminFilterNew': 'New',
       'adminFilterFlagged': 'Flagged',
+      // Add Request Space
+      'joinMsahtak': 'Join Msahtak spaces ,Start Journey Now',
+      'addSpace': 'Add Space',
+      'spaceRequestNote':
+          'We will contact you to complete your space addition request through Msahtak team',
+      'spaceName': 'Space Name',
+      'description': 'Description',
+      'phone': 'Phone Number',
+      'whatsapp': 'WhatsApp Number',
+      'contactName': 'Contact Name',
+      'pricePD': 'Price per Day',
+      'capacity': 'Capacity',
+      'workingHours': 'Working Hours',
+      'submit': 'Submit',
+      'required': 'Required',
+      'invalidNumber': 'Invalid number',
+      'invalidPhone': 'Invalid phone number',
+      'requestSuccess': 'Request sent successfully',
+      'requestSuccessFull':
+          'Your request has been sent successfully. We will contact you soon.',
+
+      // Request Booking
+      'requestBookingTitle': 'Request Booking',
+      'purpose': 'Purpose',
+      'selectPurpose': 'Select purpose',
+      'startDate': 'Start Date',
+      'selectDate': 'Select Date',
+      'duration': 'Duration',
+      'total': 'Total',
+      'weeklyCheaper': 'Weekly plan is cheaper for you',
+      'switch': 'Switch',
+      'offerOptional': 'Offer (optional)',
+      'chooseOffer': 'Choose an offer or skip',
+      'weeklyPlan': 'Weekly plan',
+      'monthlyPlan': 'Monthly plan',
+      'promo': 'Promo',
+      'addonsOptional': 'Add-ons (optional)',
+      'priceSummary': 'Price summary',
+      'sendBookingRequest': 'Send Request Booking',
+
+      // Pending
+      'pendingApprovalTitle': 'Pending booking approval',
+      'requestSent': 'Request sent successfully',
+      'underReview': 'Your booking request is under review',
+      'viewBookingStatus': 'View booking status',
+      'goHome': 'Go to Home',
+      "policies": "Policies",
+      'ai': 'AI',
+      // Status Page
+      'paymentSubmitted': 'Payment submitted. Awaiting admin confirmation.',
+      'bookingConfirmed': 'Booking confirmed! See you there.',
+      'paymentExpired': 'Payment deadline expired. Booking was cancelled.',
+      'payWithin': 'Pay within:',
+      'paymentDeadlineExpired': 'Payment deadline expired',
+
+      // Badge
+      'pending': 'Pending',
+      'underReviewStatus': 'Under Review',
+      'approvedPay': 'Approved â€“ Pay Now',
+      'paymentReview': 'Payment Review',
+      'confirmed': 'Confirmed',
+      'rejected': 'Rejected',
+      'cancelled': 'Cancelled',
+      'expired': 'Expired',
+      'loading': 'Loading...',
+      // ط§ظ„ط¨ط§ظ‚ظٹظٹظ†
+      'addNewSpace': 'Add New Space',
+      'adminDashboard': 'Admin Dashboard',
+      'manageSpaces': 'Manage your coworking spaces',
+      'weeklyBookings': 'Weekly Bookings',
+      'topSpaces': 'Top Performing Spaces',
+      'exportReport': 'Export Report',
+      'bookings': 'Bookings',
+      'revenue': 'Revenue',
+      'monthView': 'Month View',
+      'calendarMonthly': 'Calendar (monthly)',
+      'closeDay': 'Close the day',
+      'specialHours': 'Special hours',
+      'amenities': 'Amenities',
+      'add': 'Add',
+      'noAmenities': 'No amenities yet',
+      'addAmenity': 'Add Amenity',
+      'images': 'Images',
+      'uploadFailed': 'Upload failed',
+      'locationLatLng': 'Location (Lat/Lng)',
+      'pick': 'Pick',
+      'basePrice': 'Base Price',
+      'day': 'day',
+      'week': 'week',
+      'month': 'month',
+      'closed': 'Closed',
+      'visibility': 'Visibility',
+      'offerCreated': 'Offer created successfully',
+      'fixedPrice': 'Fixed Price',
+      'discount': 'Discount %',
+      'packageMonths': 'Package (Months)',
+      'bonus': 'Bonus',
+      'validUntil': 'Valid until',
+      'selectPeriod': 'Select Period',
+      'selectStatus': 'Select Status',
+      'reviewsReports': 'Reviews & Reports',
+      'manageFeedback': 'Manage feedback and issues',
+      'reply': 'Reply',
+      'hide': 'Hide',
+
+      'addNote': 'Add Note',
+      'bookingHistory': 'Booking History',
+      'todaysBookings': "Today's Bookings",
+      'todaysOffers': "Today's Offers",
+      'dontMissEssentials': "Don't miss essentials.",
+      'noActiveBookings': "No active bookings",
+      'notLoggedIn': "Not logged in",
+      'error': "Error",
+      'confirm': "Confirm",
+      'yesCancel': "Yes, Cancel",
+      'no': "No",
+      'cancelBooking': "Cancel Booking",
+      'areYouSureCancelBooking':
+          "Are you sure you want to cancel this booking?",
+      'bookingId': "Booking ID",
+      'amountPaid': "Amount Paid",
+      'date': "Date",
+      'statusPaymentReview': "Payment Under Review",
+      'invoice': "Invoice",
+      'downloadInvoice': "Download Invoice (PDF)",
+      'backToHome': "Back to Home",
+      'paymentDone': "Payment done",
+      'awaitingAdmin': "Awaiting admin confirmation. You will be notified.",
+      'spaceDetails': "Space Details",
+      'aboutApp': "About Mashtak",
+      'selectLocation': "Pick Location",
+      'confirmLocation': "Confirm",
+      'continueBooking': "Continue to Booking",
+      'fitScore': "Fit Score",
+      'whyThisMatch': "Why this matches:",
+      'headsUp': "Heads-up",
+      'deal': "Deal",
+      'perDay': "/day",
+      'bookingSummary': "Booking Summary",
+      'noOffersAvailable': "No offers available",
+      'validUntilLabel': "Valid until: ",
+      'yourReply': "Your Reply:",
+      'reason': "Reason:",
+      'internalRating': "Internal Rating",
+      'noShow': "No-show",
     },
+
     'ar': {
       // ── Auth ──
       'login': 'تسجيل الدخول',
@@ -518,8 +672,7 @@ class LanguageService {
       'bookWithConfidence': 'احجز بثقة',
       'bookWithConfidenceSubtitle': 'يتم الموافقة على الطلبات قبل الدفع.',
       'smartSuggestions': 'اقتراحات ذكية',
-      'smartSuggestionsSubtitle':
-          'الذكاء الاصطناعي يبرز أفضل المساحات لهدفك.',
+      'smartSuggestionsSubtitle': 'الذكاء الاصطناعي يبرز أفضل المساحات لهدفك.',
       // ── Onboarding Step 2 ──
       'whatAreYouBookingFor': 'ماذا ستحجز؟',
       'selectAllThatApply': 'اختر كل ما ينطبق. سنخصص المساحات وفق احتياجاتك.',
@@ -560,8 +713,7 @@ class LanguageService {
       'notificationsHelp': 'التنبيهات تساعدك على الثقة بالحجوزات',
       'notificationsSubtitle':
           'احصل على موافقات، رفض، وتذكيرات في الوقت المناسب.',
-      'notificationsFootnote':
-          'نصيحة: ستشاهد حالة الحجز داخل تبويب الحجوزات.',
+      'notificationsFootnote': 'نصيحة: ستشاهد حالة الحجز داخل تبويب الحجوزات.',
       // ── Onboarding — Reminder timings ──
       'timing30min': '30 دقيقة',
       'timing1hour': 'ساعة واحدة',
@@ -574,7 +726,6 @@ class LanguageService {
       // ── Home Tab ──
       'homeTitle': 'الرئيسية',
       'searchHint': 'ابحث',
-      'aiConcierge': 'مساعد ذكي',
       'catNearly': 'القريبة',
       'catNewSuggestion': 'اقتراح جديد',
       'catPrivateOffice': 'مكتب خاص',
@@ -700,11 +851,13 @@ class LanguageService {
       'bookingStatusPageTitle': 'حالة الحجز',
       'bookingStatusHeader': 'طلب الحجز',
       'bookingStatusPullRefresh': 'اسحب للأسفل لتحديث الحالة',
-      'bookingStatusApprovedBanner': 'تمت الموافقة على الحجز. تفضل بإتمام الدفع.',
+      'bookingStatusApprovedBanner':
+          'تمت الموافقة على الحجز. تفضل بإتمام الدفع.',
       'bookingStatusRefreshBtn': 'تحديث الحالة',
       'bookingStatusCancelBtn': 'إلغاء الطلب',
       'bookingStatusGoPaymentBtn': 'الانتقال للدفع',
-      'bookingStatusPaidMsg': 'تم الدفع بنجاح. يمكنك مراجعة تفاصيل الحجز من قائمة حجوزاتك.',
+      'bookingStatusPaidMsg':
+          'تم الدفع بنجاح. يمكنك مراجعة تفاصيل الحجز من قائمة حجوزاتك.',
       // ── Booking Timeline ──
       'timelineProgress': 'التقدم',
       'timelineRequestSent': 'تم إرسال الطلب',
@@ -838,7 +991,8 @@ class LanguageService {
       'adminMySpaces': 'مساحاتي',
       'adminMySpacesSubtitle': 'إدارة مساحاتك المدرجة',
       'adminDeleteSpace': 'حذف المساحة',
-      'adminDeleteSpaceConfirm': 'هل أنت متأكد أنك تريد حذف هذه المساحة؟ لا يمكن التراجع عن هذا الإجراء.',
+      'adminDeleteSpaceConfirm':
+          'هل أنت متأكد أنك تريد حذف هذه المساحة؟ لا يمكن التراجع عن هذا الإجراء.',
       // Add/Edit Space
       'adminAddSpace': 'إضافة مساحة',
       'adminEditSpace': 'تعديل المساحة',
@@ -876,7 +1030,8 @@ class LanguageService {
       'adminPaymentAccountName': 'اسم صاحب الحساب',
       'adminPaymentAccountNameHint': 'الاسم الكامل لصاحب الحساب',
       'adminPaymentPhone': 'رقم الهاتف',
-      'adminPaymentCardNote': 'الدفع بالبطاقة يتم عبر جهاز نقطة البيع في المساحة عند الوصول.',
+      'adminPaymentCardNote':
+          'الدفع بالبطاقة يتم عبر جهاز نقطة البيع في المساحة عند الوصول.',
       // Payment page (user side)
       'paymentMethodTitle': 'طريقة الدفع',
       'paymentMethodDetails': 'تفاصيل التحويل',
@@ -915,6 +1070,146 @@ class LanguageService {
       'adminFilterAll': 'الكل',
       'adminFilterNew': 'جديد',
       'adminFilterFlagged': 'مبلغ عنه',
+      // Add Request Space
+      'joinMsahtak': 'انضم إلى مساحات مساحتك، ابدأ رحلتك الآن',
+      'addSpace': 'إضافة مساحة',
+      'spaceRequestNote':
+          'سيتم التواصل معك لمتابعة إضافة المساحة من قبل فريق منصة مساحتك',
+      'spaceName': 'اسم المساحة',
+      'description': 'الوصف',
+      'phone': 'رقم الهاتف',
+      'whatsapp': 'رقم الواتساب',
+      'contactName': 'اسم المسؤول',
+      'pricePD': 'السعر لليوم',
+      'capacity': 'السعة',
+      'workingHours': 'ساعات العمل',
+      'submit': 'إرسال',
+      'required': 'مطلوب',
+      'invalidNumber': 'رقم غير صالح',
+      'invalidPhone': 'رقم هاتف غير صالح',
+      'requestSuccess': 'تم إرسال الطلب بنجاح',
+      'requestSuccessFull': 'تم إرسال طلبك بنجاح، سيتم التواصل معك في أقرب وقت',
+      // Request Booking
+      'requestBookingTitle': 'طلب حجز',
+      'purpose': 'الغرض',
+      'selectPurpose': 'اختر الغرض',
+      'startDate': 'تاريخ البداية',
+      'selectDate': 'اختر التاريخ',
+      'duration': 'المدة',
+      'weeklyCheaper': 'الخطة الأسبوعية أوفر لك',
+      'switch': 'تبديل',
+      'offerOptional': 'العروض (اختياري)',
+      'chooseOffer': 'اختر عرض أو تخطى',
+      'weeklyPlan': 'خطة أسبوعية',
+      'monthlyPlan': 'خطة شهرية',
+      'promo': 'عرض خاص',
+      'addonsOptional': 'إضافات (اختياري)',
+      'priceSummary': 'ملخص السعر',
+      'sendBookingRequest': 'إرسال طلب الحجز',
+      // Pending
+      'pendingApprovalTitle': 'بانتظار الموافقة',
+      'requestSent': 'تم إرسال الطلب بنجاح',
+      'underReview': 'طلب الحجز قيد المراجعة',
+      'viewBookingStatus': 'عرض حالة الحجز',
+      'goHome': 'العودة للرئيسية',
+      // Status Page
+      'paymentSubmitted': 'تم إرسال الدفع، بانتظار تأكيد الإدارة',
+      'bookingConfirmed': 'تم تأكيد الحجز! نراك قريباً',
+      'paymentExpired': 'انتهت مهلة الدفع وتم إلغاء الحجز',
+      'payWithin': 'ادفع خلال:',
+      'paymentDeadlineExpired': 'انتهت مهلة الدفع',
+      // Badge
+      'pending': 'قيد الانتظار',
+      'underReviewStatus': 'قيد المراجعة',
+      'approvedPay': 'تمت الموافقة - ادفع الآن',
+      'paymentReview': 'مراجعة الدفع',
+      'confirmed': 'مؤكد',
+      'rejected': 'مرفوض',
+      'cancelled': 'ملغي',
+      'expired': 'منتهي',
+      'loading': 'جارٍ التحميل...',
+      'addNewSpace': 'إضافة مساحة جديدة',
+      'adminDashboard': 'لوحة التحكم',
+      'manageSpaces': 'إدارة مساحات العمل المشتركة',
+      'weeklyBookings': 'الحجوزات الأسبوعية',
+      'topSpaces': 'أفضل المساحات',
+      'exportReport': 'تصدير التقرير',
+      'bookings': 'الحجوزات',
+      'revenue': 'الإيرادات',
+      'monthView': 'عرض شهري',
+      'calendarMonthly': 'التقويم (شهري)',
+      'closeDay': 'إغلاق اليوم',
+      'specialHours': 'ساعات خاصة',
+      'amenities': 'المرافق',
+      'add': 'إضافة',
+      'noAmenities': 'لا توجد مرافق بعد',
+      'addAmenity': 'إضافة مرفق',
+      'images': 'الصور',
+      'uploadFailed': 'فشل الرفع',
+      'locationLatLng': 'الموقع (خط العرض/الطول)',
+      'pick': 'اختيار',
+      'basePrice': 'السعر الأساسي',
+      'day': 'يوم',
+      'week': 'أسبوع',
+      'month': 'شهر',
+      'closed': 'مغلق',
+      'visibility': 'الظهور',
+      'offerCreated': 'تم إنشاء العرض بنجاح',
+      'fixedPrice': 'سعر ثابت',
+      'discount': 'نسبة الخصم',
+      'packageMonths': 'باقة (أشهر)',
+      'bonus': 'مكافأة',
+      'validUntil': 'صالح حتى',
+      'selectPeriod': 'اختر الفترة',
+      'selectStatus': 'اختر الحالة',
+      'reviewsReports': 'التقييمات والتقارير',
+      'manageFeedback': 'إدارة التقييمات والمشاكل',
+      'reply': 'رد',
+      'hide': 'إخفاء',
+      'msahtak':'مساحتك',
+      'addNote': 'إضافة ملاحظة',
+      'bookingHistory': 'سجل الحجوزات',
+      'todaysBookings': "حجوزات اليوم",
+      'todaysOffers': "عروض اليوم",
+      'dontMissEssentials': "لا تفوت الأساسيات",
+      'noActiveBookings': "لا يوجد حجوزات حالياً",
+      'notLoggedIn': "لم يتم تسجيل الدخول",
+      'error': "خطأ",
+      'confirm': "تأكيد",
+      'yesCancel': "نعم، إلغاء",
+      'no': "لا",
+      'cancelBooking': "إلغاء الحجز",
+      'areYouSureCancelBooking': "هل أنت متأكد من إلغاء هذا الحجز؟",
+      'bookingId': "رقم الحجز",
+      'amountPaid': "المبلغ المدفوع",
+      'date': "التاريخ",
+      'statusPaymentReview': "قيد مراجعة الدفع",
+      'invoice': "فاتورة",
+      'downloadInvoice': "تحميل الفاتورة",
+      'backToHome': "العودة للرئيسية",
+      'paymentDone': "تم الدفع",
+      'awaitingAdmin': "بانتظار تأكيد الإدارة",
+      'spaceDetails': "تفاصيل المساحة",
+      'aboutApp': "حول التطبيق",
+      'selectLocation': "اختيار الموقع",
+      'confirmLocation': "تأكيد",
+      'aiConcierge': "المساعد الذكي",
+      'continueBooking': "متابعة الحجز",
+      'fitScore': "نسبة التطابق",
+      'whyThisMatch': "لماذا هذا مناسب:",
+      'headsUp': "تنبيه",
+      'deal': "عرض",
+      'perDay': "/يوم",
+      'bookingSummary': "ملخص الحجز",
+      'total': "الإجمالي",
+      'noOffersAvailable': "لا توجد عروض",
+      'validUntilLabel': "صالح حتى: ",
+      'yourReply': "ردك:",
+      'reason': "السبب:",
+      'internalRating': "التقييم الداخلي",
+      'noShow': "عدم الحضور",
+      "policies": "سياسات",
+      'ai':'ذكاء الاصطناعي'
     },
   };
 

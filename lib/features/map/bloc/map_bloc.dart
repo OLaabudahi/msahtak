@@ -84,3 +84,4 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 }
+

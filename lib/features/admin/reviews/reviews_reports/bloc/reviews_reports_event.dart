@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class ReviewsReportsEvent extends Equatable {
   const ReviewsReportsEvent();
@@ -31,3 +31,5 @@ class ReviewsReportsReplyPressed extends ReviewsReportsEvent {
   @override
   List<Object?> get props => [reviewId, reply];
 }
+
+

@@ -7,17 +7,19 @@ class WeeklyPlanRepoDummy implements WeeklyPlanRepo {
   final WeeklyPlanRemoteSource source;
   WeeklyPlanRepoDummy(this.source);
 
-  /// جلب قائمة المساحات وتحويلها إلى entities
+  /// ط¬ظ„ط¨ ظ‚ط§ط¦ظ…ط© ط§ظ„ظ…ط³ط§ط­ط§طھ ظˆطھط­ظˆظٹظ„ظ‡ط§ ط¥ظ„ظ‰ entities
   @override
   Future<List<Hub>> getHubs() => source.getHubs();
 
-  /// جلب تفاصيل الخطة وتحويلها إلى entity
+  /// ط¬ظ„ط¨ طھظپط§طµظٹظ„ ط§ظ„ط®ط·ط© ظˆطھط­ظˆظٹظ„ظ‡ط§ ط¥ظ„ظ‰ entity
   @override
   Future<WeeklyPlanDetails> getPlanDetails(String hubId) =>
       source.getPlanDetails(hubId);
 
-  /// تفعيل الخطة عبر المصدر
+  /// طھظپط¹ظٹظ„ ط§ظ„ط®ط·ط© ط¹ط¨ط± ط§ظ„ظ…طµط¯ط±
   @override
   Future<void> activatePlan(String hubId) =>
       source.activatePlan(hubId);
 }
+
+

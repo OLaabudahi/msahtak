@@ -11,12 +11,12 @@ class PaymentRoutes {
 
   static Route<void> payment({
     required PaymentBloc bloc,
-    required String requestId,
+    required String bookingId,
   }) {
     return MaterialPageRoute(
       builder: (_) => BlocProvider.value(
-        value: bloc..add(PaymentStarted(requestId)),
-        child: PaymentPage(requestId: requestId),
+        value: bloc..add(PaymentStarted(bookingId)),
+        child: PaymentPage(bookingId: bookingId),
       ),
     );
   }
@@ -29,3 +29,4 @@ class PaymentRoutes {
     );
   }
 }
+

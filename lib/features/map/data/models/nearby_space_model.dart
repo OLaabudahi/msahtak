@@ -56,3 +56,4 @@ class NearbySpaceModel {
     distanceKm: distanceKm,
   );
 }
+

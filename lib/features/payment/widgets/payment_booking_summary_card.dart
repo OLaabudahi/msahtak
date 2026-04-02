@@ -26,14 +26,14 @@ class PaymentBookingSummaryCard extends StatelessWidget {
           const Text('Booking Summary', style: TextStyle(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           if (s == null)
-            Text('—', style: TextStyle(color: AppColors.textDark))
+            Text('â€”', style: TextStyle(color: AppColors.textDark))
           else ...[
             ...s.items.map((i) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
                   Expanded(child: Text(i.label, style: TextStyle(color: AppColors.textDark))),
-                  Text('₪${i.amount}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                  Text('â‚ھ${i.amount}', style: const TextStyle(fontWeight: FontWeight.w700)),
                 ],
               ),
             )),
@@ -42,7 +42,7 @@ class PaymentBookingSummaryCard extends StatelessWidget {
             Row(
               children: [
                 const Expanded(child: Text('Total', style: TextStyle(fontWeight: FontWeight.w800))),
-                Text('₪${s.total}', style: const TextStyle(fontWeight: FontWeight.w800)),
+                Text('â‚ھ${s.total}', style: const TextStyle(fontWeight: FontWeight.w800)),
               ],
             ),
           ],
@@ -51,4 +51,6 @@ class PaymentBookingSummaryCard extends StatelessWidget {
     );
   }
 }
+
+
 

@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // Google Sign-In غير مدعوم على الويب بدون Client ID
+  // Google Sign-In ط؛ظٹط± ظ…ط¯ط¹ظˆظ… ط¹ظ„ظ‰ ط§ظ„ظˆظٹط¨ ط¨ط¯ظˆظ† Client ID
   GoogleSignIn? get _googleSignIn => kIsWeb ? null : GoogleSignIn();
 
   // Get current user
@@ -224,3 +224,5 @@ class AuthService {
     }
   }
 }
+
+

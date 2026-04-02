@@ -1,20 +1,20 @@
 import '../../domain/entities/fit_score.dart';
 import '../models/best_for_you_space_model.dart';
 
-/// واجهة مصدر البيانات – استبدل FakeBestForYouSource بـ RealBestForYouSource عند ربط API
+/// ظˆط§ط¬ظ‡ط© ظ…طµط¯ط± ط§ظ„ط¨ظٹط§ظ†ط§طھ â€“ ط§ط³طھط¨ط¯ظ„ FakeBestForYouSource ط¨ظ€ RealBestForYouSource ط¹ظ†ط¯ ط±ط¨ط· API
 abstract class BestForYouRemoteSource {
   Future<BestForYouSpaceModel> getBestSpace(String goal);
   Future<FitScore> getFitScore(String spaceId, String goal);
 
-  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر من الموقع الحالي
+  /// ط¬ظ„ط¨ ط£ط¹ظ„ظ‰ 5 ظ…ط³ط§ط­ط§طھ طھظ‚ظٹظٹظ…ط§ظ‹ ط¶ظ…ظ† 100 ظ…طھط± ظ…ظ† ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ط­ط§ظ„ظٹ
   Future<List<BestForYouSpaceModel>> getTopRatedNearby();
 }
 
 class FakeBestForYouSource implements BestForYouRemoteSource {
   static const _space = BestForYouSpaceModel(
     id: 'space_a',
-    name: 'Space A – Study Friendly',
-    location: 'City Center • Quiet • Fast Wi-Fi',
+    name: 'Space A â€“ Study Friendly',
+    location: 'City Center â€¢ Quiet â€¢ Fast Wi-Fi',
     distance: '1.2 km',
     pricePerDay: 35,
     rating: 4.8,
@@ -53,20 +53,20 @@ class FakeBestForYouSource implements BestForYouRemoteSource {
       reasons: [
         'Comfortable lounge area',
         'Natural lighting',
-        'Café on ground floor',
+        'Cafأ© on ground floor',
       ],
       headsUp: 'Can be noisy during lunch hours.',
     ),
   };
 
-  /// جلب المساحة الأفضل للهدف – استبدل بـ http.get('/best-for-you?goal=X') عند ربط API
+  /// ط¬ظ„ط¨ ط§ظ„ظ…ط³ط§ط­ط© ط§ظ„ط£ظپط¶ظ„ ظ„ظ„ظ‡ط¯ظپ â€“ ط§ط³طھط¨ط¯ظ„ ط¨ظ€ http.get('/best-for-you?goal=X') ط¹ظ†ط¯ ط±ط¨ط· API
   @override
   Future<BestForYouSpaceModel> getBestSpace(String goal) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _space;
   }
 
-  /// جلب درجة التطابق – استبدل بـ http.get('/fit-score?spaceId=X&goal=Y') عند ربط API
+  /// ط¬ظ„ط¨ ط¯ط±ط¬ط© ط§ظ„طھط·ط§ط¨ظ‚ â€“ ط§ط³طھط¨ط¯ظ„ ط¨ظ€ http.get('/fit-score?spaceId=X&goal=Y') ط¹ظ†ط¯ ط±ط¨ط· API
   @override
   Future<FitScore> getFitScore(
       String spaceId, String goal) async {
@@ -80,3 +80,5 @@ class FakeBestForYouSource implements BestForYouRemoteSource {
     return [_space];
   }
 }
+
+

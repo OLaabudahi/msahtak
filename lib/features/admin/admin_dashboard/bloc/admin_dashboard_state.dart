@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 import '../domain/entities/admin_dashboard_data_entity.dart';
 
@@ -38,3 +38,5 @@ class AdminDashboardState extends Equatable {
   @override
   List<Object?> get props => [status, data, dropdownOpen, navIndex, errorMessage];
 }
+
+

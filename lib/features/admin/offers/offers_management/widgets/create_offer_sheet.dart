@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import '../../../_shared/admin_ui.dart';
 import '../bloc/offers_management_event.dart';
 import '../bloc/offers_management_state.dart';
@@ -84,22 +85,22 @@ class CreateOfferSheet extends StatelessWidget {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<OfferType>(
                     value: form.type,
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: OfferType.fixedPriceOverride,
-                        child: Text('Fixed Price'),
+                        child: Text(context.t('fixedPrice')),
                       ),
                       DropdownMenuItem(
                         value: OfferType.discountPercent,
-                        child: Text('Discount %'),
+                        child: Text(context.t('discount')),
                       ),
-                      DropdownMenuItem(
+                      const DropdownMenuItem(
                         value: OfferType.packageMonths,
                         child: Text('Package (Months)'),
                       ),
                       DropdownMenuItem(
                         value: OfferType.bonus,
-                        child: Text('Bonus'),
+                        child: Text(context.t('bonus')),
                       ),
                     ],
                     onChanged: (v) => v == null
@@ -219,18 +220,18 @@ class CreateOfferSheet extends StatelessWidget {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<PriceUnit>(
                           value: form.fixedPriceUnit,
-                          items: const [
+                          items: [
                             DropdownMenuItem(
                               value: PriceUnit.day,
-                              child: Text('day'),
+                              child: Text(context.t('day')),
                             ),
                             DropdownMenuItem(
                               value: PriceUnit.week,
-                              child: Text('week'),
+                              child: Text(context.t('week')),
                             ),
                             DropdownMenuItem(
                               value: PriceUnit.month,
-                              child: Text('month'),
+                              child: Text(context.t('month')),
                             ),
                           ],
                           onChanged: (v) => v == null
@@ -430,3 +431,5 @@ class _Field extends StatelessWidget {
     );
   }
 }
+
+

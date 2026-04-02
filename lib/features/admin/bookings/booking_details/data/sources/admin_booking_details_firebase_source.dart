@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_booking_details_source.dart';
 import '../models/booking_details_model.dart';
 
-/// مصدر Firebase لتفاصيل الحجز — يقرأ من bookings ويجمع بيانات المستخدم
+/// ظ…طµط¯ط± Firebase ظ„طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط² â€” ظٹظ‚ط±ط£ ظ…ظ† bookings ظˆظٹط¬ظ…ط¹ ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…
 class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
   final _db = FirebaseFirestore.instance;
 
@@ -21,7 +21,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     }
     final d = doc.data()!;
 
-    // جلب بيانات المستخدم من users collection
+    // ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ… ظ…ظ† users collection
     final uid = d['userId'] as String? ?? d['user_id'] as String? ?? '';
     String userPhone = '-', userEmail = '-';
     if (uid.isNotEmpty) {
@@ -83,7 +83,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     await _createNotification(bookingId: bookingId, type: 'bookingRejected');
   }
 
-  /// ينشئ إشعاراً في مجموعة notifications لليوزر صاحب الحجز
+  /// ظٹظ†ط´ط¦ ط¥ط´ط¹ط§ط±ط§ظ‹ ظپظٹ ظ…ط¬ظ…ظˆط¹ط© notifications ظ„ظ„ظٹظˆط²ط± طµط§ط­ط¨ ط§ظ„ط­ط¬ط²
   Future<void> _createNotification({
     required String bookingId,
     required String type,
@@ -146,3 +146,5 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     return name.isNotEmpty ? name[0].toUpperCase() : '?';
   }
 }
+
+

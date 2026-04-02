@@ -10,7 +10,7 @@ class PayBookingRequestUseCase {
   const PayBookingRequestUseCase(this.repo);
 
   Future<PaymentReceiptEntity> call({
-    required String requestId,
+    required String bookingId,
     required PaymentMethodType method,
     required String methodName,
     String? receiptUrl,
@@ -22,7 +22,7 @@ class PayBookingRequestUseCase {
     String? receiptFileName,
   }) {
     return repo.pay(
-      requestId: requestId,
+      bookingId: bookingId,
       method: method,
       methodName: methodName,
       receiptUrl: receiptUrl,
@@ -34,3 +34,5 @@ class PayBookingRequestUseCase {
     );
   }
 }
+
+

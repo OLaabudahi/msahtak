@@ -16,7 +16,7 @@ import '../widgets/plan_card.dart';
 class WeeklyPlanPage extends StatelessWidget {
   const WeeklyPlanPage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  /// ط¥ظ†ط´ط§ط، ط§ظ„طµظپط­ط© ظ…ط¹ BLoC ط®ط§طµ ط¨ظ‡ط§
   static Widget withBloc() {
     final source = WeeklyPlanFirebaseSource();
     final repo = WeeklyPlanRepoDummy(source);
@@ -191,3 +191,5 @@ class _HubDropdown extends StatelessWidget {
     );
   }
 }
+
+

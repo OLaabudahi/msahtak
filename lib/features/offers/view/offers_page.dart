@@ -17,7 +17,7 @@ import '../widgets/offers_search_bar.dart';
 class OffersPage extends StatelessWidget {
   const OffersPage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  /// ط¥ظ†ط´ط§ط، ط§ظ„طµظپط­ط© ظ…ط¹ BLoC ط®ط§طµ ط¨ظ‡ط§
   static Widget withBloc() {
     final source = OffersFirebaseSource();
     final repo = OffersRepoDummy(source);
@@ -52,7 +52,7 @@ class _OffersViewState extends State<_OffersView> {
     super.dispose();
   }
 
-  /// التنقل إلى صفحة تفاصيل الفضاء عند الضغط على Deal
+  /// ط§ظ„طھظ†ظ‚ظ„ ط¥ظ„ظ‰ طµظپط­ط© طھظپط§طµظٹظ„ ط§ظ„ظپط¶ط§ط، ط¹ظ†ط¯ ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ Deal
   void _openSpaceDetails(String spaceId) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -148,3 +148,5 @@ class _OffersViewState extends State<_OffersView> {
     );
   }
 }
+
+

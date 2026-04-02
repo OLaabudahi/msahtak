@@ -29,3 +29,4 @@ class AiConciergeQuickReplySelected extends AiConciergeEvent {
 class AiConciergeResetRequested extends AiConciergeEvent {
   const AiConciergeResetRequested();
 }
+

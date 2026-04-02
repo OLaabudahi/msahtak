@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/payment_details_entity.dart';
+import '../../domain/entities/payment_details_entity.dart';
 
 class PaymentDetailsModel {
   final String id;
@@ -54,3 +54,5 @@ class PaymentDetailsModel {
         bookingId: bookingId,
       );
 }
+
+

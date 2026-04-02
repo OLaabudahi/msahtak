@@ -26,3 +26,5 @@ class SpaceDetailsCarouselChanged extends SpaceDetailsEvent {
   @override
   List<Object?> get props => [index];
 }
+
+

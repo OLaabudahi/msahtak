@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/user_profile_entity.dart';
+import '../../domain/entities/user_profile_entity.dart';
 
 class UserProfileModel {
   final String id;
@@ -44,3 +44,5 @@ class UserProfileModel {
         bookingHistory: bookingHistory,
       );
 }
+
+

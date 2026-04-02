@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../theme/app_colors.dart';
+import '../../../../core/i18n/app_i18n.dart';
 import '../../bloc/booking_request_bloc.dart';
 import '../../domain/entities/booking_request_entity.dart';
 import '../../widgets/booking_request_summary_card.dart';
 import '../booking_request_routes.dart';
-
 
 class PendingBookingApprovalPage extends StatelessWidget {
   final BookingRequestEntity request;
 
   const PendingBookingApprovalPage({super.key, required this.request});
 
-  static const _pagePadding = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+  static const _pagePadding = EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 12,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final canViewStatus = request.requestId.isNotEmpty;
+    final canViewStatus = request.bookingId.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pending booking approval'),
+        title: Text(context.t('pendingApprovalTitle')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -33,8 +36,8 @@ class PendingBookingApprovalPage extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               _SuccessCard(
-                title: 'Request sent successfully',
-                subtitle: 'Your booking request is under review',
+                title: context.t('requestSent'),
+                subtitle: context.t('underReview'),
               ),
               const SizedBox(height: 14),
               BookingRequestSummaryCard(request: request),
@@ -43,20 +46,25 @@ class PendingBookingApprovalPage extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: canViewStatus
-                      ? () => Navigator.of(context).push(
-                    BookingRequestRoutes.bookingStatus(
-                      bloc: context.read<BookingRequestBloc>(),
-                      requestId: request.requestId,
-                    ),
-                  )
-                      : null,
+                  onPressed: () {
+                    final bloc = context.read<BookingRequestBloc>();
+
+                    Navigator.of(context).push(
+                      BookingRequestRoutes.bookingStatus(
+                        bloc: bloc,
+                        bookingId: request.bookingId,
+                      ),
+                    );
+                  },
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.amber,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(26),
+                    ),
                   ),
-                  child: const Text(
-                    'View booking status',
+                  child: Text(
+                    context.t('viewBookingStatus'),
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -67,14 +75,16 @@ class PendingBookingApprovalPage extends StatelessWidget {
                 height: 52,
                 child: OutlinedButton(
                   onPressed: () {
-                    // مكانها الحقيقي: Navigator.popUntil(Home)
+                    // ظ…ظƒط§ظ†ظ‡ط§ ط§ظ„ط­ظ‚ظٹظ‚ظٹ: Navigator.popUntil(Home)
                     Navigator.of(context).popUntil((r) => r.isFirst);
                   },
                   style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(26),
+                    ),
                     side: const BorderSide(color: AppColors.inputBorder),
                   ),
-                  child: const Text('Go to Home'),
+                  child: Text(context.t('goHome')),
                 ),
               ),
               const SizedBox(height: 10),
@@ -107,15 +117,25 @@ class _SuccessCard extends StatelessWidget {
           const Icon(Icons.check_circle, color: AppColors.approvedText),
           const SizedBox(width: 10),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
-              const SizedBox(height: 2),
-              Text(subtitle, style: TextStyle(color: AppColors.textDark, fontSize: 12)),
-            ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: AppColors.textDark, fontSize: 12),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 }
+
 

@@ -1,17 +1,18 @@
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/repos/bookings_repo.dart';
 import '../models/booking_model.dart';
 
-/// ✅ تنفيذ Firebase لـ BookingsRepo – يقرأ bookings مرتبطة بالمستخدم
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ BookingsRepo â€“ ظٹظ‚ط±ط£ bookings ظ…ط±طھط¨ط·ط© ط¨ط§ظ„ظ…ط³طھط®ط¯ظ…
 class BookingsRepoFirebase implements BookingsRepo {
   @override
   Future<List<Booking>> fetchBookings() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return [];
 
-    // الأدمن يكتب userId (camelCase) ، التطبيق القديم كان user_id
+    // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ userId (camelCase) طŒ ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ظ‚ط¯ظٹظ… ظƒط§ظ† user_id
     QuerySnapshot<Map<String, dynamic>> snap;
     try {
       snap = await FirebaseFirestore.instance
@@ -27,7 +28,7 @@ class BookingsRepoFirebase implements BookingsRepo {
 
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = snap.docs;
 
-    // إذا لم نجد بـ userId نجرب user_id
+    // ط¥ط°ط§ ظ„ظ… ظ†ط¬ط¯ ط¨ظ€ userId ظ†ط¬ط±ط¨ user_id
     if (docs.isEmpty) {
       try {
         final snap2 = await FirebaseFirestore.instance
@@ -39,14 +40,14 @@ class BookingsRepoFirebase implements BookingsRepo {
     }
 
     docs.sort((a, b) {
-      // الأدمن يكتب createdAt ، التطبيق القديم created_at
+      // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ createdAt طŒ ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ظ‚ط¯ظٹظ… created_at
       final aTs = a.data()['createdAt'] ?? a.data()['created_at'];
       final bTs = b.data()['createdAt'] ?? b.data()['created_at'];
       if (aTs is Timestamp && bTs is Timestamp) return bTs.compareTo(aTs);
       return 0;
     });
 
-    // جمع كل spaceIds الفريدة لجلب صور الأماكن
+    // ط¬ظ…ط¹ ظƒظ„ spaceIds ط§ظ„ظپط±ظٹط¯ط© ظ„ط¬ظ„ط¨ طµظˆط± ط§ظ„ط£ظ…ط§ظƒظ†
     final spaceIds = docs
         .map((doc) {
           final d = doc.data();
@@ -59,7 +60,7 @@ class BookingsRepoFirebase implements BookingsRepo {
         .toSet()
         .toList();
 
-    // جلب صور الأماكن من workspaces و spaces
+    // ط¬ظ„ط¨ طµظˆط± ط§ظ„ط£ظ…ط§ظƒظ† ظ…ظ† workspaces ظˆ spaces
     final Map<String, String> spaceImages = {};
     if (spaceIds.isNotEmpty) {
       final futures = await Future.wait([
@@ -83,19 +84,19 @@ class BookingsRepoFirebase implements BookingsRepo {
     return docs.map((doc) {
       final d = doc.data();
 
-      // الأدمن يكتب workspaceId ، التطبيق القديم space_id
+      // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ workspaceId طŒ ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ظ‚ط¯ظٹظ… space_id
       final spaceId = d['space_id'] as String? ??
           d['spaceId'] as String? ??
           d['workspaceId'] as String? ??
           '';
 
-      // الأدمن لا يكتب space_name – نستخدم workspaceId كـ fallback
+      // ط§ظ„ط£ط¯ظ…ظ† ظ„ط§ ظٹظƒطھط¨ space_name â€“ ظ†ط³طھط®ط¯ظ… workspaceId ظƒظ€ fallback
       final spaceName = d['space_name'] as String? ??
           d['spaceName'] as String? ??
           d['workspaceName'] as String? ??
           'Space';
 
-      // التاريخ: الأدمن يكتب startDate كـ Timestamp
+      // ط§ظ„طھط§ط±ظٹط®: ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ startDate ظƒظ€ Timestamp
       final startTs = d['startDate'] as Timestamp? ?? d['date'] as Timestamp?;
       final dateText = d['date_text'] as String? ??
           d['date'] as String? ??
@@ -107,16 +108,16 @@ class BookingsRepoFirebase implements BookingsRepo {
       final timeText = d['time_text'] as String? ??
           d['time_slot'] as String? ??
           (startTs != null && endTs != null
-              ? '${_fmt(startTs.toDate())} – ${_fmt(endTs.toDate())}'
+              ? '${_fmt(startTs.toDate())} â€“ ${_fmt(endTs.toDate())}'
               : '--');
 
-      // السعر: الأدمن يكتب totalAmount
+      // ط§ظ„ط³ط¹ط±: ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ totalAmount
       final totalPrice = (d['total_price'] as num?)?.toDouble() ??
           (d['totalPrice'] as num?)?.toDouble() ??
           (d['totalAmount'] as num?)?.toDouble() ??
           0.0;
 
-      // الصورة: من الحجز أولاً، ثم من بيانات المكان
+      // ط§ظ„طµظˆط±ط©: ظ…ظ† ط§ظ„ط­ط¬ط² ط£ظˆظ„ط§ظ‹طŒ ط«ظ… ظ…ظ† ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ظƒط§ظ†
       final imageUrl = d['image_url'] as String? ??
           d['imageUrl'] as String? ??
           spaceImages[spaceId];
@@ -129,7 +130,7 @@ class BookingsRepoFirebase implements BookingsRepo {
         timeText: timeText,
         status: _normalizeStatus(d['status'] as String?),
         totalPrice: totalPrice,
-        currency: d['currency'] as String? ?? '₪',
+        currency: d['currency'] as String? ?? 'â‚ھ',
         imageUrl: imageUrl,
       );
     }).toList();
@@ -146,7 +147,7 @@ class BookingsRepoFirebase implements BookingsRepo {
   String _fmt(DateTime dt) =>
       '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
 
-  /// تحويل حالات Firebase إلى القيم المتوقعة في التطبيق
+  /// طھط­ظˆظٹظ„ ط­ط§ظ„ط§طھ Firebase ط¥ظ„ظ‰ ط§ظ„ظ‚ظٹظ… ط§ظ„ظ…طھظˆظ‚ط¹ط© ظپظٹ ط§ظ„طھط·ط¨ظٹظ‚
   String _normalizeStatus(String? raw) {
     switch (raw?.toLowerCase()) {
       case 'approved':
@@ -166,3 +167,6 @@ class BookingsRepoFirebase implements BookingsRepo {
     }
   }
 }
+*/
+
+

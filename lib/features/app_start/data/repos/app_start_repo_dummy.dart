@@ -16,10 +16,12 @@ class AppStartRepoDummy implements AppStartRepo {
     final completed = await _storage.getHasCompletedOnboarding();
     if (!completed) return AppStartDecision.goOnboarding;
 
-    // إذا كان المستخدم أدمن يُوجَّه لواجهة الإدارة
+    // ط¥ط°ط§ ظƒط§ظ† ط§ظ„ظ…ط³طھط®ط¯ظ… ط£ط¯ظ…ظ† ظٹظڈظˆط¬ظژظ‘ظ‡ ظ„ظˆط§ط¬ظ‡ط© ط§ظ„ط¥ط¯ط§ط±ط©
     final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
     if (role.contains('admin')) return AppStartDecision.goAdmin;
 
     return AppStartDecision.goHome;
   }
 }
+
+

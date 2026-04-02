@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/entities/day_availability_entity.dart';
 import '../domain/usecases/get_day_usecase.dart';
 import '../domain/usecases/save_day_usecase.dart';
@@ -51,3 +51,5 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
   }
 }
+
+

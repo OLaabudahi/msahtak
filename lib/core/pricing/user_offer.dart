@@ -1,4 +1,4 @@
-﻿import 'pricing_enums.dart';
+import 'pricing_enums.dart';
 
 class UserOffer {
   final String id;
@@ -116,3 +116,5 @@ class UserOffer {
     }
   }
 }
+
+

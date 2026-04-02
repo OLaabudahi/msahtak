@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/space_form_entity.dart';
+import '../../domain/entities/space_form_entity.dart';
 import '../../domain/entities/price_unit.dart';
 import '../models/amenity_model.dart';
 import '../models/policy_section_model.dart';
@@ -160,4 +160,7 @@ class SpaceFormModel {
       paymentMethods: e.paymentMethods,
     );
   }
+
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/add_user_note_usecase.dart';
 import '../domain/usecases/approve_user_usecase.dart';
 import '../domain/usecases/block_user_usecase.dart';
@@ -52,3 +52,5 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     add(UserProfileStarted(event.userId));
   }
 }
+
+

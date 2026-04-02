@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/policy_section_entity.dart';
+import '../../domain/entities/policy_section_entity.dart';
 
 class PolicySectionModel {
   final String id;
@@ -23,3 +23,5 @@ class PolicySectionModel {
 
   static PolicySectionModel fromEntity(PolicySectionEntity e) => PolicySectionModel(id: e.id, title: e.title, bullets: e.bullets);
 }
+
+

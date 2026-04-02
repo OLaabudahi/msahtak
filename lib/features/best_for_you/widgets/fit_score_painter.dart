@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// رسام الدائرة التقدمية لدرجة التطابق
+/// ط±ط³ط§ظ… ط§ظ„ط¯ط§ط¦ط±ط© ط§ظ„طھظ‚ط¯ظ…ظٹط© ظ„ط¯ط±ط¬ط© ط§ظ„طھط·ط§ط¨ظ‚
 class FitScorePainter extends CustomPainter {
   final double progress;
   final Color bgColor;
@@ -40,3 +40,5 @@ class FitScorePainter extends CustomPainter {
   bool shouldRepaint(covariant FitScorePainter oldDelegate) =>
       oldDelegate.progress != progress;
 }
+
+

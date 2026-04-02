@@ -24,3 +24,5 @@ class BookingPriceQuoteEntity extends Equatable {
     currency,
   ];
 }
+
+

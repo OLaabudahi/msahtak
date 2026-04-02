@@ -6,3 +6,5 @@ class DeleteSpaceUseCase {
 
   Future<void> call({required String spaceId}) => repo.deleteSpace(spaceId: spaceId);
 }
+
+

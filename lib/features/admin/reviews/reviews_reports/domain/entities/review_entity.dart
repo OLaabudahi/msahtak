@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class ReviewEntity extends Equatable {
   final String id;
@@ -22,3 +22,4 @@ class ReviewEntity extends Equatable {
   @override
   List<Object?> get props => [id, userName, spaceName, dateLabel, stars, text, adminReply];
 }
+

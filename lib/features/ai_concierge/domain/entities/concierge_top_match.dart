@@ -7,7 +7,7 @@ class ConciergeTopMatch extends Equatable {
   final String planLine; // Plan suggestion...
   final String priceLine; // Daily... Weekly...
 
-  /// ✅ Dummy: asset — API-ready: imageUrl commented in data layer
+  /// âœ… Dummy: asset â€” API-ready: imageUrl commented in data layer
   final String imageAsset;
 
   const ConciergeTopMatch({
@@ -22,3 +22,4 @@ class ConciergeTopMatch extends Equatable {
   @override
   List<Object?> get props => [spaceId, title, whyLine, planLine, priceLine, imageAsset];
 }
+

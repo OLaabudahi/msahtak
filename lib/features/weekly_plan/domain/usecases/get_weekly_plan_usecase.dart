@@ -6,7 +6,7 @@ class GetWeeklyPlanUseCase {
   final WeeklyPlanRepo repo;
   GetWeeklyPlanUseCase(this.repo);
 
-  /// جلب قائمة المساحات وتفاصيل الخطة للمساحة الافتراضية
+  /// ط¬ظ„ط¨ ظ‚ط§ط¦ظ…ط© ط§ظ„ظ…ط³ط§ط­ط§طھ ظˆطھظپط§طµظٹظ„ ط§ظ„ط®ط·ط© ظ„ظ„ظ…ط³ط§ط­ط© ط§ظ„ط§ظپطھط±ط§ط¶ظٹط©
   Future<({List<Hub> hubs, WeeklyPlanDetails details})> call(
       String hubId) async {
     final hubs = await repo.getHubs();
@@ -14,3 +14,5 @@ class GetWeeklyPlanUseCase {
     return (hubs: hubs, details: details);
   }
 }
+
+

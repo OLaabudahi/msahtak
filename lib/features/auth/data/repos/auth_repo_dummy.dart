@@ -83,3 +83,5 @@ class AuthRepoDummy implements AuthRepo {
     return RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(s);
   }
 }
+
+

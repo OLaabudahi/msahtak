@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/amenity_entity.dart';
+import '../../domain/entities/amenity_entity.dart';
 
 class AmenityModel {
   final String id;
@@ -26,3 +26,5 @@ class AmenityModel {
 
   static AmenityModel fromEntity(AmenityEntity e) => AmenityModel(id: e.id, name: e.name, selected: e.selected, isCustom: e.isCustom);
 }
+
+

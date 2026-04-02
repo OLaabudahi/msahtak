@@ -37,7 +37,7 @@ class BookingDetails extends Equatable {
     this.imageUrl,
   });
 
-  // ✅ API READY (comment)
+  // âœ… API READY (comment)
   // factory BookingDetails.fromJson(Map<String, dynamic> json) {
   //   return BookingDetails(
   //     bookingId: json['bookingId'].toString(),
@@ -50,7 +50,7 @@ class BookingDetails extends Equatable {
   //     timeText: json['timeText'] ?? '',
   //     notes: json['notes'] ?? '',
   //     totalPrice: (json['totalPrice'] ?? 0),
-  //     currency: json['currency'] ?? '₪',
+  //     currency: json['currency'] ?? 'â‚ھ',
   //     imageUrl: json['imageUrl'],
   //   );
   // }
@@ -72,3 +72,5 @@ class BookingDetails extends Equatable {
     imageUrl,
   ];
 }
+
+

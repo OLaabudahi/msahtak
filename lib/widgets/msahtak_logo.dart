@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/i18n/app_i18n.dart';
+
 class MsahtakLogo extends StatelessWidget {
   final double width;
   final double height;

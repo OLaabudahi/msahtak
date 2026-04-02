@@ -10,7 +10,7 @@ class BestForYouState extends Equatable {
   final bool isLoading;
   final String? error;
 
-  /// قائمة أعلى 5 مساحات تقييماً ضمن 100 متر
+  /// ظ‚ط§ط¦ظ…ط© ط£ط¹ظ„ظ‰ 5 ظ…ط³ط§ط­ط§طھ طھظ‚ظٹظٹظ…ط§ظ‹ ط¶ظ…ظ† 100 ظ…طھط±
   final List<BestForYouSpace> topSpaces;
 
   const BestForYouState({
@@ -46,3 +46,5 @@ class BestForYouState extends Equatable {
   List<Object?> get props =>
       [space, fitScore, selectedGoal, goals, isLoading, error, topSpaces];
 }
+
+

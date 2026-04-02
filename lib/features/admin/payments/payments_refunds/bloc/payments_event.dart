@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/payment_status.dart';
 
 sealed class PaymentsEvent extends Equatable {
@@ -38,3 +38,5 @@ class PaymentsIssueRefund extends PaymentsEvent {
   @override
   List<Object?> get props => [paymentId];
 }
+
+

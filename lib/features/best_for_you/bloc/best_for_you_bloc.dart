@@ -20,12 +20,12 @@ class BestForYouBloc
     on<BestForYouContinuePressed>(_onContinuePressed);
   }
 
-  /// تحميل البيانات للهدف الافتراضي وقائمة أعلى المساحات القريبة
+  /// طھط­ظ…ظٹظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ ظ„ظ„ظ‡ط¯ظپ ط§ظ„ط§ظپطھط±ط§ط¶ظٹ ظˆظ‚ط§ط¦ظ…ط© ط£ط¹ظ„ظ‰ ط§ظ„ظ…ط³ط§ط­ط§طھ ط§ظ„ظ‚ط±ظٹط¨ط©
   Future<void> _onStarted(BestForYouStarted event,
       Emitter<BestForYouState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
-      // نحمل القائمة والأفضل بالتوازي
+      // ظ†ط­ظ…ظ„ ط§ظ„ظ‚ط§ط¦ظ…ط© ظˆط§ظ„ط£ظپط¶ظ„ ط¨ط§ظ„طھظˆط§ط²ظٹ
       final bestFuture = getBestForYouUseCase(state.selectedGoal);
       final topFuture = getTopRatedNearbyUseCase();
 
@@ -43,7 +43,7 @@ class BestForYouBloc
     }
   }
 
-  /// تحميل البيانات عند تغيير الهدف
+  /// طھط­ظ…ظٹظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ ط¹ظ†ط¯ طھط؛ظٹظٹط± ط§ظ„ظ‡ط¯ظپ
   Future<void> _onGoalChanged(BestForYouGoalChanged event,
       Emitter<BestForYouState> emit) async {
     emit(state.copyWith(selectedGoal: event.goal, isLoading: true));
@@ -58,9 +58,11 @@ class BestForYouBloc
     }
   }
 
-  /// معالجة الضغط على "Continue to Booking"
+  /// ظ…ط¹ط§ظ„ط¬ط© ط§ظ„ط¶ط؛ط· ط¹ظ„ظ‰ "Continue to Booking"
   void _onContinuePressed(BestForYouContinuePressed event,
       Emitter<BestForYouState> emit) {
     // TODO: navigate to booking page with state.space?.id
   }
 }
+
+

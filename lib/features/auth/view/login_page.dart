@@ -1,11 +1,17 @@
+import 'package:Msahtak/constants/app_assets.dart';
 import 'package:flutter/material.dart';
+import '../../../core/services/firestore_api.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app_start/bloc/app_start_bloc.dart';
 import '../../app_start/bloc/app_start_event.dart';
 import '../../../core/i18n/app_i18n.dart';
-import '../../../services/local_storage_service.dart';
+import '../../space_requests/bloc/space_request_bloc.dart';
+import '../../space_requests/data/repos/space_request_repo_impl.dart';
+import '../../space_requests/data/sources/space_request_firebase_source.dart';
+import '../../space_requests/domain/usecases/submit_space_request_usecase.dart';
+import '../../space_requests/view/space_request_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -46,9 +52,15 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
+            listener: (context, state)  {
               if (state.status == AuthStatus.success) {
                 _notifyAppRoot(context);
+
+                /*await seedAllSpaces
+                  (
+                  source: AddEditSpaceFirebaseSource(),
+                  adminId: "EHSoT00cQ4TlkusDqWo0Vb5dwOl1",
+                );*/
               }
               if (state.status == AuthStatus.error &&
                   state.errorMessage != null) {
@@ -74,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     Center(
                       child: Image.asset(
-                        'assets/images/msahtak_logo.png',
+                        AppAssets.logo,
                         width: 200,
                         height: 80,
                         fit: BoxFit.contain,
@@ -83,9 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                             width: 200,
                             height: 80,
                             alignment: Alignment.center,
-                            child: const Text(
-                              'Msahtak',
-                              style: TextStyle(
+                            child: Text(
+                              context.t('msahtak'),
+                              style: const TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.secondary,
@@ -248,7 +260,64 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 20),
 
+                    GestureDetector(
+                     /* onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                              create: (context) => SpaceRequestBloc(
+                                SubmitSpaceRequestUseCase(
+                                  SpaceRequestRepoImpl(
+                                    SpaceRequestFirebaseSource(FirestoreApi()),
+                                  ),
+                                ),
+                              ),
+                              child: SpaceRequestPage(),
+                            ),
+                          ),
+                        );
+                      },*/
+                      onTap: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                              create: (context) => SpaceRequestBloc(
+                                SubmitSpaceRequestUseCase(
+                                  SpaceRequestRepoImpl(
+                                    SpaceRequestFirebaseSource(FirestoreApi()),
+                                  ),
+                                ),
+                              ),
+                              child: const SpaceRequestPage(),
+                            ),
+                          ),
+                        );
+                        if (result == true) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                context.t('requestSuccessFull'),
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          context.t( 'joinMsahtak'),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: AppColors.amber,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -259,4 +328,191 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+ /* Future<void> seedAllSpaces({
+    required AddEditSpaceFirebaseSource source,
+    required String adminId,
+  }) async {
+    final spaces = [
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'LegoSpaces',
+        address: 'Gaza - Al Thalathini Street',
+        description: 'Workspace with meeting rooms',
+        images :[ 'https://images.unsplash.com/photo-1497366754035-f200968a6e72'],
+        price: '40',
+        hours: '8 AM - 10 PM',
+        policies: 'Keep space clean',
+        basePriceValue: 40,
+        basePriceUnit: 'day',
+        totalSeats: 20,
+        location: const {'lat': 31.5143, 'lng': 34.4429},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a2', 'name': 'Electricity', 'selected': true, 'isCustom': false},
+          {'id': 'a3', 'name': 'Meeting Room', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Printer', 'selected': true, 'isCustom': false},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Gaza Sky Geeks',
+        address: 'UNRWA HQ Square, Gaza',
+        description: 'Training and startup hub',
+        images :[ 'https://images.unsplash.com/photo-1524758631624-e2822e304c36'],
+        price: '25',
+        hours: '9 AM - 6 PM',
+        policies: 'Quiet environment',
+        basePriceValue: 25,
+        basePriceUnit: 'day',
+        totalSeats: 50,
+        location: const {'lat': 31.5130, 'lng': 34.4453},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a2', 'name': 'Electricity', 'selected': true, 'isCustom': false},
+          {'id': 'a3', 'name': 'Training Room', 'selected': true, 'isCustom': true},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Cupresso Workspace',
+        address: 'Gaza - Al Rimal, Ahmed Abdel Aziz Street',
+        description: 'Cafe workspace with coffee',
+        images :[ 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb'],
+        price: '25',
+        hours: '8 AM - 12 AM',
+        policies: 'Order required',
+        basePriceValue: 25,
+        basePriceUnit: 'day',
+        totalSeats: 15,
+        location: const {'lat': 31.5197, 'lng': 34.4466},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a2', 'name': 'Electricity', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Mazaj Cafe Workspace',
+        address: 'Gaza City - central area',
+        description: 'Outdoor workspace',
+        images :[ 'https://images.unsplash.com/photo-1554118811-1e0d58224f24'],
+        price: '20',
+        hours: '9 AM - 11 PM',
+        policies: 'No loud noise',
+        basePriceValue: 20,
+        basePriceUnit: 'day',
+        totalSeats: 30,
+        location: const {'lat': 31.5016, 'lng': 34.4668},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+          {'id': 'a5', 'name': 'Outdoor Seating', 'selected': true, 'isCustom': true},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Branch Cafe Workspace',
+        address: 'Gaza - near Canal Street',
+        description: 'Calm workspace',
+        images :[ 'https://images.unsplash.com/photo-1492724441997-5dc865305da7'],
+        price: '22',
+        hours: '8 AM - 11 PM',
+        policies: 'Respect others',
+        basePriceValue: 22,
+        basePriceUnit: 'day',
+        totalSeats: 20,
+        location: const {'lat': 31.5125, 'lng': 34.4481},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a2', 'name': 'Electricity', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Art De Cafe Workspace',
+        address: 'Gaza - Abdel Qader Al Husseini Street',
+        description: 'Art cafe workspace',
+        images :[ 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085'],
+        price: '18',
+        hours: '9 AM - 10 PM',
+        policies: 'No disturbance',
+        basePriceValue: 18,
+        basePriceUnit: 'day',
+        totalSeats: 12,
+        location: const {'lat': 31.5208, 'lng': 34.4468},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+        ],
+        paymentMethods: const [],
+      ),
+
+      SpaceFormModel(
+        id: null,
+        adminId: adminId,
+        name: 'Meow Cafe Workspace',
+        address: 'Tel Al Hawa - Towers Street',
+        description: 'Quiet workspace',
+        images :[ 'https://images.unsplash.com/photo-1509042239860-f550ce710b93'],
+        price: '25',
+        hours: '10 AM - 10 PM',
+        policies: 'Silent zone',
+        basePriceValue: 25,
+        basePriceUnit: 'day',
+        totalSeats: 10,
+        location: const {'lat': 31.5030, 'lng': 34.4321},
+        workingHours: const [],
+        policySections: const [],
+        hidden: false,
+        amenities: const [
+          {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+          {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+          {'id': 'a7', 'name': 'Quiet Space', 'selected': true, 'isCustom': true},
+        ],
+        paymentMethods: const [],
+      ),
+    ];
+
+    for (final space in spaces) {
+      await source.saveSpace(form: space);
+    }
+  }*/
 }
+
+

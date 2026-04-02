@@ -16,7 +16,7 @@ import '../widgets/reviews_filter_chip.dart';
 class ReviewsPage extends StatelessWidget {
   const ReviewsPage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  /// ط¥ظ†ط´ط§ط، ط§ظ„طµظپط­ط© ظ…ط¹ BLoC ط®ط§طµ ط¨ظ‡ط§
   static Widget withBloc() {
     final source = ReviewsFirebaseSource();
     final repo = ReviewsRepoDummy(source);
@@ -213,3 +213,5 @@ class _OverallRatingCard extends StatelessWidget {
     );
   }
 }
+
+

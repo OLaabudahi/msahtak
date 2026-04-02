@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class SettingsActionTile extends StatelessWidget {
-  final IconData? icon; // ✅ صار اختياري
+  final IconData? icon; // âœ… طµط§ط± ط§ط®طھظٹط§ط±ظٹ
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
@@ -88,3 +88,5 @@ class SettingsActionTile extends StatelessWidget {
     );
   }
 }
+
+

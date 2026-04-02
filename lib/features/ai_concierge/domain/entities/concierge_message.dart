@@ -16,3 +16,4 @@ class ConciergeMessage extends Equatable {
   @override
   List<Object?> get props => [id, sender, text];
 }
+

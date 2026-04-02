@@ -17,3 +17,5 @@ class ReviewsSummaryModel extends ReviewsSummary {
     );
   }
 }
+
+

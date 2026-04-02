@@ -50,3 +50,4 @@ class AdminDashboardRepoDummy implements AdminDashboardRepo {
     return model.toEntity();
   }
 }
+

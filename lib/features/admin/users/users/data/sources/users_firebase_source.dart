@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'users_source.dart';
 import '../models/user_model.dart';
 
-/// مصدر Firebase للمستخدمين — يقرأ من users collection
+/// ظ…طµط¯ط± Firebase ظ„ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† â€” ظٹظ‚ط±ط£ ظ…ظ† users collection
 class UsersFirebaseSource implements UsersSource {
   final _db = FirebaseFirestore.instance;
 
   @override
   Future<List<UserModel>> fetchUsers() async {
-    // جلب كل المستخدمين وفلترة الأدمن client-side لتجنب composite index
+    // ط¬ظ„ط¨ ظƒظ„ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ† ظˆظپظ„طھط±ط© ط§ظ„ط£ط¯ظ…ظ† client-side ظ„طھط¬ظ†ط¨ composite index
     final snap = await _db.collection('users').get();
 
     return snap.docs.where((doc) {
@@ -35,3 +35,5 @@ class UsersFirebaseSource implements UsersSource {
     return name.isNotEmpty ? name[0].toUpperCase() : '?';
   }
 }
+
+

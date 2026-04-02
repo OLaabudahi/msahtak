@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'admin_colors.dart';
 
@@ -69,3 +69,5 @@ class _NavItem {
   final String label;
   const _NavItem({required this.icon, required this.label});
 }
+
+

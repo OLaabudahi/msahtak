@@ -1,9 +1,11 @@
 import '../entities/offer.dart';
 
 abstract class OffersRepo {
-  /// جلب جميع العروض
+  /// ط¬ظ„ط¨ ط¬ظ…ظٹط¹ ط§ظ„ط¹ط±ظˆط¶
   Future<List<Offer>> getOffers();
 
-  /// البحث في العروض بالنص
+  /// ط§ظ„ط¨ط­ط« ظپظٹ ط§ظ„ط¹ط±ظˆط¶ ط¨ط§ظ„ظ†طµ
   Future<List<Offer>> searchOffers(String query);
 }
+
+

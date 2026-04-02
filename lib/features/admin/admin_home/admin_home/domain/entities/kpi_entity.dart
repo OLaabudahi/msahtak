@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class KpiEntity extends Equatable {
   final String id;
@@ -16,3 +16,5 @@ class KpiEntity extends Equatable {
   @override
   List<Object?> get props => [id, title, value, delta];
 }
+
+

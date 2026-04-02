@@ -45,3 +45,4 @@ class HomeFeaturedPageChanged extends HomeEvent {
   @override
   List<Object?> get props => [index];
 }
+

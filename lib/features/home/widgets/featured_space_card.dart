@@ -21,7 +21,7 @@ class FeaturedSpaceCard extends StatelessWidget {
     required this.onViewTap,
   });
 
-  /// ✅ دالة: بناء كارد "For You" الكبير (صورة + كارد أبيض فوقها)
+  /// âœ… ط¯ط§ظ„ط©: ط¨ظ†ط§ط، ظƒط§ط±ط¯ "For You" ط§ظ„ظƒط¨ظٹط± (طµظˆط±ط© + ظƒط§ط±ط¯ ط£ط¨ظٹط¶ ظپظˆظ‚ظ‡ط§)
   @override
   Widget build(BuildContext context) {
     final url = imageUrl;
@@ -126,3 +126,5 @@ class FeaturedSpaceCard extends StatelessWidget {
     );
   }
 }
+
+

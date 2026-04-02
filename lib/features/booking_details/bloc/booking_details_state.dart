@@ -32,3 +32,5 @@ class BookingDetailsState extends Equatable {
   @override
   List<Object?> get props => [loading, error, data];
 }
+
+

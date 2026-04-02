@@ -66,7 +66,7 @@ class BestForYouPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ─── قسم أعلى 5 مساحات قريبة ───
+                // â”€â”€â”€ ظ‚ط³ظ… ط£ط¹ظ„ظ‰ 5 ظ…ط³ط§ط­ط§طھ ظ‚ط±ظٹط¨ط© â”€â”€â”€
                 const Text(
                   'Top Rated Spaces Near You',
                   style: TextStyle(
@@ -102,7 +102,7 @@ class BestForYouPage extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // ─── قسم الهدف وFit Score ───
+                // â”€â”€â”€ ظ‚ط³ظ… ط§ظ„ظ‡ط¯ظپ ظˆFit Score â”€â”€â”€
                 const Divider(),
                 const SizedBox(height: 12),
                 const Text(
@@ -136,7 +136,7 @@ class BestForYouPage extends StatelessWidget {
   }
 }
 
-/// عنصر مساحة واحدة في القائمة — نفس تصميم SpaceResultCard
+/// ط¹ظ†طµط± ظ…ط³ط§ط­ط© ظˆط§ط­ط¯ط© ظپظٹ ط§ظ„ظ‚ط§ط¦ظ…ط© â€” ظ†ظپط³ طھطµظ…ظٹظ… SpaceResultCard
 class _SpaceListItem extends StatelessWidget {
   final BestForYouSpace space;
   final VoidCallback onView;
@@ -202,7 +202,7 @@ class _SpaceListItem extends StatelessWidget {
                             const SizedBox(height: 6),
                           ],
                           Text(
-                            '₪${space.pricePerDay}/day',
+                            'â‚ھ${space.pricePerDay}/day',
                             style: const TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 13),
                           ),
@@ -295,3 +295,5 @@ class _GoalDropdown extends StatelessWidget {
     );
   }
 }
+
+

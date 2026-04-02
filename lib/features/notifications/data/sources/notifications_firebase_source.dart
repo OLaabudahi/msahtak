@@ -2,25 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/services/firestore_api.dart';
 import '../../domain/entities/notification_item.dart';
 import '../models/notification_item_model.dart';
 import '../models/notification_settings_model.dart';
 import 'notifications_remote_source.dart';
 
-/// ✅ تنفيذ Firebase لـ NotificationsRemoteSource
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ NotificationsRemoteSource
 class NotificationsFirebaseSource implements NotificationsRemoteSource {
   static const _kBookingApproved = 'notif_bookingApproved';
   static const _kBookingRejected = 'notif_bookingRejected';
   static const _kBookingReminder = 'notif_bookingReminder';
   static const _kOfferSuggestion = 'notif_offerSuggestion';
   static const _kReminderTiming = 'notif_reminderTiming';
+  final FirestoreApi api = FirestoreApi();
 
   @override
   Future<List<NotificationItemModel>> getNotifications() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return [];
 
-    // الأدمن يكتب userId (camelCase) – نجرب الاثنين
+    /*
+    // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ userId (camelCase) â€“ ظ†ط¬ط±ط¨ ط§ظ„ط§ط«ظ†ظٹظ†
     QuerySnapshot<Map<String, dynamic>> snap;
     try {
       snap = await FirebaseFirestore.instance
@@ -36,7 +39,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
           .get();
     }
 
-    // إذا لم نجد بـ userId نجرب user_id
+    // ط¥ط°ط§ ظ„ظ… ظ†ط¬ط¯ ط¨ظ€ userId ظ†ط¬ط±ط¨ user_id
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = snap.docs;
     if (docs.isEmpty) {
       try {
@@ -48,27 +51,51 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
         docs = snap2.docs;
       } catch (_) {}
     }
+*/
+    List<Map<String, dynamic>> docs = [];
 
-    docs.sort((a, b) {
-      // الأدمن يكتب createdAt ، التطبيق القديم created_at
+    try {
+      docs = await api.queryWhereEqual(
+        collection: 'notifications',
+        field: 'userId',
+        value: uid,
+      );
+    } catch (_) {}
+
+    if (docs.isEmpty) {
+      try {
+        docs = await api.queryWhereEqual(
+          collection: 'notifications',
+          field: 'user_id',
+          value: uid,
+        );
+      } catch (_) {}
+    }
+    /*docs.sort((a, b) {
       final aTs = a.data()['createdAt'] ?? a.data()['created_at'];
-      final bTs = b.data()['createdAt'] ?? b.data()['created_at'];
+      final bTs = b.data()['createdAt'] ?? b.data()['created_at'];*/
+    docs.sort((a, b) {
+      final aTs = a['createdAt'] ?? a['created_at'];
+      final bTs = b['createdAt'] ?? b['created_at'];
       if (aTs is Timestamp && bTs is Timestamp) return bTs.compareTo(aTs);
       return 0;
     });
 
-    return docs.map((doc) {
-      final d = doc.data();
-      // الأدمن يكتب isRead ، التطبيق القديم is_read
+  /*  return docs.map((doc) {
+      final d = doc.data();*/
+    return docs.map((d) {
+      // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ isRead طŒ ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ظ‚ط¯ظٹظ… is_read
       final isRead = d['isRead'] as bool? ?? d['is_read'] as bool? ?? false;
-      // الأدمن يكتب message ، التطبيق يقرأ subtitle ثم body
-      final subtitle = d['subtitle'] as String? ??
+      // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ message طŒ ط§ظ„طھط·ط¨ظٹظ‚ ظٹظ‚ط±ط£ subtitle ط«ظ… body
+      final subtitle =
+          d['subtitle'] as String? ??
           d['body'] as String? ??
           d['message'] as String? ??
           '';
       final ts = d['createdAt'] as Timestamp? ?? d['created_at'] as Timestamp?;
       return NotificationItemModel(
-        id: doc.id,
+        // id: doc.id,
+        id: d['id'],
         title: d['title'] as String? ?? '',
         subtitle: subtitle,
         time: _relativeTime(ts),
@@ -77,7 +104,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
           orElse: () => NotificationType.tip,
         ),
         isRead: isRead,
-        requestId: d['requestId'] as String?,
+        bookingId: d['bookingId'] as String?,
       );
     }).toList();
   }
@@ -95,7 +122,9 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
   }
 
   @override
-  Future<void> saveNotificationSettings(NotificationSettingsModel settings) async {
+  Future<void> saveNotificationSettings(
+    NotificationSettingsModel settings,
+  ) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setBool(_kBookingApproved, settings.bookingApproved);
     await sp.setBool(_kBookingRejected, settings.bookingRejected);
@@ -113,3 +142,5 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
     return '${diff.inDays}d';
   }
 }
+
+

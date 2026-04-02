@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'offers_source.dart';
 import '../models/offer_model.dart';
 
-/// مصدر Firebase للعروض — يقرأ/يكتب من offers collection
+/// ظ…طµط¯ط± Firebase ظ„ظ„ط¹ط±ظˆط¶ â€” ظٹظ‚ط±ط£/ظٹظƒطھط¨ ظ…ظ† offers collection
 class OffersFirebaseSource implements OffersSource {
   final _db = FirebaseFirestore.instance;
 
@@ -28,3 +28,5 @@ class OffersFirebaseSource implements OffersSource {
     await _db.collection('offers').add(data);
   }
 }
+
+

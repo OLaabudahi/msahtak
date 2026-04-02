@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'analytics_source.dart';
 import '../models/analytics_model.dart';
 
-/// مصدر Firebase للتحليلات — يجمع من bookings و spaces و reviews
 class AnalyticsFirebaseSource implements AnalyticsSource {
   final _db = FirebaseFirestore.instance;
 
@@ -11,7 +10,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
   Future<AnalyticsModel> fetchAnalytics() async {
     final now = DateTime.now();
 
-    // جلب الحجوزات والمساحات والتقييمات بالتوازي
     final results = await Future.wait([
       _db.collection('bookings').get(),
       _db.collection('spaces').get(),
@@ -22,7 +20,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
     final spacesDocs = results[1].docs;
     final reviewsDocs = results[2].docs;
 
-    // إجمالي الإيرادات من الحجوزات المدفوعة
     double totalRevenue = 0;
     for (final doc in bookingsDocs) {
       final d = doc.data() as Map<String, dynamic>;
@@ -32,7 +29,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
       }
     }
 
-    // نسبة الإشغال (محجوز / إجمالي)
     final totalSpaces = spacesDocs.length;
     final bookedSpaces = bookingsDocs
         .where((d) {
@@ -46,7 +42,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
         ? '${((bookedSpaces / totalSpaces) * 100).toStringAsFixed(0)}%'
         : '0%';
 
-    // متوسط التقييم
     double ratingSum = 0;
     int ratingCount = 0;
     for (final doc in reviewsDocs) {
@@ -58,7 +53,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
     }
     final avgRating = ratingCount > 0 ? (ratingSum / ratingCount).toStringAsFixed(1) : '-';
 
-    // إيرادات آخر 7 أيام
     final weekLabels = <String>[];
     final weekValues = <String>[];
     for (int i = 6; i >= 0; i--) {
@@ -82,7 +76,6 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
       weekValues.add(dayRevenue.toStringAsFixed(0));
     }
 
-    // أفضل المساحات حسب عدد الحجوزات
     final spaceBookingCount = <String, int>{};
     for (final doc in bookingsDocs) {
       final spaceName = doc.data()['spaceName'] as String? ?? '';
@@ -108,6 +101,8 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
 
   @override
   Future<void> exportReport() async {
-    // يمكن تنفيذه لاحقاً
+
   }
 }
+
+

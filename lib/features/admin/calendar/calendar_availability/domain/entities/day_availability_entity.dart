@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class DayAvailabilityEntity extends Equatable {
   final String dayId; // YYYY-MM-DD
@@ -14,3 +14,5 @@ class DayAvailabilityEntity extends Equatable {
   @override
   List<Object?> get props => [dayId, closed, specialHours];
 }
+
+

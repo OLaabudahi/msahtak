@@ -24,18 +24,18 @@ class BookingRequestSummaryCard extends StatelessWidget {
         children: [
           Text(request.space.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
           const SizedBox(height: 10),
-          _RowLine(label: context.t('summaryRequestId'), value: request.requestId),
+          _RowLine(label: context.t('summarybookingId'), value: request.bookingId),
           const SizedBox(height: 8),
           _RowLine(label: context.t('summaryStart'), value: _fmtDate(request.startDate)),
           const SizedBox(height: 8),
           _RowLine(label: context.t('summaryDuration'), value: '${request.durationValue} ${request.durationUnit.name}'),
           const SizedBox(height: 8),
-          _RowLine(label: context.t('summaryPurpose'), value: request.purposeLabel ?? '—'),
+          _RowLine(label: context.t('summaryPurpose'), value: request.purposeLabel ?? 'â€”'),
           const SizedBox(height: 8),
-          _RowLine(label: context.t('summaryOffer'), value: request.offerLabel ?? '—'),
+          _RowLine(label: context.t('summaryOffer'), value: request.offerLabel ?? 'â€”'),
           const SizedBox(height: 10),
           const Divider(height: 18),
-          _RowLine(label: context.t('summaryTotal'), value: '₪${request.totalAmount}', bold: true),
+          _RowLine(label: context.t('summaryTotal'), value: 'â‚ھ${request.totalAmount}', bold: true),
         ],
       ),
     );
@@ -66,4 +66,6 @@ class _RowLine extends StatelessWidget {
     );
   }
 }
+
+
 

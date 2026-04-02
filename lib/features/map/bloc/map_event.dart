@@ -29,3 +29,4 @@ class MapMarkerTapped extends MapEvent {
 class MapShowAllToggled extends MapEvent {
   const MapShowAllToggled();
 }
+

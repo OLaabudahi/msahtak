@@ -4,29 +4,29 @@ import '../../../../constants/app_assets.dart';
 import '../../domain/repos/space_details_repo.dart';
 import '../models/space_details_model.dart';
 
-/// ✅ تنفيذ Firebase لـ SpaceDetailsRepo – يقرأ workspaces/{id}
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ SpaceDetailsRepo â€“ ظٹظ‚ط±ط£ spaces/{id}
 class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
   @override
   Future<SpaceDetails> fetchSpaceDetails(String spaceId) async {
     final doc = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .doc(spaceId)
         .get();
 
     final d = doc.data() ?? {};
 
-    // ─── الاسم: الأدمن يكتب spaceName ───
+    // â”€â”€â”€ ط§ظ„ط§ط³ظ…: ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ spaceName â”€â”€â”€
     final name = d['name'] as String? ??
         d['spaceName'] as String? ??
         'Space';
 
-    // ─── الوصف الفرعي: الأدمن يكتب description ───
+    // â”€â”€â”€ ط§ظ„ظˆطµظپ ط§ظ„ظپط±ط¹ظٹ: ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ description â”€â”€â”€
     final subtitleLine = d['subtitle'] as String? ??
         d['subtitleLine'] as String? ??
         d['description'] as String? ??
         '';
 
-    // ─── السعر: الأدمن يكتب pricePerHour أو pricing.pricePerDay ───
+    // â”€â”€â”€ ط§ظ„ط³ط¹ط±: ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ pricePerHour ط£ظˆ pricing.pricePerDay â”€â”€â”€
     final pricing = d['pricing'] as Map<String, dynamic>?;
     final pricePerDay = (d['basePriceValue'] as num?)?.toInt() ??
         (d['price_per_day'] as num?)?.toInt() ??
@@ -36,13 +36,13 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
         (d['pricePerHour'] as num?)?.toInt() ??
         0;
 
-    // ─── التقييم: الأدمن يخزنه في stats.averageRating ───
+    // â”€â”€â”€ ط§ظ„طھظ‚ظٹظٹظ…: ط§ظ„ط£ط¯ظ…ظ† ظٹط®ط²ظ†ظ‡ ظپظٹ stats.averageRating â”€â”€â”€
     final stats = d['stats'] as Map<String, dynamic>?;
     final rating = (d['rating'] as num?)?.toDouble() ??
         (stats?['averageRating'] as num?)?.toDouble() ??
         4.0;
 
-    // ─── عنوان الموقع + إحداثيات ───
+    // â”€â”€â”€ ط¹ظ†ظˆط§ظ† ط§ظ„ظ…ظˆظ‚ط¹ + ط¥ط­ط¯ط§ط«ظٹط§طھ â”€â”€â”€
     final loc = d['location'];
     String locationAddress = d['location_address'] as String? ??
         d['locationAddress'] as String? ??
@@ -59,7 +59,7 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
     }
     if (locationAddress.isEmpty) locationAddress = '--';
 
-    // استخراج الإحداثيات الجغرافية
+    // ط§ط³طھط®ط±ط§ط¬ ط§ظ„ط¥ط­ط¯ط§ط«ظٹط§طھ ط§ظ„ط¬ط؛ط±ط§ظپظٹط©
     double? spaceLat;
     double? spaceLng;
     if (loc is GeoPoint) {
@@ -72,16 +72,16 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
           (loc['longitude'] as num?)?.toDouble();
     }
 
-    // الصور
+    // ط§ظ„طµظˆط±
     final imageUrls = (d['images'] as List?)?.cast<String>() ?? const [];
     final imageAssets =
         imageUrls.isEmpty ? [AppAssets.home, AppAssets.home] : <String>[];
 
-    // الـ features
+    // ط§ظ„ظ€ features
     final features = (d['features'] as List?)?.cast<String>() ?? const [];
 
-    // الـ amenities كـ features إضافية إذا فش features
-    // الأدمن يحفظها كـ List<Map> مع {id, name, selected, isCustom}
+    // ط§ظ„ظ€ amenities ظƒظ€ features ط¥ط¶ط§ظپظٹط© ط¥ط°ط§ ظپط´ features
+    // ط§ظ„ط£ط¯ظ…ظ† ظٹط­ظپط¸ظ‡ط§ ظƒظ€ List<Map> ظ…ط¹ {id, name, selected, isCustom}
     final amenitiesRaw = (d['amenities'] as List?) ?? const [];
     final amenities = amenitiesRaw
         .where((e) => e is Map)
@@ -89,7 +89,7 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
         .where((s) => s.isNotEmpty)
         .toList();
 
-    // إحصاءات الاستخدام
+    // ط¥ط­طµط§ط،ط§طھ ط§ظ„ط§ط³طھط®ط¯ط§ظ…
     final usageStatsList = (d['usage_stats'] as List?) ?? const [];
     final usageStats = usageStatsList
         .map((e) => UsageStat(
@@ -105,7 +105,7 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
     // review summary
     final rsMap = d['review_summary'] as Map<String, dynamic>? ?? {};
     final reviewSummary = ReviewSummary(
-      header: rsMap['header'] as String? ?? '$rating ★',
+      header: rsMap['header'] as String? ?? '$rating âک…',
       meta: rsMap['meta'] as String? ?? '',
       topPositives: (rsMap['top_positives'] as List?)?.cast<String>() ?? const [],
       repeatedNegatives:
@@ -142,14 +142,14 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
             ))
         .toList();
 
-    // policies — الأدمن يحفظ policySections كـ List<Map> مع {id, title, bullets}
-    // d['policies'] قد يكون String (حقل قديم) أو Map أو null — نتجاهل الـ String
+    // policies â€” ط§ظ„ط£ط¯ظ…ظ† ظٹط­ظپط¸ policySections ظƒظ€ List<Map> ظ…ط¹ {id, title, bullets}
+    // d['policies'] ظ‚ط¯ ظٹظƒظˆظ† String (ط­ظ‚ظ„ ظ‚ط¯ظٹظ…) ط£ظˆ Map ط£ظˆ null â€” ظ†طھط¬ط§ظ‡ظ„ ط§ظ„ظ€ String
     final policiesObj = d['policies'];
     final policiesMap = (policiesObj is Map)
         ? policiesObj.cast<String, dynamic>()
         : <String, dynamic>{};
 
-    // نقرأ من policySections (حقل الأدمن) أو policies.sections (حقل قديم)
+    // ظ†ظ‚ط±ط£ ظ…ظ† policySections (ط­ظ‚ظ„ ط§ظ„ط£ط¯ظ…ظ†) ط£ظˆ policies.sections (ط­ظ‚ظ„ ظ‚ط¯ظٹظ…)
     final rawSections = (d['policySections'] as List?)
         ?? (policiesMap['sections'] as List?)
         ?? const [];
@@ -178,7 +178,7 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
       imageAssets: imageUrls.isNotEmpty ? imageUrls : imageAssets,
       subtitleLine: subtitleLine,
       pricePerDay: pricePerDay,
-      currency: d['currency'] as String? ?? '₪',
+      currency: d['currency'] as String? ?? 'â‚ھ',
       rating: rating,
       reviewsCount: (d['reviews_count'] as num?)?.toInt() ??
           (d['reviewsCount'] as num?)?.toInt() ??
@@ -200,14 +200,14 @@ class SpaceDetailsRepoFirebase implements SpaceDetailsRepo {
   }
 }
 
-/// تحويل workingHours من Firestore إلى نص قابل للعرض
+/// طھط­ظˆظٹظ„ workingHours ظ…ظ† Firestore ط¥ظ„ظ‰ ظ†طµ ظ‚ط§ط¨ظ„ ظ„ظ„ط¹ط±ط¶
 String _parseWorkingHours(Map<String, dynamic> d) {
   final raw = d['workingHours'] ?? d['working_hours'];
 
-  // نص جاهز
+  // ظ†طµ ط¬ط§ظ‡ط²
   if (raw is String) return raw.isNotEmpty ? raw : '--';
 
-  // قائمة Map من الأدمن: [{day, open, close, closed}, ...]
+  // ظ‚ط§ط¦ظ…ط© Map ظ…ظ† ط§ظ„ط£ط¯ظ…ظ†: [{day, open, close, closed}, ...]
   if (raw is List) {
     final open = raw.where((e) => e is Map && e['closed'] != true);
     if (open.isEmpty) return 'Closed';
@@ -219,3 +219,5 @@ String _parseWorkingHours(Map<String, dynamic> d) {
 
   return '--';
 }
+
+

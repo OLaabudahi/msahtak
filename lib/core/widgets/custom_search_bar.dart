@@ -93,7 +93,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             height: widget.height,
             child: Stack(
               children: [
-                // Search field — start-aligned (left in LTR, right in RTL)
+                // Search field â€” start-aligned (left in LTR, right in RTL)
                 PositionedDirectional(
                   start: 0,
                   top: 0,
@@ -137,7 +137,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                   ),
                 ),
 
-                // Filter button (optional) — after the search field
+                // Filter button (optional) â€” after the search field
                 if (widget.showFilterButton && widget.onFilterTap != null)
                   PositionedDirectional(
                     start: widget.fieldWidth + 10,
@@ -157,7 +157,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     ),
                   ),
 
-                // AI button slot background — end-aligned (right in LTR, left in RTL)
+                // AI button slot background â€” end-aligned (right in LTR, left in RTL)
                 if (widget.showAiButton)
                   PositionedDirectional(
                     end: 0,
@@ -173,7 +173,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     ),
                   ),
 
-                // AI button — end-aligned
+                // AI button â€” end-aligned
                 if (widget.showAiButton && widget.onAiTap != null)
                   PositionedDirectional(
                     end: widget.aiRightInset,
@@ -261,3 +261,5 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     );
   }
 }
+
+

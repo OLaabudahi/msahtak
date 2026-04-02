@@ -5,11 +5,8 @@ class InsightItem extends Equatable {
   final String title;
   final String subtitle;
 
-  /// مفاتيح الترجمة — إذا موجودة تُستخدم في الـ UI بدل title/subtitle
   final String? titleKey;
   final String? subtitleKey;
-
-  /// ✅ عندكم في UI: item.imageAsset ?? AppAssets.home
   final String? imageAsset;
 
   const InsightItem({
@@ -24,3 +21,4 @@ class InsightItem extends Equatable {
   @override
   List<Object?> get props => [id, title, subtitle, titleKey, subtitleKey, imageAsset];
 }
+

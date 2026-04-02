@@ -7,7 +7,7 @@ class DotIndicator extends StatelessWidget {
 
   const DotIndicator({super.key, required this.count, required this.active});
 
-  /// ✅ دالة: عرض نقاط تحت الصور
+  /// âœ… ط¯ط§ظ„ط©: ط¹ط±ط¶ ظ†ظ‚ط§ط· طھط­طھ ط§ظ„طµظˆط±
   @override
   Widget build(BuildContext context) {
     if (count <= 1) return const SizedBox.shrink();
@@ -29,3 +29,5 @@ class DotIndicator extends StatelessWidget {
     );
   }
 }
+
+

@@ -55,14 +55,14 @@ class BookingProgressTimeline extends StatelessWidget {
         return [sent, _Step('Under review', 'The space reviewed your request', _StepState.active), _Step('Approved', 'Proceed to payment', _StepState.todo)];
       case BookingRequestStatus.approvedWaitingPayment:
       case BookingRequestStatus.approved:
-        return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Approved – Pay now', 'Complete payment within 24 hours', _StepState.active), _Step('Payment review', 'Admin verifies payment', _StepState.todo), _Step('Confirmed', 'Booking confirmed', _StepState.todo)];
+        return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Approved â€“ Pay now', 'Complete payment within 24 hours', _StepState.active), _Step('Payment review', 'Admin verifies payment', _StepState.todo), _Step('Confirmed', 'Booking confirmed', _StepState.todo)];
       case BookingRequestStatus.paymentUnderReview:
         return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Payment submitted', 'Payment received', _StepState.done), _Step('Payment review', 'Admin is verifying your payment', _StepState.active), _Step('Confirmed', 'Booking confirmed', _StepState.todo)];
       case BookingRequestStatus.confirmed:
       case BookingRequestStatus.paid:
         return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Payment submitted', 'Payment received', _StepState.done), _Step('Payment review', 'Payment verified', _StepState.done), _Step('Confirmed', 'Booking confirmed!', _StepState.done)];
       case BookingRequestStatus.expired:
-        return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Expired', 'Payment deadline passed – booking cancelled', _StepState.active)];
+        return [sent, _Step('Under review', 'Review completed', _StepState.done), _Step('Expired', 'Payment deadline passed â€“ booking cancelled', _StepState.active)];
       case BookingRequestStatus.cancelled:
         return [sent, _Step('Cancelled', 'Booking was cancelled', _StepState.active)];
       case BookingRequestStatus.rejected:
@@ -136,3 +136,5 @@ class _TimelineRow extends StatelessWidget {
     }
   }
 }
+
+

@@ -4,14 +4,14 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:Msahtak/features/map/data/sources/location_service.dart';
 
-/// صفحة اختيار الموقع من الخريطة – تُعيد (lat, lng) عند التأكيد
+/// طµظپط­ط© ط§ط®طھظٹط§ط± ط§ظ„ظ…ظˆظ‚ط¹ ظ…ظ† ط§ظ„ط®ط±ظٹط·ط© â€“ طھظڈط¹ظٹط¯ (lat, lng) ط¹ظ†ط¯ ط§ظ„طھط£ظƒظٹط¯
 class LocationPickerPage extends StatefulWidget {
   final double? initialLat;
   final double? initialLng;
 
   const LocationPickerPage({super.key, this.initialLat, this.initialLng});
 
-  /// فتح الصفحة والانتظار للحصول على الموقع المختار
+  /// ظپطھط­ ط§ظ„طµظپط­ط© ظˆط§ظ„ط§ظ†طھط¸ط§ط± ظ„ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ظ…ط®طھط§ط±
   static Future<(double, double)?> show(
     BuildContext context, {
     double? lat,
@@ -44,14 +44,14 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
   }
 
   Future<void> _initCenter() async {
-    // إذا في إحداثيات مُمررة، نبدأ منها
+    // ط¥ط°ط§ ظپظٹ ط¥ط­ط¯ط§ط«ظٹط§طھ ظ…ظڈظ…ط±ط±ط©طŒ ظ†ط¨ط¯ط£ ظ…ظ†ظ‡ط§
     if (widget.initialLat != null && widget.initialLng != null) {
       _picked = LatLng(widget.initialLat!, widget.initialLng!);
       _center = _picked!;
       setState(() => _loading = false);
       return;
     }
-    // وإلا نجيب الموقع الحالي
+    // ظˆط¥ظ„ط§ ظ†ط¬ظٹط¨ ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ط­ط§ظ„ظٹ
     final pos = await GeolocatorLocationService().getCurrentLocation();
     if (mounted) {
       setState(() {
@@ -120,7 +120,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               ],
             ),
 
-          // تعليمات في الأسفل
+          // طھط¹ظ„ظٹظ…ط§طھ ظپظٹ ط§ظ„ط£ط³ظپظ„
           Positioned(
             bottom: 20,
             left: 16,
@@ -180,3 +180,5 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
     );
   }
 }
+
+

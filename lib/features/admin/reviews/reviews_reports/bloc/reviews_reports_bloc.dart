@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_reports_usecase.dart';
 import '../domain/usecases/get_reviews_usecase.dart';
 import '../domain/usecases/hide_review_usecase.dart';
@@ -47,3 +47,5 @@ class ReviewsReportsBloc extends Bloc<ReviewsReportsEvent, ReviewsReportsState> 
     add(const ReviewsReportsStarted());
   }
 }
+
+

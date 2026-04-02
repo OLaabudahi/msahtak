@@ -7,17 +7,19 @@ class UsageRepoDummy implements UsageRepo {
   final UsageRemoteSource source;
   UsageRepoDummy(this.source);
 
-  /// جلب الإحصاءات من المصدر
+  /// ط¬ظ„ط¨ ط§ظ„ط¥ط­طµط§ط،ط§طھ ظ…ظ† ط§ظ„ظ…طµط¯ط±
   @override
   Future<UsageStats> getUsageStats() => source.getUsageStats();
 
-  /// جلب خيارات الباقات من المصدر
+  /// ط¬ظ„ط¨ ط®ظٹط§ط±ط§طھ ط§ظ„ط¨ط§ظ‚ط§طھ ظ…ظ† ط§ظ„ظ…طµط¯ط±
   @override
   Future<List<PlanOption>> getPlanOptions() =>
       source.getPlanOptions();
 
-  /// تطبيق الباقة عبر المصدر
+  /// طھط·ط¨ظٹظ‚ ط§ظ„ط¨ط§ظ‚ط© ط¹ط¨ط± ط§ظ„ظ…طµط¯ط±
   @override
   Future<void> applyPlan(String planId) =>
       source.applyPlan(planId);
 }
+
+

@@ -6,7 +6,9 @@ class RefreshBookingRequestStatusUseCase {
 
   const RefreshBookingRequestStatusUseCase(this.repo);
 
-  Future<BookingRequestEntity> call(String requestId) {
-    return repo.refreshStatus(requestId: requestId);
+  Future<BookingRequestEntity> call(String bookingId) {
+    return repo.refreshStatus(bookingId: bookingId);
   }
 }
+
+

@@ -1,1 +1,3 @@
-﻿enum PaymentStatus { paid, pending, refunded }
+enum PaymentStatus { paid, pending, refunded }
+
+

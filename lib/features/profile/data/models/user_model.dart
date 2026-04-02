@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// ✅ موديل بيانات المستخدم
+/// âœ… ظ…ظˆط¯ظٹظ„ ط¨ظٹط§ظ§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…
 class UserModel extends Equatable {
   final String userId;
   final String fullName;
@@ -27,7 +27,7 @@ class UserModel extends Equatable {
     required this.savedSpaces,
   });
 
-  /// ✅ API READY
+  /// âœ… API READY
   // factory UserModel.fromJson(Map<String, dynamic> json) {
   //   return UserModel(
   //     userId: json['userId'].toString(),
@@ -54,3 +54,5 @@ class UserModel extends Equatable {
     savedSpaces,
   ];
 }
+
+

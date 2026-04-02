@@ -1,9 +1,206 @@
+
+import '../../../../../../core/services/firestore_api.dart';
+import '../../../../_shared/admin_session.dart';
+import '../models/amenity_model.dart';
+import '../models/space_form_model.dart';
+import 'add_edit_space_source.dart';
+
+class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
+  final FirestoreApi api = FirestoreApi();
+
+  static const String spaceCollection = "spaces";
+
+  static const List<Map<String, dynamic>> _defaultAmenities = [
+    {'id': 'a1', 'name': 'WiFi', 'selected': false, 'isCustom': false},
+    {'id': 'a2', 'name': 'Electricity', 'selected': false, 'isCustom': false},
+    {'id': 'a3', 'name': 'Meeting Room', 'selected': false, 'isCustom': false},
+    {'id': 'a4', 'name': 'Coffee', 'selected': false, 'isCustom': false},
+    {'id': 'a5', 'name': 'Parking', 'selected': false, 'isCustom': false},
+    {'id': 'a6', 'name': 'Printer', 'selected': false, 'isCustom': false},
+  ];
+
+  /// =========================
+  /// GET AMENITIES
+  /// =========================
+  @override
+  Future<List<AmenityModel>> fetchAmenityCatalog() async {
+    return _defaultAmenities.map(AmenityModel.fromJson).toList();
+  }
+
+  @override
+  Future<AmenityModel> createAmenity({required String name}) async {
+    final id = "AM-${DateTime.now().millisecondsSinceEpoch}";
+    return AmenityModel(id: id, name: name, selected: false, isCustom: true);
+  }
+
+  /// =========================
+  /// GET SPACE
+  /// =========================
+  @override
+  Future<SpaceFormModel> fetchSpaceForm({required String? spaceId}) async {
+    if (spaceId == null || spaceId.isEmpty) {
+      return SpaceFormModel(
+        id: null,
+        name: '',
+        address: '',
+        description: '',
+        price: '',
+        hours: '',
+        policies: '',
+        basePriceValue: 0,
+        basePriceUnit: 'day',
+        location: null,
+        workingHours: const [],
+        policySections: const [],
+        amenities: _defaultAmenities,
+        hidden: false,
+        paymentMethods: const [],
+      );
+    }
+
+    final data = await api.getDoc(
+      collection: spaceCollection,
+      docId: spaceId,
+    );
+
+    if (data == null) {
+      return SpaceFormModel(
+        id: spaceId,
+        name: '',
+        address: '',
+        description: '',
+        price: '',
+        hours: '',
+        policies: '',
+        basePriceValue: 0,
+        basePriceUnit: 'day',
+        location: null,
+        workingHours: const [],
+        policySections: const [],
+        amenities: _defaultAmenities,
+        hidden: false,
+      );
+    }
+
+    data['id'] = spaceId;
+    return SpaceFormModel.fromJson(data);
+  }
+
+  /// =========================
+  /// SAVE SPACE
+  /// =========================
+  @override
+  Future<void> saveSpace({required SpaceFormModel form}) async {
+    final data = form.toJson();
+
+    data.remove('id');
+
+    data['adminId'] = form.adminId ?? AdminSession.userId;
+    data['updatedAt'] = DateTime.now(); // âœ… Timestamp
+
+    if (form.id == null) {
+      final spaceId = "SP-${DateTime.now().millisecondsSinceEpoch}";
+
+      data['createdAt'] = DateTime.now();
+      data['availableSeats'] = form.totalSeats;
+
+      await api.create(
+        collection: spaceCollection,
+        data: data,
+        docId: spaceId,
+      );
+
+      if (data['adminId'] != null) {
+        await _assignSpaceToAdmin(
+          spaceId: spaceId,
+          newAdminId: data['adminId'],
+          oldAdminId: null,
+        );
+      }
+    } else {
+      String? oldAdminId;
+
+      try {
+        final old = await api.getDoc(
+          collection: spaceCollection,
+          docId: form.id!,
+        );
+        oldAdminId = old?['adminId'];
+      } catch (_) {}
+
+      await api.updateFields(
+        collection: spaceCollection,
+        docId: form.id!,
+        data: data,
+      );
+
+      final newAdminId = data['adminId'];
+
+      if (oldAdminId != newAdminId) {
+        await _assignSpaceToAdmin(
+          spaceId: form.id!,
+          newAdminId: newAdminId,
+          oldAdminId: oldAdminId,
+        );
+      }
+    }
+  }
+
+  /// =========================
+  /// ADMIN ASSIGNMENT
+  /// =========================
+  Future<void> _assignSpaceToAdmin({
+    required String spaceId,
+    required String? newAdminId,
+    required String? oldAdminId,
+  }) async {
+    // remove from old
+    if (oldAdminId != null && oldAdminId.isNotEmpty) {
+      try {
+        final old = await api.getDoc(
+          collection: "users",
+          docId: oldAdminId,
+        );
+
+        final ids = List<String>.from(old?['assignedSpaceIds'] ?? []);
+        ids.remove(spaceId);
+
+        await api.updateFields(
+          collection: "users",
+          docId: oldAdminId,
+          data: {'assignedSpaceIds': ids},
+        );
+      } catch (_) {}
+    }
+
+    // add to new
+    if (newAdminId != null && newAdminId.isNotEmpty) {
+      try {
+        final user = await api.getDoc(
+          collection: "users",
+          docId: newAdminId,
+        );
+
+        final ids = List<String>.from(user?['assignedSpaceIds'] ?? []);
+
+        if (!ids.contains(spaceId)) ids.add(spaceId);
+
+        await api.updateFields(
+          collection: "users",
+          docId: newAdminId,
+          data: {'assignedSpaceIds': ids},
+        );
+      } catch (_) {}
+    }
+  }
+}
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_edit_space_source.dart';
 import '../models/amenity_model.dart';
 import '../models/space_form_model.dart';
 
-/// مصدر Firebase لإضافة/تعديل المساحات — يقرأ/يكتب من spaces collection
+/// ظ…طµط¯ط± Firebase ظ„ط¥ط¶ط§ظپط©/طھط¹ط¯ظٹظ„ ط§ظ„ظ…ط³ط§ط­ط§طھ â€” ظٹظ‚ط±ط£/ظٹظƒطھط¨ ظ…ظ† spaces collection
 class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
   final _db = FirebaseFirestore.instance;
 
@@ -49,7 +246,7 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
       );
     }
 
-    final doc = await _db.collection('workspaces').doc(spaceId).get();
+    final doc = await _db.collection('spaces').doc(spaceId).get();
     if (!doc.exists) {
       return SpaceFormModel(
         id: spaceId,
@@ -81,27 +278,27 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     data['updatedAt'] = FieldValue.serverTimestamp();
 
     if (form.id == null) {
-      // مساحة جديدة
+      // ظ…ط³ط§ط­ط© ط¬ط¯ظٹط¯ط©
       data['createdAt'] = FieldValue.serverTimestamp();
       data['availableSeats'] = form.totalSeats;
-      final docRef = await _db.collection('workspaces').add(data);
+      final docRef = await _db.collection('spaces').add(data);
 
-      // تعيين الأدمن الفرعي للمساحة الجديدة
+      // طھط¹ظٹظٹظ† ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ظپط±ط¹ظٹ ظ„ظ„ظ…ط³ط§ط­ط© ط§ظ„ط¬ط¯ظٹط¯ط©
       if (form.adminId != null && form.adminId!.isNotEmpty) {
         await _assignSpaceToAdmin(spaceId: docRef.id, newAdminId: form.adminId!, oldAdminId: null);
       }
     } else {
-      // مساحة موجودة — اقرأ الأدمن القديم قبل الحفظ
+      // ظ…ط³ط§ط­ط© ظ…ظˆط¬ظˆط¯ط© â€” ط§ظ‚ط±ط£ ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ظ‚ط¯ظٹظ… ظ‚ط¨ظ„ ط§ظ„ط­ظپط¸
       data.remove('availableSeats');
       String? oldAdminId;
       try {
-        final old = await _db.collection('workspaces').doc(form.id).get();
+        final old = await _db.collection('spaces').doc(form.id).get();
         oldAdminId = old.data()?['adminId'] as String?;
       } catch (_) {}
 
-      await _db.collection('workspaces').doc(form.id).set(data, SetOptions(merge: true));
+      await _db.collection('spaces').doc(form.id).set(data, SetOptions(merge: true));
 
-      // تحديث تعيين الأدمن إذا تغيّر
+      // طھط­ط¯ظٹط« طھط¹ظٹظٹظ† ط§ظ„ط£ط¯ظ…ظ† ط¥ط°ط§ طھط؛ظٹظ‘ط±
       final newAdminId = form.adminId;
       if (oldAdminId != newAdminId) {
         await _assignSpaceToAdmin(spaceId: form.id!, newAdminId: newAdminId, oldAdminId: oldAdminId);
@@ -109,13 +306,13 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     }
   }
 
-  /// تحديث assignedSpaceIds للأدمن القديم والجديد
+  /// طھط­ط¯ظٹط« assignedSpaceIds ظ„ظ„ط£ط¯ظ…ظ† ط§ظ„ظ‚ط¯ظٹظ… ظˆط§ظ„ط¬ط¯ظٹط¯
   Future<void> _assignSpaceToAdmin({
     required String spaceId,
     required String? newAdminId,
     required String? oldAdminId,
   }) async {
-    // إزالة المساحة من الأدمن القديم
+    // ط¥ط²ط§ظ„ط© ط§ظ„ظ…ط³ط§ط­ط© ظ…ظ† ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ظ‚ط¯ظٹظ…
     if (oldAdminId != null && oldAdminId.isNotEmpty) {
       try {
         final oldDoc = await _db.collection('users').doc(oldAdminId).get();
@@ -127,7 +324,7 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
       } catch (_) {}
     }
 
-    // إضافة المساحة للأدمن الجديد
+    // ط¥ط¶ط§ظپط© ط§ظ„ظ…ط³ط§ط­ط© ظ„ظ„ط£ط¯ظ…ظ† ط§ظ„ط¬ط¯ظٹط¯
     if (newAdminId != null && newAdminId.isNotEmpty) {
       try {
         final newDoc = await _db.collection('users').doc(newAdminId).get();
@@ -140,3 +337,6 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     }
   }
 }
+*/
+
+

@@ -17,3 +17,5 @@ class FilterChipModel {
 
   FilterChipEntity toEntity() => FilterChipEntity(id: id, label: label);
 }
+
+

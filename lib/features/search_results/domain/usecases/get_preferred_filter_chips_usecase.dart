@@ -12,3 +12,5 @@ class GetPreferredFilterChipsUseCase {
     return repo.getPreferredFilterChips(originKey: originKey);
   }
 }
+
+

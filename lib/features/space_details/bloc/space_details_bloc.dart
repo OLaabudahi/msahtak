@@ -12,7 +12,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     on<SpaceDetailsCarouselChanged>(_onCarouselChanged);
   }
 
-  /// ✅ دالة: تحميل تفاصيل المساحة (Dummy الآن)
+  /// âœ… ط¯ط§ظ„ط©: طھط­ظ…ظٹظ„ طھظپط§طµظٹظ„ ط§ظ„ظ…ط³ط§ط­ط© (Dummy ط§ظ„ط¢ظ†)
   Future<void> _onStarted(
     SpaceDetailsStarted event,
     Emitter<SpaceDetailsState> emit,
@@ -26,7 +26,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     }
   }
 
-  /// ✅ دالة: تغيير التاب
+  /// âœ… ط¯ط§ظ„ط©: طھط؛ظٹظٹط± ط§ظ„طھط§ط¨
   void _onTabChanged(
     SpaceDetailsTabChanged event,
     Emitter<SpaceDetailsState> emit,
@@ -34,7 +34,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     emit(state.copyWith(tabIndex: event.index));
   }
 
-  /// ✅ دالة: تغيير مؤشر صور الكاروسيل
+  /// âœ… ط¯ط§ظ„ط©: طھط؛ظٹظٹط± ظ…ط¤ط´ط± طµظˆط± ط§ظ„ظƒط§ط±ظˆط³ظٹظ„
   void _onCarouselChanged(
     SpaceDetailsCarouselChanged event,
     Emitter<SpaceDetailsState> emit,
@@ -42,3 +42,5 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     emit(state.copyWith(carouselIndex: event.index));
   }
 }
+
+

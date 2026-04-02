@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/space_entity.dart';
 import '../../../../../core/i18n/app_i18n.dart';
@@ -108,3 +108,5 @@ class SpaceCard extends StatelessWidget {
 extension on AdminSpace {
   static const s12 = 12.0;
 }
+
+

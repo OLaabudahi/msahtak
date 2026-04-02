@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'user_profile_source.dart';
 import '../models/user_profile_model.dart';
 
-/// مصدر Firebase لملف المستخدم
+/// ظ…طµط¯ط± Firebase ظ„ظ…ظ„ظپ ط§ظ„ظ…ط³طھط®ط¯ظ…
 class UserProfileFirebaseSource implements UserProfileSource {
   final _db = FirebaseFirestore.instance;
 
@@ -47,3 +47,5 @@ class UserProfileFirebaseSource implements UserProfileSource {
     return name.isNotEmpty ? name[0].toUpperCase() : '?';
   }
 }
+
+

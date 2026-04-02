@@ -5,6 +5,8 @@ class GetNotificationSettingsUseCase {
   final NotificationsRepo repo;
   GetNotificationSettingsUseCase(this.repo);
 
-  /// جلب إعدادات الإشعارات الحالية
+  /// ط¬ظ„ط¨ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ط§ظ„ط­ط§ظ„ظٹط©
   Future<NotificationSettings> call() => repo.getNotificationSettings();
 }
+
+

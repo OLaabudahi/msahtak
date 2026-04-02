@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/settings_model.dart';
 import '../../domain/repos/settings_repo.dart';
 
-/// حفظ وجلب إعدادات المستخدم من Firestore
+/// ط­ظپط¸ ظˆط¬ظ„ط¨ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ… ظ…ظ† Firestore
 class SettingsRepoFirebase implements SettingsRepo {
   final _db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
@@ -50,3 +50,5 @@ class SettingsRepoFirebase implements SettingsRepo {
         darkMode: false,
       );
 }
+
+

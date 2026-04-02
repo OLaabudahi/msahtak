@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/i18n/app_i18n.dart';
 import '../../bloc/booking_request_bloc.dart';
 import '../../bloc/booking_request_event.dart';
 import '../../bloc/booking_request_state.dart';
@@ -22,7 +23,7 @@ class RequestBookingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Request Booking'),
+        title: Text(context.t('requestBookingTitle')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -32,9 +33,11 @@ class RequestBookingPage extends StatelessWidget {
         child: BlocConsumer<BookingRequestBloc, BookingRequestState>(
           listenWhen: (p, c) => p.uiStatus != c.uiStatus,
           listener: (context, state) {
+            final bloc = context.read<BookingRequestBloc>();
             if (state.uiStatus == BookingRequestUiStatus.success && state.createdRequest != null) {
               Navigator.of(context).pushReplacement(
                 BookingRequestRoutes.pendingApproval(
+                  bloc: bloc,
                   request: state.createdRequest!,
                 ),
               );}
@@ -62,9 +65,9 @@ class RequestBookingPage extends StatelessWidget {
                     BookingRequestHeaderCard(space: space),
                     const SizedBox(height: 14),
 
-                    _Label('Purpose'),
+                  _Label(context.t('purpose')),
                     _DropdownTile(
-                      hint: 'Select purpose',
+                      hint: context.t('selectPurpose'),
                       value: state.purposeLabel,
                       onTap: () async {
                         final picked = await _pickFromBottomSheet(
@@ -130,7 +133,7 @@ class RequestBookingPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              'Weekly plan is cheaper for you',
+                              context.t('weeklyCheaper'),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ),
@@ -211,9 +214,9 @@ class RequestBookingPage extends StatelessWidget {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                            : const Text(
-                          'Send Request Booking',
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                            : Text(
+                          context.t('sendBookingRequest'),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -236,7 +239,7 @@ class RequestBookingPage extends StatelessWidget {
 }
 
 extension on AddOnEntity {
-  String get currencySymbol => '₪';
+  String get currencySymbol => 'â‚ھ';
 }
 
 class _Label extends StatelessWidget {
@@ -331,4 +334,6 @@ Future<_PickItem?> _pickFromBottomSheet(
     },
   );
 }
+
+
 

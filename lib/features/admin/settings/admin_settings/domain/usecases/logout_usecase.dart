@@ -1,4 +1,4 @@
-﻿import '../repos/admin_settings_repo.dart';
+import '../repos/admin_settings_repo.dart';
 
 class LogoutUseCase {
   final AdminSettingsRepo repo;
@@ -6,3 +6,5 @@ class LogoutUseCase {
 
   Future<void> call() => repo.logout();
 }
+
+

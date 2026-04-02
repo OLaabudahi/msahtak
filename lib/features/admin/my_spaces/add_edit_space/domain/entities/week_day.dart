@@ -1,1 +1,3 @@
-﻿enum WeekDay { sun, mon, tue, wed, thu, fri, sat }
+enum WeekDay { sun, mon, tue, wed, thu, fri, sat }
+
+

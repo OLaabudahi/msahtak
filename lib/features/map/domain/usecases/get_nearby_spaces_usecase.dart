@@ -13,3 +13,4 @@ class GetNearbySpacesUseCase {
     return repo.getNearbySpaces(center: center, radiusKm: radiusKm);
   }
 }
+

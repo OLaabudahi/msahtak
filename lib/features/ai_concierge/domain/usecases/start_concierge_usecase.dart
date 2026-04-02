@@ -10,3 +10,4 @@ class StartConciergeUseCase {
     return repo.start();
   }
 }
+

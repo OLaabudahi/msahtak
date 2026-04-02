@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../space_details/view/space_details_page.dart';
@@ -33,7 +34,7 @@ class AiConciergePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Concierge'),
+        title: Text(context.t('aiConcierge')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -69,7 +70,6 @@ class AiConciergePage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
                     itemCount: state.messages.length + (state.topMatch != null ? 1 : 0),
                     itemBuilder: (context, index) {
-                      // Top match card يظهر بعد الرسائل (قريب من الصورة)
                       if (state.topMatch != null && index == state.messages.length) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 14),
@@ -122,3 +122,4 @@ class AiConciergePage extends StatelessWidget {
     );
   }
 }
+

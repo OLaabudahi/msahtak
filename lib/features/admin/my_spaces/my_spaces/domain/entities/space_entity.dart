@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 enum SpaceAvailability { available, hidden }
 
@@ -20,3 +20,5 @@ class SpaceEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, rating, availability, cover];
 }
+
+

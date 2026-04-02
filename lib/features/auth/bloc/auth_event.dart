@@ -45,3 +45,5 @@ class AuthForgotPasswordRequested extends AuthEvent {
 class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();
 }
+
+

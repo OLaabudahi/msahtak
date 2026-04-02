@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../_shared/admin_feedback_widgets.dart';
 
@@ -91,8 +92,8 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
   void _showSuccess() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Offer created successfully'),
+      SnackBar(
+        content: Text(context.t('offerCreated')),
         backgroundColor: AdminColors.success,
       ),
     );
@@ -222,3 +223,5 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
     );
   }
 }
+
+

@@ -1,69 +1,78 @@
 import 'package:bloc/bloc.dart';
-import '../domain/repos/bookings_repo.dart';
-import '../data/repos/bookings_repo_dummy.dart';
+
+import '../domain/usecases/get_bookings_usecase.dart';
+import '../domain/usecases/cancel_booking_usecase.dart';
+
 import 'bookings_event.dart';
 import 'bookings_state.dart';
 
 class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
-  final BookingsRepo repo;
+  final GetBookingsUseCase getBookings;
+  final CancelBookingUseCase cancelBooking;
 
-  BookingsBloc({BookingsRepo? repo})
-    : repo = repo ?? BookingsRepoDummy(),
-      super(BookingsState.initial()) {
+  BookingsBloc({
+    required this.getBookings,
+    required this.cancelBooking,
+  }) : super(BookingsState.initial()) {
     on<BookingsStarted>(_onStarted);
     on<BookingsSegmentChanged>(_onSegmentChanged);
     on<BookingsRefreshRequested>(_onRefresh);
     on<BookingsCancelRequested>(_onCancel);
   }
 
-  /// ✅ دالة: تحميل الحجوزات أول ما تفتح التاب
+  /// âœ… طھط­ظ…ظٹظ„ ط§ظ„ط­ط¬ظˆط²ط§طھ
   Future<void> _onStarted(
-    BookingsStarted event,
-    Emitter<BookingsState> emit,
-  ) async {
+      BookingsStarted event,
+      Emitter<BookingsState> emit,
+      ) async {
     emit(state.copyWith(loading: true, error: null));
     try {
-      final data = await repo.fetchBookings();
+      final data = await getBookings();
       emit(state.copyWith(loading: false, bookings: data, error: null));
     } catch (e) {
       emit(
-        state.copyWith(loading: false, error: e.toString(), bookings: const []),
+        state.copyWith(
+          loading: false,
+          error: e.toString(),
+          bookings: const [],
+        ),
       );
     }
   }
 
-  /// ✅ دالة: تغيير Segmented (Upcoming / Past)
+  /// âœ… طھط؛ظٹظٹط± ط§ظ„طھط§ط¨
   void _onSegmentChanged(
-    BookingsSegmentChanged event,
-    Emitter<BookingsState> emit,
-  ) {
+      BookingsSegmentChanged event,
+      Emitter<BookingsState> emit,
+      ) {
     emit(state.copyWith(segmentIndex: event.index));
   }
 
-  /// ✅ دالة: ريفريش (Pull to refresh)
+  /// âœ… ط±ظٹظپط±ظٹط´
   Future<void> _onRefresh(
-    BookingsRefreshRequested event,
-    Emitter<BookingsState> emit,
-  ) async {
+      BookingsRefreshRequested event,
+      Emitter<BookingsState> emit,
+      ) async {
     try {
-      final data = await repo.fetchBookings();
+      final data = await getBookings();
       emit(state.copyWith(bookings: data, error: null));
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
   }
 
-  /// إلغاء حجز وتحديث القائمة
+  /// âœ… ط¥ظ„ط؛ط§ط، ط­ط¬ط²
   Future<void> _onCancel(
-    BookingsCancelRequested event,
-    Emitter<BookingsState> emit,
-  ) async {
+      BookingsCancelRequested event,
+      Emitter<BookingsState> emit,
+      ) async {
     try {
-      await repo.cancelBooking(event.bookingId);
-      final data = await repo.fetchBookings();
+      await cancelBooking(event.bookingId);
+      final data = await getBookings();
       emit(state.copyWith(bookings: data, error: null));
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
   }
 }
+

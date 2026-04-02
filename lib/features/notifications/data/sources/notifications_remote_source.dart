@@ -2,7 +2,7 @@ import '../../domain/entities/notification_item.dart';
 import '../models/notification_item_model.dart';
 import '../models/notification_settings_model.dart';
 
-/// واجهة مصدر البيانات – استبدل FakeNotificationsSource بـ RealNotificationsSource عند ربط API
+/// ظˆط§ط¬ظ‡ط© ظ…طµط¯ط± ط§ظ„ط¨ظٹط§ظ†ط§طھ â€“ ط§ط³طھط¨ط¯ظ„ FakeNotificationsSource ط¨ظ€ RealNotificationsSource ط¹ظ†ط¯ ط±ط¨ط· API
 abstract class NotificationsRemoteSource {
   Future<List<NotificationItemModel>> getNotifications();
   Future<NotificationSettingsModel> getNotificationSettings();
@@ -10,7 +10,7 @@ abstract class NotificationsRemoteSource {
 }
 
 class FakeNotificationsSource implements NotificationsRemoteSource {
-  /// جلب بيانات الإشعارات التجريبية – استبدل بـ http.get() عند ربط API
+  /// ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ط§ظ„طھط¬ط±ظٹط¨ظٹط© â€“ ط§ط³طھط¨ط¯ظ„ ط¨ظ€ http.get() ط¹ظ†ط¯ ط±ط¨ط· API
   @override
   Future<List<NotificationItemModel>> getNotifications() async {
     await Future.delayed(const Duration(milliseconds: 400));
@@ -60,7 +60,7 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     ];
   }
 
-  /// جلب إعدادات الإشعارات التجريبية – استبدل بـ http.get() عند ربط API
+  /// ط¬ظ„ط¨ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ط§ظ„طھط¬ط±ظٹط¨ظٹط© â€“ ط§ط³طھط¨ط¯ظ„ ط¨ظ€ http.get() ط¹ظ†ط¯ ط±ط¨ط· API
   @override
   Future<NotificationSettingsModel> getNotificationSettings() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -73,7 +73,7 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     );
   }
 
-  /// حفظ الإعدادات – استبدل بـ http.post() عند ربط API
+  /// ط­ظپط¸ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ â€“ ط§ط³طھط¨ط¯ظ„ ط¨ظ€ http.post() ط¹ظ†ط¯ ط±ط¨ط· API
   @override
   Future<void> saveNotificationSettings(
       NotificationSettingsModel settings) async {
@@ -81,3 +81,5 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     // TODO: POST /api/notification-settings body: settings.toJson()
   }
 }
+
+

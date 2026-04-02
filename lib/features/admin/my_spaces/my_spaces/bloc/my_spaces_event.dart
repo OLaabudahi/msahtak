@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class MySpacesEvent extends Equatable {
   const MySpacesEvent();
@@ -23,3 +23,5 @@ class MySpacesDeletePressed extends MySpacesEvent {
   @override
   List<Object?> get props => [spaceId];
 }
+
+

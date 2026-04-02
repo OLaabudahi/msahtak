@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_assets.dart';
@@ -18,7 +18,6 @@ class BookingDetailsPage extends StatelessWidget {
 
   const BookingDetailsPage({super.key, required this.bookingId});
 
-  /// ✅ دالة: فتح الصفحة مع Bloc جاهز (Dummy repo حالياً)
   static Widget withBloc({required String bookingId}) {
     return BlocProvider(
       create: (_) =>
@@ -28,13 +27,13 @@ class BookingDetailsPage extends StatelessWidget {
     );
   }
 
-  /// ✅ دالة: تنسيق السعر
+  /// âœ… ط¯ط§ظ„ط©: طھظ†ط³ظٹظ‚ ط§ظ„ط³ط¹ط±
   String _money(String currency, num v) => '$currency ${v.toStringAsFixed(1)}';
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-      /// ✅ دالة: بناء UI حسب حالة التحميل/البيانات
+      /// âœ… ط¯ط§ظ„ط©: ط¨ظ†ط§ط، UI ط­ط³ط¨ ط­ط§ظ„ط© ط§ظ„طھط­ظ…ظٹظ„/ط§ظ„ط¨ظٹط§ظ†ط§طھ
       builder: (context, state) {
         if (state.loading) {
           return const Scaffold(
@@ -51,13 +50,13 @@ class BookingDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('صار خطأ: ${state.error}', style: AppTextStyles.body),
+                    Text('طµط§ط± ط®ط·ط£: ${state.error}', style: AppTextStyles.body),
                     AppSpacing.vMd,
                     FilledButton(
                       onPressed: () => context.read<BookingDetailsBloc>().add(
                         BookingDetailsStarted(bookingId),
                       ),
-                      child: const Text('إعادة المحاولة'),
+                      child: const Text('ط¥ط¹ط§ط¯ط© ط§ظ„ظ…ط­ط§ظˆظ„ط©'),
                     ),
                   ],
                 ),
@@ -82,7 +81,7 @@ class BookingDetailsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // صورة المساحة
+                        // طµظˆط±ط© ط§ظ„ظ…ط³ط§ط­ط©
                         ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: ConstrainedBox(
@@ -103,7 +102,7 @@ class BookingDetailsPage extends StatelessWidget {
 
                         AppSpacing.vMd,
 
-                        // اسم المساحة + تقييم
+                        // ط§ط³ظ… ط§ظ„ظ…ط³ط§ط­ط© + طھظ‚ظٹظٹظ…
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -205,19 +204,19 @@ class BookingDetailsPage extends StatelessWidget {
                   ),
                 ),
 
-                // زر ثابت تحت
+                // ط²ط± ط«ط§ط¨طھ طھط­طھ
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
                   child: SizedBox(
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: () {
-                        // ✅ لاحقاً: Cancel / Modify / Pay حسب التصميم اللي رح تبعتيه
+                        // âœ… ظ„ط§ط­ظ‚ط§ظ‹: Cancel / Modify / Pay ط­ط³ط¨ ط§ظ„طھطµظ…ظٹظ… ط§ظ„ظ„ظٹ ط±ط­ طھط¨ط¹طھظٹظ‡
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Action (placeholder)')),
                         );
 
-                        // ✅ API READY (كومنت)
+                        // âœ… API READY (ظƒظˆظ…ظ†طھ)
                         // await bookingRepo.cancelBooking(bookingId);
                       },
                       child: Text(context.t('manageBooking')),
@@ -232,3 +231,5 @@ class BookingDetailsPage extends StatelessWidget {
     );
   }
 }
+
+

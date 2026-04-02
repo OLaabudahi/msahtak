@@ -5,14 +5,14 @@ import '../entities/payment_receipt_entity.dart';
 import '../entities/payment_summary_entity.dart';
 
 abstract class PaymentRepo {
-  /// جلب طرق الدفع من مساحة الحجز
-  Future<List<PaymentMethodEntity>> getMethods({required String requestId});
+  /// ط¬ظ„ط¨ ط·ط±ظ‚ ط§ظ„ط¯ظپط¹ ظ…ظ† ظ…ط³ط§ط­ط© ط§ظ„ط­ط¬ط²
+  Future<List<PaymentMethodEntity>> getMethods({required String bookingId});
 
-  Future<PaymentSummaryEntity> getSummary({required String requestId});
+  Future<PaymentSummaryEntity> getSummary({required String bookingId});
 
-  /// تأكيد الدفع مع رفع إشعار الدفع أو تفاصيل البطاقة
+  /// طھط£ظƒظٹط¯ ط§ظ„ط¯ظپط¹ ظ…ط¹ ط±ظپط¹ ط¥ط´ط¹ط§ط± ط§ظ„ط¯ظپط¹ ط£ظˆ طھظپط§طµظٹظ„ ط§ظ„ط¨ط·ط§ظ‚ط©
   Future<PaymentReceiptEntity> pay({
-    required String requestId,
+    required String bookingId,
     required PaymentMethodType method,
     required String methodName,
     String? receiptUrl,
@@ -24,3 +24,5 @@ abstract class PaymentRepo {
     String? receiptFileName,
   });
 }
+
+

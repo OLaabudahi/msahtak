@@ -52,7 +52,7 @@ class PlanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '₪$pricePerWeek',
+                    'â‚ھ$pricePerWeek',
                     style: const TextStyle(
                         color: AppColors.amber,
                         fontSize: 26,
@@ -72,3 +72,5 @@ class PlanCard extends StatelessWidget {
     );
   }
 }
+
+

@@ -7,7 +7,7 @@ import '../../domain/entities/fit_score.dart';
 import '../models/best_for_you_space_model.dart';
 import 'best_for_you_remote_source.dart';
 
-/// ✅ تنفيذ Firebase لـ BestForYouRemoteSource
+/// âœ… طھظ†ظپظٹط° Firebase ظ„ظ€ BestForYouRemoteSource
 class BestForYouFirebaseSource implements BestForYouRemoteSource {
   static const double _fallbackLat = 31.511136495468655;
   static const double _fallbackLng = 34.45187681199389;
@@ -28,7 +28,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
     return top.first;
   }
 
-  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر
+  /// ط¬ظ„ط¨ ط£ط¹ظ„ظ‰ 5 ظ…ط³ط§ط­ط§طھ طھظ‚ظٹظٹظ…ط§ظ‹ ط¶ظ…ظ† 100 ظ…طھط±
   @override
   Future<List<BestForYouSpaceModel>> getTopRatedNearby() async {
     final pos = await LocationService.getCurrentPosition();
@@ -37,7 +37,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
     final bool hasRealLocation = pos != null;
 
     final snap = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .limit(50)
         .get();
 
@@ -107,7 +107,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
       );
     }).toList();
 
-    // نصفي بـ 100 متر عند توفر الموقع الحقيقي
+    // ظ†طµظپظٹ ط¨ظ€ 100 ظ…طھط± ط¹ظ†ط¯ طھظˆظپط± ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ط­ظ‚ظٹظ‚ظٹ
     List<_SpaceWithDist> nearby;
     if (hasRealLocation) {
       nearby = all.where((s) => s.distKm <= 0.1).toList();
@@ -116,7 +116,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
       nearby = all;
     }
 
-    // نرتب حسب التقييم (الأعلى أولاً) ونأخذ أول 5
+    // ظ†ط±طھط¨ ط­ط³ط¨ ط§ظ„طھظ‚ظٹظٹظ… (ط§ظ„ط£ط¹ظ„ظ‰ ط£ظˆظ„ط§ظ‹) ظˆظ†ط£ط®ط° ط£ظˆظ„ 5
     nearby.sort((a, b) => b.model.rating.compareTo(a.model.rating));
     return nearby.take(5).map((s) => s.model).toList();
   }
@@ -124,7 +124,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
   @override
   Future<FitScore> getFitScore(String spaceId, String goal) async {
     final doc = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .doc(spaceId)
         .collection('fit_scores')
         .doc(goal.toLowerCase())
@@ -157,7 +157,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
         ),
       _ => const FitScore(
           percentage: 0.70,
-          reasons: ['Comfortable space', 'Café nearby'],
+          reasons: ['Comfortable space', 'Cafأ© nearby'],
           headsUp: '',
         ),
     };
@@ -180,3 +180,5 @@ class _SpaceWithDist {
   final double distKm;
   const _SpaceWithDist({required this.model, required this.distKm});
 }
+
+

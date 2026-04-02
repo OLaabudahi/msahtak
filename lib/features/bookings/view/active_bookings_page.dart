@@ -6,7 +6,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../booking_details/view/booking_details_page.dart';
 
-/// صفحة الحجوزات الفعّالة فقط — تُفتح من "Meeting-ready checklist"
+/// طµظپط­ط© ط§ظ„ط­ط¬ظˆط²ط§طھ ط§ظ„ظپط¹ظ‘ط§ظ„ط© ظپظ‚ط· â€” طھظڈظپطھط­ ظ…ظ† "Meeting-ready checklist"
 class ActiveBookingsPage extends StatelessWidget {
   const ActiveBookingsPage({super.key});
 
@@ -47,7 +47,7 @@ class ActiveBookingsPage extends StatelessWidget {
                 }
 
                 final docs = snapshot.data?.docs ?? [];
-                // ترتيب حسب تاريخ الإنشاء
+                // طھط±طھظٹط¨ ط­ط³ط¨ طھط§ط±ظٹط® ط§ظ„ط¥ظ†ط´ط§ط،
                 docs.sort((a, b) {
                   final at = (a['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
                   final bt = (b['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
@@ -121,14 +121,14 @@ class _ActiveBookingCard extends StatelessWidget {
       final dt = startTs.toDate();
       dateText = '${dt.day}/${dt.month}/${dt.year}';
       timeText = _fmt(dt);
-      if (endTs != null) timeText += ' – ${_fmt(endTs.toDate())}';
+      if (endTs != null) timeText += ' â€“ ${_fmt(endTs.toDate())}';
     }
 
     final imageUrls = (data['images'] as List?)?.cast<String>() ?? const [];
     final imageUrl = imageUrls.isNotEmpty ? imageUrls.first : null;
 
     final totalAmount = (data['totalAmount'] as num?)?.toInt() ?? 0;
-    final currency = data['currency'] as String? ?? '₪';
+    final currency = data['currency'] as String? ?? 'â‚ھ';
 
     return Material(
       elevation: 2,
@@ -141,7 +141,7 @@ class _ActiveBookingCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  // الصورة
+                  // ط§ظ„طµظˆط±ط©
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: SizedBox(
@@ -154,7 +154,7 @@ class _ActiveBookingCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // المعلومات
+                  // ط§ظ„ظ…ط¹ظ„ظˆظ…ط§طھ
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _ActiveBookingCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '$dateText  •  $timeText',
+                          '$dateText  â€¢  $timeText',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -258,3 +258,5 @@ class _StatusBadge extends StatelessWidget {
     );
   }
 }
+
+

@@ -22,3 +22,4 @@ class AdminSpaceSummaryModel {
     return AdminSpaceSummaryEntity(id: id, name: name);
   }
 }
+

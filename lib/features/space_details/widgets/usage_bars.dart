@@ -6,7 +6,7 @@ class UsageBars extends StatelessWidget {
 
   const UsageBars({super.key, required this.items});
 
-  /// ✅ دالة: Progress bars بنفس شكل التصميم (gradient + track رمادي)
+  /// âœ… ط¯ط§ظ„ط©: Progress bars ط¨ظ†ظپط³ ط´ظƒظ„ ط§ظ„طھطµظ…ظٹظ… (gradient + track ط±ظ…ط§ط¯ظٹ)
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,7 +45,7 @@ class UsageBars extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
                 child: Container(
                   height: 10,
-                  color: Color(0xFFE9EFF6), // ✅ الرمادي الفاتح مثل الصورة
+                  color: Color(0xFFE9EFF6), // âœ… ط§ظ„ط±ظ…ط§ط¯ظٹ ط§ظ„ظپط§طھط­ ظ…ط«ظ„ ط§ظ„طµظˆط±ط©
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: FractionallySizedBox(
@@ -55,8 +55,8 @@ class UsageBars extends StatelessWidget {
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Color(0xFF2B6CB0), // ✅ أزرق
-                              AppColors.amber, // ✅ أصفر
+                              Color(0xFF2B6CB0), // âœ… ط£ط²ط±ظ‚
+                              AppColors.amber, // âœ… ط£طµظپط±
                             ],
                           ),
                         ),
@@ -72,3 +72,5 @@ class UsageBars extends StatelessWidget {
     );
   }
 }
+
+

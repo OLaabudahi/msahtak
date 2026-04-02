@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/policy_section_entity.dart';
 
@@ -221,3 +221,5 @@ class _Section extends StatelessWidget {
     );
   }
 }
+
+

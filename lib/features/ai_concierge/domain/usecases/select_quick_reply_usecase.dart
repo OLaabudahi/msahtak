@@ -10,3 +10,4 @@ class SelectQuickReplyUseCase {
     return repo.selectQuickReply(reply: reply);
   }
 }
+

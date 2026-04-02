@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../_shared/admin_ui.dart';
 import '../../../../core/i18n/app_i18n.dart';
 
-/// صفحة إدارة المشرفين الفرعيين — للأدمن الكامل فقط
+/// طµظپط­ط© ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط´ط±ظپظٹظ† ط§ظ„ظپط±ط¹ظٹظٹظ† â€” ظ„ظ„ط£ط¯ظ…ظ† ط§ظ„ظƒط§ظ…ظ„ ظپظ‚ط·
 class SubAdminsPage extends StatefulWidget {
   const SubAdminsPage({super.key});
 
@@ -31,7 +31,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
     setState(() => _loading = true);
     try {
       final results = await Future.wait([
-        _db.collection('workspaces').get(),
+        _db.collection('spaces').get(),
         _db.collection('users').where('role', isEqualTo: 'sub_admin').get(),
       ]);
 
@@ -91,7 +91,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
 
             setSt(() { creating = true; errorMsg = null; });
             try {
-              // إنشاء حساب جديد بدون تسجيل خروج الأدمن الحالي
+              // ط¥ظ†ط´ط§ط، ط­ط³ط§ط¨ ط¬ط¯ظٹط¯ ط¨ط¯ظˆظ† طھط³ط¬ظٹظ„ ط®ط±ظˆط¬ ط§ظ„ط£ط¯ظ…ظ† ط§ظ„ط­ط§ظ„ظٹ
               final appName = 'sub_create_${DateTime.now().millisecondsSinceEpoch}';
               final secondaryApp = await Firebase.initializeApp(
                 name: appName,
@@ -502,3 +502,5 @@ class _SpaceOption {
   final String name;
   const _SpaceOption({required this.id, required this.name});
 }
+
+

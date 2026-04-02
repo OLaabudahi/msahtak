@@ -16,3 +16,4 @@ class AdminDashboardOverview extends Equatable {
   @override
   List<Object?> get props => [spaces, selectedSpace, stats];
 }
+

@@ -83,3 +83,5 @@ class SearchResultsState extends Equatable {
     suggestions,
   ];
 }
+
+

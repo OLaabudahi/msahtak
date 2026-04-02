@@ -1,3 +1,4 @@
+import 'package:Msahtak/features/notifications/data/repos/notifications_repo_impl.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
-import '../data/repos/notifications_repo_dummy.dart';
 import '../data/sources/notifications_firebase_source.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
@@ -17,10 +17,10 @@ import '../widgets/timing_chip.dart';
 class NotificationSettingsPage extends StatelessWidget {
   const NotificationSettingsPage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  /// ط¥ظ†ط´ط§ط، ط§ظ„طµظپط­ط© ظ…ط¹ BLoC ط®ط§طµ ط¨ظ‡ط§
   static Widget withBloc() {
     final source = NotificationsFirebaseSource();
-    final repo = NotificationsRepoDummy(source);
+    final repo = NotificationsRepoImpl(source);
     return BlocProvider(
       create: (_) => NotificationsBloc(
         getNotificationsUseCase: GetNotificationsUseCase(repo),
@@ -266,3 +266,5 @@ class NotificationSettingsPage extends StatelessWidget {
     );
   }
 }
+
+

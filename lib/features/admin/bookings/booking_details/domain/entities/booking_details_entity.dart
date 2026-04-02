@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class BookingDetailsEntity extends Equatable {
   final String id;
@@ -57,3 +57,5 @@ class BookingDetailsEntity extends Equatable {
         status,
       ];
 }
+
+

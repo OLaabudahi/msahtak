@@ -27,3 +27,5 @@ class UsageStats extends Equatable {
         recommendation,
       ];
 }
+
+

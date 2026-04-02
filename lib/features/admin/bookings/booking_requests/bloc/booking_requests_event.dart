@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/booking_status.dart';
 
 sealed class BookingRequestsEvent extends Equatable {
@@ -31,3 +31,5 @@ class BookingRequestsRejected extends BookingRequestsEvent {
   @override
   List<Object?> get props => [bookingId];
 }
+
+

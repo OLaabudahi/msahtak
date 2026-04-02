@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/day_availability_entity.dart';
+import '../../domain/entities/day_availability_entity.dart';
 
 class DayAvailabilityModel {
   final String dayId;
@@ -21,3 +21,5 @@ class DayAvailabilityModel {
 
   DayAvailabilityEntity toEntity() => DayAvailabilityEntity(dayId: dayId, closed: closed, specialHours: specialHours);
 }
+
+

@@ -31,8 +31,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Password Reset'),
         content: const Text(
-          'تم ارسال بريد الكتروني الى عنوان بريدك.\n'
-          'قم بتفقد بريدك ومتابعة الاوامر من هناك.',
+          'طھظ… ط§ط±ط³ط§ظ„ ط¨ط±ظٹط¯ ط§ظ„ظƒطھط±ظˆظ†ظٹ ط§ظ„ظ‰ ط¹ظ†ظˆط§ظ† ط¨ط±ظٹط¯ظƒ.\n'
+          'ظ‚ظ… ط¨طھظپظ‚ط¯ ط¨ط±ظٹط¯ظƒ ظˆظ…طھط§ط¨ط¹ط© ط§ظ„ط§ظˆط§ظ…ط± ظ…ظ† ظ‡ظ†ط§ظƒ.',
         ),
         actions: [
           TextButton(
@@ -54,7 +54,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ✅ سهم رجوع علوي
+      // âœ… ط³ظ‡ظ… ط±ط¬ظˆط¹ ط¹ظ„ظˆظٹ
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -87,7 +87,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             }
           },
           child: Center(
-            // ✅ يخلي المحتوى بنص الشاشة
+            // âœ… ظٹط®ظ„ظٹ ط§ظ„ظ…ط­طھظˆظ‰ ط¨ظ†طµ ط§ظ„ط´ط§ط´ط©
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
@@ -135,3 +135,5 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 }
+
+

@@ -155,3 +155,4 @@ class NearbySpaceCard extends StatelessWidget {
     );
   }
 }
+

@@ -63,3 +63,4 @@ class MapState extends Equatable {
   @override
   List<Object?> get props => [isLoading, error, center, radiusKm, spaces, selectedSpaceId, showAll];
 }
+

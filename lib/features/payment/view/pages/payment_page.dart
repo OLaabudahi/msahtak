@@ -16,9 +16,9 @@ import '../../widgets/payment_method_tile.dart';
 import 'payment_success_page.dart';
 
 class PaymentPage extends StatelessWidget {
-  final String requestId;
+  final String bookingId;
 
-  const PaymentPage({super.key, required this.requestId});
+  const PaymentPage({super.key, required this.bookingId});
 
   static const _pagePadding = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
 
@@ -37,7 +37,7 @@ class PaymentPage extends StatelessWidget {
           listenWhen: (p, c) => p.uiStatus != c.uiStatus,
           listener: (context, state) {
             if (state.uiStatus == PaymentUiStatus.failure && state.errorMessage != null) {
-              // استخدم context.read بدلاً من context.t لأن الـ listener خارج build
+              // ط§ط³طھط®ط¯ظ… context.read ط¨ط¯ظ„ط§ظ‹ ظ…ظ† context.t ظ„ط£ظ† ط§ظ„ظ€ listener ط®ط§ط±ط¬ build
               final langCode = context.read<LanguageBloc>().state.code;
               final msg = state.errorMessage == 'paymentReceiptRequired'
                   ? LanguageService.tr(langCode, 'paymentReceiptRequired')
@@ -72,7 +72,7 @@ class PaymentPage extends StatelessWidget {
                   PaymentBookingSummaryCard(summary: state.summary),
                   const SizedBox(height: 14),
 
-                  // ── طرق الدفع ──
+                  // â”€â”€ ط·ط±ظ‚ ط§ظ„ط¯ظپط¹ â”€â”€
                   Text(context.t('paymentMethodTitle'),
                       style: const TextStyle(fontWeight: FontWeight.w800)),
                   const SizedBox(height: 10),
@@ -98,7 +98,7 @@ class PaymentPage extends StatelessWidget {
                         ),
                       )),
 
-                  // ── تفاصيل الحساب عند اختيار الطريقة ──
+                  // â”€â”€ طھظپط§طµظٹظ„ ط§ظ„ط­ط³ط§ط¨ ط¹ظ†ط¯ ط§ط®طھظٹط§ط± ط§ظ„ط·ط±ظٹظ‚ط© â”€â”€
                   if (state.selectedMethodEntity?.details.isNotEmpty == true) ...[
                     const SizedBox(height: 4),
                     _AccountDetailsCard(
@@ -110,7 +110,7 @@ class PaymentPage extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  // ── إدخال بيانات البطاقة أو رفع إشعار الدفع ──
+                  // â”€â”€ ط¥ط¯ط®ط§ظ„ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط¨ط·ط§ظ‚ط© ط£ظˆ ط±ظپط¹ ط¥ط´ط¹ط§ط± ط§ظ„ط¯ظپط¹ â”€â”€
                   if (state.isCardPayment)
                     _CardDetailsForm(state: state)
                   else
@@ -122,13 +122,13 @@ class PaymentPage extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
-                  // ── زر إتمام الدفع ──
+                  // â”€â”€ ط²ط± ط¥طھظ…ط§ظ… ط§ظ„ط¯ظپط¹ â”€â”€
                   SizedBox(
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
                       onPressed: state.canPay
-                          ? () => context.read<PaymentBloc>().add(PayNowPressed(requestId))
+                          ? () => context.read<PaymentBloc>().add(PayNowPressed(bookingId))
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.amber,
@@ -201,7 +201,7 @@ class _AccountDetailsCard extends StatelessWidget {
   }
 }
 
-/// نموذج إدخال بيانات بطاقة الائتمان/الخصم
+/// ظ†ظ…ظˆط°ط¬ ط¥ط¯ط®ط§ظ„ ط¨ظٹط§ظ†ط§طھ ط¨ط·ط§ظ‚ط© ط§ظ„ط§ط¦طھظ…ط§ظ†/ط§ظ„ط®طµظ…
 class _CardDetailsForm extends StatefulWidget {
   final PaymentState state;
   const _CardDetailsForm({required this.state});
@@ -301,7 +301,7 @@ class _CardDetailsFormState extends State<_CardDetailsForm> {
               child: _CardField(
                 controller: _cvvCtrl,
                 label: context.t('paymentCardCvv'),
-                hint: '•••',
+                hint: 'â€¢â€¢â€¢',
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 4,
@@ -389,7 +389,7 @@ class _CardField extends StatelessWidget {
   }
 }
 
-/// يضيف مسافة كل 4 أرقام في رقم البطاقة
+/// ظٹط¶ظٹظپ ظ…ط³ط§ظپط© ظƒظ„ 4 ط£ط±ظ‚ط§ظ… ظپظٹ ط±ظ‚ظ… ط§ظ„ط¨ط·ط§ظ‚ط©
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue old, TextEditingValue next) {
@@ -407,7 +407,7 @@ class _CardNumberFormatter extends TextInputFormatter {
   }
 }
 
-/// يضيف / بعد شهرين في حقل الصلاحية
+/// ظٹط¶ظٹظپ / ط¨ط¹ط¯ ط´ظ‡ط±ظٹظ† ظپظٹ ط­ظ‚ظ„ ط§ظ„طµظ„ط§ط­ظٹط©
 class _ExpiryFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue old, TextEditingValue next) {
@@ -492,3 +492,5 @@ class _ReceiptUploadButton extends StatelessWidget {
     );
   }
 }
+
+

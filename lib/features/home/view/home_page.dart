@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Msahtak/core/services/firestore_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Msahtak/features/ai_concierge/view/ai_concierge_page.dart';
@@ -30,14 +31,13 @@ import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 import '../widgets/insight_tile.dart';
 import '../widgets/custom_search_bar.dart';
-import 'screens/insight_details_pages.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => HomeBloc(repo: HomeRepoFirebase())..add(const HomeStarted()),
+      create: (_) => HomeBloc(repo: HomeRepoFirebase(FirestoreApi()))..add(const HomeStarted()),
       child: const HomePage(),
     );
   }
@@ -224,7 +224,7 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    // Meeting-ready: يفتح صفحة الحجوزات الفعّالة فقط
+    // Meeting-ready: ظٹظپطھط­ طµظپط­ط© ط§ظ„ط­ط¬ظˆط²ط§طھ ط§ظ„ظپط¹ظ‘ط§ظ„ط© ظپظ‚ط·
     if (item.id == 'ins_4') {
       Navigator.of(context).push(ActiveBookingsPage.route());
       return;
@@ -248,7 +248,7 @@ class _HomeTabState extends State<_HomeTab> {
         );
         break;
       default:
-        page = InsightDetailsPage(item: item);
+        return;
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
@@ -442,8 +442,8 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                   itemBuilder: (context, index) {
                     final item = state.insights[index];
-                    // Builder ضروري عشان context.t() يستخدم context.select
-                    // وهو ممنوع مباشرة داخل Sliver itemBuilder
+                    // Builder ط¶ط±ظˆط±ظٹ ط¹ط´ط§ظ† context.t() ظٹط³طھط®ط¯ظ… context.select
+                    // ظˆظ‡ظˆ ظ…ظ…ظ†ظˆط¹ ظ…ط¨ط§ط´ط±ط© ط¯ط§ط®ظ„ Sliver itemBuilder
                     return Builder(
                       builder: (ctx) => InsightTile(
                         imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
@@ -467,3 +467,4 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 }
+

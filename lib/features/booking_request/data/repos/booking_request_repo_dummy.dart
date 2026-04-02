@@ -74,9 +74,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       addOns: addOns,
     );
 
-    final requestId = _generateId(prefix: 'REQ');
+    final bookingId = _generateId(prefix: 'REQ');
     final entity = BookingRequestModel(
-      requestId: requestId,
+      bookingId: bookingId,
       space: space,
       startDate: startDate,
       durationUnit: durationUnit,
@@ -87,10 +87,10 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       offerLabel: offerLabel,
       addOns: addOns,
       status: BookingRequestStatus.pending,
-      statusHint: 'Usually responds within 1–2 hours',
+      statusHint: 'Usually responds within 1â€“2 hours',
       totalAmount: quoteEntity.total,
       currency: quoteEntity.currency,
-      bookingId: null,
+
     );
 
     _store.put(entity);
@@ -102,25 +102,25 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
   }
 
   @override
-  Future<BookingRequestEntity> getStatus({required String requestId}) async {
+  Future<BookingRequestEntity> getStatus({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 250));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
     return current;
 
     // API-ready example:
-    // final res = await dio.get('/booking/requests/$requestId');
+    // final res = await dio.get('/booking/requests/$bookingId');
     // return BookingRequestModel.fromJson(res.data);
   }
 
   @override
   Future<BookingRequestEntity> refreshStatus({
-    required String requestId,
+    required String bookingId,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
@@ -152,14 +152,14 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     return current;
 
     // API-ready example:
-    // final res = await dio.post('/booking/requests/$requestId/refresh');
+    // final res = await dio.post('/booking/requests/$bookingId/refresh');
     // return BookingRequestModel.fromJson(res.data);
   }
 
   @override
-  Future<BookingRequestEntity> cancel({required String requestId}) async {
+  Future<BookingRequestEntity> cancel({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
@@ -176,7 +176,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     return updated;
 
     // API-ready example:
-    // final res = await dio.post('/booking/requests/$requestId/cancel');
+    // final res = await dio.post('/booking/requests/$bookingId/cancel');
     // return BookingRequestModel.fromJson(res.data);
   }
 
@@ -187,7 +187,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     String? bookingId,
   }) {
     return BookingRequestModel(
-      requestId: current.requestId,
+      bookingId: current.bookingId,
       space: current.space,
       startDate: current.startDate,
       durationUnit: current.durationUnit,
@@ -201,7 +201,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       statusHint: statusHint ?? current.statusHint,
       totalAmount: current.totalAmount,
       currency: current.currency,
-      bookingId: bookingId ?? current.bookingId,
+
     );
   }
 
@@ -229,3 +229,5 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     return '$prefix-$n';
   }
 }
+
+

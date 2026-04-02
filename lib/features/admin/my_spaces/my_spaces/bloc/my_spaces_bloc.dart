@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_my_spaces_usecase.dart';
 import '../domain/usecases/hide_space_usecase.dart';
 import '../domain/usecases/delete_space_usecase.dart';
@@ -40,3 +40,5 @@ class MySpacesBloc extends Bloc<MySpacesEvent, MySpacesState> {
     }
   }
 }
+
+

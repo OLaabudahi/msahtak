@@ -7,13 +7,15 @@ class ReviewsRepoDummy implements ReviewsRepo {
   final ReviewsRemoteSource source;
   ReviewsRepoDummy(this.source);
 
-  /// جلب الملخص من المصدر
+  /// ط¬ظ„ط¨ ط§ظ„ظ…ظ„ط®طµ ظ…ظ† ط§ظ„ظ…طµط¯ط±
   @override
   Future<ReviewsSummary> getReviewsSummary() =>
       source.getReviewsSummary();
 
-  /// جلب التقييمات من المصدر مع الفلتر
+  /// ط¬ظ„ط¨ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ظ…ظ† ط§ظ„ظ…طµط¯ط± ظ…ط¹ ط§ظ„ظپظ„طھط±
   @override
   Future<List<Review>> getReviews({String filter = 'all'}) =>
       source.getReviews(filter: filter);
 }
+
+

@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/space_management_entity.dart';
+import '../../domain/entities/space_management_entity.dart';
 
 class SpaceManagementModel {
   final String id;
@@ -21,3 +21,5 @@ class SpaceManagementModel {
 
   SpaceManagementEntity toEntity() => SpaceManagementEntity(id: id, name: name, hidden: hidden);
 }
+
+

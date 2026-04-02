@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class CalendarEvent extends Equatable {
   const CalendarEvent();
@@ -30,3 +30,5 @@ class CalendarSpecialHoursChanged extends CalendarEvent {
 class CalendarSavePressed extends CalendarEvent {
   const CalendarSavePressed();
 }
+
+

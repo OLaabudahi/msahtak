@@ -73,3 +73,4 @@ class HomeState extends Equatable {
     unreadNotifications,
   ];
 }
+

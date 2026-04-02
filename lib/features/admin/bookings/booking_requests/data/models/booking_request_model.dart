@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/booking_request_entity.dart';
+import '../../domain/entities/booking_request_entity.dart';
 import '../../domain/entities/booking_status.dart';
 
 class BookingRequestModel {
@@ -61,3 +61,5 @@ class BookingRequestModel {
 
   BookingStatus _parse(String s) => switch (s) { 'approved' => BookingStatus.approved, 'canceled' => BookingStatus.canceled, _ => BookingStatus.pending };
 }
+
+

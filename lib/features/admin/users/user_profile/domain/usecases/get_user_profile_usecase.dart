@@ -1,4 +1,4 @@
-﻿import '../entities/user_profile_entity.dart';
+import '../entities/user_profile_entity.dart';
 import '../repos/user_profile_repo.dart';
 
 class GetUserProfileUseCase {
@@ -7,3 +7,5 @@ class GetUserProfileUseCase {
 
   Future<UserProfileEntity> call({required String userId}) => repo.getProfile(userId: userId);
 }
+
+

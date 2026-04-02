@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-/// ✅ رسالة تنبيه ديناميكية (Limited availability أو غيرها)
+/// âœ… ط±ط³ط§ظ„ط© طھظ†ط¨ظٹظ‡ ط¯ظٹظ†ط§ظ…ظٹظƒظٹط© (Limited availability ط£ظˆ ط؛ظٹط±ظ‡ط§)
 class SpaceAlert extends Equatable {
-  final String code; // مثال: limited_availability / info / warning
+  final String code; // ظ…ط«ط§ظ„: limited_availability / info / warning
   final String title;
   final String message;
-  final String colorHex; // مثال: #FDE8E8
-  final String borderHex; // مثال: #FCA5A5
-  final String textHex; // مثال: #B91C1C
+  final String colorHex; // ظ…ط«ط§ظ„: #FDE8E8
+  final String borderHex; // ظ…ط«ط§ظ„: #FCA5A5
+  final String textHex; // ظ…ط«ط§ظ„: #B91C1C
 
   const SpaceAlert({
     required this.code,
@@ -18,7 +18,7 @@ class SpaceAlert extends Equatable {
     required this.textHex,
   });
 
-  /// ✅ (API جاهز - كومنت) من JSON
+  /// âœ… (API ط¬ط§ظ‡ط² - ظƒظˆظ…ظ†طھ) ظ…ظ† JSON
   // factory SpaceAlert.fromJson(Map<String, dynamic> json) {
   //   return SpaceAlert(
   //     code: json['code'] ?? '',
@@ -41,7 +41,7 @@ class SpaceAlert extends Equatable {
   ];
 }
 
-/// ✅ سياسات المساحة (لـ BottomSheet)
+/// âœ… ط³ظٹط§ط³ط§طھ ط§ظ„ظ…ط³ط§ط­ط© (ظ„ظ€ BottomSheet)
 class SpacePolicies extends Equatable {
   final String title;
   final String subtitle;
@@ -67,7 +67,7 @@ class PolicySection extends Equatable {
   List<Object?> get props => [title, bullets];
 }
 
-/// ✅ Review Summary (لـ BottomSheet)
+/// âœ… Review Summary (ظ„ظ€ BottomSheet)
 class ReviewSummary extends Equatable {
   final String header;
   final String meta;
@@ -96,7 +96,7 @@ class ReviewSummary extends Equatable {
   ];
 }
 
-/// ✅ آخر مراجعات (قسم Latest reviews)
+/// âœ… ط¢ط®ط± ظ…ط±ط§ط¬ط¹ط§طھ (ظ‚ط³ظ… Latest reviews)
 class SpaceReview extends Equatable {
   final String id;
   final String userName;
@@ -116,11 +116,11 @@ class SpaceReview extends Equatable {
   List<Object?> get props => [id, userName, timeAgo, stars, comment];
 }
 
-/// ✅ عروض (Offers tab)
+/// âœ… ط¹ط±ظˆط¶ (Offers tab)
 class SpaceOffer extends Equatable {
   final String id;
   final String badgeText; // LIMITED / BONUS
-  final String badgeType; // limited / bonus (للون)
+  final String badgeType; // limited / bonus (ظ„ظ„ظˆظ†)
   final String title;
   final String priceLine; // "Price:"
   final String? oldPriceText;
@@ -154,7 +154,7 @@ class SpaceOffer extends Equatable {
   ];
 }
 
-/// ✅ إحصائيات "من يستخدم المكان عادة"
+/// âœ… ط¥ط­طµط§ط¦ظٹط§طھ "ظ…ظ† ظٹط³طھط®ط¯ظ… ط§ظ„ظ…ظƒط§ظ† ط¹ط§ط¯ط©"
 class UsageStat extends Equatable {
   final String label;
   final int percent; // 0..100
@@ -165,15 +165,15 @@ class UsageStat extends Equatable {
   List<Object?> get props => [label, percent];
 }
 
-/// ✅ تفاصيل المساحة الأساسية اللي بتظهر مباشرة بالواجهة
+/// âœ… طھظپط§طµظٹظ„ ط§ظ„ظ…ط³ط§ط­ط© ط§ظ„ط£ط³ط§ط³ظٹط© ط§ظ„ظ„ظٹ ط¨طھط¸ظ‡ط± ظ…ط¨ط§ط´ط±ط© ط¨ط§ظ„ظˆط§ط¬ظ‡ط©
 class SpaceDetails extends Equatable {
   final String id;
   final String name;
 
-  final List<String> imageAssets; // هلا assets، لاحقاً imageUrls
+  final List<String> imageAssets; // ظ‡ظ„ط§ assetsطŒ ظ„ط§ط­ظ‚ط§ظ‹ imageUrls
 
-  final String subtitleLine; // "City Center • Quiet • Fast Wi-Fi"
-  /// ✅ مهم للـ booking logic
+  final String subtitleLine; // "City Center â€¢ Quiet â€¢ Fast Wi-Fi"
+  /// âœ… ظ…ظ‡ظ… ظ„ظ„ظ€ booking logic
   final int pricePerDay;
   final String currency;
 
@@ -183,7 +183,7 @@ class SpaceDetails extends Equatable {
   final String workingHours; // "Sun - Thu, 8:00 AM - 10:00 PM"
   final String locationAddress; // "12 King St, Downtown"
 
-  /// ✅ الرسالة الديناميكية (قد تكون null)
+  /// âœ… ط§ظ„ط±ط³ط§ظ„ط© ط§ظ„ط¯ظٹظ†ط§ظ…ظٹظƒظٹط© (ظ‚ط¯ طھظƒظˆظ† null)
   final SpaceAlert? alert;
 
   final List<String> features;
@@ -199,17 +199,17 @@ class SpaceDetails extends Equatable {
 
   final SpacePolicies policies;
 
-  // إحداثيات الموقع الجغرافي (اختياريان)
+  // ط¥ط­ط¯ط§ط«ظٹط§طھ ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ط¬ط؛ط±ط§ظپظٹ (ط§ط®طھظٹط§ط±ظٹط§ظ†)
   final double? lat;
   final double? lng;
 
-  /// ✅ (API جاهز - كومنت) from JSON
+  /// âœ… (API ط¬ط§ظ‡ط² - ظƒظˆظ…ظ†طھ) from JSON
   // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
   //   return SpaceDetails(
   //     id: json['id'].toString(),
   //     name: json['name'] ?? '',
-  //     imageAssets: const [], // لو assets مش من API
-  //     // أو:
+  //     imageAssets: const [], // ظ„ظˆ assets ظ…ط´ ظ…ظ† API
+  //     // ط£ظˆ:
   //     // imageUrls: List<String>.from(json['images'] ?? const []),
   //     priceText: json['priceText'] ?? '',
   //     subtitleLine: json['subtitleLine'] ?? '',
@@ -231,8 +231,8 @@ class SpaceDetails extends Equatable {
     id,
     name,
     imageAssets,
-    pricePerDay, // ✅
-    currency, // ✅
+    pricePerDay, // âœ…
+    currency, // âœ…
     subtitleLine,
     rating,
     reviewsCount,
@@ -273,19 +273,19 @@ class SpaceDetails extends Equatable {
     this.lng,
   });
 
-  /// ✅ (API جاهز - كومنت) from JSON
+  /// âœ… (API ط¬ط§ظ‡ط² - ظƒظˆظ…ظ†طھ) from JSON
   // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
   //   return SpaceDetails(
   //     id: json['id'].toString(),
   //     name: json['name'] ?? '',
   //     imageAssets: const [],
   //
-  //     // ✅ المنطق الصح للـ API:
+  //     // âœ… ط§ظ„ظ…ظ†ط·ظ‚ ط§ظ„طµط­ ظ„ظ„ظ€ API:
   //     pricePerDay: (json['price_per_day'] ?? 0) as int,
-  //     currency: json['currency'] ?? '₪',
+  //     currency: json['currency'] ?? 'â‚ھ',
   //
   //     // UI:
-  //     priceText: '${json['currency'] ?? '₪'}${json['price_per_day'] ?? 0} / day',
+  //     priceText: '${json['currency'] ?? 'â‚ھ'}${json['price_per_day'] ?? 0} / day',
   //
   //     subtitleLine: json['subtitleLine'] ?? '',
   //     rating: (json['rating'] ?? 0).toDouble(),
@@ -303,3 +303,5 @@ class SpaceDetails extends Equatable {
   // }
 
 }
+
+

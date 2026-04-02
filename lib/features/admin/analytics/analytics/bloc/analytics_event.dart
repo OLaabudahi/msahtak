@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class AnalyticsEvent extends Equatable {
   const AnalyticsEvent();
@@ -13,3 +13,5 @@ class AnalyticsStarted extends AnalyticsEvent {
 class AnalyticsExportPressed extends AnalyticsEvent {
   const AnalyticsExportPressed();
 }
+
+

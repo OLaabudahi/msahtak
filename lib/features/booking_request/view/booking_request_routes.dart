@@ -28,24 +28,30 @@ class BookingRequestRoutes {
       ),
     );
   }
-
   static Route<void> pendingApproval({
+    required BookingRequestBloc bloc,
     required BookingRequestEntity request,
   }) {
     return MaterialPageRoute(
-      builder: (_) => PendingBookingApprovalPage(request: request),
-    );
-  }
-
-  static Route<void> bookingStatus({
-    required BookingRequestBloc bloc,
-    required String requestId,
-  }) {
-    return MaterialPageRoute(
       builder: (_) => BlocProvider.value(
-        value: bloc..add(BookingRequestStatusOpened(requestId)),
-        child: BookingStatusPage(requestId: requestId),
+        value: bloc,
+        child: PendingBookingApprovalPage(request: request),
       ),
     );
   }
+
+
+  static Route<void> bookingStatus({
+    required BookingRequestBloc bloc,
+    required String bookingId,
+  }) {
+    return MaterialPageRoute(
+      builder: (_) => BlocProvider.value(
+        value: bloc..add(BookingRequestStatusOpened(bookingId)),
+        child: BookingStatusPage(bookingId: bookingId),
+      ),
+    );
+  }
+
 }
+

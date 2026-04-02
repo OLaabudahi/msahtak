@@ -18,13 +18,13 @@ class UsageBloc extends Bloc<UsageEvent, UsageState> {
     on<UsagePlanApplied>(_onPlanApplied);
   }
 
-  /// تحميل الإحصاءات وخيارات الباقات
+  /// طھط­ظ…ظٹظ„ ط§ظ„ط¥ط­طµط§ط،ط§طھ ظˆط®ظٹط§ط±ط§طھ ط§ظ„ط¨ط§ظ‚ط§طھ
   Future<void> _onStarted(
       UsageStarted event, Emitter<UsageState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final result = await getUsageUseCase();
-      // حدد الباقة الأفضل كـ default
+      // ط­ط¯ط¯ ط§ظ„ط¨ط§ظ‚ط© ط§ظ„ط£ظپط¶ظ„ ظƒظ€ default
       final bestIndex =
           result.plans.indexWhere((p) => p.isBest);
       emit(state.copyWith(
@@ -37,14 +37,14 @@ class UsageBloc extends Bloc<UsageEvent, UsageState> {
     }
   }
 
-  /// تحديث الباقة المختارة
+  /// طھط­ط¯ظٹط« ط§ظ„ط¨ط§ظ‚ط© ط§ظ„ظ…ط®طھط§ط±ط©
   void _onPlanSelected(
       UsagePlanSelected event, Emitter<UsageState> emit) {
     emit(state.copyWith(
         selectedPlanIndex: event.index, isApplied: false));
   }
 
-  /// تطبيق الباقة المختارة
+  /// طھط·ط¨ظٹظ‚ ط§ظ„ط¨ط§ظ‚ط© ط§ظ„ظ…ط®طھط§ط±ط©
   Future<void> _onPlanApplied(
       UsagePlanApplied event, Emitter<UsageState> emit) async {
     if (state.plans.isEmpty) return;
@@ -59,3 +59,5 @@ class UsageBloc extends Bloc<UsageEvent, UsageState> {
     }
   }
 }
+
+

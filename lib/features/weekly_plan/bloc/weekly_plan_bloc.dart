@@ -18,14 +18,14 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     on<WeeklyPlanActivatePressed>(_onActivatePressed);
   }
 
-  /// تحميل المساحات والخطة الافتراضية
+  /// طھط­ظ…ظٹظ„ ط§ظ„ظ…ط³ط§ط­ط§طھ ظˆط§ظ„ط®ط·ط© ط§ظ„ط§ظپطھط±ط§ط¶ظٹط©
   Future<void> _onStarted(
       WeeklyPlanStarted event, Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final result = await getWeeklyPlanUseCase(state.selectedHubId);
       final hubs = result.hubs;
-      // إذا كان الـ selectedHubId الافتراضي غير موجود في القائمة نستخدم أول عنصر
+      // ط¥ط°ط§ ظƒط§ظ† ط§ظ„ظ€ selectedHubId ط§ظ„ط§ظپطھط±ط§ط¶ظٹ ط؛ظٹط± ظ…ظˆط¬ظˆط¯ ظپظٹ ط§ظ„ظ‚ط§ط¦ظ…ط© ظ†ط³طھط®ط¯ظ… ط£ظˆظ„ ط¹ظ†طµط±
       final resolvedId = hubs.isNotEmpty &&
               !hubs.any((h) => h.id == state.selectedHubId)
           ? hubs.first.id
@@ -43,7 +43,7 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     }
   }
 
-  /// تحميل تفاصيل الخطة عند تغيير المساحة
+  /// طھط­ظ…ظٹظ„ طھظپط§طµظٹظ„ ط§ظ„ط®ط·ط© ط¹ظ†ط¯ طھط؛ظٹظٹط± ط§ظ„ظ…ط³ط§ط­ط©
   Future<void> _onHubChanged(
       WeeklyPlanHubChanged event, Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(selectedHubId: event.hubId, isLoading: true));
@@ -56,7 +56,7 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     }
   }
 
-  /// تفعيل الخطة الأسبوعية
+  /// طھظپط¹ظٹظ„ ط§ظ„ط®ط·ط© ط§ظ„ط£ط³ط¨ظˆط¹ظٹط©
   Future<void> _onActivatePressed(WeeklyPlanActivatePressed event,
       Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(isActivating: true));
@@ -68,3 +68,5 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     }
   }
 }
+
+

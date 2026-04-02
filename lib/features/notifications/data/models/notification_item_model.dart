@@ -8,10 +8,10 @@ class NotificationItemModel extends NotificationItem {
     required super.time,
     required super.type,
     super.isRead,
-    super.requestId,
+    super.bookingId,
   });
 
-  /// تحويل JSON إلى Model
+  /// طھط­ظˆظٹظ„ JSON ط¥ظ„ظ‰ Model
   factory NotificationItemModel.fromJson(Map<String, dynamic> json) {
     return NotificationItemModel(
       id: json['id'] as String,
@@ -23,11 +23,11 @@ class NotificationItemModel extends NotificationItem {
         orElse: () => NotificationType.tip,
       ),
       isRead: json['isRead'] as bool? ?? false,
-      requestId: json['requestId'] as String?,
+      bookingId: json['bookingId'] as String?,
     );
   }
 
-  /// تحويل Model إلى JSON
+  /// طھط­ظˆظٹظ„ Model ط¥ظ„ظ‰ JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
@@ -35,6 +35,8 @@ class NotificationItemModel extends NotificationItem {
         'time': time,
         'type': type.name,
         'isRead': isRead,
-        'requestId': requestId,
+        'bookingId': bookingId,
       };
 }
+
+

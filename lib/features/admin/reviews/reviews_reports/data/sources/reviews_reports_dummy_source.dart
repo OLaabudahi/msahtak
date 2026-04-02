@@ -1,4 +1,4 @@
-﻿import 'reviews_reports_source.dart';
+import 'reviews_reports_source.dart';
 import '../models/review_model.dart';
 import '../models/report_model.dart';
 
@@ -65,3 +65,4 @@ class ReviewsReportsDummySource implements ReviewsReportsSource {
     _replies[reviewId] = reply;
   }
 }
+

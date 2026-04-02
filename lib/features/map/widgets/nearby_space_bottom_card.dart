@@ -33,7 +33,7 @@ class NearbySpaceBottomCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ✅ صورة بنفس ستايل التصميم: ارتفاع ثابت + عرض كامل
+          // âœ… طµظˆط±ط© ط¨ظ†ظپط³ ط³طھط§ظٹظ„ ط§ظ„طھطµظ…ظٹظ…: ط§ط±طھظپط§ط¹ ط«ط§ط¨طھ + ط¹ط±ط¶ ظƒط§ظ…ظ„
           SizedBox(
             height: 70,
             width: double.infinity,
@@ -54,7 +54,7 @@ class NearbySpaceBottomCard extends StatelessWidget {
                   ),
           ),
 
-          // ✅ محتوى تحت الصورة
+          // âœ… ظ…ط­طھظˆظ‰ طھط­طھ ط§ظ„طµظˆط±ط©
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
             child: Row(
@@ -140,3 +140,4 @@ class NearbySpaceBottomCard extends StatelessWidget {
     );
   }
 }
+

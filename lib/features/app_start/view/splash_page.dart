@@ -1,3 +1,4 @@
+import 'package:Msahtak/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
@@ -12,13 +13,13 @@ class SplashPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/msahtak_logo.png',
+              AppAssets.logo,
               width: 280,
               height: 140,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Text(
-                  'مساحتك\nMsahtak',
+                  'ظ…ط³ط§ط­طھظƒ\nMsahtak',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 48,
@@ -37,3 +38,5 @@ class SplashPage extends StatelessWidget {
     );
   }
 }
+
+

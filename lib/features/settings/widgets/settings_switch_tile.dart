@@ -8,7 +8,7 @@ class SettingsSwitchTile extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  /// ✅ جديد (اختياري) عشان divider مثل SettingsScreen
+  /// âœ… ط¬ط¯ظٹط¯ (ط§ط®طھظٹط§ط±ظٹ) ط¹ط´ط§ظ† divider ظ…ط«ظ„ SettingsScreen
   final bool isLast;
 
   const SettingsSwitchTile({
@@ -75,3 +75,5 @@ class SettingsSwitchTile extends StatelessWidget {
     );
   }
 }
+
+

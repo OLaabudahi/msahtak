@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/offer_entity.dart';
+import '../../domain/entities/offer_entity.dart';
 import '../../domain/repos/offers_repo.dart';
 import '../models/offer_model.dart';
 import '../sources/offers_source.dart';
@@ -24,3 +24,5 @@ class OffersRepoImpl implements OffersRepo {
     return source.createOffer(offer: m);
   }
 }
+
+

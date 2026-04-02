@@ -14,7 +14,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileRefreshRequested>(_onRefresh);
   }
 
-  /// ✅ تحميل بيانات المستخدم
+  /// âœ… طھط­ظ…ظٹظ„ ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…
   Future<void> _onStarted(
     ProfileStarted event,
     Emitter<ProfileState> emit,
@@ -28,7 +28,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  /// ✅ Refresh
+  /// âœ… Refresh
   Future<void> _onRefresh(
     ProfileRefreshRequested event,
     Emitter<ProfileState> emit,
@@ -41,3 +41,5 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 }
+
+

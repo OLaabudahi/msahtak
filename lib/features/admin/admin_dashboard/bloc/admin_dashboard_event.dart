@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class AdminDashboardEvent extends Equatable {
   const AdminDashboardEvent();
@@ -31,3 +31,5 @@ class AdminDashboardNavChanged extends AdminDashboardEvent {
   @override
   List<Object?> get props => [index];
 }
+
+

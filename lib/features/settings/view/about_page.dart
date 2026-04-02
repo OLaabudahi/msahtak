@@ -30,7 +30,7 @@ class AboutPage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'Terms & Privacy — coming soon.',
+              'Terms & Privacy â€” coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -39,3 +39,5 @@ class AboutPage extends StatelessWidget {
     );
   }
 }
+
+

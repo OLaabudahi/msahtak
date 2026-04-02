@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import 'amenity_entity.dart';
 import 'policy_section_entity.dart';
 import 'price_unit.dart';
@@ -89,3 +89,5 @@ class SpaceFormEntity extends Equatable {
         paymentMethods,
       ];
 }
+
+

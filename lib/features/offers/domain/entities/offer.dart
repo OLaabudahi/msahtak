@@ -30,3 +30,5 @@ class Offer extends Equatable {
         rating,
       ];
 }
+
+

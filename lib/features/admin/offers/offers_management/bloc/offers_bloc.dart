@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/offer_entity.dart';
@@ -201,3 +201,4 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     );
   }
 }
+

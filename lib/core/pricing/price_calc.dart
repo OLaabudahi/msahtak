@@ -5,9 +5,9 @@ class PriceCalcResult {
   final double base;
   final double finalPrice;
   final PriceUnit unit;
-  final String label; // e.g. "₪25/day"
-  final String? strikeLabel; // old price label if discounted
-  final String? note; // bonus or package note
+  final String label;
+  final String? strikeLabel;
+  final String? note;
 
   const PriceCalcResult({
     required this.base,
@@ -24,7 +24,7 @@ class PriceCalculator {
     required double basePrice,
     required PriceUnit baseUnit,
     UserOffer? offer,
-    String currencySymbol = '₪',
+    String currencySymbol = '?',
   }) {
     final base = basePrice;
     double finalP = basePrice;
@@ -104,3 +104,5 @@ class PriceCalculator {
     return '$sym$numStr/${u.name}';
   }
 }
+
+

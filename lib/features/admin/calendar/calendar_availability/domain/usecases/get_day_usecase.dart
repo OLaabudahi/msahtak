@@ -1,4 +1,4 @@
-﻿import '../entities/day_availability_entity.dart';
+import '../entities/day_availability_entity.dart';
 import '../repos/calendar_repo.dart';
 
 class GetDayUseCase {
@@ -7,3 +7,5 @@ class GetDayUseCase {
 
   Future<DayAvailabilityEntity> call({required String dayId}) => repo.getDay(dayId: dayId);
 }
+
+

@@ -15,7 +15,7 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
 
   static const _filterKeys = ['all', 'mine', 'recent'];
 
-  /// تحميل التقييمات والملخص الإجمالي
+  /// طھط­ظ…ظٹظ„ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ظˆط§ظ„ظ…ظ„ط®طµ ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ
   Future<void> _onStarted(
       ReviewsStarted event, Emitter<ReviewsState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -30,7 +30,7 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
     }
   }
 
-  /// تغيير الفلتر وإعادة جلب التقييمات
+  /// طھط؛ظٹظٹط± ط§ظ„ظپظ„طھط± ظˆط¥ط¹ط§ط¯ط© ط¬ظ„ط¨ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ
   Future<void> _onFilterChanged(
       ReviewsFilterChanged event, Emitter<ReviewsState> emit) async {
     emit(state.copyWith(
@@ -45,3 +45,5 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
     }
   }
 }
+
+

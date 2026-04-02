@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class AmenityEntity extends Equatable {
   final String id;
@@ -18,3 +18,5 @@ class AmenityEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, selected, isCustom];
 }
+
+

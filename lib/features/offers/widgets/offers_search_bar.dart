@@ -52,3 +52,5 @@ class OffersSearchBar extends StatelessWidget {
     );
   }
 }
+
+

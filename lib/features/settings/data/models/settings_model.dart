@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-/// ✅ موديل الإعدادات (Dummy الآن - API-ready)
+/// âœ… ظ…ظˆط¯ظٹظ„ ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ (Dummy ط§ظ„ط¢ظ† - API-ready)
 class SettingsModel extends Equatable {
   final bool notificationsEnabled;
   final bool bookingRemindersEnabled;
   final String reminderTiming; // "30 min" / "1 hour" / "Same day (9 AM)"
 
   final String languageCode; // "en" / "ar"
-  final bool darkMode; // (لو بدك تربطيه لاحقاً بالThemeBloc)
+  final bool darkMode; // (ظ„ظˆ ط¨ط¯ظƒ طھط±ط¨ط·ظٹظ‡ ظ„ط§ط­ظ‚ط§ظ‹ ط¨ط§ظ„ThemeBloc)
 
   const SettingsModel({
     required this.notificationsEnabled,
@@ -34,7 +34,7 @@ class SettingsModel extends Equatable {
     );
   }
 
-  /// ✅ API READY (كومنت)
+  /// âœ… API READY (ظƒظˆظ…ظ†طھ)
   // factory SettingsModel.fromJson(Map<String, dynamic> json) {
   //   return SettingsModel(
   //     notificationsEnabled: json['notificationsEnabled'] ?? true,
@@ -62,3 +62,5 @@ class SettingsModel extends Equatable {
     darkMode,
   ];
 }
+
+

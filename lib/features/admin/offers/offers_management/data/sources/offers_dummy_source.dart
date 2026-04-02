@@ -1,9 +1,9 @@
-﻿import 'offers_source.dart';
+import 'offers_source.dart';
 import '../models/offer_model.dart';
 
 class OffersDummySource implements OffersSource {
   final List<OfferModel> _offers = [
-    // Fixed price override example: ₪25/day until Sep 30
+    // Fixed price override example: ?25/day until Sep 30
     const OfferModel(
       id: 'o1',
       title: 'Morning Focus Deal',
@@ -113,3 +113,5 @@ class OffersDummySource implements OffersSource {
     _offers.insert(0, offer);
   }
 }
+
+

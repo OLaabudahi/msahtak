@@ -6,7 +6,7 @@ class OfferCard extends StatelessWidget {
   final SpaceOffer offer;
   const OfferCard({super.key, required this.offer});
 
-  /// ✅ دالة: لون badge حسب النوع (limited/bonus)
+  /// âœ… ط¯ط§ظ„ط©: ظ„ظˆظ† badge ط­ط³ط¨ ط§ظ„ظ†ظˆط¹ (limited/bonus)
   Color _badgeColor() {
     switch (offer.badgeType) {
       case 'bonus':
@@ -17,7 +17,7 @@ class OfferCard extends StatelessWidget {
     }
   }
 
-  /// ✅ دالة: لون النص داخل badge
+  /// âœ… ط¯ط§ظ„ط©: ظ„ظˆظ† ط§ظ„ظ†طµ ط¯ط§ط®ظ„ badge
   Color _badgeTextColor() {
     switch (offer.badgeType) {
       case 'bonus':
@@ -28,7 +28,7 @@ class OfferCard extends StatelessWidget {
     }
   }
 
-  /// ✅ دالة: كارد عرض مثل التصميم
+  /// âœ… ط¯ط§ظ„ط©: ظƒط§ط±ط¯ ط¹ط±ط¶ ظ…ط«ظ„ ط§ظ„طھطµظ…ظٹظ…
   @override
   Widget build(BuildContext context) {
     final badgeBg = _badgeColor();
@@ -113,3 +113,5 @@ class OfferCard extends StatelessWidget {
     );
   }
 }
+
+
