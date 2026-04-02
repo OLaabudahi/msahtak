@@ -19,4 +19,6 @@ class UserEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, name, avatar, status, flagged];
+
+  Object? operator [](String other) {}
 }

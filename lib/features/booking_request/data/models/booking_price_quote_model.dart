@@ -1,4 +1,4 @@
-import '../../domain/entities/booking_price_quote_entity.dart';
+﻿import '../../domain/entities/booking_price_quote_entity.dart';
 
 class BookingPriceQuoteModel extends BookingPriceQuoteEntity {
   const BookingPriceQuoteModel({

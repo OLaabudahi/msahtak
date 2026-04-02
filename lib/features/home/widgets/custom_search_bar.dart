@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
-/// شريط بحث الصفحة الرئيسية — تصميم Row يتعامل مع RTL تلقائياً
+
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
     super.key,

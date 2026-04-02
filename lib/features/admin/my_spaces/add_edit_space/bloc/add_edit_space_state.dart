@@ -9,7 +9,7 @@ class AddEditSpaceState extends Equatable {
   final bool amenityCatalogLoading;
   final String? error;
 
-  // Validation errors
+  
   final String? nameError;
   final String? addressError;
   final String? basePriceError;

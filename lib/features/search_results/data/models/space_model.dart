@@ -1,4 +1,4 @@
-import '../../domain/entities/space_entity.dart';
+﻿import '../../domain/entities/space_entity.dart';
 
 class SpaceModel {
   final String id;

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/best_for_you_space.dart';
 import '../domain/usecases/get_best_for_you_usecase.dart';
@@ -20,12 +20,12 @@ class BestForYouBloc
     on<BestForYouContinuePressed>(_onContinuePressed);
   }
 
-  /// تحميل البيانات للهدف الافتراضي وقائمة أعلى المساحات القريبة
+  
   Future<void> _onStarted(BestForYouStarted event,
       Emitter<BestForYouState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
-      // نحمل القائمة والأفضل بالتوازي
+      
       final bestFuture = getBestForYouUseCase(state.selectedGoal);
       final topFuture = getTopRatedNearbyUseCase();
 
@@ -43,7 +43,7 @@ class BestForYouBloc
     }
   }
 
-  /// تحميل البيانات عند تغيير الهدف
+  
   Future<void> _onGoalChanged(BestForYouGoalChanged event,
       Emitter<BestForYouState> emit) async {
     emit(state.copyWith(selectedGoal: event.goal, isLoading: true));
@@ -58,9 +58,8 @@ class BestForYouBloc
     }
   }
 
-  /// معالجة الضغط على "Continue to Booking"
+  
   void _onContinuePressed(BestForYouContinuePressed event,
       Emitter<BestForYouState> emit) {
-    // TODO: navigate to booking page with state.space?.id
   }
 }

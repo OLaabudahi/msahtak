@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 import '../domain/repos/profile_repo.dart';
 import '../data/repos/profile_repo_dummy.dart';
 import 'profile_event.dart';
@@ -14,7 +14,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileRefreshRequested>(_onRefresh);
   }
 
-  /// ✅ تحميل بيانات المستخدم
+  
   Future<void> _onStarted(
     ProfileStarted event,
     Emitter<ProfileState> emit,
@@ -28,7 +28,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  /// ✅ Refresh
+  
   Future<void> _onRefresh(
     ProfileRefreshRequested event,
     Emitter<ProfileState> emit,

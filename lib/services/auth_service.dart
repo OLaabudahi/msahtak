@@ -1,21 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../features/auth/data/models/auth_user_model.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // Google Sign-In غير مدعوم على الويب بدون Client ID
+
   GoogleSignIn? get _googleSignIn => kIsWeb ? null : GoogleSignIn();
 
-  // Get current user
   User? get currentUser => _auth.currentUser;
 
-  // Auth state stream
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Sign up with email and password
   Future<Map<String, dynamic>> signUp({
     required String email,
     required String password,
@@ -30,7 +29,6 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        // Create user document in Firestore
         await _firestore.collection('users').doc(user.uid).set({
           'uid': user.uid,
           'email': email,
@@ -52,7 +50,6 @@ class AuthService {
     }
   }
 
-  // Sign in with email and password
   Future<Map<String, dynamic>> signIn({
     required String email,
     required String password,
@@ -66,7 +63,6 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        // Get user role from Firestore
         DocumentSnapshot userDoc = await _firestore
             .collection('users')
             .doc(user.uid)
@@ -81,10 +77,20 @@ class AuthService {
               ? rawIds.map((e) => e.toString()).toList()
               : <String>[];
 
-          return {'success': true, 'user': user, 'role': role, 'assignedSpaceIds': assignedSpaceIds};
+          return {
+            'success': true,
+            'user': user,
+            'role': role,
+            'assignedSpaceIds': assignedSpaceIds,
+          };
         }
 
-        return {'success': true, 'user': user, 'role': 'user', 'assignedSpaceIds': <String>[]};
+        return {
+          'success': true,
+          'user': user,
+          'role': 'user',
+          'assignedSpaceIds': <String>[],
+        };
       }
 
       return {'success': false, 'error': 'Failed to sign in'};
@@ -95,64 +101,53 @@ class AuthService {
     }
   }
 
-  // Sign in with Google
-  Future<Map<String, dynamic>> signInWithGoogle() async {
-    if (kIsWeb) {
-      return {'success': false, 'error': 'Google sign-in is not supported on web'};
+
+  Future<AuthUserModel> loginWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
+
+    if (googleUser == null) {
+      throw Exception('Google sign in cancelled');
     }
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
 
-      if (googleUser == null) {
-        return {'success': false, 'error': 'Google sign in cancelled'};
-      }
+    final googleAuth = await googleUser.authentication;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    final result = await _auth.signInWithCredential(credential);
+    final user = result.user;
 
-      UserCredential result = await _auth.signInWithCredential(credential);
-      User? user = result.user;
-
-      if (user != null) {
-        // Check if user exists in Firestore
-        DocumentSnapshot userDoc = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .get();
-
-        if (!userDoc.exists) {
-          // Create new user document
-          await _firestore.collection('users').doc(user.uid).set({
-            'uid': user.uid,
-            'email': user.email,
-            'fullName': user.displayName ?? '',
-            'phoneNumber': '',
-            'role': 'user',
-            'status': 'active',
-            'createdAt': FieldValue.serverTimestamp(),
-          });
-        }
-
-        Map<String, dynamic> userData = userDoc.exists
-            ? userDoc.data() as Map<String, dynamic>
-            : {};
-        String role = userData['role'] ?? 'user';
-
-        return {'success': true, 'user': user, 'role': role};
-      }
-
-      return {'success': false, 'error': 'Failed to sign in with Google'};
-    } catch (e) {
-      return {'success': false, 'error': e.toString()};
+    if (user == null) {
+      throw Exception('User is null');
     }
+
+    final docRef = _firestore.collection('users').doc(user.uid);
+    final userDoc = await docRef.get();
+
+    if (!userDoc.exists) {
+      await docRef.set({
+        'uid': user.uid,
+        'email': user.email ?? '',
+        'fullName': user.displayName ?? '',
+        'phoneNumber': '',
+        'role': 'user',
+        'status': 'active',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    final data = (await docRef.get()).data()!;
+
+    // 🔥 رجّعي Model مش Map
+    return AuthUserModel(
+      id: data['uid'],
+      email: data['email'] ?? '',
+      fullName: data['fullName'] ?? '',
+      role: data['role'] ?? 'user', assignedSpaceIds: [],
+    );
   }
-
-  // Get user role
   Future<String> getUserRole(String uid) async {
     try {
       DocumentSnapshot userDoc = await _firestore
@@ -171,19 +166,17 @@ class AuthService {
     }
   }
 
-  // Check if user is admin
   Future<bool> isAdmin(String uid) async {
     String role = await getUserRole(uid);
     return role == 'admin';
   }
 
-  // Sign out
   Future<void> signOut() async {
+
     await _googleSignIn?.signOut();
     await _auth.signOut();
   }
 
-  // Reset password
   Future<Map<String, dynamic>> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -195,7 +188,6 @@ class AuthService {
     }
   }
 
-  // Error messages
   String _getErrorMessage(String code) {
     switch (code) {
       case 'user-not-found':

@@ -75,7 +75,7 @@ class AdminHomePage extends StatelessWidget {
                         Text(context.t('adminSelectedSpace'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
                         const SizedBox(height: 8),
 
-                        // dropdown
+                        
                         InkWell(
                           onTap: state.spaces.isEmpty
                               ? null
@@ -137,7 +137,7 @@ class AdminHomePage extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
-                        // manage tile (opens Add/Edit Space directly)
+                        
                         InkWell(
                           onTap: hasSpace
                               ? () => Navigator.of(context).push(
@@ -183,7 +183,7 @@ class AdminHomePage extends StatelessWidget {
 
                         const SizedBox(height: 16),
 
-                        // KPI grid (fix 2px overflow by increasing tile height)
+                        
                         LayoutBuilder(
                           builder: (context, c) {
                             final w = c.maxWidth;
@@ -209,7 +209,7 @@ class AdminHomePage extends StatelessWidget {
 
                         const SizedBox(height: 18),
 
-                        // Recent Activity
+                        
                         Row(
                           children: [
                             Expanded(child: Text(context.t('adminRecentActivity'), style: AdminText.h2())),
@@ -245,7 +245,7 @@ class AdminHomePage extends StatelessWidget {
 
                         const SizedBox(height: 18),
 
-                        // Quick Actions 2x2
+                        
                         Text(context.t('adminQuickActions'), style: AdminText.h2()),
                         const SizedBox(height: 10),
                         Row(
@@ -319,10 +319,10 @@ class _ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // نص الفعل مترجم: "[verb] spaceName"
+    
     final action = '${context.t(item.actionKey)} ${item.spaceName}';
 
-    // الوقت مترجم
+    
     final td = item.timeAgoData;
     final time = td.key == 'timeJustNow'
         ? context.t('timeJustNow')

@@ -1,4 +1,4 @@
-import '../../domain/entities/plan_option.dart';
+﻿import '../../domain/entities/plan_option.dart';
 
 class PlanOptionModel extends PlanOption {
   const PlanOptionModel({

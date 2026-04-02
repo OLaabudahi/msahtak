@@ -45,8 +45,8 @@ class AdminSettingsPage extends StatelessWidget {
           listenWhen: (p, n) => p.status != n.status,
           listener: (context, state) {
             if (state.status == AdminSettingsStatus.loggedOut) {
-              // نطلب من AppStartBloc إعادة التحقق — سيرجع goLogin تلقائياً
-              // ويعرض AppRoot.BlocBuilder صفحة الـ LoginPage الصحيحة
+              
+              
               context.read<AppStartBloc>().add(const AppStartStarted());
             }
             if (state.status == AdminSettingsStatus.failure && state.error != null) {
@@ -86,7 +86,7 @@ class AdminSettingsPage extends StatelessWidget {
 
                       const SizedBox(height: 18),
 
-                      // ADMIN ACTIONS (quick actions)
+                      
                       SettingsGroup(
                         title: context.t('adminAdminActions'),
                         children: [
@@ -115,7 +115,7 @@ class AdminSettingsPage extends StatelessWidget {
 
                       const SizedBox(height: 18),
 
-                      // LOGOUT
+                      
                       SettingsGroup(
                         title: context.t('adminAccount'),
                         children: [

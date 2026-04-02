@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/notification_item.dart';

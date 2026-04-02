@@ -5,7 +5,7 @@ class AmenityEntity extends Equatable {
   final String name;
   final bool selected;
 
-  // NEW (API-ready): amenity can be created from admin
+  
   final bool isCustom;
 
   const AmenityEntity({

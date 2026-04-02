@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'payments_source.dart';
 import '../models/payment_model.dart';
 import '../models/payment_details_model.dart';
 
-/// مصدر Firebase للمدفوعات — يقرأ من bookings collection
+
 class PaymentsFirebaseSource implements PaymentsSource {
   final _db = FirebaseFirestore.instance;
 

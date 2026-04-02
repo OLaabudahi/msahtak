@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class BookingDetails extends Equatable {
   final String bookingId;
@@ -37,23 +37,21 @@ class BookingDetails extends Equatable {
     this.imageUrl,
   });
 
-  // ✅ API READY (comment)
-  // factory BookingDetails.fromJson(Map<String, dynamic> json) {
-  //   return BookingDetails(
-  //     bookingId: json['bookingId'].toString(),
-  //     spaceId: json['spaceId'].toString(),
-  //     spaceName: json['spaceName'] ?? '',
-  //     rating: (json['rating'] ?? 0).toDouble(),
-  //     locationText: json['locationText'] ?? '',
-  //     tags: (json['tags'] as List? ?? []).map((e) => e.toString()).toList(),
-  //     dateText: json['dateText'] ?? '',
-  //     timeText: json['timeText'] ?? '',
-  //     notes: json['notes'] ?? '',
-  //     totalPrice: (json['totalPrice'] ?? 0),
-  //     currency: json['currency'] ?? '₪',
-  //     imageUrl: json['imageUrl'],
-  //   );
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   @override
   List<Object?> get props => [

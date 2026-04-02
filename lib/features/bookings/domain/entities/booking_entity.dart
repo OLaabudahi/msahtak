@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+﻿import 'package:flutter/cupertino.dart';
 
 class BookingEntity {
   final String bookingId;
@@ -26,7 +26,7 @@ class BookingEntity {
     required this.currency,
     this.imageUrl,
   });
-  /// âœ… imageProvider (API-ready)
+  
   ImageProvider get imageProvider {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return NetworkImage(imageUrl!);

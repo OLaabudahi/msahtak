@@ -1,4 +1,4 @@
-import '../../domain/entities/best_for_you_space.dart';
+﻿import '../../domain/entities/best_for_you_space.dart';
 
 class BestForYouSpaceModel extends BestForYouSpace {
   const BestForYouSpaceModel({

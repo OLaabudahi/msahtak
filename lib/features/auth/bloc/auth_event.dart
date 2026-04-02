@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
@@ -41,6 +41,7 @@ class AuthForgotPasswordRequested extends AuthEvent {
   @override
   List<Object?> get props => [email];
 }
+class AuthGoogleLoginRequested extends AuthEvent {}
 
 class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();

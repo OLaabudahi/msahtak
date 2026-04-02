@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/filter_chip_entity.dart';
 import '../domain/entities/space_entity.dart';
 

@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math';
 
 import '../../domain/entities/booking_price_quote_entity.dart';
@@ -46,9 +46,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       currency: space.currency,
     );
 
-    // API-ready example:
-    // final res = await dio.post('/booking/quote', data: {...});
-    // return BookingPriceQuoteModel.fromJson(res.data);
+    
+    
+    
   }
 
   @override
@@ -87,7 +87,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       offerLabel: offerLabel,
       addOns: addOns,
       status: BookingRequestStatus.pending,
-      statusHint: 'Usually responds within 1–2 hours',
+      statusHint: 'Usually responds within 1â€“2 hours',
       totalAmount: quoteEntity.total,
       currency: quoteEntity.currency,
       bookingId: null,
@@ -96,9 +96,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     _store.put(entity);
     return entity;
 
-    // API-ready example:
-    // final res = await dio.post('/booking/requests', data: BookingRequestModel(...).toJson());
-    // return BookingRequestModel.fromJson(res.data);
+    
+    
+    
   }
 
   @override
@@ -110,9 +110,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     }
     return current;
 
-    // API-ready example:
-    // final res = await dio.get('/booking/requests/$requestId');
-    // return BookingRequestModel.fromJson(res.data);
+    
+    
+    
   }
 
   @override
@@ -135,7 +135,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     }
 
     if (current.status == BookingRequestStatus.underReview) {
-      // Dummy behavior: 70% approve, 30% stay under review
+      
       final shouldApprove = _random.nextInt(10) < 7;
       if (shouldApprove) {
         final updated = _copyRequest(
@@ -151,9 +151,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
 
     return current;
 
-    // API-ready example:
-    // final res = await dio.post('/booking/requests/$requestId/refresh');
-    // return BookingRequestModel.fromJson(res.data);
+    
+    
+    
   }
 
   @override
@@ -175,9 +175,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     _store.put(updated);
     return updated;
 
-    // API-ready example:
-    // final res = await dio.post('/booking/requests/$requestId/cancel');
-    // return BookingRequestModel.fromJson(res.data);
+    
+    
+    
   }
 
   BookingRequestEntity _copyRequest(
@@ -218,7 +218,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
 
   int _calcOfferDiscount(int subtotal, String? offerId) {
     if (offerId == null) return 0;
-    // Dummy: offer id "WEEKLY" gives 10%, "MONTHLY" gives 15%, otherwise 5%
+    
     if (offerId == 'WEEKLY') return (subtotal * 0.10).round();
     if (offerId == 'MONTHLY') return (subtotal * 0.15).round();
     return (subtotal * 0.05).round();

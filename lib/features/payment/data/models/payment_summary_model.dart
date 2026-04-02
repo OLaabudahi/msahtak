@@ -1,4 +1,4 @@
-import '../../domain/entities/payment_summary_entity.dart';
+﻿import '../../domain/entities/payment_summary_entity.dart';
 
 class PaymentSummaryModel extends PaymentSummaryEntity {
   const PaymentSummaryModel({

@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_booking_details_source.dart';
 import '../models/booking_details_model.dart';
 
-/// مصدر Firebase لتفاصيل الحجز — يقرأ من bookings ويجمع بيانات المستخدم
+
 class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
   final _db = FirebaseFirestore.instance;
 
@@ -21,7 +21,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     }
     final d = doc.data()!;
 
-    // جلب بيانات المستخدم من users collection
+    
     final uid = d['userId'] as String? ?? d['user_id'] as String? ?? '';
     String userPhone = '-', userEmail = '-';
     if (uid.isNotEmpty) {
@@ -83,7 +83,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     await _createNotification(bookingId: bookingId, type: 'bookingRejected');
   }
 
-  /// ينشئ إشعاراً في مجموعة notifications لليوزر صاحب الحجز
+  
   Future<void> _createNotification({
     required String bookingId,
     required String type,

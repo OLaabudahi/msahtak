@@ -1,4 +1,4 @@
-import '../../../../core/services/firestore_api.dart';
+﻿import '../../../../core/services/firestore_api.dart';
 import 'bookings_source.dart';
 
 class BookingsFirebaseSource implements BookingsSource {

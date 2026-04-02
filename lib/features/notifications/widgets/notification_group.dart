@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/notification_item.dart';
 import 'notification_item_tile.dart';

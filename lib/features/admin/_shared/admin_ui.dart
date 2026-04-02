@@ -67,7 +67,7 @@ class AdminIconMapper {
   static IconData users() => LucideIcons.users;
   static IconData analytics() => LucideIcons.chartLine;
 
-  static IconData settings() => LucideIcons.settings; // NEW
+  static IconData settings() => LucideIcons.settings; 
 
   static IconData plus() => LucideIcons.plus;
   static IconData chevronDown() => LucideIcons.chevronDown;
@@ -86,7 +86,7 @@ class AdminIconMapper {
   static IconData phone() => LucideIcons.phone;
   static IconData note() => LucideIcons.stickyNote;
   static IconData export() => LucideIcons.download;
-  static IconData logout() => LucideIcons.logOut; // NEW
+  static IconData logout() => LucideIcons.logOut; 
 }
 
 class AdminAppBar extends StatelessWidget {

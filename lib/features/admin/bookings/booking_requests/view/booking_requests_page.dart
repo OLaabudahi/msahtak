@@ -92,14 +92,14 @@ class BookingRequestsPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(AdminSpace.s16),
                 child: BlocBuilder<BookingRequestsBloc, BookingRequestsState>(
-                  // لا تُعد البناء إذا بقينا على نفس التاب paymentReview
+                  
                   buildWhen: (p, n) {
                     if (p.activeTab != n.activeTab) return true;
                     if (n.activeTab == BookingStatus.paymentReview) return false;
                     return true;
                   },
                   builder: (context, state) {
-                    // قسم Payment Review منفصل — يُنشأ مرة واحدة فقط
+                    
                     if (state.activeTab == BookingStatus.paymentReview) {
                       return PaymentReviewPage.withBloc();
                     }

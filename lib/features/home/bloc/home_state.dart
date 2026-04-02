@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/home_featured_space_entity.dart';
 import '../domain/entities/insight_item.dart';
 

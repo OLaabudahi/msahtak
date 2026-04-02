@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import '../../../../constants/app_assets.dart';
 import '../../../bookings/data/repos/bookings_repo_dummy.dart';
@@ -14,11 +14,11 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
   Future<BookingDetails> fetchBookingDetails(String bookingId) async {
     await Future<void>.delayed(const Duration(milliseconds: 450));
 
-    // ✅ API READY (comment)
-    // final res = await dio.get('/bookings/$bookingId');
-    // return BookingDetails.fromJson(res.data);
+    
+    
+    
 
-    // ✅ نجيب نفس قائمة الحجوزات الوهمية ونطلع منها الحجز المطلوب
+    
     final all = await _bookingsRepo.fetchBookings();
     final matches = all.where((b) => b.bookingId == bookingId).toList();
 
@@ -30,18 +30,18 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
         rating: 4.2,
         locationText: 'Unknown location',
         tags: const ['Wi-Fi', 'Quiet'],
-        dateText: '—',
-        timeText: '—',
+        dateText: 'â€”',
+        timeText: 'â€”',
         notes: 'No details found for this booking.',
         totalPrice: 0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       );
     }
 
     final b = matches.first;
 
-    // ✅ نولّد تفاصيل وهمية “منطقية” حسب الحالة
+    
     final status = b.status.toLowerCase();
 
     final notes = switch (status) {
@@ -63,10 +63,10 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
     };
 
     final locationText = switch (b.spaceId) {
-      'space_0' => 'Gaza, Al-Rimal • 1.2 km',
-      'space_1' => 'Gaza, Tel Al-Hawa • 2.8 km',
-      'space_2' => 'Gaza, Al-Nasr • 0.9 km',
-      'space_3' => 'Gaza, Al-Shati • 3.1 km',
+      'space_0' => 'Gaza, Al-Rimal â€¢ 1.2 km',
+      'space_1' => 'Gaza, Tel Al-Hawa â€¢ 2.8 km',
+      'space_2' => 'Gaza, Al-Nasr â€¢ 0.9 km',
+      'space_3' => 'Gaza, Al-Shati â€¢ 3.1 km',
       _ => 'Gaza',
     };
 
@@ -93,8 +93,8 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
       imageAsset: b.imageAsset ?? AppAssets.home,
       imageUrl: b.imageUrl,
 
-      // ✅ API READY (comment)
-      // imageUrl: b.imageUrl,
+      
+      
     );
   }
 }

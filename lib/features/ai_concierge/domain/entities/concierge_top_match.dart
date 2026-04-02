@@ -1,13 +1,13 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class ConciergeTopMatch extends Equatable {
   final String spaceId;
-  final String title; // Top Match: Space A
-  final String whyLine; // Why: very quiet...
-  final String planLine; // Plan suggestion...
-  final String priceLine; // Daily... Weekly...
+  final String title; 
+  final String whyLine; 
+  final String planLine; 
+  final String priceLine; 
 
-  /// ✅ Dummy: asset — API-ready: imageUrl commented in data layer
+  
   final String imageAsset;
 
   const ConciergeTopMatch({

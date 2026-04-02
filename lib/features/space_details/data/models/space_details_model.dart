@@ -1,13 +1,13 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
-/// ✅ رسالة تنبيه ديناميكية (Limited availability أو غيرها)
+
 class SpaceAlert extends Equatable {
-  final String code; // مثال: limited_availability / info / warning
+  final String code; 
   final String title;
   final String message;
-  final String colorHex; // مثال: #FDE8E8
-  final String borderHex; // مثال: #FCA5A5
-  final String textHex; // مثال: #B91C1C
+  final String colorHex; 
+  final String borderHex; 
+  final String textHex; 
 
   const SpaceAlert({
     required this.code,
@@ -18,17 +18,17 @@ class SpaceAlert extends Equatable {
     required this.textHex,
   });
 
-  /// ✅ (API جاهز - كومنت) من JSON
-  // factory SpaceAlert.fromJson(Map<String, dynamic> json) {
-  //   return SpaceAlert(
-  //     code: json['code'] ?? '',
-  //     title: json['title'] ?? '',
-  //     message: json['message'] ?? '',
-  //     colorHex: json['colorHex'] ?? '#FDE8E8',
-  //     borderHex: json['borderHex'] ?? '#FCA5A5',
-  //     textHex: json['textHex'] ?? '#B91C1C',
-  //   );
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   @override
   List<Object?> get props => [
@@ -41,7 +41,7 @@ class SpaceAlert extends Equatable {
   ];
 }
 
-/// ✅ سياسات المساحة (لـ BottomSheet)
+
 class SpacePolicies extends Equatable {
   final String title;
   final String subtitle;
@@ -67,7 +67,7 @@ class PolicySection extends Equatable {
   List<Object?> get props => [title, bullets];
 }
 
-/// ✅ Review Summary (لـ BottomSheet)
+
 class ReviewSummary extends Equatable {
   final String header;
   final String meta;
@@ -96,12 +96,12 @@ class ReviewSummary extends Equatable {
   ];
 }
 
-/// ✅ آخر مراجعات (قسم Latest reviews)
+
 class SpaceReview extends Equatable {
   final String id;
   final String userName;
   final String timeAgo;
-  final int stars; // 1..5
+  final int stars; 
   final String comment;
 
   const SpaceReview({
@@ -116,13 +116,13 @@ class SpaceReview extends Equatable {
   List<Object?> get props => [id, userName, timeAgo, stars, comment];
 }
 
-/// ✅ عروض (Offers tab)
+
 class SpaceOffer extends Equatable {
   final String id;
-  final String badgeText; // LIMITED / BONUS
-  final String badgeType; // limited / bonus (للون)
+  final String badgeText; 
+  final String badgeType; 
   final String title;
-  final String priceLine; // "Price:"
+  final String priceLine; 
   final String? oldPriceText;
   final String newPriceText;
   final String includesText;
@@ -154,10 +154,10 @@ class SpaceOffer extends Equatable {
   ];
 }
 
-/// ✅ إحصائيات "من يستخدم المكان عادة"
+
 class UsageStat extends Equatable {
   final String label;
-  final int percent; // 0..100
+  final int percent; 
 
   const UsageStat({required this.label, required this.percent});
 
@@ -165,25 +165,25 @@ class UsageStat extends Equatable {
   List<Object?> get props => [label, percent];
 }
 
-/// ✅ تفاصيل المساحة الأساسية اللي بتظهر مباشرة بالواجهة
+
 class SpaceDetails extends Equatable {
   final String id;
   final String name;
 
-  final List<String> imageAssets; // هلا assets، لاحقاً imageUrls
+  final List<String> imageAssets; 
 
-  final String subtitleLine; // "City Center • Quiet • Fast Wi-Fi"
-  /// ✅ مهم للـ booking logic
+  final String subtitleLine; 
+  
   final int pricePerDay;
   final String currency;
 
   final double rating;
   final int reviewsCount;
 
-  final String workingHours; // "Sun - Thu, 8:00 AM - 10:00 PM"
-  final String locationAddress; // "12 King St, Downtown"
+  final String workingHours; 
+  final String locationAddress; 
 
-  /// ✅ الرسالة الديناميكية (قد تكون null)
+  
   final SpaceAlert? alert;
 
   final List<String> features;
@@ -199,40 +199,39 @@ class SpaceDetails extends Equatable {
 
   final SpacePolicies policies;
 
-  // إحداثيات الموقع الجغرافي (اختياريان)
+  
   final double? lat;
   final double? lng;
 
-  /// ✅ (API جاهز - كومنت) from JSON
-  // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
-  //   return SpaceDetails(
-  //     id: json['id'].toString(),
-  //     name: json['name'] ?? '',
-  //     imageAssets: const [], // لو assets مش من API
-  //     // أو:
-  //     // imageUrls: List<String>.from(json['images'] ?? const []),
-  //     priceText: json['priceText'] ?? '',
-  //     subtitleLine: json['subtitleLine'] ?? '',
-  //     rating: (json['rating'] ?? 0).toDouble(),
-  //     reviewsCount: (json['reviewsCount'] ?? 0) as int,
-  //     workingHours: json['workingHours'] ?? '',
-  //     locationAddress: json['locationAddress'] ?? '',
-  //     alert: json['alert'] == null ? null : SpaceAlert.fromJson(json['alert']),
-  //     features: List<String>.from(json['features'] ?? const []),
-  //     usageStats: (json['usageStats'] as List? ?? const [])
-  //         .map((e) => UsageStat(label: e['label'], percent: e['percent']))
-  //         .toList(),
-  //     whyPeopleComeChips: List<String>.from(json['whyPeopleCome'] ?? const []),
-  //     // reviewSummary / latestReviews / offers / policies...
-  //   );
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   @override
   List<Object?> get props => [
     id,
     name,
     imageAssets,
-    pricePerDay, // ✅
-    currency, // ✅
+    pricePerDay, 
+    currency, 
     subtitleLine,
     rating,
     reviewsCount,
@@ -273,33 +272,32 @@ class SpaceDetails extends Equatable {
     this.lng,
   });
 
-  /// ✅ (API جاهز - كومنت) from JSON
-  // factory SpaceDetails.fromJson(Map<String, dynamic> json) {
-  //   return SpaceDetails(
-  //     id: json['id'].toString(),
-  //     name: json['name'] ?? '',
-  //     imageAssets: const [],
-  //
-  //     // ✅ المنطق الصح للـ API:
-  //     pricePerDay: (json['price_per_day'] ?? 0) as int,
-  //     currency: json['currency'] ?? '₪',
-  //
-  //     // UI:
-  //     priceText: '${json['currency'] ?? '₪'}${json['price_per_day'] ?? 0} / day',
-  //
-  //     subtitleLine: json['subtitleLine'] ?? '',
-  //     rating: (json['rating'] ?? 0).toDouble(),
-  //     reviewsCount: (json['reviewsCount'] ?? 0) as int,
-  //     workingHours: json['workingHours'] ?? '',
-  //     locationAddress: json['locationAddress'] ?? '',
-  //     alert: json['alert'] == null ? null : SpaceAlert.fromJson(json['alert']),
-  //     features: List<String>.from(json['features'] ?? const []),
-  //     usageStats: (json['usageStats'] as List? ?? const [])
-  //         .map((e) => UsageStat(label: e['label'], percent: e['percent']))
-  //         .toList(),
-  //     whyPeopleComeChips: List<String>.from(json['whyPeopleCome'] ?? const []),
-  //     // reviewSummary / latestReviews / offers / policies...
-  //   );
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 }

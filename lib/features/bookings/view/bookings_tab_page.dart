@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -129,7 +129,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
             .where((b) => b.status.toLowerCase() == 'cancelled')
             .toList();
 
-        // Search filter (UI فقط)
+        
         final q = _search.text.trim().toLowerCase();
         List<Booking> filter(List<Booking> src) {
           if (q.isEmpty) return src;
@@ -186,8 +186,8 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
                     booking: b,
                     onView: () => _openBookingDetails(context, b),
                     onRebook: () {
-                      // ✅ منطق rebook يروح للـ Bloc (Event)
-                      // bloc.add(BookingsRebookRequested(spaceId: b.spaceId));
+                      
+                      
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Rebook (dummy)')),
                       );

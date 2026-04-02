@@ -1,15 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_bookings_source.dart';
 import '../models/booking_request_model.dart';
 import '../../../../_shared/admin_session.dart';
 
-/// مصدر Firebase لطلبات الحجز — يقرأ من مجموعة bookings
+
 class AdminBookingsFirebaseSource implements AdminBookingsSource {
   final _db = FirebaseFirestore.instance;
 
   @override
   Future<List<BookingRequestModel>> fetchBookings({required String status}) async {
-    // كل تاب يشمل حالات متعددة
+    
     final List<String> statuses = switch (status) {
       'pending' => ['pending', 'under_review'],
       'approved' => ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed'],
@@ -35,7 +35,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
         final bt = (b.data()['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
         return bt.compareTo(at);
       });
-    // جمع workspaceIds الفريدة لجلب بيانات المقاعد دفعةً واحدة
+    
     final spaceIds = sorted
         .map((doc) {
           final d = doc.data();
@@ -47,7 +47,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
     final Map<String, Map<String, dynamic>> workspaceData = {};
     if (spaceIds.isNotEmpty) {
-      final wsFutures = spaceIds.map((id) => _db.collection('workspaces').doc(id).get());
+      final wsFutures = spaceIds.map((id) => _db.collection('spaces').doc(id).get());
       final wsDocs = await Future.wait(wsFutures);
       for (final wsDoc in wsDocs) {
         if (wsDoc.exists) workspaceData[wsDoc.id] = wsDoc.data()!;
@@ -102,7 +102,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     final deadline = DateTime.now().add(const Duration(hours: 24));
     final bookingRef = _db.collection('bookings').doc(bookingId);
 
-    // حماية من الموافقة المزدوجة — نتحقق من الحالة داخل Transaction
+    
     bool alreadyProcessed = false;
     String spaceId = '';
 
@@ -110,7 +110,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       final snap = await tx.get(bookingRef);
       if (!snap.exists) { alreadyProcessed = true; return; }
       final currentStatus = (snap.data()!['status'] ?? '') as String;
-      // إذا كانت الحالة ليست pending أو under_review فالحجز معالَج مسبقاً
+      
       if (currentStatus != 'pending' && currentStatus != 'under_review') {
         alreadyProcessed = true;
         return;
@@ -125,10 +125,10 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
     if (alreadyProcessed) return;
 
-    // تخفيض المقاعد المتاحة في المساحة
+    
     if (spaceId.isNotEmpty) {
       try {
-        final wsRef = _db.collection('workspaces').doc(spaceId);
+        final wsRef = _db.collection('spaces').doc(spaceId);
         await _db.runTransaction((tx) async {
           final wsSnap = await tx.get(wsRef);
           if (!wsSnap.exists) return;
@@ -145,7 +145,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
   Future<void> rejectBooking({required String bookingId}) async {
     final bookingRef = _db.collection('bookings').doc(bookingId);
 
-    // تحقق من الحالة قبل الرفض — إذا كان موافقاً عليه نُعيد المقعد
+    
     String prevStatus = '';
     String spaceId = '';
     try {
@@ -162,10 +162,10 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    // إعادة المقعد إذا كان قد تم قبول الحجز مسبقاً
+    
     if (spaceId.isNotEmpty && (prevStatus == 'approved_waiting_payment' || prevStatus == 'approved' || prevStatus == 'payment_under_review')) {
       try {
-        final wsRef = _db.collection('workspaces').doc(spaceId);
+        final wsRef = _db.collection('spaces').doc(spaceId);
         await _db.runTransaction((tx) async {
           final wsSnap = await tx.get(wsRef);
           if (!wsSnap.exists) return;
@@ -179,7 +179,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     await _createNotification(bookingId: bookingId, type: 'bookingRejected');
   }
 
-  /// ينشئ إشعاراً في مجموعة notifications لليوزر صاحب الحجز
+  
   Future<void> _createNotification({
     required String bookingId,
     required String type,

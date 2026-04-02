@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../_shared/admin_session.dart';
 import '../../../../../core/i18n/app_i18n.dart';
@@ -44,8 +44,8 @@ class _AdminRootPageState extends State<AdminRootPage> {
 
     final isSuperAdmin = AdminSession.isSuperAdmin;
 
-    // تاب الأدمن الفرعي: Home, Bookings, Settings (بدون Users)
-    // تاب الأدمن الكامل: Home, Bookings, Users, Sub Admins, Settings
+    
+    
     final tabs = isSuperAdmin
         ? [
             _TabConfig(context.t('adminTabHome'), 0),

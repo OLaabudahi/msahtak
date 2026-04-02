@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-/// رسام الدائرة التقدمية لدرجة التطابق
+
 class FitScorePainter extends CustomPainter {
   final double progress;
   final Color bgColor;

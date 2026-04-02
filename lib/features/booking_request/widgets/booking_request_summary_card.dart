@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 import '../domain/entities/booking_request_entity.dart';
@@ -30,12 +30,12 @@ class BookingRequestSummaryCard extends StatelessWidget {
           const SizedBox(height: 8),
           _RowLine(label: context.t('summaryDuration'), value: '${request.durationValue} ${request.durationUnit.name}'),
           const SizedBox(height: 8),
-          _RowLine(label: context.t('summaryPurpose'), value: request.purposeLabel ?? '—'),
+          _RowLine(label: context.t('summaryPurpose'), value: request.purposeLabel ?? 'â€”'),
           const SizedBox(height: 8),
-          _RowLine(label: context.t('summaryOffer'), value: request.offerLabel ?? '—'),
+          _RowLine(label: context.t('summaryOffer'), value: request.offerLabel ?? 'â€”'),
           const SizedBox(height: 10),
           const Divider(height: 18),
-          _RowLine(label: context.t('summaryTotal'), value: '₪${request.totalAmount}', bold: true),
+          _RowLine(label: context.t('summaryTotal'), value: 'â‚ھ${request.totalAmount}', bold: true),
         ],
       ),
     );

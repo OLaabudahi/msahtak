@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 import 'payment_method_entity.dart';
 
@@ -9,7 +9,7 @@ class PaymentReceiptEntity extends Equatable {
   final String bookingId;
   final DateTime paidAt;
 
-  /// API-ready: backend returns downloadable invoice URL
+  
   final String? invoiceUrl;
 
   const PaymentReceiptEntity({

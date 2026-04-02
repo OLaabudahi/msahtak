@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_preferred_filter_chips_usecase.dart';
 import '../domain/usecases/search_spaces_usecase.dart';
 import 'search_results_event.dart';

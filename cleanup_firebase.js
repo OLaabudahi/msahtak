@@ -129,7 +129,7 @@ async function main() {
     await deleteCollection('users', excludeUserIds);
 
     // 5. حذف كل المساحات
-    await deleteCollection('workspaces');
+    await deleteCollection('spaces');
 
     // 6. حذف كل الحجوزات
     await deleteCollection('bookings');

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 abstract class OffersEvent extends Equatable {
   const OffersEvent();
@@ -6,12 +6,12 @@ abstract class OffersEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل العروض عند فتح الصفحة
+
 class OffersStarted extends OffersEvent {
   const OffersStarted();
 }
 
-/// تحديث نص البحث
+
 class OffersSearchChanged extends OffersEvent {
   final String query;
   const OffersSearchChanged(this.query);
@@ -19,7 +19,7 @@ class OffersSearchChanged extends OffersEvent {
   List<Object?> get props => [query];
 }
 
-/// الضغط على زر Deal لعرض تفاصيل العرض
+
 class OfferDealPressed extends OffersEvent {
   final String offerId;
   const OfferDealPressed(this.offerId);

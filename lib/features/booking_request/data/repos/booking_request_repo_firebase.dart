@@ -1,4 +1,4 @@
-import '../../domain/entities/booking_price_quote_entity.dart';
+﻿import '../../domain/entities/booking_price_quote_entity.dart';
 import '../../domain/entities/booking_request_entity.dart';
 import '../../domain/repos/booking_request_repo.dart';
 import '../models/booking_price_quote_model.dart';

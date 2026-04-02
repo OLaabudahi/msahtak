@@ -1,17 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_home_source.dart';
 import '../models/kpi_model.dart';
 import '../../domain/entities/admin_space_item.dart';
 import '../../domain/entities/admin_activity_item.dart';
 import '../../../../_shared/admin_session.dart';
 
-/// مصدر Firebase للوحة تحكم الأدمن — يحسب KPIs من bookings/workspaces
+
 class AdminHomeFirebaseSource implements AdminHomeSource {
   final _db = FirebaseFirestore.instance;
 
   @override
   Future<List<AdminSpaceItem>> fetchSpaces() async {
-    final all = await _db.collection('workspaces').get();
+    final all = await _db.collection('spaces').get();
     final assigned = AdminSession.assignedSpaceIds;
     return all.docs
         .where((d) => assigned.isEmpty || assigned.contains(d.id))
@@ -61,7 +61,7 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
       return assigned.contains(sid);
     }
 
-    // حجوزات اليوم
+    
     final todayStart = DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
     final todayEnd   = todayStart.add(const Duration(days: 1));
 
@@ -72,14 +72,14 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
         .get();
     final todayCount = todaySnap.docs.where(inScope).length;
 
-    // الطلبات المعلقة
+    
     final pendingSnap = await _db
         .collection('bookings')
         .where('status', isEqualTo: 'pending')
         .get();
     final pendingCount = pendingSnap.docs.where(inScope).length;
 
-    // إيرادات الأسبوع — تشمل كل الحالات الموافق عليها
+    
     final weekStart = DateTime.now().subtract(const Duration(days: 7));
     final weekStatuses = ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed', 'paid'];
     final weekSnaps = await Future.wait(weekStatuses.map((s) => _db.collection('bookings').where('status', isEqualTo: s).get()));
@@ -92,8 +92,8 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
       return sum + price;
     });
 
-    // عدد المساحات النشطة — فلترة client-side
-    final spacesSnap = await _db.collection('workspaces').get();
+    
+    final spacesSnap = await _db.collection('spaces').get();
     final activeSpaces = spacesSnap.docs.where((d) {
       if (assigned.isNotEmpty && !assigned.contains(d.id)) return false;
       return d.data()['isActive'] as bool? ?? true;
@@ -121,7 +121,7 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
       KpiModel(
         id: 'revenue',
         title: 'kpiRevenueTitle',
-        value: '${weekRevenue.toStringAsFixed(0)} ₪',
+        value: '${weekRevenue.toStringAsFixed(0)} â‚ھ',
         delta: 'kpiRevenueDelta',
       ),
     ];

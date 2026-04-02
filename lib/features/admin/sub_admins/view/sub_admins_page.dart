@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../../_shared/admin_ui.dart';
 import '../../../../core/i18n/app_i18n.dart';
 
-/// صفحة إدارة المشرفين الفرعيين — للأدمن الكامل فقط
+
 class SubAdminsPage extends StatefulWidget {
   const SubAdminsPage({super.key});
 
@@ -31,7 +31,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
     setState(() => _loading = true);
     try {
       final results = await Future.wait([
-        _db.collection('workspaces').get(),
+        _db.collection('spaces').get(),
         _db.collection('users').where('role', isEqualTo: 'sub_admin').get(),
       ]);
 
@@ -91,7 +91,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
 
             setSt(() { creating = true; errorMsg = null; });
             try {
-              // إنشاء حساب جديد بدون تسجيل خروج الأدمن الحالي
+              
               final appName = 'sub_create_${DateTime.now().millisecondsSinceEpoch}';
               final secondaryApp = await Firebase.initializeApp(
                 name: appName,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,6 +10,7 @@ import '../../auth/bloc/auth_bloc.dart';
 import '../../auth/bloc/auth_event.dart';
 import '../../auth/bloc/auth_state.dart';
 import '../../../constants/app_spacing.dart';
+import '../../auth/view/login_page.dart';
 import '../../reviews/view/reviews_page.dart';
 import '../../usage/view/usage_page.dart';
 import 'payments_receipts_page.dart';
@@ -90,7 +91,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             onTap: onPaymentsReceipts,
           ),
 
-          // Payment Details (expandable)
+
           Column(
             children: [
               ProfileMenuTile(
@@ -139,7 +140,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
   Widget _buildLogoutRow(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<AuthBloc>().add(const AuthLogoutRequested()),
+      onTap: () =>{ context.read<AuthBloc>().add(const AuthLogoutRequested())},
       child: Row(
         children: [
           Container(
@@ -176,6 +177,11 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
         if (state.status == AuthStatus.loggedOut) {
           Navigator.of(context).popUntil((r) => r.isFirst);
           context.read<AppStartBloc>().add(const AppStartStarted());
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => LoginPage()),
+                (route) => false,
+          );
         }
         if (state.status == AuthStatus.error && state.errorMessage != null) {
           ScaffoldMessenger.of(

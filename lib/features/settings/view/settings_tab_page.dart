@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -144,7 +144,7 @@ class SettingsTabPage extends StatelessWidget {
                     builder: (context, langState) => SettingsActionTile(
                       icon: null,
                       title: context.t('appLanguage'),
-                      subtitle: langState.code == 'ar' ? 'العربية' : 'English',
+                      subtitle: langState.code == 'ar' ? 'ط§ظ„ط¹ط±ط¨ظٹط©' : 'English',
                       trailing: const Icon(
                         Icons.chevron_right,
                         color: _chevronBlue,

@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 import '../domain/repos/bookings_repo.dart';
 import '../data/repos/bookings_repo_dummy.dart';
 import 'bookings_event.dart';
@@ -16,7 +16,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     on<BookingsCancelRequested>(_onCancel);
   }
 
-  /// ✅ دالة: تحميل الحجوزات أول ما تفتح التاب
+  
   Future<void> _onStarted(
     BookingsStarted event,
     Emitter<BookingsState> emit,
@@ -32,7 +32,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     }
   }
 
-  /// ✅ دالة: تغيير Segmented (Upcoming / Past)
+  
   void _onSegmentChanged(
     BookingsSegmentChanged event,
     Emitter<BookingsState> emit,
@@ -40,7 +40,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     emit(state.copyWith(segmentIndex: event.index));
   }
 
-  /// ✅ دالة: ريفريش (Pull to refresh)
+  
   Future<void> _onRefresh(
     BookingsRefreshRequested event,
     Emitter<BookingsState> emit,
@@ -53,7 +53,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
     }
   }
 
-  /// إلغاء حجز وتحديث القائمة
+  
   Future<void> _onCancel(
     BookingsCancelRequested event,
     Emitter<BookingsState> emit,

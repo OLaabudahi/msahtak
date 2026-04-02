@@ -3,11 +3,11 @@
 class ReviewEntity extends Equatable {
   final String id;
   final String userName;
-  final String spaceName; // NEW
-  final String dateLabel; // NEW (e.g. Feb 25, 2026)
+  final String spaceName; 
+  final String dateLabel; 
   final String stars;
   final String text;
-  final String? adminReply; // NEW
+  final String? adminReply; 
 
   const ReviewEntity({
     required this.id,

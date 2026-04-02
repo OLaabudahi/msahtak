@@ -1,4 +1,4 @@
-import '../entities/booking_price_quote_entity.dart';
+﻿import '../entities/booking_price_quote_entity.dart';
 import '../entities/booking_request_entity.dart';
 
 abstract class BookingRequestRepo {

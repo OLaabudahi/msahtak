@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class InsightTile extends StatelessWidget {
   final String imageAsset;
-  // final String? imageUrl; // ✅ للـ API لاحقاً
+  
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -11,13 +11,13 @@ class InsightTile extends StatelessWidget {
   const InsightTile({
     super.key,
     required this.imageAsset,
-    // this.imageUrl,
+    
     required this.title,
     required this.subtitle,
     required this.onTap,
   });
 
-  /// ✅ بناء كارد Insight (صورة + تدرج + نص)
+  
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -30,10 +30,10 @@ class InsightTile extends StatelessWidget {
             Positioned.fill(
               child: Image.asset(imageAsset, fit: BoxFit.cover),
 
-              // ✅ API لاحقاً:
-              // child: imageUrl != null
-              //     ? Image.network(imageUrl!, fit: BoxFit.cover)
-              //     : Image.asset(imageAsset, fit: BoxFit.cover),
+              
+              
+              
+              
             ),
             Positioned.fill(
               child: Container(

@@ -8,7 +8,7 @@ class AnalyticsEntity extends Equatable {
   final List<String> weekLabels;
   final List<String> weekValues;
 
-  final List<String> topSpaces; // names only
+  final List<String> topSpaces; 
 
   const AnalyticsEntity({
     required this.occupancy,

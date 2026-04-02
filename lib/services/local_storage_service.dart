@@ -1,4 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
+﻿import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
   static const _kIsLoggedIn = 'is_logged_in';

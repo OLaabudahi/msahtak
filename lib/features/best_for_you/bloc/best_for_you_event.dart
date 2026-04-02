@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 abstract class BestForYouEvent extends Equatable {
   const BestForYouEvent();
@@ -6,12 +6,12 @@ abstract class BestForYouEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل البيانات عند فتح الصفحة بالهدف الافتراضي
+
 class BestForYouStarted extends BestForYouEvent {
   const BestForYouStarted();
 }
 
-/// تغيير الهدف المختار (Study / Work / Meeting / Relax)
+
 class BestForYouGoalChanged extends BestForYouEvent {
   final String goal;
   const BestForYouGoalChanged(this.goal);
@@ -19,7 +19,7 @@ class BestForYouGoalChanged extends BestForYouEvent {
   List<Object?> get props => [goal];
 }
 
-/// الضغط على زر "Continue to Booking"
+
 class BestForYouContinuePressed extends BestForYouEvent {
   const BestForYouContinuePressed();
 }

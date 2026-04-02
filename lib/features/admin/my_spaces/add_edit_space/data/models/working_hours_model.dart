@@ -3,7 +3,7 @@ import '../../domain/entities/week_day.dart';
 import 'week_day_model.dart';
 
 class WorkingHoursModel {
-  final String day; // sun..sat
+  final String day; 
   final String open;
   final String close;
   final bool closed;

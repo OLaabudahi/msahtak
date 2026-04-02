@@ -44,7 +44,7 @@ class AdminDashboardBloc extends Bloc<AdminDashboardEvent, AdminDashboardState> 
     final data = state.data;
     if (data == null) return;
 
-    // Keep dropdown behavior identical to design
+    
     final updated = data.copyWith(selectedSpace: event.space);
     emit(state.copyWith(data: updated, dropdownOpen: false));
   }

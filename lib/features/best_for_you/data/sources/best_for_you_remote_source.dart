@@ -1,20 +1,20 @@
-import '../../domain/entities/fit_score.dart';
+﻿import '../../domain/entities/fit_score.dart';
 import '../models/best_for_you_space_model.dart';
 
-/// واجهة مصدر البيانات – استبدل FakeBestForYouSource بـ RealBestForYouSource عند ربط API
+
 abstract class BestForYouRemoteSource {
   Future<BestForYouSpaceModel> getBestSpace(String goal);
   Future<FitScore> getFitScore(String spaceId, String goal);
 
-  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر من الموقع الحالي
+  
   Future<List<BestForYouSpaceModel>> getTopRatedNearby();
 }
 
 class FakeBestForYouSource implements BestForYouRemoteSource {
   static const _space = BestForYouSpaceModel(
     id: 'space_a',
-    name: 'Space A – Study Friendly',
-    location: 'City Center • Quiet • Fast Wi-Fi',
+    name: 'Space A â€“ Study Friendly',
+    location: 'City Center â€¢ Quiet â€¢ Fast Wi-Fi',
     distance: '1.2 km',
     pricePerDay: 35,
     rating: 4.8,
@@ -53,20 +53,20 @@ class FakeBestForYouSource implements BestForYouRemoteSource {
       reasons: [
         'Comfortable lounge area',
         'Natural lighting',
-        'Café on ground floor',
+        'Cafأ© on ground floor',
       ],
       headsUp: 'Can be noisy during lunch hours.',
     ),
   };
 
-  /// جلب المساحة الأفضل للهدف – استبدل بـ http.get('/best-for-you?goal=X') عند ربط API
+  
   @override
   Future<BestForYouSpaceModel> getBestSpace(String goal) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _space;
   }
 
-  /// جلب درجة التطابق – استبدل بـ http.get('/fit-score?spaceId=X&goal=Y') عند ربط API
+  
   @override
   Future<FitScore> getFitScore(
       String spaceId, String goal) async {

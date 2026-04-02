@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/usecases/get_reviews_usecase.dart';
 import 'reviews_event.dart';
@@ -15,7 +15,7 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
 
   static const _filterKeys = ['all', 'mine', 'recent'];
 
-  /// تحميل التقييمات والملخص الإجمالي
+  
   Future<void> _onStarted(
       ReviewsStarted event, Emitter<ReviewsState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -30,7 +30,7 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
     }
   }
 
-  /// تغيير الفلتر وإعادة جلب التقييمات
+  
   Future<void> _onFilterChanged(
       ReviewsFilterChanged event, Emitter<ReviewsState> emit) async {
     emit(state.copyWith(

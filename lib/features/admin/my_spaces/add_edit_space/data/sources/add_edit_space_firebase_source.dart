@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_edit_space_source.dart';
 import '../models/amenity_model.dart';
 import '../models/space_form_model.dart';
 
-/// مصدر Firebase لإضافة/تعديل المساحات — يقرأ/يكتب من spaces collection
+
 class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
   final _db = FirebaseFirestore.instance;
 
@@ -49,7 +49,7 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
       );
     }
 
-    final doc = await _db.collection('workspaces').doc(spaceId).get();
+    final doc = await _db.collection('spaces').doc(spaceId).get();
     if (!doc.exists) {
       return SpaceFormModel(
         id: spaceId,
@@ -81,27 +81,27 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     data['updatedAt'] = FieldValue.serverTimestamp();
 
     if (form.id == null) {
-      // مساحة جديدة
+      
       data['createdAt'] = FieldValue.serverTimestamp();
       data['availableSeats'] = form.totalSeats;
-      final docRef = await _db.collection('workspaces').add(data);
+      final docRef = await _db.collection('spaces').add(data);
 
-      // تعيين الأدمن الفرعي للمساحة الجديدة
+      
       if (form.adminId != null && form.adminId!.isNotEmpty) {
         await _assignSpaceToAdmin(spaceId: docRef.id, newAdminId: form.adminId!, oldAdminId: null);
       }
     } else {
-      // مساحة موجودة — اقرأ الأدمن القديم قبل الحفظ
+      
       data.remove('availableSeats');
       String? oldAdminId;
       try {
-        final old = await _db.collection('workspaces').doc(form.id).get();
+        final old = await _db.collection('spaces').doc(form.id).get();
         oldAdminId = old.data()?['adminId'] as String?;
       } catch (_) {}
 
-      await _db.collection('workspaces').doc(form.id).set(data, SetOptions(merge: true));
+      await _db.collection('spaces').doc(form.id).set(data, SetOptions(merge: true));
 
-      // تحديث تعيين الأدمن إذا تغيّر
+      
       final newAdminId = form.adminId;
       if (oldAdminId != newAdminId) {
         await _assignSpaceToAdmin(spaceId: form.id!, newAdminId: newAdminId, oldAdminId: oldAdminId);
@@ -109,13 +109,13 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
     }
   }
 
-  /// تحديث assignedSpaceIds للأدمن القديم والجديد
+  
   Future<void> _assignSpaceToAdmin({
     required String spaceId,
     required String? newAdminId,
     required String? oldAdminId,
   }) async {
-    // إزالة المساحة من الأدمن القديم
+    
     if (oldAdminId != null && oldAdminId.isNotEmpty) {
       try {
         final oldDoc = await _db.collection('users').doc(oldAdminId).get();
@@ -127,7 +127,7 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
       } catch (_) {}
     }
 
-    // إضافة المساحة للأدمن الجديد
+    
     if (newAdminId != null && newAdminId.isNotEmpty) {
       try {
         final newDoc = await _db.collection('users').doc(newAdminId).get();

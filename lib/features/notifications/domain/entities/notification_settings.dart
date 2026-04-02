@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class NotificationSettings extends Equatable {
   final bool bookingApproved;
@@ -6,7 +6,7 @@ class NotificationSettings extends Equatable {
   final bool bookingReminder;
   final bool offerSuggestion;
 
-  /// 0 = 30 دقيقة، 1 = ساعة، 2 = نفس اليوم
+  
   final int reminderTiming;
 
   const NotificationSettings({

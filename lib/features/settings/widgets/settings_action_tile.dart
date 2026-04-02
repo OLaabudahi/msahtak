@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class SettingsActionTile extends StatelessWidget {
-  final IconData? icon; // ✅ صار اختياري
+  final IconData? icon; 
   final String title;
   final String? subtitle;
   final VoidCallback onTap;

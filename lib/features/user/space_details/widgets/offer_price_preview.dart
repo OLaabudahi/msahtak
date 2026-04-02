@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import '../../../admin/_shared/admin_ui.dart'; // using same SF Pro text + spacing/colors
+import '../../../admin/_shared/admin_ui.dart'; 
 import '../../../../core/pricing/price_calc.dart';
 import '../../../../core/pricing/pricing_enums.dart';
 import '../../../../core/pricing/user_offer.dart';
@@ -10,7 +10,7 @@ class OfferPricePreview extends StatelessWidget {
   final List<UserOffer> offers;
   final String currencySymbol;
 
-  /// returns selected offer id (IDs only)
+  
   final ValueChanged<String?> onSelectedOfferChanged;
   final String? selectedOfferId;
 
@@ -41,7 +41,7 @@ class OfferPricePreview extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Price row like the UI (strike + final)
+        
         Row(
           children: [
             if (calc.strikeLabel != null) ...[
@@ -60,7 +60,7 @@ class OfferPricePreview extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // Offers list (tap to select)
+        
         if (enabledOffers.isEmpty)
           Text('No offers available', style: AdminText.body14(color: AdminColors.black40))
         else

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class SegmentedTabs extends StatelessWidget {
@@ -11,7 +11,7 @@ class SegmentedTabs extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// ✅ دالة: Tabs بشكل segmented مثل التصميم
+  
   @override
   Widget build(BuildContext context) {
     const tabs = ['Overview', 'Reviews', 'Offers'];

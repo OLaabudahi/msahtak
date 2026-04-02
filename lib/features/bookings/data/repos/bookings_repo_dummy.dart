@@ -1,9 +1,9 @@
-import '../../../../constants/app_assets.dart';
+﻿import '../../../../constants/app_assets.dart';
 import '../models/booking_model.dart';
 import '../../domain/repos/bookings_repo.dart';
 
 class BookingsRepoDummy implements BookingsRepo {
-  /// ✅ دالة: داتا وهمية للحجوزات (جاهزة للتشغيل)
+  
   @override
   Future<List<Booking>> fetchBookings() async {
     await Future.delayed(const Duration(milliseconds: 450));
@@ -17,7 +17,7 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '09:00 - 12:00',
         status: 'upcoming',
         totalPrice: 18.0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       ),
       Booking(
@@ -28,7 +28,7 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '03:00 - 06:00',
         status: 'upcoming',
         totalPrice: 25.0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       ),
       Booking(
@@ -39,7 +39,7 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '10:00 - 01:00',
         status: 'completed',
         totalPrice: 35.0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       ),
       Booking(
@@ -50,14 +50,14 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '08:00 - 09:00',
         status: 'cancelled',
         totalPrice: 0.0,
-        currency: '₪',
+        currency: 'â‚ھ',
         imageAsset: AppAssets.home,
       ),
     ];
 
-    // ✅ API READY (كومنت)
-    // final res = await dio.get('/bookings');
-    // return (res.data as List).map((e) => Booking.fromJson(e)).toList();
+    
+    
+    
   }
 
   @override

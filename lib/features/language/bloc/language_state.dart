@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class LanguageState extends Equatable {
   const LanguageState({required this.loading, required this.code, this.error});

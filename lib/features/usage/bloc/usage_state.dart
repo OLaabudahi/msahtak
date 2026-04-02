@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/plan_option.dart';
 import '../domain/entities/usage_stats.dart';
 
@@ -14,7 +14,7 @@ class UsageState extends Equatable {
   const UsageState({
     this.stats,
     this.plans = const [],
-    this.selectedPlanIndex = 1, // Weekly by default
+    this.selectedPlanIndex = 1, 
     this.isLoading = false,
     this.isApplying = false,
     this.isApplied = false,

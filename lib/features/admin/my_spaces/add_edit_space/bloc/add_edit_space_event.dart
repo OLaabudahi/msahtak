@@ -31,7 +31,7 @@ class AddEditSpaceHiddenToggled extends AddEditSpaceEvent {
 }
 
 class AddEditSpaceBasePriceChanged extends AddEditSpaceEvent {
-  final String value; // keep string in UI then parse in bloc
+  final String value; 
   const AddEditSpaceBasePriceChanged(this.value);
   @override
   List<Object?> get props => [value];
@@ -72,7 +72,7 @@ class AddEditSpaceAmenityAddRequested extends AddEditSpaceEvent {
 
 class AddEditSpaceWorkingDayEnabledToggled extends AddEditSpaceEvent {
   final WeekDay day;
-  final bool enabled; // enabled means not closed and exists
+  final bool enabled; 
   const AddEditSpaceWorkingDayEnabledToggled(this.day, this.enabled);
   @override
   List<Object?> get props => [day, enabled];
@@ -88,8 +88,8 @@ class AddEditSpaceWorkingDayClosedToggled extends AddEditSpaceEvent {
 
 class AddEditSpaceWorkingTimeChanged extends AddEditSpaceEvent {
   final WeekDay day;
-  final String open;  // HH:mm
-  final String close; // HH:mm
+  final String open;  
+  final String close; 
   const AddEditSpaceWorkingTimeChanged(this.day, this.open, this.close);
   @override
   List<Object?> get props => [day, open, close];
@@ -164,7 +164,7 @@ class AddEditSpaceAdminChanged extends AddEditSpaceEvent {
   List<Object?> get props => [adminId, adminName];
 }
 
-/// إضافة طريقة دفع
+
 class AddEditSpacePaymentMethodAdded extends AddEditSpaceEvent {
   final String id;
   final String name;
@@ -173,7 +173,7 @@ class AddEditSpacePaymentMethodAdded extends AddEditSpaceEvent {
   List<Object?> get props => [id, name];
 }
 
-/// حذف طريقة دفع
+
 class AddEditSpacePaymentMethodRemoved extends AddEditSpaceEvent {
   final String id;
   const AddEditSpacePaymentMethodRemoved({required this.id});
@@ -181,7 +181,7 @@ class AddEditSpacePaymentMethodRemoved extends AddEditSpaceEvent {
   List<Object?> get props => [id];
 }
 
-/// تعديل حقل معيّن لطريقة دفع (phone, iban, accountName...)
+
 class AddEditSpacePaymentFieldChanged extends AddEditSpaceEvent {
   final String id;
   final String fieldKey;

@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
-import '../data/models/user_model.dart';
+import '../data/models/auth_user_model.dart';
 
 enum AuthStatus {
   idle,
@@ -8,19 +8,19 @@ enum AuthStatus {
   success,
   error,
   forgotSent,
-  loggedOut, // ✅ new
+  loggedOut, 
 }
 
 class AuthState extends Equatable {
   const AuthState({required this.status, this.user, this.errorMessage});
 
   final AuthStatus status;
-  final UserModel? user;
+  final AuthUserModel? user;
   final String? errorMessage;
 
   AuthState copyWith({
     AuthStatus? status,
-    UserModel? user,
+    AuthUserModel? user,
     String? errorMessage,
   }) {
     return AuthState(

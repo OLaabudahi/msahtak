@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -93,7 +93,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             height: widget.height,
             child: Stack(
               children: [
-                // Search field — start-aligned (left in LTR, right in RTL)
+                
                 PositionedDirectional(
                   start: 0,
                   top: 0,
@@ -137,7 +137,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                   ),
                 ),
 
-                // Filter button (optional) — after the search field
+                
                 if (widget.showFilterButton && widget.onFilterTap != null)
                   PositionedDirectional(
                     start: widget.fieldWidth + 10,
@@ -157,7 +157,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     ),
                   ),
 
-                // AI button slot background — end-aligned (right in LTR, left in RTL)
+                
                 if (widget.showAiButton)
                   PositionedDirectional(
                     end: 0,
@@ -173,7 +173,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     ),
                   ),
 
-                // AI button — end-aligned
+                
                 if (widget.showAiButton && widget.onAiTap != null)
                   PositionedDirectional(
                     end: widget.aiRightInset,
@@ -223,7 +223,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             ),
           ),
 
-          // Dropdown suggestions
+          
           if (shouldShowDropdown)
             Padding(
               padding: const EdgeInsets.only(top: 8),

@@ -23,7 +23,7 @@ class SpaceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // image placeholder
+          
           Container(
             height: 120,
             decoration: BoxDecoration(

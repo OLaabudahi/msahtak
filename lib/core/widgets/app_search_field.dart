@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 
 class AppSearchField extends StatefulWidget {
@@ -81,7 +81,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
           ],
         ),
 
-        // Dropdown
+        
         if (_isFocused &&
             widget.controller.text.trim().isNotEmpty &&
             widget.suggestions.isNotEmpty)

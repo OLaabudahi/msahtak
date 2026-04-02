@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/notification_item.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
@@ -25,7 +25,7 @@ class NotificationsBloc
     on<NotificationSettingsSaved>(_onSettingsSaved);
   }
 
-  /// تحميل الإعدادات أولاً ثم الإشعارات مع تصفية حسب الإعدادات
+  
   Future<void> _onStarted(
       NotificationsStarted event, Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingList: true));
@@ -60,7 +60,7 @@ class NotificationsBloc
     }
   }
 
-  /// تحميل إعدادات الإشعارات الحالية
+  
   Future<void> _onSettingsStarted(NotificationSettingsStarted event,
       Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingSettings: true));
@@ -72,7 +72,7 @@ class NotificationsBloc
     }
   }
 
-  /// تبديل قيمة إعداد معين
+  
   void _onSettingToggled(
       NotificationSettingToggled event, Emitter<NotificationsState> emit) {
     final s = state.settings;
@@ -86,7 +86,7 @@ class NotificationsBloc
     emit(state.copyWith(settings: updated, isSaved: false));
   }
 
-  /// تحديث توقيت التذكير
+  
   void _onReminderTimingChanged(NotificationReminderTimingChanged event,
       Emitter<NotificationsState> emit) {
     emit(state.copyWith(
@@ -94,7 +94,7 @@ class NotificationsBloc
         isSaved: false));
   }
 
-  /// حفظ الإعدادات عبر الـ use case
+  
   Future<void> _onSettingsSaved(
       NotificationSettingsSaved event, Emitter<NotificationsState> emit) async {
     try {

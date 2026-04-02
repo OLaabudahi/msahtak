@@ -1,4 +1,4 @@
-import '../../domain/entities/admin_dashboard_stats_entity.dart';
+﻿import '../../domain/entities/admin_dashboard_stats_entity.dart';
 
 class AdminDashboardStatsModel {
   final int todaysBookings;

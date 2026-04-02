@@ -1,7 +1,9 @@
-import 'dart:math';
+﻿import 'dart:math';
+
+import 'package:Msahtak/features/auth/data/models/auth_user_model.dart';
+import 'package:Msahtak/features/auth/domain/entities/auth_user.dart';
 
 import '../../../../services/local_storage_service.dart';
-import '../models/user_model.dart';
 import '../../domain/repos/auth_repo.dart';
 
 class AuthRepoDummy implements AuthRepo {
@@ -10,7 +12,7 @@ class AuthRepoDummy implements AuthRepo {
   final LocalStorageService _storage;
 
   @override
-  Future<UserModel> login({
+  Future<AuthUserModel> login({
     required String email,
     required String password,
   }) async {
@@ -22,19 +24,22 @@ class AuthRepoDummy implements AuthRepo {
 
     await _storage.setIsLoggedIn(true);
 
-    return UserModel(
+    return AuthUserModel(
       id: Random().nextInt(999999).toString(),
       fullName: 'Mashtak User',
       email: email.trim(),
+      role: 'admin',
+      assignedSpaceIds: [],
+
     );
 
-    // API-ready example (commented):
-    // final res = await dio.post('/auth/login', data: {...});
-    // return UserModel.fromJson(res.data['user']);
+    
+    
+    
   }
 
   @override
-  Future<UserModel> signUp({
+  Future<AuthUserModel> signUp({
     required String fullName,
     required String email,
     required String password,
@@ -49,15 +54,16 @@ class AuthRepoDummy implements AuthRepo {
     await _storage.setIsLoggedIn(true);
     await _storage.setHasCompletedOnboarding(false);
 
-    return UserModel(
+    return AuthUserModel(
       id: Random().nextInt(999999).toString(),
       fullName: fullName.trim(),
       email: email.trim(),
+      role: 'user', assignedSpaceIds: [],
     );
 
-    // API-ready example (commented):
-    // final res = await dio.post('/auth/register', data: {...});
-    // return UserModel.fromJson(res.data['user']);
+    
+    
+    
   }
 
   @override
@@ -65,8 +71,8 @@ class AuthRepoDummy implements AuthRepo {
     await Future.delayed(const Duration(milliseconds: 850));
     if (!_isValidEmail(email)) throw Exception('Invalid email');
 
-    // API-ready example (commented):
-    // await dio.post('/auth/forgot-password', data: {'email': email});
+    
+    
   }
 
   @override
@@ -74,12 +80,18 @@ class AuthRepoDummy implements AuthRepo {
     await Future.delayed(const Duration(milliseconds: 350));
     await _storage.clearAuth();
 
-    // API-ready example (commented):
-    // await dio.post('/auth/logout');
+    
+    
   }
 
   bool _isValidEmail(String v) {
     final s = v.trim();
     return RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(s);
+  }
+
+  @override
+  Future<AuthUserModel> loginWithGoogle() {
+    // TODO: implement loginWithGoogle
+    throw UnimplementedError();
   }
 }

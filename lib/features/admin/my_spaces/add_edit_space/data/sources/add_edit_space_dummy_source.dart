@@ -35,9 +35,9 @@ class AddEditSpaceDummySource implements AddEditSpaceSource {
         name: '',
         address: '',
         description: '',
-        price: '',      // compat
-        hours: '',      // compat
-        policies: '',   // compat
+        price: '',      
+        hours: '',      
+        policies: '',   
         basePriceValue: 0,
         basePriceUnit: 'day',
         location: null,
@@ -73,7 +73,7 @@ class AddEditSpaceDummySource implements AddEditSpaceSource {
         {'id': 'p2', 'title': 'Food & Drinks', 'bullets': ['Drinks allowed at desks.', 'Please clean your table.']},
       ],
       amenities: _catalog.map((a) {
-        // mark two as selected for demo
+        
         final selected = (a.id == 'a1' || a.id == 'a2');
         return AmenityModel(id: a.id, name: a.name, selected: selected, isCustom: a.isCustom).toJson();
       }).toList(growable: false),

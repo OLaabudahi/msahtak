@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 import '../domain/entities/booking_price_quote_entity.dart';
 import '../domain/entities/booking_request_entity.dart';
@@ -18,7 +18,7 @@ class BookingRequestState extends Equatable {
   final BookingRequestUiStatus uiStatus;
   final String? errorMessage;
 
-  // Form base
+  
   final SpaceSummaryEntity? space;
   final DateTime? startDate;
   final DurationUnit durationUnit;
@@ -32,7 +32,7 @@ class BookingRequestState extends Equatable {
 
   final List<AddOnEntity> addOns;
 
-  // Derived / Result
+  
   final BookingPriceQuoteEntity? quote;
   final BookingRequestEntity? createdRequest;
 

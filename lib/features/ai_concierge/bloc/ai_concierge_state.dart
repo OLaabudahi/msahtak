@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 import '../domain/entities/concierge_message.dart';
 import '../domain/entities/concierge_top_match.dart';
@@ -35,7 +35,7 @@ class AiConciergeState extends Equatable {
     errorMessage: null,
     stepIndex: 1,
     totalSteps: 4,
-    stepMeta: 'Step 1 of 4 • 30 sec',
+    stepMeta: 'Step 1 of 4 â€¢ 30 sec',
     messages: [],
     quickReplies: [],
     topMatch: null,

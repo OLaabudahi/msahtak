@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class WorkspacePreferencesPage extends StatelessWidget {
   const WorkspacePreferencesPage({super.key});
@@ -25,7 +25,7 @@ class WorkspacePreferencesPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Study, work, meetings — coming soon.',
+              'Study, work, meetings â€” coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/best_for_you_space.dart';
 import '../domain/entities/fit_score.dart';
 
@@ -10,7 +10,7 @@ class BestForYouState extends Equatable {
   final bool isLoading;
   final String? error;
 
-  /// قائمة أعلى 5 مساحات تقييماً ضمن 100 متر
+  
   final List<BestForYouSpace> topSpaces;
 
   const BestForYouState({

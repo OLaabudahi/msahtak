@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class HomeFeaturedSpaceEntity extends Equatable {
   final String id;
@@ -8,18 +8,18 @@ class HomeFeaturedSpaceEntity extends Equatable {
   final String subtitleLine;
   final double rating;
 
-  /// ✅ للانتقال والـ booking لاحقًا
+  
   final int pricePerDay;
   final String currency;
 
-  /// ✅ جديد: لدعم الخريطة والـ Nearly (اختياري)
+  
   final double? lat;
   final double? lng;
 
-  /// ✅ جديد: مسافة تقريبية (اختياري) – API-ready
+  
   final double? distanceKm;
 
-  /// ✅ تاغات المساحة (wifi, parking, quiet, …)
+  
   final List<String> tags;
 
   const HomeFeaturedSpaceEntity({

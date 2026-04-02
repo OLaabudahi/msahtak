@@ -1,3 +1,4 @@
+﻿import 'package:Msahtak/main.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,13 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app_start/bloc/app_start_bloc.dart';
 import '../../app_start/bloc/app_start_event.dart';
 import '../../../core/i18n/app_i18n.dart';
-import '../../../services/local_storage_service.dart';
+import '../../home/view/home_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../data/repos/auth_repo_dummy.dart';
 import '../widgets/auth_language_header.dart';
-import '../widgets/auth_social_row.dart';
 import '../widgets/auth_text_field.dart';
 import 'forgot_password_page.dart';
 import 'signup_page.dart';
@@ -34,21 +33,27 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _notifyAppRoot(BuildContext context) {
-    context.read<AppStartBloc>().add(const AppStartStarted());
+  void _notifyAppRoot(BuildContext context)  {
+   context.read<AppStartBloc>().add(const AppStartStarted());
   }
 
   @override
   Widget build(BuildContext context) {
+    final apple = context.t('apple');
     return Directionality(
       textDirection: context.isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
+            listener: (context, state)  {
               if (state.status == AuthStatus.success) {
-                _notifyAppRoot(context);
+                 /*_notifyAppRoot(context);*/
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) =>  MyApp()),
+                      (route) => false,
+                );
               }
               if (state.status == AuthStatus.error &&
                   state.errorMessage != null) {
@@ -212,7 +217,65 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 24),
 
-                    const AuthSocialRow(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            context.read<AuthBloc>().add(
+                              AuthGoogleLoginRequested(),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(30),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryTint25,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.g_mobiledata,
+                                size: 34,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 40),
+                        InkWell(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(apple),
+                                behavior: SnackBarBehavior.floating,
+                                margin: const EdgeInsets.all(16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(30),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryTint25,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.apple,
+                                size: 28,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
                     const SizedBox(height: 32),
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../data/models/space_details_model.dart';
 
@@ -6,7 +6,7 @@ class OfferCard extends StatelessWidget {
   final SpaceOffer offer;
   const OfferCard({super.key, required this.offer});
 
-  /// ✅ دالة: لون badge حسب النوع (limited/bonus)
+  
   Color _badgeColor() {
     switch (offer.badgeType) {
       case 'bonus':
@@ -17,7 +17,7 @@ class OfferCard extends StatelessWidget {
     }
   }
 
-  /// ✅ دالة: لون النص داخل badge
+  
   Color _badgeTextColor() {
     switch (offer.badgeType) {
       case 'bonus':
@@ -28,7 +28,7 @@ class OfferCard extends StatelessWidget {
     }
   }
 
-  /// ✅ دالة: كارد عرض مثل التصميم
+  
   @override
   Widget build(BuildContext context) {
     final badgeBg = _badgeColor();

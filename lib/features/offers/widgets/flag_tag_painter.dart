@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
-/// رسام شكل علامة الخصم (flag shape)
+
 class FlagTagPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

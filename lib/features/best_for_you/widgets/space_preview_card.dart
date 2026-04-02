@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/best_for_you_space.dart';
 
@@ -64,7 +64,7 @@ class SpacePreviewCard extends StatelessWidget {
                         mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('₪${space.pricePerDay}/day',
+                          Text('â‚ھ${space.pricePerDay}/day',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13)),

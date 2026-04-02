@@ -1,10 +1,10 @@
-import '../../../../constants/app_assets.dart';
+﻿import '../../../../constants/app_assets.dart';
 import '../../../booking_request/domain/entities/booking_request_entity.dart';
 import '../models/space_details_model.dart';
 import '../../domain/repos/space_details_repo.dart';
 
 class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
-  /// ✅ دالة: داتا وهمية جاهزة للتشغيل
+  
   @override
   Future<SpaceDetails> fetchSpaceDetails(String spaceId) async {
     await Future.delayed(const Duration(milliseconds: 450));
@@ -13,15 +13,15 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
       id: spaceId,
       name: 'Downtown Hub',
       imageAssets: const [AppAssets.home, AppAssets.home, AppAssets.home],
-      subtitleLine: 'City Center • Quiet • Fast Wi-Fi',
+      subtitleLine: 'City Center â€¢ Quiet â€¢ Fast Wi-Fi',
       rating: 4.8,
       reviewsCount: 64,
       workingHours: 'Sun - Thu, 8:00 AM - 10:00 PM',
       locationAddress: '12 King St, Downtown',
       pricePerDay: 35,
-      currency: '₪',
+      currency: 'â‚ھ',
 
-      // ✅ الرسالة الديناميكية: ممكن تكون null
+      
       alert: const SpaceAlert(
         code: 'limited_availability',
         title: 'Limited availability',
@@ -51,7 +51,7 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
       ],
       reviewSummary: const ReviewSummary(
         header: 'Review Summary',
-        meta: 'Based on 58 reviews • last 90 days • similar users',
+        meta: 'Based on 58 reviews â€¢ last 90 days â€¢ similar users',
         topPositives: [
           'Quietness is good for studying',
           'Wi-Fi is excellent and stable',
@@ -89,8 +89,8 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
           badgeType: 'limited',
           title: 'Morning Focus Deal',
           priceLine: 'Price:',
-          oldPriceText: '₪35/day',
-          newPriceText: '₪25/day',
+          oldPriceText: 'â‚ھ35/day',
+          newPriceText: 'â‚ھ25/day',
           includesText: 'Includes: 8 AM - 12 PM access',
           validUntilText: 'Valid until: Sep 30',
         ),
@@ -146,9 +146,9 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
 
     );
 
-    // ✅ API READY (كومنت)
-    // final res = await dio.get('/spaces/$spaceId/details');
-    // return SpaceDetails.fromJson(res.data);
+    
+    
+    
   }
   SpaceSummaryEntity mapToBookingSummary(SpaceDetails space) {
     return SpaceSummaryEntity(

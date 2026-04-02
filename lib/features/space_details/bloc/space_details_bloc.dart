@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 import '../domain/repos/space_details_repo.dart';
 import 'space_details_event.dart';
 import 'space_details_state.dart';
@@ -12,7 +12,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     on<SpaceDetailsCarouselChanged>(_onCarouselChanged);
   }
 
-  /// ✅ دالة: تحميل تفاصيل المساحة (Dummy الآن)
+  
   Future<void> _onStarted(
     SpaceDetailsStarted event,
     Emitter<SpaceDetailsState> emit,
@@ -26,7 +26,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     }
   }
 
-  /// ✅ دالة: تغيير التاب
+  
   void _onTabChanged(
     SpaceDetailsTabChanged event,
     Emitter<SpaceDetailsState> emit,
@@ -34,7 +34,7 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     emit(state.copyWith(tabIndex: event.index));
   }
 
-  /// ✅ دالة: تغيير مؤشر صور الكاروسيل
+  
   void _onCarouselChanged(
     SpaceDetailsCarouselChanged event,
     Emitter<SpaceDetailsState> emit,

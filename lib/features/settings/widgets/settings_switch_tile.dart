@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class SettingsSwitchTile extends StatelessWidget {
@@ -8,7 +8,7 @@ class SettingsSwitchTile extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  /// ✅ جديد (اختياري) عشان divider مثل SettingsScreen
+  
   final bool isLast;
 
   const SettingsSwitchTile({

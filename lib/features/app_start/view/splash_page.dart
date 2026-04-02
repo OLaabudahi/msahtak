@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -18,7 +18,7 @@ class SplashPage extends StatelessWidget {
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Text(
-                  'مساحتك\nMsahtak',
+                  'ظ…ط³ط§ط­طھظƒ\nMsahtak',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 48,

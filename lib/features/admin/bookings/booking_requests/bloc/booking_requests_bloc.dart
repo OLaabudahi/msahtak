@@ -35,7 +35,7 @@ class BookingRequestsBloc extends Bloc<BookingRequestsEvent, BookingRequestsStat
   Future<void> _onStarted(BookingRequestsStarted event, Emitter<BookingRequestsState> emit) async => _load(emit, state.activeTab);
 
   Future<void> _onTabChanged(BookingRequestsTabChanged event, Emitter<BookingRequestsState> emit) async {
-    // تاب Pay Review له StreamBuilder خاص — لا نُحمّل بيانات من Bloc
+    
     if (event.tab == BookingStatus.paymentReview) {
       emit(state.copyWith(activeTab: event.tab, bookings: [], status: BookingRequestsLoadStatus.success));
       return;

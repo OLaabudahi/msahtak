@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -30,7 +30,7 @@ class AboutPage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'Terms & Privacy — coming soon.',
+              'Terms & Privacy â€” coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

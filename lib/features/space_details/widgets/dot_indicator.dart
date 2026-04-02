@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class DotIndicator extends StatelessWidget {
@@ -7,7 +7,7 @@ class DotIndicator extends StatelessWidget {
 
   const DotIndicator({super.key, required this.count, required this.active});
 
-  /// ✅ دالة: عرض نقاط تحت الصور
+  
   @override
   Widget build(BuildContext context) {
     if (count <= 1) return const SizedBox.shrink();

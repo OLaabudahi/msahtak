@@ -1,17 +1,17 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 enum BookingRequestStatus {
-  pending,              // بانتظار موافقة الأدمن
-  underReview,          // الأدمن يراجع الطلب
-  approvedWaitingPayment, // تمت الموافقة، بانتظار الدفع خلال 24 ساعة
-  paymentUnderReview,   // تم إرسال الدفع، بانتظار تأكيد الأدمن
-  confirmed,            // تم تأكيد الحجز نهائياً
-  rejected,             // تم الرفض
-  cancelled,            // تم الإلغاء
-  expired,              // انتهت مهلة الدفع
-  // legacy aliases
-  approved,             // قديم → approvedWaitingPayment
-  paid,                 // قديم → confirmed
+  pending,              
+  underReview,          
+  approvedWaitingPayment, 
+  paymentUnderReview,   
+  confirmed,            
+  rejected,             
+  cancelled,            
+  expired,              
+  
+  approved,             
+  paid,                 
 }
 
 enum DurationUnit { days, weeks, months }
@@ -19,7 +19,7 @@ enum DurationUnit { days, weeks, months }
 class SpaceSummaryEntity extends Equatable {
   final String id;
   final String name;
-  final int basePricePerDay; // smallest currency unit not enforced here (dummy)
+  final int basePricePerDay; 
   final String currency;
 
   const SpaceSummaryEntity({
@@ -36,8 +36,8 @@ class SpaceSummaryEntity extends Equatable {
 class AddOnEntity extends Equatable {
   final String id;
   final String title;
-  final int price; // per unit (hour/day) simplified
-  final String unitLabel; // e.g. "/ hour"
+  final int price; 
+  final String unitLabel; 
   final bool isSelected;
 
   const AddOnEntity({
@@ -79,16 +79,16 @@ class BookingRequestEntity extends Equatable {
 
   final BookingRequestStatus status;
 
-  /// UI helper text (API-ready: comes from backend policy/SLAs)
+  
   final String? statusHint;
 
   final int totalAmount;
   final String currency;
 
-  /// Present after payment (to link to Booking Details feature)
+  
   final String? bookingId;
 
-  /// مهلة الدفع: 24 ساعة من وقت الموافقة
+  
   final DateTime? paymentDeadline;
 
   const BookingRequestEntity({

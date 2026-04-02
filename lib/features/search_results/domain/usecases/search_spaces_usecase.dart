@@ -1,4 +1,4 @@
-import '../entities/space_entity.dart';
+﻿import '../entities/space_entity.dart';
 import '../repos/search_results_repo.dart';
 
 class SearchSpacesUseCase {

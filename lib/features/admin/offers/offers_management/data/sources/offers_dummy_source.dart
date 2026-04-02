@@ -3,7 +3,7 @@ import '../models/offer_model.dart';
 
 class OffersDummySource implements OffersSource {
   final List<OfferModel> _offers = [
-    // Fixed price override example: ₪25/day until Sep 30
+    
     const OfferModel(
       id: 'o1',
       title: 'Morning Focus Deal',
@@ -21,7 +21,7 @@ class OffersDummySource implements OffersSource {
       bonusText: null,
     ),
 
-    // Bonus example
+    
     const OfferModel(
       id: 'o2',
       title: 'Free Meeting Room Hour',
@@ -39,7 +39,7 @@ class OffersDummySource implements OffersSource {
       bonusText: '+ 1 hour free (with day booking)',
     ),
 
-    // Package months example (3/6/9/12)
+    
     const OfferModel(
       id: 'o3',
       title: '3 Months Package',
@@ -57,7 +57,7 @@ class OffersDummySource implements OffersSource {
       bonusText: null,
     ),
 
-    // Discount percent example
+    
     const OfferModel(
       id: 'o4',
       title: 'Student Week',

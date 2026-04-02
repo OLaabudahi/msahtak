@@ -1,7 +1,7 @@
 ﻿import 'package:equatable/equatable.dart';
 
 class DayAvailabilityEntity extends Equatable {
-  final String dayId; // YYYY-MM-DD
+  final String dayId; 
   final bool closed;
   final String specialHours;
 

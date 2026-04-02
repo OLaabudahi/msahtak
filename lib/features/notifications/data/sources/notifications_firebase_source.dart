@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,7 +7,7 @@ import '../models/notification_item_model.dart';
 import '../models/notification_settings_model.dart';
 import 'notifications_remote_source.dart';
 
-/// ✅ تنفيذ Firebase لـ NotificationsRemoteSource
+
 class NotificationsFirebaseSource implements NotificationsRemoteSource {
   static const _kBookingApproved = 'notif_bookingApproved';
   static const _kBookingRejected = 'notif_bookingRejected';
@@ -20,7 +20,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return [];
 
-    // الأدمن يكتب userId (camelCase) – نجرب الاثنين
+    
     QuerySnapshot<Map<String, dynamic>> snap;
     try {
       snap = await FirebaseFirestore.instance
@@ -36,7 +36,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
           .get();
     }
 
-    // إذا لم نجد بـ userId نجرب user_id
+    
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = snap.docs;
     if (docs.isEmpty) {
       try {
@@ -50,7 +50,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
     }
 
     docs.sort((a, b) {
-      // الأدمن يكتب createdAt ، التطبيق القديم created_at
+      
       final aTs = a.data()['createdAt'] ?? a.data()['created_at'];
       final bTs = b.data()['createdAt'] ?? b.data()['created_at'];
       if (aTs is Timestamp && bTs is Timestamp) return bTs.compareTo(aTs);
@@ -59,9 +59,9 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
 
     return docs.map((doc) {
       final d = doc.data();
-      // الأدمن يكتب isRead ، التطبيق القديم is_read
+      
       final isRead = d['isRead'] as bool? ?? d['is_read'] as bool? ?? false;
-      // الأدمن يكتب message ، التطبيق يقرأ subtitle ثم body
+      
       final subtitle = d['subtitle'] as String? ??
           d['body'] as String? ??
           d['message'] as String? ??

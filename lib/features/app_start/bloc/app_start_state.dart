@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/repos/app_start_repo.dart';
 
 class AppStartState extends Equatable {

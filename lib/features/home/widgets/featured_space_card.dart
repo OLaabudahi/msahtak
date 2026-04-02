@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
@@ -21,7 +21,7 @@ class FeaturedSpaceCard extends StatelessWidget {
     required this.onViewTap,
   });
 
-  /// ✅ دالة: بناء كارد "For You" الكبير (صورة + كارد أبيض فوقها)
+  
   @override
   Widget build(BuildContext context) {
     final url = imageUrl;

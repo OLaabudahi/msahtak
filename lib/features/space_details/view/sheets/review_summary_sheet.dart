@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/models/space_details_model.dart';
 
@@ -17,7 +17,7 @@ class ReviewSummarySheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
+            
             Center(
               child: Text(
                 'Review Summary',
@@ -28,7 +28,7 @@ class ReviewSummarySheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            // Meta
+            
             Center(
               child: Text(
                 summary.meta,
@@ -40,7 +40,7 @@ class ReviewSummarySheet extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Top positives
+            
             const Text(
               'Top positives',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
@@ -58,7 +58,7 @@ class ReviewSummarySheet extends StatelessWidget {
                 children: summary.topPositives
                     .map((t) => Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text('• $t',
+                          child: Text('â€¢ $t',
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14)),
                         ))
@@ -68,7 +68,7 @@ class ReviewSummarySheet extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Repeated negatives
+            
             const Text(
               'Repeated negatives',
               style: TextStyle(
@@ -89,7 +89,7 @@ class ReviewSummarySheet extends StatelessWidget {
                 children: summary.repeatedNegatives
                     .map((t) => Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text('• $t',
+                          child: Text('â€¢ $t',
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14)),
                         ))
@@ -99,7 +99,7 @@ class ReviewSummarySheet extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Crowd & environment
+            
             const Text(
               'Crowd & environment',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
@@ -111,7 +111,7 @@ class ReviewSummarySheet extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Close button
+            
             SizedBox(
               width: double.infinity,
               height: 52,

@@ -367,7 +367,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
   void _onPaymentMethodAdded(AddEditSpacePaymentMethodAdded event, Emitter<AddEditSpaceState> emit) {
     final f = state.form;
     if (f == null) return;
-    if (f.paymentMethods.any((m) => m['id'] == event.id)) return; // لا تضف مكرراً
+    if (f.paymentMethods.any((m) => m['id'] == event.id)) return; 
     final next = [...f.paymentMethods, {'id': event.id, 'name': event.name}];
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
   }
@@ -429,7 +429,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
 
     if (f.basePriceValue <= 0) out['basePrice'] = 'Base price must be greater than 0';
 
-    // Working hours: at least one enabled day, and open < close for enabled & not closed
+    
     final enabled = f.workingHours.where((w) => !w.closed).toList(growable: false);
     if (enabled.isEmpty) {
       out['workingHours'] = 'Select at least one working day';
@@ -446,7 +446,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       if (invalidTime) out['workingHours'] = 'Invalid time range (open must be before close)';
     }
 
-    // Policies: if sections exist, titles not empty and each section should have at least 1 bullet
+    
     if (f.policySections.isNotEmpty) {
       for (final s in f.policySections) {
         if (s.title.trim().isEmpty) {
@@ -473,7 +473,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     return h * 60 + m;
   }
 
-  // -------- helpers: copy + derive compat strings (price/hours/policies) --------
+  
   SpaceFormEntity _copyForm(
     SpaceFormEntity f, {
     String? name,

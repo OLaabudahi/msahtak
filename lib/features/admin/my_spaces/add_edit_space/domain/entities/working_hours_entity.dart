@@ -3,8 +3,8 @@ import 'week_day.dart';
 
 class WorkingHoursEntity extends Equatable {
   final WeekDay day;
-  final String open;  // "08:00"
-  final String close; // "22:00"
+  final String open;  
+  final String close; 
   final bool closed;
 
   const WorkingHoursEntity({

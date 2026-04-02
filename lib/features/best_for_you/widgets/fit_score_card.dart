@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/fit_score.dart';
 import 'fit_score_painter.dart';
@@ -125,7 +125,7 @@ class _FitScoreCardState extends State<FitScoreCard>
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              const Text('• ',
+                              const Text('â€¢ ',
                                   style:
                                       TextStyle(fontSize: 11)),
                               Expanded(

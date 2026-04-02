@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 sealed class BookingsEvent extends Equatable {
   const BookingsEvent();
@@ -11,7 +11,7 @@ class BookingsStarted extends BookingsEvent {
 }
 
 class BookingsSegmentChanged extends BookingsEvent {
-  /// 0 = Upcoming, 1 = Past
+  
   final int index;
   const BookingsSegmentChanged(this.index);
   @override

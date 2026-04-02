@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
@@ -28,7 +28,7 @@ class SpaceDetailsPage extends StatefulWidget {
 
   const SpaceDetailsPage({super.key, required this.spaceId});
 
-  /// ✅ دالة: فتح الصفحة مع Bloc + Repo (Dummy حالياً)
+  
   static Widget withBloc({required String spaceId}) {
     return BlocProvider(
       create: (_) =>
@@ -54,10 +54,10 @@ class SpaceDetailsPage extends StatefulWidget {
 }
 
 class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
-  // ====== Tabs Swipe Controller ======
+  
   late final PageController _tabsController;
 
-  // ====== Images Auto Carousel ======
+  
   late final PageController _imagesController;
   Timer? _imageAutoTimer;
   Timer? _imageResumeTimer;
@@ -68,7 +68,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     _tabsController = PageController();
     _imagesController = PageController();
 
-    // ✅ شغّل تحريك الصور تلقائياً كل 3 ثواني
+    
     _startImageAutoSlide();
   }
 
@@ -81,7 +81,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     super.dispose();
   }
 
-  /// ✅ دالة: تشغيل تحريك الصور تلقائياً (كل 3 ثواني)
+  
   void _startImageAutoSlide() {
     _imageAutoTimer?.cancel();
     _imageAutoTimer = Timer.periodic(const Duration(seconds: 3), (_) {
@@ -105,13 +105,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     });
   }
 
-  /// ✅ دالة: إيقاف تحريك الصور فوراً
+  
   void _stopImageAutoSlide() {
     _imageAutoTimer?.cancel();
     _imageAutoTimer = null;
   }
 
-  /// ✅ دالة: إعادة تحريك الصور بعد ثانيتين من ترك المستخدم
+  
   void _scheduleResumeImageAutoSlide() {
     _imageResumeTimer?.cancel();
     _imageResumeTimer = Timer(const Duration(seconds: 2), () {
@@ -120,7 +120,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     });
   }
 
-  /// ✅ دالة: فتح Dialog سياسات المكان
+  
   void _openPoliciesSheet(BuildContext context, SpaceDetailsState state) {
     final policies = state.details!.policies;
     showDialog(
@@ -133,7 +133,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 
-  /// ✅ دالة: فتح Dialog Review Summary
+  
   void _openReviewSummarySheet(BuildContext context, SpaceDetailsState state) {
     final summary = state.details!.reviewSummary;
     showDialog(
@@ -146,7 +146,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 
-  /// ✅ دالة: لما نكبس على Tab من segmented، نعمل animate للـ PageView
+  
   void _animateToTab(int index) {
     if (!_tabsController.hasClients) return;
     _tabsController.animateToPage(
@@ -161,11 +161,11 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     return BlocListener<SpaceDetailsBloc, SpaceDetailsState>(
       listenWhen: (p, c) => p.tabIndex != c.tabIndex,
       listener: (context, state) {
-        // ✅ لما الـ bloc يغير tabIndex (من tap أو swipe) خلّي الـ PageView يروح لنفس المكان
+        
         _animateToTab(state.tabIndex);
       },
       child: BlocBuilder<SpaceDetailsBloc, SpaceDetailsState>(
-        /// ✅ دالة: بناء الشاشة كاملة حسب state
+        
         builder: (context, state) {
           if (state.loading) {
             return const Scaffold(
@@ -182,13 +182,13 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('صار خطأ: ${state.error ?? "Unknown"}'),
+                      Text('طµط§ط± ط®ط·ط£: ${state.error ?? "Unknown"}'),
                       const SizedBox(height: 12),
                       FilledButton(
                         onPressed: () => context.read<SpaceDetailsBloc>().add(
                           SpaceDetailsStarted(widget.spaceId),
                         ),
-                        child: const Text('إعادة المحاولة'),
+                        child: const Text('ط¥ط¹ط§ط¯ط© ط§ظ„ظ…ط­ط§ظˆظ„ط©'),
                       ),
                     ],
                   ),
@@ -204,9 +204,9 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
             body: SafeArea(
               child: Column(
                 children: [
-                  // =========================
-                  // ✅ Header ثابت
-                  // =========================
+                  
+                  
+                  
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
                     child: Row(
@@ -233,9 +233,9 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                     ),
                   ),
 
-                  // =========================
-                  // ✅ صور (تتحرك تلقائياً + توقف باللمس)
-                  // =========================
+                  
+                  
+                  
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ClipRRect(
@@ -282,7 +282,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                     active: state.carouselIndex,
                   ),
 
-                  // السعر + rating
+                  
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                     child: Row(
@@ -351,25 +351,25 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                     ),
                   ),
 
-                  // =========================
-                  // ✅ Tabs ثابتة + Swipe
-                  // =========================
+                  
+                  
+                  
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
                     child: SegmentedTabs(
                       index: state.tabIndex,
                       onChanged: (i) {
-                        // 1) حدّث الـ bloc
+                        
                         bloc.add(SpaceDetailsTabChanged(i));
-                        // 2) حرّك الـ PageView
+                        
                         _animateToTab(i);
                       },
                     ),
                   ),
 
-                  // =========================
-                  // ✅ محتوى المتغير (Swipe بين التابات)
-                  // =========================
+                  
+                  
+                  
                   Expanded(
                     child: PageView(
                       controller: _tabsController,
@@ -380,7 +380,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                         }
                       },
                       children: [
-                        // -------- Overview --------
+                        
                         SingleChildScrollView(
                           padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
                           child: Column(
@@ -434,7 +434,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      // ✅ placeholder: share
+                                      
                                     },
                                     child: const Icon(
                                       Icons.share_outlined,
@@ -463,7 +463,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   }
                                 },
                                 child: const Text(
-                                  '📍 View location',
+                                  'ًں“چ View location',
                                   style: TextStyle(
                                     color: AppColors.amber,
                                     fontWeight: FontWeight.w900,
@@ -473,7 +473,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                               const SizedBox(height: 18),
 
-                              // ✅ Features (لوحدها)
+                              
                               const Text(
                                 'Features',
                                 style: TextStyle(fontWeight: FontWeight.w900),
@@ -483,7 +483,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 (f) => Padding(
                                   padding: const EdgeInsets.only(bottom: 6),
                                   child: Text(
-                                    '• $f',
+                                    'â€¢ $f',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -493,7 +493,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                               const SizedBox(height: 16),
 
-                              // ✅ Who usually uses this space (نزلناه تحت + Gradient مثل AI)
+                              
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(14),
@@ -532,7 +532,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           ),
                         ),
 
-                        // -------- Reviews --------
+                        
                         SingleChildScrollView(
                           padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
                           child: Column(
@@ -554,7 +554,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               Row(
                                 children: [
                                   Text(
-                                    '${d.rating} ★',
+                                    '${d.rating} âک…',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 22,
@@ -622,7 +622,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                           ),
                         ),
 
-                        // -------- Offers --------
+                        
                         SingleChildScrollView(
                           padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
                           child: Column(
@@ -658,7 +658,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
               ),
             ),
 
-            // ✅ زر ثابت تحت
+            
             bottomNavigationBar: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),

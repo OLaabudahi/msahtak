@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class UsageBars extends StatelessWidget {
-  final List<Map<String, dynamic>> items; // {label, percent}
+  final List<Map<String, dynamic>> items; 
 
   const UsageBars({super.key, required this.items});
 
-  /// ✅ دالة: Progress bars بنفس شكل التصميم (gradient + track رمادي)
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,12 +40,12 @@ class UsageBars extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // Track + Fill
+              
               ClipRRect(
                 borderRadius: BorderRadius.circular(999),
                 child: Container(
                   height: 10,
-                  color: Color(0xFFE9EFF6), // ✅ الرمادي الفاتح مثل الصورة
+                  color: Color(0xFFE9EFF6), 
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: FractionallySizedBox(
@@ -55,8 +55,8 @@ class UsageBars extends StatelessWidget {
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Color(0xFF2B6CB0), // ✅ أزرق
-                              AppColors.amber, // ✅ أصفر
+                              Color(0xFF2B6CB0), 
+                              AppColors.amber, 
                             ],
                           ),
                         ),

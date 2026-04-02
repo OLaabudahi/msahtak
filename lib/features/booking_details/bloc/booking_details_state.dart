@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../data/models/booking_details_model.dart';
 
 class BookingDetailsState extends Equatable {

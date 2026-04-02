@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'admin_space_summary.dart';
 import 'admin_dashboard_stats.dart';
 

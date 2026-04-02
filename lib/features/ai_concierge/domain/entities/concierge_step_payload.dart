@@ -1,12 +1,12 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 import 'concierge_message.dart';
 import 'concierge_top_match.dart';
 
 class ConciergeStepPayload extends Equatable {
-  final int stepIndex; // 1..4
-  final int totalSteps; // 4
-  final String stepMeta; // Step 1 of 4 • 30 sec
+  final int stepIndex; 
+  final int totalSteps; 
+  final String stepMeta; 
 
   final List<ConciergeMessage> newMessages;
   final List<String> quickReplies;

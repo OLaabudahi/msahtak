@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +27,7 @@ class AuthLanguageHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 4),
         BlocBuilder<LanguageBloc, LanguageState>(
           builder: (context, state) {
             return Row(
@@ -48,11 +48,11 @@ class AuthLanguageHeader extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width:2),
                 Container(
-                  constraints: const BoxConstraints(maxWidth: 140),
+                  constraints: const BoxConstraints(maxWidth: 95),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
+                    horizontal: 8,
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(

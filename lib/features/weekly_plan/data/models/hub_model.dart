@@ -1,4 +1,4 @@
-import '../../domain/entities/hub.dart';
+﻿import '../../domain/entities/hub.dart';
 
 class HubModel extends Hub {
   const HubModel({required super.id, required super.name});

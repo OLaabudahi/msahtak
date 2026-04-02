@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+﻿import 'dart:typed_data';
 
 import '../entities/payment_method_entity.dart';
 import '../entities/payment_receipt_entity.dart';

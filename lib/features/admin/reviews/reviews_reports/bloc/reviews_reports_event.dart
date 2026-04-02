@@ -11,7 +11,7 @@ class ReviewsReportsStarted extends ReviewsReportsEvent {
 }
 
 class ReviewsReportsTabChanged extends ReviewsReportsEvent {
-  final int tab; // 0 reviews, 1 reports
+  final int tab; 
   const ReviewsReportsTabChanged(this.tab);
   @override
   List<Object?> get props => [tab];

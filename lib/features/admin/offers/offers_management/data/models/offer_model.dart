@@ -6,17 +6,17 @@ import '../../../../my_spaces/add_edit_space/domain/entities/price_unit.dart';
 class OfferModel {
   final String id;
   final String title;
-  final String type; // discountPercent|fixedPriceOverride|packageMonths|bonus
+  final String type; 
   final String validUntil;
   final bool enabled;
 
   final int? durationValue;
-  final String? durationUnit; // days|weeks|months
+  final String? durationUnit; 
 
   final double? discountPercent;
 
   final double? fixedPriceValue;
-  final String? fixedPriceUnit; // day|week|month
+  final String? fixedPriceUnit; 
 
   final int? packageMonths;
   final double? packageDiscountPercent;

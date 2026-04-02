@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../data/models/user_model.dart';
 
 class ProfileState extends Equatable {

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../data/models/settings_model.dart';
 
 class SettingsState extends Equatable {
@@ -7,7 +7,7 @@ class SettingsState extends Equatable {
 
   final SettingsModel? settings;
 
-  /// ✅ للإشعار باللوج آوت (Navigation)
+  
 
   const SettingsState({
     required this.loading,

@@ -7,7 +7,7 @@ class SpaceEntity extends Equatable {
   final String name;
   final String rating;
   final SpaceAvailability availability;
-  final String cover; // url or placeholder key
+  final String cover; 
 
   const SpaceEntity({
     required this.id,

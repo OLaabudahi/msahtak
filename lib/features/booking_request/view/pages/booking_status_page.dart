@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../../../core/i18n/app_i18n.dart';
@@ -56,7 +56,7 @@ class BookingStatusPage extends StatelessWidget {
                   _StatusHeaderCard(request: req),
                   const SizedBox(height: 14),
 
-                  // مؤقت مهلة الدفع
+                  
                   if (req != null && (req.status == BookingRequestStatus.approvedWaitingPayment || req.status == BookingRequestStatus.approved) && req.paymentDeadline != null) ...[
                     const SizedBox(height: 4),
                     _DeadlineCountdown(deadline: req.paymentDeadline!),
@@ -84,7 +84,7 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // زر الدفع عند الموافقة
+                  
                   if (req != null && (req.status == BookingRequestStatus.approvedWaitingPayment || req.status == BookingRequestStatus.approved)) ...[
                     SizedBox(width: double.infinity, height: 52, child: ElevatedButton(
                       onPressed: () =>
@@ -98,7 +98,7 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // بانتظار تأكيد الدفع
+                  
                   if (req != null && req.status == BookingRequestStatus.paymentUnderReview) ...[
                     Container(padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(color: const Color(0xFFFFF3CD), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFFFFE083))),
@@ -106,7 +106,7 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // مؤكد نهائياً
+                  
                   if (req != null && (req.status == BookingRequestStatus.confirmed || req.status == BookingRequestStatus.paid)) ...[
                     Container(padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(color: AppColors.approvedBg, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.approvedBorder)),
@@ -114,7 +114,7 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // منتهية المهلة
+                  
                   if (req != null && req.status == BookingRequestStatus.expired) ...[
                     Container(padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(color: const Color(0xFFFFF0F0), borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.danger)),
@@ -193,7 +193,7 @@ class _StatusHeaderCard extends StatelessWidget {
         return _Badge('Under Review', AppColors.reviewStatusBg, AppColors.reviewStatusText);
       case BookingRequestStatus.approvedWaitingPayment:
       case BookingRequestStatus.approved:
-        return _Badge('Approved – Pay Now', AppColors.approvedBg, AppColors.approvedText);
+        return _Badge('Approved â€“ Pay Now', AppColors.approvedBg, AppColors.approvedText);
       case BookingRequestStatus.paymentUnderReview:
         return _Badge('Payment Review', const Color(0xFFFFF3CD), const Color(0xFFB8860B));
       case BookingRequestStatus.confirmed:
@@ -218,7 +218,7 @@ class _Badge {
   const _Badge(this.label, this.bg, this.fg);
 }
 
-/// مؤقت العد التنازلي لمهلة الدفع
+
 class _DeadlineCountdown extends StatefulWidget {
   final DateTime deadline;
   const _DeadlineCountdown({required this.deadline});

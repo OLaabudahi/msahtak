@@ -1,11 +1,11 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../data/models/booking_model.dart';
 
 class BookingsState extends Equatable {
   final bool loading;
   final String? error;
 
-  final int segmentIndex; // 0 upcoming, 1 past
+  final int segmentIndex; 
   final List<Booking> bookings;
 
   const BookingsState({

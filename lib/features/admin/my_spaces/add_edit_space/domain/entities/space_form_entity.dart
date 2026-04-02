@@ -8,40 +8,40 @@ import 'working_hours_entity.dart';
 class SpaceFormEntity extends Equatable {
   final String? id;
 
-  // Basic
+  
   final String name;
-  final String address; // keep (text)
-  final String description; // keep (optional)
+  final String address; 
+  final String description; 
 
-  // OLD compatibility (UI currently uses these)
-  final String price;    // keep
-  final String hours;    // keep
-  final String policies; // keep
+  
+  final String price;    
+  final String hours;    
+  final String policies; 
 
-  // NEW structured fields (API-ready)
+  
   final double basePriceValue;
   final PriceUnit basePriceUnit;
 
-  final SpaceLocationEntity? location; // lat/lng
+  final SpaceLocationEntity? location; 
   final List<WorkingHoursEntity> workingHours;
   final List<PolicySectionEntity> policySections;
 
   final List<AmenityEntity> amenities;
 
-  // Images (list of URLs)
+  
   final List<String> images;
 
-  // Availability
+  
   final bool hidden;
 
-  // Seats
+  
   final int totalSeats;
 
-  // Sub Admin
+  
   final String? adminId;
   final String? adminName;
 
-  /// طرق الدفع المتاحة: [{id, name, details}]
+  
   final List<Map<String, String>> paymentMethods;
 
   const SpaceFormEntity({

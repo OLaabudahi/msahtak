@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 import '../data/models/user_model.dart';
@@ -25,7 +25,7 @@ class ProfileHeaderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Avatar + Edit badge
+              
               Stack(
                 children: [
                   Container(
@@ -81,7 +81,7 @@ class ProfileHeaderCard extends StatelessWidget {
 
               const SizedBox(width: 20),
 
-              // Stats
+              
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

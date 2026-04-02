@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 
 import '../domain/usecases/select_quick_reply_usecase.dart';
 import '../domain/usecases/start_concierge_usecase.dart';

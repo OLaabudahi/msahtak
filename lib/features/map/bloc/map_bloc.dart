@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_current_location_usecase.dart';
 import '../domain/usecases/get_nearby_spaces_usecase.dart';
 import 'map_event.dart';

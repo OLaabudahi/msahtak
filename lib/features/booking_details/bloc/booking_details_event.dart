@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 sealed class BookingDetailsEvent extends Equatable {
   const BookingDetailsEvent();

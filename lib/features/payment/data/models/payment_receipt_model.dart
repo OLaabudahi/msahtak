@@ -1,4 +1,4 @@
-import '../../domain/entities/payment_method_entity.dart';
+﻿import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 
 class PaymentReceiptModel extends PaymentReceiptEntity {

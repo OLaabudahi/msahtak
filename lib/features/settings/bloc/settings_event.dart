@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 sealed class SettingsEvent extends Equatable {
   const SettingsEvent();
@@ -36,7 +36,7 @@ class SettingsSelectReminderTiming extends SettingsEvent {
 }
 
 class SettingsSelectLanguage extends SettingsEvent {
-  final String languageCode; // "en" / "ar"
+  final String languageCode; 
   const SettingsSelectLanguage(this.languageCode);
   @override
   List<Object?> get props => [languageCode];

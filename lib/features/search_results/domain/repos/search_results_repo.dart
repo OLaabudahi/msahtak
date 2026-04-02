@@ -1,4 +1,4 @@
-import '../entities/filter_chip_entity.dart';
+﻿import '../entities/filter_chip_entity.dart';
 import '../entities/space_entity.dart';
 
 abstract class SearchResultsRepo {

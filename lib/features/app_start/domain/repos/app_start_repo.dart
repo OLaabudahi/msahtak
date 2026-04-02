@@ -1,4 +1,4 @@
-abstract class AppStartRepo {
+﻿abstract class AppStartRepo {
   Future<AppStartDecision> decide();
 }
 

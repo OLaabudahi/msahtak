@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 class LanguageBottomSheet extends StatelessWidget {
-  final String selected; // "en" / "ar"
+  final String selected; 
   final ValueChanged<String> onSelect;
 
   const LanguageBottomSheet({

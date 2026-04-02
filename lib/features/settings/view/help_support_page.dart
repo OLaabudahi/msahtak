@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class HelpSupportPage extends StatelessWidget {
   const HelpSupportPage({super.key});
@@ -25,7 +25,7 @@ class HelpSupportPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'FAQs and contact us — coming soon.',
+              'FAQs and contact us â€” coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

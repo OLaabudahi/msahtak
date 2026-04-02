@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 enum AdminStatIcon { bookings, pending, occupancy, revenue }
 
@@ -6,7 +6,7 @@ class AdminDashboardStatEntity extends Equatable {
   final String label;
   final String value;
   final AdminStatIcon icon;
-  final int colorHex; // 0xFFRRGGBB
+  final int colorHex; 
 
   const AdminDashboardStatEntity({
     required this.label,

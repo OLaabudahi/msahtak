@@ -16,7 +16,7 @@ class SettingsGroup extends StatelessWidget {
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFEFF4FA), // قريب من user settings card
+            color: const Color(0xFFEFF4FA), 
             borderRadius: BorderRadius.circular(18),
           ),
           child: Column(

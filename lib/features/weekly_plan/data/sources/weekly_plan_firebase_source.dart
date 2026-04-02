@@ -1,17 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/hub_model.dart';
 import '../models/weekly_plan_model.dart';
 import 'weekly_plan_remote_source.dart';
 
-/// ✅ تنفيذ Firebase لـ WeeklyPlanRemoteSource
+
 class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
   @override
   Future<List<HubModel>> getHubs() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    // إذا كان المستخدم مسجل دخول، نجيب مساحاته من آخر أسبوع
+    
     if (uid != null) {
       final weekAgo = DateTime.now().subtract(const Duration(days: 7));
       var bookingsSnap = await FirebaseFirestore.instance
@@ -22,7 +22,7 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
           .limit(20)
           .get();
 
-      // محاولة بديلة مع user_id إذا ما في نتائج
+      
       if (bookingsSnap.docs.isEmpty) {
         bookingsSnap = await FirebaseFirestore.instance
             .collection('bookings')
@@ -51,7 +51,7 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
         for (final wsId in workspaceIds) {
           try {
             final wsDoc = await FirebaseFirestore.instance
-                .collection('workspaces')
+                .collection('spaces')
                 .doc(wsId)
                 .get();
             if (wsDoc.exists) {
@@ -67,9 +67,9 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
       }
     }
 
-    // fallback: مساحات تحتوي على has_weekly_plan=true
+    
     final snap = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .where('has_weekly_plan', isEqualTo: true)
         .limit(20)
         .get();
@@ -83,9 +83,9 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
           .toList();
     }
 
-    // آخر fallback: كل المساحات
+    
     final allSnap = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .limit(10)
         .get();
     return allSnap.docs
@@ -99,7 +99,7 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
   @override
   Future<WeeklyPlanModel> getPlanDetails(String hubId) async {
     final doc = await FirebaseFirestore.instance
-        .collection('workspaces')
+        .collection('spaces')
         .doc(hubId)
         .get();
     final d = doc.data() ?? {};
@@ -117,6 +117,5 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
 
   @override
   Future<void> activatePlan(String hubId) async {
-    // TODO: تسجيل في Firestore users/{uid}/plans
   }
 }

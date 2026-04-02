@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class BookingChip extends StatelessWidget {
   final String text;
   const BookingChip({super.key, required this.text});
 
-  /// ✅ دالة: Chip صغير للمعلومات (Quiet / Fast Wi-Fi ...)
+  
   @override
   Widget build(BuildContext context) {
     return Container(

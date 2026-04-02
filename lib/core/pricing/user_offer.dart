@@ -15,7 +15,7 @@ class UserOffer {
   final double? fixedPriceValue;
   final PriceUnit? fixedPriceUnit;
 
-  final int? packageMonths; // 3/6/9/12
+  final int? packageMonths; 
   final double? packageDiscountPercent;
   final double? fixedMonthlyPrice;
 
@@ -38,7 +38,7 @@ class UserOffer {
     required this.bonusText,
   });
 
-  // API-ready
+  
   factory UserOffer.fromJson(Map<String, dynamic> json) {
     final type = _parseType(json['type']?.toString());
     return UserOffer(

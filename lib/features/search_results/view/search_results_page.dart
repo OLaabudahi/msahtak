@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../theme/app_colors.dart';
 import '../../space_details/view/space_details_page.dart';
@@ -85,7 +85,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
               children: [
                 const SizedBox(height: 12),
 
-                // Search + Filter button
+                
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -127,7 +127,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                   ),
                 ),
 
-                // Dropdown suggestions
+                
                 if (_isFocused &&
                     state.query.trim().isNotEmpty &&
                     state.suggestions.isNotEmpty)
@@ -165,7 +165,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                     ),
                   ),
 
-                // Preferred chips (shown after apply filters)
+                
                 if (state.hasAppliedFilters && state.preferredChips.isNotEmpty)
                   PreferredChipsRow(
                     chips: state.preferredChips,

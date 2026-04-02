@@ -5,7 +5,7 @@ abstract class AddEditSpaceRepo {
   Future<SpaceFormEntity> getSpaceForm({required String? spaceId});
   Future<void> saveSpace({required SpaceFormEntity form});
 
-  // NEW: API-ready amenities management
+  
   Future<List<AmenityEntity>> getAmenityCatalog();
   Future<AmenityEntity> addAmenity({required String name});
 }

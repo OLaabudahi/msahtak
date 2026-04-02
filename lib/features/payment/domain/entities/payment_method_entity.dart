@@ -1,12 +1,12 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
-/// معرّف طريقة الدفع — String بدلاً من enum لدعم الطرق الديناميكية من Firebase
+
 typedef PaymentMethodType = String;
 
 class PaymentMethodEntity extends Equatable {
   final PaymentMethodType type;
   final String title;
-  final String details; // تفاصيل الحساب التي يدخلها الأدمن
+  final String details; 
 
   const PaymentMethodEntity({
     required this.type,

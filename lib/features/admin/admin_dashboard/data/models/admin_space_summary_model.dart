@@ -1,4 +1,4 @@
-import '../../domain/entities/admin_space_summary_entity.dart';
+﻿import '../../domain/entities/admin_space_summary_entity.dart';
 
 class AdminSpaceSummaryModel {
   final String id;

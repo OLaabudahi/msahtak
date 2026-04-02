@@ -10,29 +10,29 @@ class OffersCreateForm extends Equatable {
   final OfferType type;
 
   final String title;
-  final String validUntil; // e.g. Sep 30
+  final String validUntil; 
   final bool enabled;
 
-  // duration (optional)
-  final String durationValue; // numeric text
+  
+  final String durationValue; 
   final OfferDurationUnit durationUnit;
 
-  // discount %
+  
   final String discountPercent;
 
-  // fixed price override
+  
   final String fixedPriceValue;
   final PriceUnit fixedPriceUnit;
 
-  // packages
-  final int packageMonths; // 3/6/9/12
+  
+  final int packageMonths; 
   final String packageDiscountPercent;
   final String fixedMonthlyPrice;
 
-  // bonus
+  
   final String bonusText;
 
-  // validation errors
+  
   final String? titleError;
   final String? validUntilError;
   final String? typeError;

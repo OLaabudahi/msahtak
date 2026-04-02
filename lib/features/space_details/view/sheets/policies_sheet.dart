@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
 import '../../data/models/space_details_model.dart';
 
@@ -20,7 +20,7 @@ class PoliciesSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
+            
             Center(
               child: Text(
                 policies.title,
@@ -44,7 +44,7 @@ class PoliciesSheet extends StatelessWidget {
             ],
             const SizedBox(height: 20),
 
-            // Sections
+            
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
@@ -77,7 +77,7 @@ class PoliciesSheet extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(bottom: 6),
                                         child: Text(
-                                          '• $b',
+                                          'â€¢ $b',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
@@ -98,7 +98,7 @@ class PoliciesSheet extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Close button
+            
             SizedBox(
               width: double.infinity,
               height: 52,

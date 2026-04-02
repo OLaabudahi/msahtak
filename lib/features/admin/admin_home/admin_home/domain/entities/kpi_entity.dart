@@ -4,7 +4,7 @@ class KpiEntity extends Equatable {
   final String id;
   final String title;
   final String value;
-  final String delta; // optional text
+  final String delta; 
 
   const KpiEntity({
     required this.id,

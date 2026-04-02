@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,17 +37,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _notifyAppRoot(BuildContext context) {
-    // Capture bloc before popping (context becomes invalid after pop)
+
     final appStartBloc = context.read<AppStartBloc>();
-    // Pop SignUpPage so onboarding opens cleanly without SignUpPage in the stack
+
     if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-    // After signup repo sets: isLoggedIn=true, hasCompletedOnboarding=false
-    // AppRoot will open Onboarding.
+
+
     appStartBloc.add(const AppStartStarted());
   }
 
   @override
   Widget build(BuildContext context) {
+    final apple = context.t('apple');
     return Directionality(
       textDirection: context.isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
@@ -213,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 24),
 
-                    Row(
+                  /*  Row(
                       children: [
                         Expanded(
                           child: Container(height: 1, color: Colors.grey),
@@ -236,7 +237,59 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 20),
 
-                    const AuthSocialRow(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            context.read<AuthBloc>().add(AuthGoogleLoginRequested());
+                          },
+                          borderRadius: BorderRadius.circular(30),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryTint25,
+                              shape: BoxShape.circle,
+
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.g_mobiledata, size: 34, color: Colors.black),
+
+                            ),
+
+                          ),
+                        ),
+                        const SizedBox(width: 40),
+                        InkWell(
+                          onTap:() {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:  Text(apple),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          );
+                        },
+
+                          borderRadius: BorderRadius.circular(30),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryTint25,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.apple, size: 28, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),*/
 
                     const SizedBox(height: 24),
                   ],

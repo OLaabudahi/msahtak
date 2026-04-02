@@ -1,4 +1,4 @@
-import '../../domain/entities/usage_stats.dart';
+﻿import '../../domain/entities/usage_stats.dart';
 
 class UsageStatsModel extends UsageStats {
   const UsageStatsModel({

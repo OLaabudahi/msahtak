@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+﻿import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -11,7 +11,7 @@ class PaymentFirebaseSource {
 
   PaymentFirebaseSource(this.api);
 
-  /// رفع صورة الإيصال
+  
   Future<String?> uploadReceipt({
     required String requestId,
     required Uint8List bytes,
@@ -35,7 +35,7 @@ class PaymentFirebaseSource {
     return api.getDoc(collection: 'spaces', docId: spaceId);
   }
 
-  /// تحديث الدفع داخل Firestore
+  
   Future<void> submitPayment({
     required String requestId,
     required Map<String, dynamic> data,
@@ -46,7 +46,7 @@ class PaymentFirebaseSource {
       data: data,
     );
   }
-  /// إضافة طلب مراجعة للأدمن
+  
   Future<void> createAdminReview({
     required AdminPaymentReviewModel review,
   }) async {
@@ -55,7 +55,7 @@ class PaymentFirebaseSource {
         .add(review.toJson());
   }
 
-  /// جلب بيانات الحجز
+  
   Future<Map<String, dynamic>?> getBooking(String requestId) {
     return api.getDoc(collection: 'bookings', docId: requestId);
   }

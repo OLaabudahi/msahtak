@@ -1,4 +1,4 @@
-import '../entities/filter_chip_entity.dart';
+﻿import '../entities/filter_chip_entity.dart';
 import '../repos/search_results_repo.dart';
 
 class GetPreferredFilterChipsUseCase {

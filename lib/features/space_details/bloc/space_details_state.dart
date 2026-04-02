@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../data/models/space_details_model.dart';
 
 class SpaceDetailsState extends Equatable {

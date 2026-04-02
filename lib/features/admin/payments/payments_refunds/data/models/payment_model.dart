@@ -5,7 +5,7 @@ class PaymentModel {
   final String id;
   final String date;
   final String amount;
-  final String status; // paid|pending|refunded
+  final String status; 
   final String userName;
   final String bookingId;
 

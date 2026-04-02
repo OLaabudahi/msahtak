@@ -1,4 +1,4 @@
-import 'package:Msahtak/features/payment/view/payment_routes.dart';
+﻿import 'package:Msahtak/features/payment/view/payment_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 import '../../../../../features/language/bloc/language_bloc.dart';
-import '../../../../../services/language_service.dart';
+import '../../../../services/language_service.dart';
 import '../../bloc/payment_bloc.dart';
 import '../../bloc/payment_event.dart';
 import '../../bloc/payment_state.dart';
@@ -37,7 +37,7 @@ class PaymentPage extends StatelessWidget {
           listenWhen: (p, c) => p.uiStatus != c.uiStatus,
           listener: (context, state) {
             if (state.uiStatus == PaymentUiStatus.failure && state.errorMessage != null) {
-              // استخدم context.read بدلاً من context.t لأن الـ listener خارج build
+              
               final langCode = context.read<LanguageBloc>().state.code;
               final msg = state.errorMessage == 'paymentReceiptRequired'
                   ? LanguageService.tr(langCode, 'paymentReceiptRequired')
@@ -72,7 +72,7 @@ class PaymentPage extends StatelessWidget {
                   PaymentBookingSummaryCard(summary: state.summary),
                   const SizedBox(height: 14),
 
-                  // ── طرق الدفع ──
+                  
                   Text(context.t('paymentMethodTitle'),
                       style: const TextStyle(fontWeight: FontWeight.w800)),
                   const SizedBox(height: 10),
@@ -98,7 +98,7 @@ class PaymentPage extends StatelessWidget {
                         ),
                       )),
 
-                  // ── تفاصيل الحساب عند اختيار الطريقة ──
+                  
                   if (state.selectedMethodEntity?.details.isNotEmpty == true) ...[
                     const SizedBox(height: 4),
                     _AccountDetailsCard(
@@ -110,7 +110,7 @@ class PaymentPage extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  // ── إدخال بيانات البطاقة أو رفع إشعار الدفع ──
+                  
                   if (state.isCardPayment)
                     _CardDetailsForm(state: state)
                   else
@@ -122,7 +122,7 @@ class PaymentPage extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
-                  // ── زر إتمام الدفع ──
+                  
                   SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -201,7 +201,7 @@ class _AccountDetailsCard extends StatelessWidget {
   }
 }
 
-/// نموذج إدخال بيانات بطاقة الائتمان/الخصم
+
 class _CardDetailsForm extends StatefulWidget {
   final PaymentState state;
   const _CardDetailsForm({required this.state});
@@ -301,7 +301,7 @@ class _CardDetailsFormState extends State<_CardDetailsForm> {
               child: _CardField(
                 controller: _cvvCtrl,
                 label: context.t('paymentCardCvv'),
-                hint: '•••',
+                hint: 'â€¢â€¢â€¢',
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 4,
@@ -389,7 +389,7 @@ class _CardField extends StatelessWidget {
   }
 }
 
-/// يضيف مسافة كل 4 أرقام في رقم البطاقة
+
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue old, TextEditingValue next) {
@@ -407,7 +407,7 @@ class _CardNumberFormatter extends TextInputFormatter {
   }
 }
 
-/// يضيف / بعد شهرين في حقل الصلاحية
+
 class _ExpiryFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue old, TextEditingValue next) {

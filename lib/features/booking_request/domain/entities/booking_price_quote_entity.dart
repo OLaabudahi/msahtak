@@ -1,8 +1,8 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class BookingPriceQuoteEntity extends Equatable {
   final int spaceSubtotal;
-  final int offerDiscount; // positive number
+  final int offerDiscount; 
   final int addOnsTotal;
   final int total;
   final String currency;

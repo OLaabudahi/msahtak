@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../constants/app_assets.dart';
 import '../../../../constants/app_spacing.dart';
 import '../../../../theme/app_colors.dart';
@@ -46,28 +46,28 @@ class InsightDetailsPage extends StatelessWidget {
     switch (id) {
       case 'ins_4':
         return [
-          _Section(title: 'Before the meeting', emoji: '📋', items: [
+          _Section(title: 'Before the meeting', emoji: 'ًں“‹', items: [
             'Book the meeting room in advance via the app',
             'Confirm attendees and send calendar invites',
             'Prepare your agenda and share it with participants',
             'Test your laptop / presentation setup',
             'Charge all devices fully',
           ]),
-          _Section(title: 'Tech & equipment', emoji: '💻', items: [
+          _Section(title: 'Tech & equipment', emoji: 'ًں’»', items: [
             'HDMI / USB-C adapter for screen mirroring',
             'Headset or earphones for calls',
             'Stable Wi-Fi connection confirmed',
             'Backup slides saved offline (USB or local)',
             'Video conferencing app installed & tested',
           ]),
-          _Section(title: 'During the meeting', emoji: '🎯', items: [
-            'Start on time — respect everyone\'s schedule',
+          _Section(title: 'During the meeting', emoji: 'ًںژ¯', items: [
+            'Start on time â€” respect everyone\'s schedule',
             'Mute when not speaking',
             'Take notes or assign a note-taker',
             'Keep to the agenda items',
             'Assign action items with owners & deadlines',
           ]),
-          _Section(title: 'After the meeting', emoji: '✅', items: [
+          _Section(title: 'After the meeting', emoji: 'âœ…', items: [
             'Send meeting minutes within 24 hours',
             'Follow up on action items',
             'Leave the room clean and tidy',
@@ -76,7 +76,7 @@ class InsightDetailsPage extends StatelessWidget {
         ];
       default:
         return [
-          _Section(title: 'Tips', emoji: '💡', items: [item.subtitle]),
+          _Section(title: 'Tips', emoji: 'ًں’،', items: [item.subtitle]),
         ];
     }
   }

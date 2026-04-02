@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/nearby_space_entity.dart';
 
@@ -33,7 +33,7 @@ class NearbySpaceBottomCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ✅ صورة بنفس ستايل التصميم: ارتفاع ثابت + عرض كامل
+          
           SizedBox(
             height: 70,
             width: double.infinity,
@@ -54,7 +54,7 @@ class NearbySpaceBottomCard extends StatelessWidget {
                   ),
           ),
 
-          // ✅ محتوى تحت الصورة
+          
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
             child: Row(

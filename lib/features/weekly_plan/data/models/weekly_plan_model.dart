@@ -1,4 +1,4 @@
-import '../../domain/entities/weekly_plan_details.dart';
+﻿import '../../domain/entities/weekly_plan_details.dart';
 
 class WeeklyPlanModel extends WeeklyPlanDetails {
   const WeeklyPlanModel({

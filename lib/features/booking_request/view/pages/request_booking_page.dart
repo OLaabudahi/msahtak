@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/booking_request_bloc.dart';
@@ -118,7 +118,7 @@ class RequestBookingPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
 
-                    // Banner (Weekly plan cheaper)
+                    
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -136,7 +136,7 @@ class RequestBookingPage extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Dummy: switch offer to WEEKLY
+                              
                               context.read<BookingRequestBloc>().add(
                                 const OfferChanged(offerId: 'WEEKLY', offerLabel: 'Weekly plan'),
                               );
@@ -236,7 +236,7 @@ class RequestBookingPage extends StatelessWidget {
 }
 
 extension on AddOnEntity {
-  String get currencySymbol => '₪';
+  String get currencySymbol => 'â‚ھ';
 }
 
 class _Label extends StatelessWidget {

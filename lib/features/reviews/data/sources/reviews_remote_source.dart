@@ -1,7 +1,7 @@
-import '../models/review_model.dart';
+﻿import '../models/review_model.dart';
 import '../models/reviews_summary_model.dart';
 
-/// واجهة مصدر البيانات – استبدل FakeReviewsSource بـ RealReviewsSource عند ربط API
+
 abstract class ReviewsRemoteSource {
   Future<ReviewsSummaryModel> getReviewsSummary();
   Future<List<ReviewModel>> getReviews({String filter});
@@ -44,14 +44,14 @@ class FakeReviewsSource implements ReviewsRemoteSource {
     ),
   ];
 
-  /// جلب الملخص – استبدل بـ http.get('/reviews/summary') عند ربط API
+  
   @override
   Future<ReviewsSummaryModel> getReviewsSummary() async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _summary;
   }
 
-  /// جلب القائمة مع الفلترة – استبدل بـ http.get('/reviews?filter=X') عند ربط API
+  
   @override
   Future<List<ReviewModel>> getReviews({String filter = 'all'}) async {
     await Future.delayed(const Duration(milliseconds: 300));

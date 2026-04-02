@@ -1,7 +1,7 @@
-import '../models/hub_model.dart';
+﻿import '../models/hub_model.dart';
 import '../models/weekly_plan_model.dart';
 
-/// واجهة مصدر البيانات – استبدل FakeWeeklyPlanSource بـ RealWeeklyPlanSource عند ربط API
+
 abstract class WeeklyPlanRemoteSource {
   Future<List<HubModel>> getHubs();
   Future<WeeklyPlanModel> getPlanDetails(String hubId);
@@ -57,24 +57,23 @@ class FakeWeeklyPlanSource implements WeeklyPlanRemoteSource {
     ),
   };
 
-  /// جلب قائمة المساحات – استبدل بـ http.get('/hubs') عند ربط API
+  
   @override
   Future<List<HubModel>> getHubs() async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _hubs;
   }
 
-  /// جلب تفاصيل الخطة – استبدل بـ http.get('/weekly-plan/$hubId') عند ربط API
+  
   @override
   Future<WeeklyPlanModel> getPlanDetails(String hubId) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return _plans[hubId] ?? _plans['h1']!;
   }
 
-  /// تفعيل الخطة – استبدل بـ http.post('/weekly-plan/activate') عند ربط API
+  
   @override
   Future<void> activatePlan(String hubId) async {
     await Future.delayed(const Duration(milliseconds: 400));
-    // TODO: POST /api/weekly-plan/activate body: {'hubId': hubId}
   }
 }

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'geo_point_entity.dart';
 
 class NearbySpaceEntity extends Equatable {

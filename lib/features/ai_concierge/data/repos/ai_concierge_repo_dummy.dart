@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import '../../domain/entities/concierge_message.dart';
 import '../../domain/entities/concierge_step_payload.dart';
@@ -22,7 +22,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     return const ConciergeStepPayload(
       stepIndex: 1,
       totalSteps: 4,
-      stepMeta: 'Step 1 of 4 • 30 sec',
+      stepMeta: 'Step 1 of 4 â€¢ 30 sec',
       newMessages: [
         ConciergeMessage(
           id: 'm1',
@@ -35,9 +35,9 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       showContinueButton: false,
     );
 
-    // API-ready:
-    // final res = await dio.post('/concierge/start');
-    // return ConciergeStepPayloadModel.fromJson(res.data).toEntity();
+    
+    
+    
   }
 
   @override
@@ -56,7 +56,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       return ConciergeStepPayload(
         stepIndex: 2,
         totalSteps: 4,
-        stepMeta: 'Step 2 of 4 • 30 sec',
+        stepMeta: 'Step 2 of 4 â€¢ 30 sec',
         newMessages: [
           ConciergeMessage(id: 'u1', sender: ConciergeSender.user, text: answer),
           const ConciergeMessage(
@@ -78,7 +78,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       return const ConciergeStepPayload(
         stepIndex: 3,
         totalSteps: 4,
-        stepMeta: 'Step 3 of 4 • 30 sec',
+        stepMeta: 'Step 3 of 4 â€¢ 30 sec',
         newMessages: [
           ConciergeMessage(id: 'u2', sender: ConciergeSender.user, text: 'Weekly'),
         ],
@@ -86,12 +86,12 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
         topMatch: ConciergeTopMatch(
           spaceId: 'SPACE-001',
           title: 'Top Match: Space A',
-          whyLine: 'Why: very quiet • strong Wi-Fi • 10 min away',
+          whyLine: 'Why: very quiet â€¢ strong Wi-Fi â€¢ 10 min away',
           planLine: 'Plan suggestion: Weekly saves you ~18%',
-          priceLine: 'Daily ₪10/day • Weekly ₪58/week',
+          priceLine: 'Daily â‚ھ10/day â€¢ Weekly â‚ھ58/week',
           imageAsset: 'assets/images/home.png',
-          // API-ready:
-          // imageUrl: 'https://...'
+          
+          
         ),
         showContinueButton: true,
       );
@@ -102,7 +102,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     return ConciergeStepPayload(
       stepIndex: 4,
       totalSteps: 4,
-      stepMeta: 'Step 4 of 4 • 30 sec',
+      stepMeta: 'Step 4 of 4 â€¢ 30 sec',
       newMessages: const [
         ConciergeMessage(
           id: 'b4',
@@ -114,9 +114,9 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       topMatch: const ConciergeTopMatch(
         spaceId: 'SPACE-001',
         title: 'Top Match: Space A',
-        whyLine: 'Why: very quiet • strong Wi-Fi • 10 min away',
+        whyLine: 'Why: very quiet â€¢ strong Wi-Fi â€¢ 10 min away',
         planLine: 'Plan suggestion: Weekly saves you ~18%',
-        priceLine: 'Daily ₪10/day • Weekly ₪58/week',
+        priceLine: 'Daily â‚ھ10/day â€¢ Weekly â‚ھ58/week',
         imageAsset: 'assets/images/home.png',
       ),
       showContinueButton: true,

@@ -13,20 +13,20 @@ class SpaceFormModel {
   final String address;
   final String description;
 
-  // OLD compatibility fields
+  
   final String price;
   final String hours;
   final String policies;
 
-  // NEW
+  
   final double basePriceValue;
-  final String basePriceUnit; // day|week|month
+  final String basePriceUnit; 
 
-  final Map<String, dynamic>? location; // {lat,lng}
-  final List<Map<String, dynamic>> workingHours; // list
-  final List<Map<String, dynamic>> policySections; // list
-  final List<Map<String, dynamic>> amenities; // list
-  final List<String> images; // list of image URLs
+  final Map<String, dynamic>? location; 
+  final List<Map<String, dynamic>> workingHours; 
+  final List<Map<String, dynamic>> policySections; 
+  final List<Map<String, dynamic>> amenities; 
+  final List<String> images; 
 
   final bool hidden;
   final int totalSeats;

@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
-/// ✅ موديل بيانات المستخدم
+
 class UserModel extends Equatable {
   final String userId;
   final String fullName;
@@ -27,19 +27,19 @@ class UserModel extends Equatable {
     required this.savedSpaces,
   });
 
-  /// ✅ API READY
-  // factory UserModel.fromJson(Map<String, dynamic> json) {
-  //   return UserModel(
-  //     userId: json['userId'].toString(),
-  //     fullName: json['fullName'] ?? '',
-  //     email: json['email'] ?? '',
-  //     phoneNumber: json['phoneNumber'],
-  //     avatarUrl: json['avatarUrl'],
-  //     totalBookings: json['totalBookings'] ?? 0,
-  //     completedBookings: json['completedBookings'] ?? 0,
-  //     savedSpaces: json['savedSpaces'] ?? 0,
-  //   );
-  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   @override
   List<Object?> get props => [

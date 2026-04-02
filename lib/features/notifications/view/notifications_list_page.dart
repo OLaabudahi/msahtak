@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/di/app_injector.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +47,7 @@ class NotificationsListPage extends StatelessWidget {
     }
   }
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  
   static Widget withBloc() {
     final source = NotificationsFirebaseSource();
     final repo = NotificationsRepoDummy(source);

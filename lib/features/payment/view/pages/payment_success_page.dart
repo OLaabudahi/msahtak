@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -80,8 +80,8 @@ class PaymentSuccessPage extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    // لو بدك: افتحي Booking Details بالـ bookingId
-                    // Navigator.pushNamed(context, '/booking-details', arguments: args.bookingId);
+                    
+                    
                     Navigator.of(context).popUntil((r) => r.isFirst);
                   },
                   style: ElevatedButton.styleFrom(
@@ -130,7 +130,7 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 10),
           _row('Booking ID', bookingId),
           const SizedBox(height: 8),
-          _row('Amount paid', '₪$amountPaid'),
+          _row('Amount paid', 'â‚ھ$amountPaid'),
           const SizedBox(height: 8),
           _row('Paid at', paid),
           const SizedBox(height: 12),

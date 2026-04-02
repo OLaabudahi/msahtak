@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class MsahtakLogo extends StatelessWidget {
   final double width;
@@ -20,7 +20,7 @@ class MsahtakLogo extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // The "M" shape with person icon
+          
           Positioned(
             left: 0,
             child: CustomPaint(
@@ -28,7 +28,7 @@ class MsahtakLogo extends StatelessWidget {
               painter: MsahtakMPainter(),
             ),
           ),
-          // Text
+          
           Positioned(
             right: 0,
             child: Column(
@@ -45,7 +45,7 @@ class MsahtakLogo extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'مساحتك',
+                  'ظ…ط³ط§ط­طھظƒ',
                   style: TextStyle(
                     fontSize: fontSize * 0.65,
                     fontWeight: FontWeight.w500,
@@ -70,7 +70,7 @@ class MsahtakMPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    // Orange dot (person head)
+    
     final headPaint = Paint()
       ..color = const Color(0xFFFFA726)
       ..style = PaintingStyle.fill;
@@ -81,12 +81,12 @@ class MsahtakMPainter extends CustomPainter {
       headPaint,
     );
 
-    // Blue M shape with person body
+    
     paint.color = const Color(0xFF003B73);
 
     final path = Path();
 
-    // Left leg with circle
+    
     canvas.drawCircle(
       Offset(size.width * 0.15, size.height * 0.95),
       size.width * 0.08,
@@ -97,20 +97,20 @@ class MsahtakMPainter extends CustomPainter {
     path.moveTo(size.width * 0.15, size.height * 0.95);
     path.lineTo(size.width * 0.15, size.height * 0.5);
 
-    // Left shoulder
+    
     path.lineTo(size.width * 0.35, size.height * 0.35);
 
-    // Body center (under head)
+    
     path.lineTo(size.width * 0.5, size.height * 0.28);
 
-    // Right shoulder
+    
     path.lineTo(size.width * 0.65, size.height * 0.35);
 
-    // Right leg
+    
     path.lineTo(size.width * 0.85, size.height * 0.5);
     path.lineTo(size.width * 0.85, size.height * 0.95);
 
-    // Right circle
+    
     canvas.drawCircle(
       Offset(size.width * 0.85, size.height * 0.95),
       size.width * 0.08,

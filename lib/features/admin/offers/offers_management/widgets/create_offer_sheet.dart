@@ -111,7 +111,7 @@ class CreateOfferSheet extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-              // Optional duration
+              
               Row(
                 children: [
                   Expanded(
@@ -166,7 +166,7 @@ class CreateOfferSheet extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Dynamic section
+              
               if (form.type == OfferType.discountPercent) ...[
                 _Field(
                   label: 'Discount %',

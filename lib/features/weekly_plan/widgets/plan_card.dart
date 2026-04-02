@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class PlanCard extends StatelessWidget {
@@ -52,7 +52,7 @@ class PlanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '₪$pricePerWeek',
+                    'â‚ھ$pricePerWeek',
                     style: const TextStyle(
                         color: AppColors.amber,
                         fontSize: 26,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 
@@ -14,7 +14,7 @@ class CategoryChip extends StatelessWidget {
     required this.onTap,
   });
 
-  /// ✅ دالة: بناء شكل الـ Chip مثل التصميم
+  
   @override
   Widget build(BuildContext context) {
     return InkWell(

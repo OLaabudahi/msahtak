@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 abstract class UsageEvent extends Equatable {
   const UsageEvent();
@@ -6,12 +6,12 @@ abstract class UsageEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// تحميل بيانات الاستخدام عند فتح الصفحة
+
 class UsageStarted extends UsageEvent {
   const UsageStarted();
 }
 
-/// اختيار باقة من قائمة الباقات
+
 class UsagePlanSelected extends UsageEvent {
   final int index;
   const UsagePlanSelected(this.index);
@@ -19,7 +19,7 @@ class UsagePlanSelected extends UsageEvent {
   List<Object?> get props => [index];
 }
 
-/// تطبيق الباقة المختارة
+
 class UsagePlanApplied extends UsageEvent {
   const UsagePlanApplied();
 }

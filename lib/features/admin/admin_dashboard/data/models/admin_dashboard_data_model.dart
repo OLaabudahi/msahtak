@@ -1,4 +1,4 @@
-import '../../domain/entities/admin_dashboard_data_entity.dart';
+﻿import '../../domain/entities/admin_dashboard_data_entity.dart';
 
 class AdminDashboardStatModel {
   final String label;

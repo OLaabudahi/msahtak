@@ -1,4 +1,4 @@
-import '../../domain/entities/geo_point_entity.dart';
+﻿import '../../domain/entities/geo_point_entity.dart';
 import '../../domain/entities/nearby_space_entity.dart';
 
 class NearbySpaceModel {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +16,7 @@ import '../widgets/usage_stats_card.dart';
 class UsagePage extends StatelessWidget {
   const UsagePage({super.key});
 
-  /// إنشاء الصفحة مع BLoC خاص بها
+  
   static Widget withBloc() {
     final source = UsageFirebaseSource();
     final repo = UsageRepoDummy(source);
@@ -57,7 +57,7 @@ class UsagePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-                    // Header
+                    
                     Row(
                       children: [
                         GestureDetector(
@@ -98,7 +98,7 @@ class UsagePage extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),
                     const SizedBox(height: 16),
-                    // Plans List
+                    
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -122,7 +122,7 @@ class UsagePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Recommendation
+                    
                     if (state.stats != null)
                       Container(
                         width: double.infinity,
@@ -154,7 +154,7 @@ class UsagePage extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 24),
-                    // Apply Button
+                    
                     SizedBox(
                       width: double.infinity,
                       height: 52,

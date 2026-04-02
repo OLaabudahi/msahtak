@@ -1,4 +1,5 @@
-import '../entities/booking_entity.dart';
+﻿import 'package:Msahtak/features/bookings/data/models/booking_model.dart';
+
 import '../repos/bookings_repo.dart';
 
 class GetBookingsUseCase {
@@ -6,7 +7,7 @@ class GetBookingsUseCase {
 
   GetBookingsUseCase(this.repo);
 
-  Future<List<BookingEntity>> call() {
+  Future<List<Booking>> call() {
     return repo.fetchBookings();
   }
 }

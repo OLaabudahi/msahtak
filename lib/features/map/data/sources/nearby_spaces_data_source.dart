@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/geo_point_entity.dart';
 import '../models/nearby_space_model.dart';
@@ -17,11 +17,11 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
     required double radiusKm,
   }) async {
     final all = <_Raw>[
-      // ✅ نفس الأماكن اللي بعتيها (IDs لازم تطابق الهوم عندك)
+      
       _Raw(
         id: 'SPACE-001',
         name: 'Downtown Hub',
-        subtitle: 'City Center • Quiet • Fast Wi-Fi',
+        subtitle: 'City Center â€¢ Quiet â€¢ Fast Wi-Fi',
         rating: 4.8,
         imageUrl: 'https://picsum.photos/seed/space001/900/400',
         lat: 31.511605,
@@ -30,7 +30,7 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
       _Raw(
         id: 'SPACE-002',
         name: 'Blue Owl',
-        subtitle: 'Cozy • Good lighting • Calm',
+        subtitle: 'Cozy â€¢ Good lighting â€¢ Calm',
         rating: 4.6,
         imageUrl: 'https://picsum.photos/seed/space002/900/400',
         lat: 31.516397477736643,
@@ -39,7 +39,7 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
       _Raw(
         id: 'SPACE-003',
         name: 'Study Nest',
-        subtitle: 'Student Friendly • Power Backup',
+        subtitle: 'Student Friendly â€¢ Power Backup',
         rating: 4.7,
         imageUrl: 'https://picsum.photos/seed/space003/900/400',
         lat: 31.522031386576206,
@@ -48,18 +48,18 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
       _Raw(
         id: 'SPACE-004',
         name: 'Private Corner',
-        subtitle: 'Private Office • Quiet Zone',
+        subtitle: 'Private Office â€¢ Quiet Zone',
         rating: 4.5,
         imageUrl: 'https://picsum.photos/seed/space004/900/400',
         lat: 31.513233,
         lng: 34.444722,
       ),
 
-      // ✅ أماكن إضافية قريبة (زي ما طلبتي)
+      
       _Raw(
         id: 'SPACE-005',
         name: 'Skyline Desk',
-        subtitle: 'Bright • City View • Coffee',
+        subtitle: 'Bright â€¢ City View â€¢ Coffee',
         rating: 4.4,
         imageUrl: 'https://picsum.photos/seed/space005/900/400',
         lat: 31.5102,
@@ -68,7 +68,7 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
       _Raw(
         id: 'SPACE-006',
         name: 'Work & Chill',
-        subtitle: 'Relaxed • Meetings • Wi-Fi',
+        subtitle: 'Relaxed â€¢ Meetings â€¢ Wi-Fi',
         rating: 4.3,
         imageUrl: 'https://picsum.photos/seed/space006/900/400',
         lat: 31.5079,
@@ -90,7 +90,7 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
       );
     }).toList();
 
-    // ✅ فلترة حسب الراديوس وترتيب بالأقرب
+    
     final filtered = models
         .where((m) => m.distanceKm <= radiusKm)
         .toList()
@@ -113,16 +113,16 @@ class DummyNearbySpacesDataSource implements NearbySpacesDataSource {
   double _degToRad(double deg) => deg * (pi / 180.0);
 }
 
-/// يقرأ المساحات من Firestore ويصفيها حسب الراديوس من الموقع الحالي
+
 class FirebaseNearbySpacesDataSource implements NearbySpacesDataSource {
   @override
   Future<List<NearbySpaceModel>> fetchNearby({
     required GeoPointEntity center,
     required double radiusKm,
   }) async {
-    // نقرأ من كلا الـ collections: workspaces (موجودة) + spaces (من الأدمن)
+    
     final results = await Future.wait([
-      FirebaseFirestore.instance.collection('workspaces').limit(50).get(),
+
       FirebaseFirestore.instance.collection('spaces').limit(50).get(),
     ]);
 
@@ -143,7 +143,7 @@ class FirebaseNearbySpacesDataSource implements NearbySpacesDataSource {
         lat = loc.latitude;
         lng = loc.longitude;
       } else if (loc is Map) {
-        // يدعم {lat,lng} (من الأدمن) و {latitude,longitude} (من Firebase)
+        
         lat = (loc['lat'] as num?)?.toDouble() ??
             (loc['latitude'] as num?)?.toDouble();
         lng = (loc['lng'] as num?)?.toDouble() ??

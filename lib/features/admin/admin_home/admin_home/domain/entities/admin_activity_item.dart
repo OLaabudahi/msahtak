@@ -1,9 +1,9 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 class AdminActivityItem extends Equatable {
   final String userName;
   final String spaceName;
-  final String status; // e.g. 'pending', 'approved_waiting_payment', 'confirmed'
+  final String status; 
   final DateTime createdAt;
 
   const AdminActivityItem({
@@ -13,7 +13,7 @@ class AdminActivityItem extends Equatable {
     required this.createdAt,
   });
 
-  /// مفتاح ترجمة الفعل — يُستخدم في الـ widget مع context.t()
+  
   String get actionKey {
     return switch (status) {
       'pending' => 'activityRequested',
@@ -25,7 +25,7 @@ class AdminActivityItem extends Equatable {
     };
   }
 
-  /// مدة منذ الإنشاء — (key, n) ليترجمها الـ widget
+  
   ({String key, int n}) get timeAgoData {
     final diff = DateTime.now().difference(createdAt);
     if (diff.inSeconds < 60) return (key: 'timeJustNow', n: 0);

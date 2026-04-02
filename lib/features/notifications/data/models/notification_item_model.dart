@@ -1,4 +1,4 @@
-import '../../domain/entities/notification_item.dart';
+﻿import '../../domain/entities/notification_item.dart';
 
 class NotificationItemModel extends NotificationItem {
   const NotificationItemModel({
@@ -11,7 +11,7 @@ class NotificationItemModel extends NotificationItem {
     super.requestId,
   });
 
-  /// تحويل JSON إلى Model
+  
   factory NotificationItemModel.fromJson(Map<String, dynamic> json) {
     return NotificationItemModel(
       id: json['id'] as String,
@@ -27,7 +27,7 @@ class NotificationItemModel extends NotificationItem {
     );
   }
 
-  /// تحويل Model إلى JSON
+  
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,

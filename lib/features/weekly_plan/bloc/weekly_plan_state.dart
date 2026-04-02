@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/hub.dart';
 import '../domain/entities/weekly_plan_details.dart';
 

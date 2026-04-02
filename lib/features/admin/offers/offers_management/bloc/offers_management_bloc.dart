@@ -141,7 +141,7 @@ class OffersManagementBloc extends Bloc<OffersManagementEvent, OffersManagementS
     if (f.title.trim().isEmpty) out['title'] = 'Title is required';
     if (f.validUntil.trim().isEmpty) out['validUntil'] = 'Valid until is required';
 
-    // duration is optional BUT if user types value, must be >0
+    
     if (f.durationValue.trim().isNotEmpty) {
       final dv = int.tryParse(f.durationValue.trim());
       if (dv == null || dv <= 0) out['duration'] = 'Invalid duration';
@@ -159,7 +159,7 @@ class OffersManagementBloc extends Bloc<OffersManagementEvent, OffersManagementS
         break;
 
       case OfferType.packageMonths:
-        // require either packageDiscountPercent OR fixedMonthlyPrice
+        
         final dp = f.packageDiscountPercent.trim().isEmpty ? null : double.tryParse(f.packageDiscountPercent.replaceAll(',', '.').trim());
         final mp = f.fixedMonthlyPrice.trim().isEmpty ? null : double.tryParse(f.fixedMonthlyPrice.replaceAll(',', '.').trim());
         if ((dp == null || dp <= 0 || dp > 100) && (mp == null || mp <= 0)) {

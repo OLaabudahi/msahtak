@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import '../domain/entities/booking_request_entity.dart';
 
@@ -24,7 +24,7 @@ class BookingRequestHeaderCard extends StatelessWidget {
           Text(space.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           const SizedBox(height: 4),
           Text(
-            'Base price: ₪${space.basePricePerDay} / day',
+            'Base price: â‚ھ${space.basePricePerDay} / day',
             style: TextStyle(color: AppColors.textDark, fontSize: 13),
           ),
         ],

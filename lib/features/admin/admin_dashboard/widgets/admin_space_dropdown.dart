@@ -65,7 +65,7 @@ class AdminSpaceDropdown extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            top: 16 + 8 + 14 + 8 + 52, // label + spaces (approx) to appear under button
+            top: 16 + 8 + 14 + 8 + 52, 
             child: Material(
               color: Colors.transparent,
               child: Container(

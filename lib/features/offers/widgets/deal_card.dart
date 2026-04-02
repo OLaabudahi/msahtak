@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/offer.dart';
 import 'flag_tag_painter.dart';
@@ -55,7 +55,7 @@ class DealCard extends StatelessWidget {
                 color: AppColors.secondary, size: 32),
           ),
         ),
-        // علامة الخصم
+        
         Positioned(
           top: 10,
           left: 0,
@@ -74,7 +74,7 @@ class DealCard extends StatelessWidget {
             ),
           ),
         ),
-        // تقييم النجوم
+        
         Positioned(
           bottom: 8,
           right: 8,
@@ -118,7 +118,7 @@ class DealCard extends StatelessWidget {
                 TextStyle(color: AppColors.textSecondary, fontSize: 12)),
         const SizedBox(height: 8),
         Text(
-          '₪${offer.originalPrice}/day',
+          'â‚ھ${offer.originalPrice}/day',
           style: const TextStyle(
             color: Color(0xFF5B8FB9),
             fontSize: 12,
@@ -130,7 +130,7 @@ class DealCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              '₪${offer.discountedPrice}',
+              'â‚ھ${offer.discountedPrice}',
               style: const TextStyle(
                   color: Color(0xFFF5A623),
                   fontWeight: FontWeight.bold,

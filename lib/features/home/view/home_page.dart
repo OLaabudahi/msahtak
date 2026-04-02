@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -224,7 +224,7 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    // Meeting-ready: يفتح صفحة الحجوزات الفعّالة فقط
+    
     if (item.id == 'ins_4') {
       Navigator.of(context).push(ActiveBookingsPage.route());
       return;
@@ -442,8 +442,8 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                   itemBuilder: (context, index) {
                     final item = state.insights[index];
-                    // Builder ضروري عشان context.t() يستخدم context.select
-                    // وهو ممنوع مباشرة داخل Sliver itemBuilder
+                    
+                    
                     return Builder(
                       builder: (ctx) => InsightTile(
                         imageAsset: item.imageAsset ?? 'assets/images/home.jpg',

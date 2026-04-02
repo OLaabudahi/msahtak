@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
@@ -16,10 +16,10 @@ class BookingListItem extends StatelessWidget {
   final Booking booking;
   final VoidCallback onView;
 
-  /// ✅ فقط للـ Upcoming
+  
   final VoidCallback? onCancel;
 
-  /// ✅ فقط للـ Completed
+  
   final VoidCallback? onRebook;
 
   static const _blue = AppColors.btnSecondary;
@@ -28,7 +28,7 @@ class BookingListItem extends StatelessWidget {
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
   bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
 
-  String _dateLine() => '${booking.dateText} • ${booking.timeText}';
+  String _dateLine() => '${booking.dateText} â€¢ ${booking.timeText}';
 
   String _priceLine(BuildContext context) {
     final value = booking.totalPrice % 1 == 0
@@ -207,7 +207,7 @@ class BookingListItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ✅ Name
+                        
                         Text(
                           booking.spaceName,
                           maxLines: 1,
@@ -220,7 +220,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
 
-                        // ✅ date/time
+                        
                         Text(
                           _dateLine(),
                           maxLines: 1,
@@ -232,7 +232,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
 
-                        // ✅ booking id
+                        
                         Text(
                           '${context.t('bookingIdLabel')} ${booking.bookingId}',
                           maxLines: 1,
@@ -244,7 +244,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
 
-                        // ✅ Price + Status chip
+                        
                         Row(
                           children: [
                             Flexible(

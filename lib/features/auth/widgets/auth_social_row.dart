@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
 class AuthSocialRow extends StatelessWidget {
@@ -18,10 +18,13 @@ class AuthSocialRow extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.secondaryTint25,
               shape: BoxShape.circle,
+
             ),
             child: const Center(
               child: Icon(Icons.g_mobiledata, size: 34, color: Colors.black),
+
             ),
+
           ),
         ),
         const SizedBox(width: 40),

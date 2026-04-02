@@ -41,9 +41,9 @@ async function seed() {
   console.log('✅ users');
 
   // ────────────────────────────────────────────────────────────────────────
-  // 2. WORKSPACES
+  // 2. spaces
   // ────────────────────────────────────────────────────────────────────────
-  const workspaces = [
+  const spaces = [
     {
       id: 'ws_001',
       data: {
@@ -250,10 +250,10 @@ async function seed() {
     },
   ];
 
-  for (const ws of workspaces) {
-    await db.collection('workspaces').doc(ws.id).set(ws.data);
+  for (const ws of spaces) {
+    await db.collection('spaces').doc(ws.id).set(ws.data);
   }
-  console.log('✅ workspaces (3 documents)');
+  console.log('✅ spaces (3 documents)');
 
   // ────────────────────────────────────────────────────────────────────────
   // 3. BOOKINGS

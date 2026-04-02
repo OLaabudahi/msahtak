@@ -1,4 +1,4 @@
-import '../../domain/entities/reviews_summary.dart';
+﻿import '../../domain/entities/reviews_summary.dart';
 
 class ReviewsSummaryModel extends ReviewsSummary {
   const ReviewsSummaryModel({

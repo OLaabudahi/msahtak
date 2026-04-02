@@ -3,7 +3,7 @@ import '../models/review_model.dart';
 import '../models/report_model.dart';
 
 class ReviewsReportsDummySource implements ReviewsReportsSource {
-  // in-memory replies
+  
   final Map<String, String> _replies = {};
 
   final List<ReviewModel> _baseReviews = [
@@ -55,7 +55,7 @@ class ReviewsReportsDummySource implements ReviewsReportsSource {
   @override
   Future<void> hideReview({required String reviewId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 120));
-    // (optional) remove reply when hidden
+    
     _replies.remove(reviewId);
   }
 

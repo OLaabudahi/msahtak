@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+﻿import 'dart:typed_data';
 import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 import '../../domain/entities/payment_summary_entity.dart';
@@ -8,7 +8,7 @@ import '../models/payment_receipt_model.dart';
 import '../models/payment_summary_model.dart';
 import '../sources/payment_firebase_source.dart';
 
-/// ✅ تنفيذ Firebase لـ PaymentRepo (Clean Version)
+
 class PaymentRepoFirebase implements PaymentRepo {
   final PaymentFirebaseSource source;
 
@@ -46,7 +46,7 @@ class PaymentRepoFirebase implements PaymentRepo {
         .toList();
   }
 
-  /// بناء تفاصيل الدفع
+  
   String _buildDetails(Map<String, dynamic> m) {
     final parts = <String>[];
 
@@ -81,7 +81,7 @@ class PaymentRepoFirebase implements PaymentRepo {
     }
 
     final totalAmount = (booking['totalPrice'] as num?)?.toInt() ?? 0;
-    final currency = booking['currency'] as String? ?? '₪';
+    final currency = booking['currency'] as String? ?? 'â‚ھ';
     final durationUnit = booking['durationUnit'] as String? ?? 'day';
     final durationValue = booking['durationValue'] as int? ?? 1;
     final spaceName = booking['spaceName'] as String? ?? 'Space';
@@ -90,17 +90,17 @@ class PaymentRepoFirebase implements PaymentRepo {
 
     if (durationUnit == 'day') {
       items.add(PaymentLineItemEntity(
-        label: 'Daily × $durationValue',
+        label: 'Daily أ— $durationValue',
         amount: totalAmount,
       ));
     } else if (durationUnit == 'week') {
       items.add(PaymentLineItemEntity(
-        label: 'Weekly × $durationValue',
+        label: 'Weekly أ— $durationValue',
         amount: totalAmount,
       ));
     } else if (durationUnit == 'month') {
       items.add(PaymentLineItemEntity(
-        label: 'Monthly × $durationValue',
+        label: 'Monthly أ— $durationValue',
         amount: totalAmount,
       ));
     } else {
@@ -158,14 +158,14 @@ class PaymentRepoFirebase implements PaymentRepo {
     }
 
     final totalAmount = (booking['totalPrice'] as num?)?.toInt() ?? 0;
-    final currency = booking['currency'] as String? ?? '₪';
+    final currency = booking['currency'] as String? ?? 'â‚ھ';
     final userId = booking['userId'] as String? ?? '';
     final spaceName = booking['spaceName'] as String? ?? 'Space';
     final spaceId = booking['spaceId'] as String? ?? '';
 
     final paidAt = DateTime.now();
 
-    /// رفع الصورة (هنا فقط ✔)
+    
     String? receiptUrl;
 
     if (receiptBytes != null && receiptFileName != null) {
@@ -194,13 +194,13 @@ class PaymentRepoFirebase implements PaymentRepo {
       updateData['cardExpiry'] = cardExpiry ?? '';
     }
 
-    /// تحديث الحجز
+    
     await source.submitPayment(
       requestId: requestId,
       data: updateData,
     );
 
-    /// إشعار الأدمن
+    
     if (userId.isNotEmpty) {
       await source.createAdminReview(
         review: AdminPaymentReviewModel(

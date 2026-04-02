@@ -71,7 +71,7 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
 
     _sheetOpen = false;
 
-    // إذا انسكر بالسحب، خلّي البلوك يعرف
+    
     if (mounted) {
       final st = context.read<OffersManagementBloc>().state;
       if (st.createOpen) {
@@ -117,7 +117,7 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
         bottom: false,
         child: MultiBlocListener(
           listeners: [
-            // فتح الشيت مرة واحدة فقط
+            
             BlocListener<OffersManagementBloc, OffersManagementState>(
               listenWhen: (p, n) => p.createOpen != n.createOpen && n.createOpen == true,
               listener: (context, state) async {
@@ -125,7 +125,7 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
               },
             ),
 
-            // نجاح الإنشاء => اغلاق + نجاح
+            
             BlocListener<OffersManagementBloc, OffersManagementState>(
               listenWhen: (p, n) =>
                   p.status == OffersManagementStatus.creating &&
@@ -136,7 +136,7 @@ class _OffersManagementPageState extends State<OffersManagementPage> {
               },
             ),
 
-            // فشل الإنشاء
+            
             BlocListener<OffersManagementBloc, OffersManagementState>(
               listenWhen: (p, n) =>
                   p.status != n.status &&

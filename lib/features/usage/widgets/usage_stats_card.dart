@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/usage_stats.dart';
 
@@ -14,15 +14,15 @@ class UsageStatsCard extends StatelessWidget {
         _InfoCard(
           title: 'Your usage',
           lines: [
-            '${stats.totalBookings} bookings • ${stats.totalHours} hours'
-                ' • avg ${stats.avgHoursPerSession}h/session',
+            '${stats.totalBookings} bookings â€¢ ${stats.totalHours} hours'
+                ' â€¢ avg ${stats.avgHoursPerSession}h/session',
             'Most common time: ${stats.mostCommonTime}',
           ],
         ),
         const SizedBox(height: 16),
         _InfoCard(
           title: 'Insights',
-          lines: stats.insights.map((i) => '• $i').toList(),
+          lines: stats.insights.map((i) => 'â€¢ $i').toList(),
         ),
       ],
     );

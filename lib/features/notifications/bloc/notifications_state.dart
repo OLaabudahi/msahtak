@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import '../domain/entities/notification_item.dart';
 import '../domain/entities/notification_settings.dart';
 

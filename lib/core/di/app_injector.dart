@@ -1,4 +1,4 @@
-import '../../features/booking_request/bloc/booking_request_bloc.dart';
+﻿import '../../features/booking_request/bloc/booking_request_bloc.dart';
 import '../../features/booking_request/data/repos/booking_request_repo_firebase.dart';
 import '../../features/booking_request/data/sources/booking_request_firebase_source.dart';
 import '../../features/booking_request/domain/usecases/create_booking_request_usecase.dart';
@@ -22,7 +22,7 @@ import '../../features/notifications/domain/usecases/save_notification_settings_
 import '../services/firestore_api.dart';
 
 class AppInjector {
-  /// 🔥 BOOKING
+  
   static BookingRequestBloc createBookingBloc() {
     final source = BookingRequestFirebaseSource(FirestoreApi());
     final repo = BookingRequestRepoFirebase(source: source);
@@ -36,7 +36,7 @@ class AppInjector {
     );
   }
 
-  /// 🔥 PAYMENT
+  
   static PaymentBloc createPaymentBloc() {
     final source = PaymentFirebaseSource(FirestoreApi());
     final repo = PaymentRepoFirebase(source: source);
@@ -48,7 +48,7 @@ class AppInjector {
     );
   }
 
-  /// 🔥 NOTIFICATIONS
+  
   static NotificationsBloc createNotificationsBloc() {
     final source = NotificationsFirebaseSource();
     final repo = NotificationsRepoDummy(source);

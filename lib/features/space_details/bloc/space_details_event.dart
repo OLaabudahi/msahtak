@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 sealed class SpaceDetailsEvent extends Equatable {
   const SpaceDetailsEvent();
@@ -14,7 +14,7 @@ class SpaceDetailsStarted extends SpaceDetailsEvent {
 }
 
 class SpaceDetailsTabChanged extends SpaceDetailsEvent {
-  final int index; // 0 overview, 1 reviews, 2 offers
+  final int index; 
   const SpaceDetailsTabChanged(this.index);
   @override
   List<Object?> get props => [index];

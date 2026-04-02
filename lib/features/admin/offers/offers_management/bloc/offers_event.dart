@@ -59,7 +59,7 @@ class OffersCreateFixedUnitChanged extends OffersEvent {
 }
 
 class OffersCreatePackageMonthsChanged extends OffersEvent {
-  final int months; // 3/6/9/12
+  final int months; 
   const OffersCreatePackageMonthsChanged(this.months);
   @override
   List<Object?> get props => [months];

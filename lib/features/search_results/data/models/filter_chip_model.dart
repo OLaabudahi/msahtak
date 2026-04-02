@@ -1,4 +1,4 @@
-import '../../domain/entities/filter_chip_entity.dart';
+﻿import '../../domain/entities/filter_chip_entity.dart';
 
 class FilterChipModel {
   final String id;

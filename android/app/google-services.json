@@ -13,7 +13,20 @@
           "package_name": "com.example.masahtak_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "698765384610-rfks62ope0s8dao4ro8vvtpmm8ukdqi2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.masahtak_app",
+            "certificate_hash": "b3707f66a2c6df10fc6eb8a76068939cb37c2dc8"
+          }
+        },
+        {
+          "client_id": "698765384610-v4qfcp50vadi88m9939k2kef3evkdt9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCpSCsM7rT4FPMNFS_rJyhsXPNozs5pNlo"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698765384610-v4qfcp50vadi88m9939k2kef3evkdt9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "698765384610-u3jccuuelm4gcts51o94ocgr41ksq87h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.masahtakApp"
+              }
+            }
+          ]
         }
       }
     },
@@ -32,7 +57,20 @@
           "package_name": "com.example.msahtak_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "698765384610-p31roub0t1et25eq9t61qqgf7lca3ghr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.msahtak_app",
+            "certificate_hash": "b3707f66a2c6df10fc6eb8a76068939cb37c2dc8"
+          }
+        },
+        {
+          "client_id": "698765384610-v4qfcp50vadi88m9939k2kef3evkdt9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCpSCsM7rT4FPMNFS_rJyhsXPNozs5pNlo"
@@ -40,7 +78,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698765384610-v4qfcp50vadi88m9939k2kef3evkdt9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "698765384610-u3jccuuelm4gcts51o94ocgr41ksq87h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.masahtakApp"
+              }
+            }
+          ]
         }
       }
     }

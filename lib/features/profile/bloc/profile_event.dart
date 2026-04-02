@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 
 sealed class ProfileEvent extends Equatable {
   const ProfileEvent();

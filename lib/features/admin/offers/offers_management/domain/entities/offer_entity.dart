@@ -8,27 +8,27 @@ class OfferEntity extends Equatable {
   final String title;
   final OfferType type;
 
-  // validity
-  final String validUntil; // "Sep 30" (keep string for UI)
+  
+  final String validUntil; 
   final bool enabled;
 
-  // duration (for limited offers)
-  final int? durationValue; // e.g. 7
-  final OfferDurationUnit? durationUnit; // days/weeks/months
+  
+  final int? durationValue; 
+  final OfferDurationUnit? durationUnit; 
 
-  // discount
+  
   final double? discountPercent;
 
-  // fixed price override
+  
   final double? fixedPriceValue;
   final PriceUnit? fixedPriceUnit;
 
-  // packages
-  final int? packageMonths; // 3/6/9/12
-  final double? packageDiscountPercent; // optional
-  final double? fixedMonthlyPrice; // optional
+  
+  final int? packageMonths; 
+  final double? packageDiscountPercent; 
+  final double? fixedMonthlyPrice; 
 
-  // bonus
+  
   final String? bonusText;
 
   const OfferEntity({

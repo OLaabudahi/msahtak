@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/app_start/view/splash_page.dart';
 import '../features/admin/navigation/admin_root/view/admin_root_page.dart';
@@ -40,7 +40,7 @@ class _AppRootState extends State<AppRoot> {
       context,
     ).push(MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()));
 
-    // When onboarding finishes (page popped), mark completed then re-check flow.
+    
     await LocalStorageService().setHasCompletedOnboarding(true);
 
     if (mounted) {
@@ -61,15 +61,10 @@ class _AppRootState extends State<AppRoot> {
       },
       child: BlocBuilder<AppStartBloc, AppStartState>(
         builder: (context, state) {
-          // Splash while deciding
+          
           if (state.loading || state.decision == null) {
             return const SplashPage();
           }
-
-          // Flow (same as your logic):
-          // - not logged in => Login
-          // - logged in + not onboarding => open onboarding (listener) and keep splash behind
-          // - logged in + onboarding done => Home
           switch (state.decision!) {
             case AppStartDecision.goLogin:
               return const LoginPage();
