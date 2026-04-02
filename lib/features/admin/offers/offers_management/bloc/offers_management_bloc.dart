@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/offer_duration_unit.dart';
@@ -201,3 +201,5 @@ class OffersManagementBloc extends Bloc<OffersManagementEvent, OffersManagementS
     );
   }
 }
+
+

@@ -18,7 +18,7 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     on<OfferDealPressed>(_onDealPressed);
   }
 
-  
+  /// تحميل جميع العروض من الـ use case
   Future<void> _onStarted(
       OffersStarted event, Emitter<OffersState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -31,7 +31,7 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     }
   }
 
-  
+  /// فلترة العروض بناءً على نص البحث
   Future<void> _onSearchChanged(
       OffersSearchChanged event, Emitter<OffersState> emit) async {
     emit(state.copyWith(searchQuery: event.query));
@@ -43,8 +43,9 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     }
   }
 
-  
+  /// معالجة الضغط على Deal – يمكن إضافة navigation هنا
   void _onDealPressed(
       OfferDealPressed event, Emitter<OffersState> emit) {
+    // TODO: navigate to offer details or booking page
   }
 }

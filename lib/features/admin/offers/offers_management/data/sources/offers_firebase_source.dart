@@ -2,7 +2,7 @@
 import 'offers_source.dart';
 import '../models/offer_model.dart';
 
-
+/// مصدر Firebase للعروض — يقرأ/يكتب من offers collection
 class OffersFirebaseSource implements OffersSource {
   final _db = FirebaseFirestore.instance;
 

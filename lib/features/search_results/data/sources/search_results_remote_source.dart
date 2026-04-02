@@ -1,7 +1,8 @@
-﻿class SearchResultsRemoteSource {
+﻿/// NOTE: API-ready skeleton.
+class SearchResultsRemoteSource {
   const SearchResultsRemoteSource();
 
-  
+  /// GET /spaces/search?query=... مع body/params للفلاتر + originKey
   Future<List<Map<String, dynamic>>> searchSpacesRaw({
     required String query,
     required Map<String, dynamic> selectedFilters,
@@ -11,7 +12,7 @@
     return <Map<String, dynamic>>[];
   }
 
-  
+  /// GET /users/me/preferred-filters?originKey=...
   Future<List<Map<String, dynamic>>> preferredChipsRaw({
     required String originKey,
   }) async {

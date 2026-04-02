@@ -18,3 +18,5 @@ class LanguageState extends Equatable {
   @override
   List<Object?> get props => [loading, code, error];
 }
+
+

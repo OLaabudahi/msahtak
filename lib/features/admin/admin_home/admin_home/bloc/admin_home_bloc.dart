@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/entities/kpi_entity.dart';
 import '../domain/entities/admin_space_item.dart';
 import '../domain/entities/admin_activity_item.dart';
@@ -58,3 +58,5 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
     }
   }
 }
+
+

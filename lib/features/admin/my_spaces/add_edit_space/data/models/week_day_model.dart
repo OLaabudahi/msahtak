@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/week_day.dart';
+import '../../domain/entities/week_day.dart';
 
 class WeekDayModel {
   static String toJson(WeekDay d) => d.name;
@@ -15,3 +15,5 @@ class WeekDayModel {
     }
   }
 }
+
+

@@ -7,7 +7,7 @@ import '../../domain/entities/fit_score.dart';
 import '../models/best_for_you_space_model.dart';
 import 'best_for_you_remote_source.dart';
 
-
+/// ✅ تنفيذ Firebase لـ BestForYouRemoteSource
 class BestForYouFirebaseSource implements BestForYouRemoteSource {
   static const double _fallbackLat = 31.511136495468655;
   static const double _fallbackLng = 34.45187681199389;
@@ -28,7 +28,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
     return top.first;
   }
 
-  
+  /// جلب أعلى 5 مساحات تقييماً ضمن 100 متر
   @override
   Future<List<BestForYouSpaceModel>> getTopRatedNearby() async {
     final pos = await LocationService.getCurrentPosition();
@@ -37,7 +37,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
     final bool hasRealLocation = pos != null;
 
     final snap = await FirebaseFirestore.instance
-        .collection('spaces')
+        .collection('workspaces')
         .limit(50)
         .get();
 
@@ -107,16 +107,16 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
       );
     }).toList();
 
-    
+
     List<_SpaceWithDist> nearby;
     if (hasRealLocation) {
       nearby = all.where((s) => s.distKm <= 0.1).toList();
-      if (nearby.isEmpty) nearby = all; 
+      if (nearby.isEmpty) nearby = all;
     } else {
       nearby = all;
     }
 
-    
+    // نرتب حسب التقييم (الأعلى أولاً) ونأخذ أول 5
     nearby.sort((a, b) => b.model.rating.compareTo(a.model.rating));
     return nearby.take(5).map((s) => s.model).toList();
   }
@@ -157,7 +157,7 @@ class BestForYouFirebaseSource implements BestForYouRemoteSource {
         ),
       _ => const FitScore(
           percentage: 0.70,
-          reasons: ['Comfortable space', 'Cafأ© nearby'],
+          reasons: ['Comfortable space', 'Café nearby'],
           headsUp: '',
         ),
     };

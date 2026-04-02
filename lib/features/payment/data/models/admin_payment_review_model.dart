@@ -35,9 +35,9 @@
       'currency': currency,
       'paymentMethod': paymentMethod,
       'paymentReceiptUrl': receiptUrl,
-      'paidAt': paidAt.toIso8601String(),
+      'paidAt': paidAt,
       'status': status,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt,
     };
   }
 }

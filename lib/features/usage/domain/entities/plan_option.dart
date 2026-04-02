@@ -16,3 +16,5 @@ class PlanOption extends Equatable {
   @override
   List<Object?> get props => [id, name, priceLabel, isBest];
 }
+
+

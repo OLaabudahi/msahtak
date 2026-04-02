@@ -6,7 +6,9 @@ class GetBookingRequestStatusUseCase {
 
   const GetBookingRequestStatusUseCase(this.repo);
 
-  Future<BookingRequestEntity> call(String requestId) {
-    return repo.getStatus(requestId: requestId);
+  Future<BookingRequestEntity> call(String bookingId) {
+    return repo.getStatus(bookingId: bookingId);
   }
 }
+
+

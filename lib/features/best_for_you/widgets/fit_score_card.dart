@@ -147,3 +147,5 @@ class _FitScoreCardState extends State<FitScoreCard>
     );
   }
 }
+
+

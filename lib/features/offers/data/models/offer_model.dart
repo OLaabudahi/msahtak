@@ -11,7 +11,7 @@ class OfferModel extends Offer {
     required super.rating,
   });
 
-  
+  /// تحويل JSON إلى Model
   factory OfferModel.fromJson(Map<String, dynamic> json) {
     return OfferModel(
       id: json['id'] as String,
@@ -24,7 +24,7 @@ class OfferModel extends Offer {
     );
   }
 
-  
+  /// تحويل Model إلى JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,

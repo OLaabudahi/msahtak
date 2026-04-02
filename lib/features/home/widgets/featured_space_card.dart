@@ -21,7 +21,7 @@ class FeaturedSpaceCard extends StatelessWidget {
     required this.onViewTap,
   });
 
-  
+  /// ✅ دالة: بناء كارد "For You" الكبير (صورة + كارد أبيض فوقها)
   @override
   Widget build(BuildContext context) {
     final url = imageUrl;

@@ -2,13 +2,13 @@
 import 'users_source.dart';
 import '../models/user_model.dart';
 
-
+/// مصدر Firebase للمستخدمين — يقرأ من users collection
 class UsersFirebaseSource implements UsersSource {
   final _db = FirebaseFirestore.instance;
 
   @override
   Future<List<UserModel>> fetchUsers() async {
-    
+    // جلب كل المستخدمين وفلترة الأدمن client-side لتجنب composite index
     final snap = await _db.collection('users').get();
 
     return snap.docs.where((doc) {

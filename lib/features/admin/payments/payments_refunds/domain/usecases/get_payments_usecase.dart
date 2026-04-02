@@ -1,4 +1,4 @@
-﻿import '../entities/payment_entity.dart';
+import '../entities/payment_entity.dart';
 import '../entities/payment_status.dart';
 import '../repos/payments_repo.dart';
 
@@ -10,3 +10,5 @@ class GetPaymentsUseCase {
     return repo.getPayments(periodId: periodId, status: status);
   }
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 enum AdminSettingsStatus { idle, loggingOut, loggedOut, failure }
 
@@ -16,3 +16,5 @@ class AdminSettingsState extends Equatable {
   @override
   List<Object?> get props => [status, error];
 }
+
+

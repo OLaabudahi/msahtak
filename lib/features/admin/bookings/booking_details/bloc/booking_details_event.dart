@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class BookingDetailsEvent extends Equatable {
   const BookingDetailsEvent();
@@ -27,3 +27,5 @@ class BookingDetailsCanceled extends BookingDetailsEvent {
   @override
   List<Object?> get props => [bookingId, reason];
 }
+
+

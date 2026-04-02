@@ -22,3 +22,5 @@ class UsageStatsModel extends UsageStats {
     );
   }
 }
+
+

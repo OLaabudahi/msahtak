@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/price_unit.dart';
+import '../../domain/entities/price_unit.dart';
 
 class PriceUnitModel {
   static String toJson(PriceUnit u) => switch (u) { PriceUnit.week => 'week', PriceUnit.month => 'month', _ => 'day' };
@@ -14,3 +14,5 @@ class PriceUnitModel {
     }
   }
 }
+
+

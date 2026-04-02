@@ -18,14 +18,14 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     on<WeeklyPlanActivatePressed>(_onActivatePressed);
   }
 
-  
+  /// تحميل المساحات والخطة الافتراضية
   Future<void> _onStarted(
       WeeklyPlanStarted event, Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final result = await getWeeklyPlanUseCase(state.selectedHubId);
       final hubs = result.hubs;
-      
+      // إذا كان الـ selectedHubId الافتراضي غير موجود في القائمة نستخدم أول عنصر
       final resolvedId = hubs.isNotEmpty &&
               !hubs.any((h) => h.id == state.selectedHubId)
           ? hubs.first.id
@@ -43,7 +43,7 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     }
   }
 
-  
+  /// تحميل تفاصيل الخطة عند تغيير المساحة
   Future<void> _onHubChanged(
       WeeklyPlanHubChanged event, Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(selectedHubId: event.hubId, isLoading: true));
@@ -56,7 +56,7 @@ class WeeklyPlanBloc extends Bloc<WeeklyPlanEvent, WeeklyPlanState> {
     }
   }
 
-  
+  /// تفعيل الخطة الأسبوعية
   Future<void> _onActivatePressed(WeeklyPlanActivatePressed event,
       Emitter<WeeklyPlanState> emit) async {
     emit(state.copyWith(isActivating: true));

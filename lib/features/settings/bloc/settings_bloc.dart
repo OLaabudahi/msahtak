@@ -21,7 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsToggleDarkMode>(_onToggleDarkMode);
   }
 
-  
+  /// ✅ تحميل الإعدادات أول ما تفتح الصفحة
   Future<void> _onStarted(
     SettingsStarted event,
     Emitter<SettingsState> emit,
@@ -35,7 +35,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  
+  /// ✅ Refresh
   Future<void> _onRefresh(
     SettingsRefreshRequested event,
     Emitter<SettingsState> emit,
@@ -53,11 +53,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     try {
       await repo.saveSettings(next.settings!);
     } catch (_) {
-      
+      // ما منوقف UI لو فشل الحفظ، بس ممكن تضيفي toast لاحقاً
     }
   }
 
-  
+  /// ✅ تشغيل/إيقاف إشعارات عامة
   Future<void> _onToggleNotifications(
     SettingsToggleNotifications event,
     Emitter<SettingsState> emit,
@@ -70,7 +70,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  
+  /// ✅ تشغيل/إيقاف تذكير الحجز
   Future<void> _onToggleReminders(
     SettingsToggleBookingReminders event,
     Emitter<SettingsState> emit,
@@ -85,7 +85,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  
+  /// ✅ اختيار توقيت التذكير
   Future<void> _onSelectTiming(
     SettingsSelectReminderTiming event,
     Emitter<SettingsState> emit,
@@ -98,7 +98,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  
+  /// ✅ تغيير اللغة
   Future<void> _onSelectLanguage(
     SettingsSelectLanguage event,
     Emitter<SettingsState> emit,
@@ -111,7 +111,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  
+  /// ✅ Dark mode (حالياً UI فقط - ممكن تربطيه لاحقاً بـ ThemeBloc)
   Future<void> _onToggleDarkMode(
     SettingsToggleDarkMode event,
     Emitter<SettingsState> emit,

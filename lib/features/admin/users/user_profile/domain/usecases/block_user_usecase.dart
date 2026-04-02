@@ -1,4 +1,4 @@
-﻿import '../repos/user_profile_repo.dart';
+import '../repos/user_profile_repo.dart';
 
 class BlockUserUseCase {
   final UserProfileRepo repo;
@@ -6,3 +6,5 @@ class BlockUserUseCase {
 
   Future<void> call({required String userId}) => repo.blockUser(userId: userId);
 }
+
+

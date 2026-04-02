@@ -1,4 +1,4 @@
-﻿import '../models/review_model.dart';
+import '../models/review_model.dart';
 import '../models/report_model.dart';
 
 abstract class ReviewsReportsSource {
@@ -7,3 +7,5 @@ abstract class ReviewsReportsSource {
   Future<void> hideReview({required String reviewId});
   Future<void> replyReview({required String reviewId, required String reply});
 }
+
+

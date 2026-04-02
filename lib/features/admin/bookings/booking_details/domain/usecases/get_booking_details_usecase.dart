@@ -1,4 +1,4 @@
-﻿import '../entities/booking_details_entity.dart';
+import '../entities/booking_details_entity.dart';
 import '../repos/admin_booking_details_repo.dart';
 
 class GetBookingDetailsUseCase {
@@ -9,3 +9,5 @@ class GetBookingDetailsUseCase {
     return repo.getBookingDetails(bookingId: bookingId);
   }
 }
+
+

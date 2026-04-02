@@ -12,12 +12,12 @@ sealed class PaymentEvent extends Equatable {
 }
 
 class PaymentStarted extends PaymentEvent {
-  final String requestId;
+  final String bookingId;
 
-  const PaymentStarted(this.requestId);
+  const PaymentStarted(this.bookingId);
 
   @override
-  List<Object?> get props => [requestId];
+  List<Object?> get props => [bookingId];
 }
 
 class PaymentMethodSelected extends PaymentEvent {
@@ -29,7 +29,7 @@ class PaymentMethodSelected extends PaymentEvent {
   List<Object?> get props => [method];
 }
 
-
+/// رفع إشعار الدفع من قِبَل المستخدم
 class PaymentReceiptPicked extends PaymentEvent {
   final Uint8List bytes;
   final String fileName;
@@ -40,7 +40,7 @@ class PaymentReceiptPicked extends PaymentEvent {
   List<Object?> get props => [fileName];
 }
 
-
+/// تغيير حقل في نموذج بطاقة الدفع
 class PaymentCardFieldChanged extends PaymentEvent {
   final String? cardNumber;
   final String? cardExpiry;
@@ -59,10 +59,10 @@ class PaymentCardFieldChanged extends PaymentEvent {
 }
 
 class PayNowPressed extends PaymentEvent {
-  final String requestId;
+  final String bookingId;
 
-  const PayNowPressed(this.requestId);
+  const PayNowPressed(this.bookingId);
 
   @override
-  List<Object?> get props => [requestId];
+  List<Object?> get props => [bookingId];
 }

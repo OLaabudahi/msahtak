@@ -23,3 +23,5 @@ class AppStartState extends Equatable {
   @override
   List<Object?> get props => [loading, decision, error];
 }
+
+

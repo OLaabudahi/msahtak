@@ -3,7 +3,7 @@
 class AdminActivityItem extends Equatable {
   final String userName;
   final String spaceName;
-  final String status; 
+  final String status; // e.g. 'pending', 'approved_waiting_payment', 'confirmed'
   final DateTime createdAt;
 
   const AdminActivityItem({
@@ -13,7 +13,7 @@ class AdminActivityItem extends Equatable {
     required this.createdAt,
   });
 
-  
+
   String get actionKey {
     return switch (status) {
       'pending' => 'activityRequested',
@@ -25,7 +25,7 @@ class AdminActivityItem extends Equatable {
     };
   }
 
-  
+
   ({String key, int n}) get timeAgoData {
     final diff = DateTime.now().difference(createdAt);
     if (diff.inSeconds < 60) return (key: 'timeJustNow', n: 0);

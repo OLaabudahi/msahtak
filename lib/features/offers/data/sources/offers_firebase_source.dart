@@ -3,7 +3,7 @@
 import '../models/offer_model.dart';
 import 'offers_remote_source.dart';
 
-
+/// ✅ تنفيذ Firebase لـ OffersRemoteSource
 class OffersFirebaseSource implements OffersRemoteSource {
   @override
   Future<List<OfferModel>> getOffers() async {
@@ -16,7 +16,7 @@ class OffersFirebaseSource implements OffersRemoteSource {
       return snap.docs.map(_fromDoc).toList();
     }
 
-    
+    // بيانات تجريبية عند غياب الـ offers collection في Firestore
     return [
       OfferModel(
         id: 'offer_001',

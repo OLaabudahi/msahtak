@@ -1,4 +1,4 @@
-﻿enum AdminIcon {
+enum AdminIcon {
   arrowLeft,
   mapPin,
   clock,
@@ -7,3 +7,5 @@
   phone,
   mail,
 }
+
+

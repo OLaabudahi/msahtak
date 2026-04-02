@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../../../core/i18n/app_i18n.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/price_unit.dart';
 
@@ -61,10 +62,10 @@ class PriceEditor extends StatelessWidget {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<PriceUnit>(
                     value: unit,
-                    items: const [
-                      DropdownMenuItem(value: PriceUnit.day, child: Text('day')),
-                      DropdownMenuItem(value: PriceUnit.week, child: Text('week')),
-                      DropdownMenuItem(value: PriceUnit.month, child: Text('month')),
+                    items: [
+                      DropdownMenuItem(value: PriceUnit.day, child: Text(context.t('day'))),
+                      DropdownMenuItem(value: PriceUnit.week, child: Text(context.t('week'))),
+                      DropdownMenuItem(value: PriceUnit.month, child: Text(context.t('month'))),
                     ],
                     onChanged: (v) {
                       if (v != null) onUnitChanged(v);
@@ -79,3 +80,5 @@ class PriceEditor extends StatelessWidget {
     );
   }
 }
+
+

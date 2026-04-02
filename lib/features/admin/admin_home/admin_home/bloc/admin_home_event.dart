@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class AdminHomeEvent extends Equatable {
   const AdminHomeEvent();
@@ -17,3 +17,5 @@ class AdminHomeSpaceChanged extends AdminHomeEvent {
   @override
   List<Object?> get props => [spaceId, spaceName];
 }
+
+

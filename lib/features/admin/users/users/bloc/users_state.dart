@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/user_entity.dart';
 import '../domain/entities/user_flag.dart';
 
@@ -46,3 +46,5 @@ class UsersState extends Equatable {
   @override
   List<Object?> get props => [status, query, filter, users, error];
 }
+
+

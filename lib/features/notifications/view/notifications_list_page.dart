@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
-import '../data/repos/notifications_repo_dummy.dart';
+import '../data/repos/notifications_repo_impl.dart';
 import '../data/sources/notifications_firebase_source.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
@@ -25,11 +25,11 @@ class NotificationsListPage extends StatelessWidget {
   void _onNotificationTap(BuildContext context, NotificationItem item) {
     switch (item.type) {
       case NotificationType.bookingApproved:
-        if (item.requestId != null) {
+        if (item.bookingId != null) {
           Navigator.of(context).push(
             BookingRequestRoutes.bookingStatus(
               bloc: AppInjector.createBookingBloc(),
-              requestId: item.requestId!,
+              bookingId: item.bookingId!,
             ),          );
         } else {
           Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
@@ -47,10 +47,10 @@ class NotificationsListPage extends StatelessWidget {
     }
   }
 
-  
+  /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
     final source = NotificationsFirebaseSource();
-    final repo = NotificationsRepoDummy(source);
+    final repo = NotificationsRepoImpl(source);
     return BlocProvider(
       create: (_) => NotificationsBloc(
         getNotificationsUseCase: GetNotificationsUseCase(repo),

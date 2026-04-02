@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/booking_details_entity.dart';
+import '../../domain/entities/booking_details_entity.dart';
 import '../../domain/repos/admin_booking_details_repo.dart';
 import '../sources/admin_booking_details_source.dart';
 
@@ -22,3 +22,5 @@ class AdminBookingDetailsRepoImpl implements AdminBookingDetailsRepo {
     return source.cancelBooking(bookingId: bookingId, reason: reason);
   }
 }
+
+

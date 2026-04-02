@@ -4,16 +4,16 @@ import '../../../theme/app_colors.dart';
 class ProfileMenuTile extends StatelessWidget {
   final String title;
 
-  
+  /// هذا نفس الموجود عندك (لكن الآن بنستخدمه كـ “label” داخل دائرة)
   final IconData icon;
 
   final VoidCallback onTap;
   final bool isDestructive;
 
-  
-  
-  
-  
+  /// ✅ إضافات اختيارية (بدون تغيير الاسم):
+  /// - label داخل الدائرة (مثل P / B / $ / SD)
+  /// - أو icon داخل الدائرة (star/heart)
+  /// - للتحكم بالـ divider
   final String? leadingText;
   final IconData? leadingIcon;
   final bool isLast;

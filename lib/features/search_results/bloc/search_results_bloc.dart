@@ -133,3 +133,5 @@ class SearchResultsBloc extends Bloc<SearchResultsEvent, SearchResultsState> {
     emit(state.copyWith(isLoading: false, results: results, errorMessage: null));
   }
 }
+
+

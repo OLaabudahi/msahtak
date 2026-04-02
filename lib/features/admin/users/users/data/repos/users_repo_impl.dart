@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/user_entity.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/user_flag.dart';
 import '../../domain/repos/users_repo.dart';
 import '../sources/users_source.dart';
@@ -31,3 +31,5 @@ class UsersRepoImpl implements UsersRepo {
     return res.toList(growable: false);
   }
 }
+
+

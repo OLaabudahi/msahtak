@@ -1,3 +1,5 @@
-﻿abstract class AdminSettingsRepo {
+abstract class AdminSettingsRepo {
   Future<void> logout();
 }
+
+

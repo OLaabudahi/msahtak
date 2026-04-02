@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class PaymentDetailsEntity extends Equatable {
   final String id;
@@ -24,3 +24,5 @@ class PaymentDetailsEntity extends Equatable {
   @override
   List<Object?> get props => [id, date, amount, status, method, reference, userName, bookingId];
 }
+
+

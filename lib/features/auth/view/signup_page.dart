@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../constants/app_assets.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,12 +38,12 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _notifyAppRoot(BuildContext context) {
-
+    // Capture bloc before popping (context becomes invalid after pop)
     final appStartBloc = context.read<AppStartBloc>();
-
+    // Pop SignUpPage so onboarding opens cleanly without SignUpPage in the stack
     if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-
-
+    // After signup repo sets: isLoggedIn=true, hasCompletedOnboarding=false
+    // AppRoot will open Onboarding.
     appStartBloc.add(const AppStartStarted());
   }
 
@@ -83,7 +84,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     Center(
                       child: Image.asset(
-                        'assets/images/msahtak_logo.png',
+                        AppAssets.logo,
                         width: 200,
                         height: 80,
                         fit: BoxFit.contain,

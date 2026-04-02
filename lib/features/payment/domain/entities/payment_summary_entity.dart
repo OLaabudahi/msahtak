@@ -24,3 +24,5 @@ class PaymentSummaryEntity extends Equatable {
   @override
   List<Object?> get props => [items, total, currency];
 }
+
+

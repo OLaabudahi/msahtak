@@ -3,3 +3,5 @@
   static const String welcome = 'assets/images/welcome.png';
   static const String home = 'assets/images/home.png';
 }
+
+

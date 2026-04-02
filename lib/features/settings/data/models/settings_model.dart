@@ -1,13 +1,13 @@
 ﻿import 'package:equatable/equatable.dart';
 
-
+/// ✅ موديل الإعدادات (Dummy الآن - API-ready)
 class SettingsModel extends Equatable {
   final bool notificationsEnabled;
   final bool bookingRemindersEnabled;
-  final String reminderTiming; 
+  final String reminderTiming; // "30 min" / "1 hour" / "Same day (9 AM)"
 
-  final String languageCode; 
-  final bool darkMode; 
+  final String languageCode; // "en" / "ar"
+  final bool darkMode; // (لو بدك تربطيه لاحقاً بالThemeBloc)
 
   const SettingsModel({
     required this.notificationsEnabled,
@@ -34,24 +34,24 @@ class SettingsModel extends Equatable {
     );
   }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  /// ✅ API READY (كومنت)
+  // factory SettingsModel.fromJson(Map<String, dynamic> json) {
+  //   return SettingsModel(
+  //     notificationsEnabled: json['notificationsEnabled'] ?? true,
+  //     bookingRemindersEnabled: json['bookingRemindersEnabled'] ?? true,
+  //     reminderTiming: json['reminderTiming'] ?? '30 min',
+  //     languageCode: json['languageCode'] ?? 'en',
+  //     darkMode: json['darkMode'] ?? false,
+  //   );
+  // }
+  //
+  // Map<String, dynamic> toJson() => {
+  //   'notificationsEnabled': notificationsEnabled,
+  //   'bookingRemindersEnabled': bookingRemindersEnabled,
+  //   'reminderTiming': reminderTiming,
+  //   'languageCode': languageCode,
+  //   'darkMode': darkMode,
+  // };
 
   @override
   List<Object?> get props => [

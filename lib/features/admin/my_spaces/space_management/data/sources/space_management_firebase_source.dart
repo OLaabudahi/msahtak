@@ -2,7 +2,7 @@
 import 'space_management_source.dart';
 import '../models/space_management_model.dart';
 
-
+/// مصدر Firebase لإدارة المساحات — يقرأ/يكتب من spaces collection
 class SpaceManagementFirebaseSource implements SpaceManagementSource {
   final _db = FirebaseFirestore.instance;
 

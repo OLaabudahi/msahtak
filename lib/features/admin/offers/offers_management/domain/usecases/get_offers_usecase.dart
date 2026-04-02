@@ -1,4 +1,4 @@
-﻿import '../entities/offer_entity.dart';
+import '../entities/offer_entity.dart';
 import '../repos/offers_repo.dart';
 
 class GetOffersUseCase {
@@ -7,3 +7,5 @@ class GetOffersUseCase {
 
   Future<List<OfferEntity>> call() => repo.getOffers();
 }
+
+

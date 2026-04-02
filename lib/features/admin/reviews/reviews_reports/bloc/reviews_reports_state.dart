@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/review_entity.dart';
 import '../domain/entities/report_entity.dart';
 
@@ -45,3 +45,5 @@ class ReviewsReportsState extends Equatable {
   @override
   List<Object?> get props => [status, tab, reviews, reports, error];
 }
+
+

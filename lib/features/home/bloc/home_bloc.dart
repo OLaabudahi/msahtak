@@ -9,7 +9,7 @@ import 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepo repo;
 
-  
+  // نخزن الأصل عشان البحث ما يضيع الداتا
   List<HomeFeaturedSpaceEntity> _allFeatured = const [];
 
   HomeBloc({required this.repo}) : super(HomeState.initial()) {
@@ -61,7 +61,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
 
-    
+    // البحث يعرض المساحات التي تحتوي على WiFi وضمن 100 متر وتطابق النص
     final filtered = _allFeatured.where((s) {
       final hasWifi = s.tags.any((t) => t.contains('wifi'));
       final withinRange = (s.distanceKm ?? 999) <= 0.1;
@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return hasWifi && withinRange && textMatch;
     }).toList();
 
-    
+    // إذا ما في نتيجة بالفلتر الكامل، نرجع بحث بالنص فقط (fallback)
     if (filtered.isEmpty) {
       final textOnly = _allFeatured.where((s) {
         return s.name.toLowerCase().contains(q) ||

@@ -28,3 +28,5 @@ class BookingsCancelRequested extends BookingsEvent {
   @override
   List<Object?> get props => [bookingId];
 }
+
+

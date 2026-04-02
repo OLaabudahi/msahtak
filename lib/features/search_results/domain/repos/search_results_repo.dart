@@ -12,3 +12,5 @@ abstract class SearchResultsRepo {
     required String originKey,
   });
 }
+
+

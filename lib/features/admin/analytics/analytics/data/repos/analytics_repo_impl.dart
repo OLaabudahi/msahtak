@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/analytics_entity.dart';
+import '../../domain/entities/analytics_entity.dart';
 import '../../domain/repos/analytics_repo.dart';
 import '../sources/analytics_source.dart';
 
@@ -15,3 +15,5 @@ class AnalyticsRepoImpl implements AnalyticsRepo {
   @override
   Future<void> exportReport() => source.exportReport();
 }
+
+

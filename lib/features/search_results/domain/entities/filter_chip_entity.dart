@@ -12,3 +12,5 @@ class FilterChipEntity extends Equatable {
   @override
   List<Object?> get props => [id, label];
 }
+
+

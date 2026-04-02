@@ -2,7 +2,7 @@
 import '../../../theme/app_colors.dart';
 
 class SettingsActionTile extends StatelessWidget {
-  final IconData? icon; 
+  final IconData? icon; // ✅ صار اختياري
   final String title;
   final String? subtitle;
   final VoidCallback onTap;

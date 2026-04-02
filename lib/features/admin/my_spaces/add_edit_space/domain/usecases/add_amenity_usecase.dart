@@ -1,4 +1,4 @@
-﻿import '../entities/amenity_entity.dart';
+import '../entities/amenity_entity.dart';
 import '../repos/add_edit_space_repo.dart';
 
 class AddAmenityUseCase {
@@ -7,3 +7,5 @@ class AddAmenityUseCase {
 
   Future<AmenityEntity> call({required String name}) => repo.addAmenity(name: name);
 }
+
+

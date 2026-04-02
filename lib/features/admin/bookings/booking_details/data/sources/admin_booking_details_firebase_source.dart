@@ -21,7 +21,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     }
     final d = doc.data()!;
 
-    
+
     final uid = d['userId'] as String? ?? d['user_id'] as String? ?? '';
     String userPhone = '-', userEmail = '-';
     if (uid.isNotEmpty) {
@@ -83,7 +83,7 @@ class AdminBookingDetailsFirebaseSource implements AdminBookingDetailsSource {
     await _createNotification(bookingId: bookingId, type: 'bookingRejected');
   }
 
-  
+
   Future<void> _createNotification({
     required String bookingId,
     required String type,

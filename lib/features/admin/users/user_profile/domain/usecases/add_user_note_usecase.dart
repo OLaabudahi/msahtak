@@ -1,4 +1,4 @@
-﻿import '../repos/user_profile_repo.dart';
+import '../repos/user_profile_repo.dart';
 
 class AddUserNoteUseCase {
   final UserProfileRepo repo;
@@ -6,3 +6,5 @@ class AddUserNoteUseCase {
 
   Future<void> call({required String userId, required String note}) => repo.addNote(userId: userId, note: note);
 }
+
+

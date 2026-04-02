@@ -4,14 +4,14 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:Msahtak/features/map/data/sources/location_service.dart';
 
-
+/// صفحة اختيار الموقع من الخريطة – تُعيد (lat, lng) عند التأكيد
 class LocationPickerPage extends StatefulWidget {
   final double? initialLat;
   final double? initialLng;
 
   const LocationPickerPage({super.key, this.initialLat, this.initialLng});
 
-  
+  /// فتح الصفحة والانتظار للحصول على الموقع المختار
   static Future<(double, double)?> show(
     BuildContext context, {
     double? lat,
@@ -44,14 +44,14 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
   }
 
   Future<void> _initCenter() async {
-    
+    // إذا في إحداثيات مُمررة، نبدأ منها
     if (widget.initialLat != null && widget.initialLng != null) {
       _picked = LatLng(widget.initialLat!, widget.initialLng!);
       _center = _picked!;
       setState(() => _loading = false);
       return;
     }
-    
+    // وإلا نجيب الموقع الحالي
     final pos = await GeolocatorLocationService().getCurrentLocation();
     if (mounted) {
       setState(() {
@@ -120,7 +120,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               ],
             ),
 
-          
+          // تعليمات في الأسفل
           Positioned(
             bottom: 20,
             left: 16,

@@ -1,4 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../constants/app_assets.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -12,13 +14,13 @@ class SplashPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/msahtak_logo.png',
+              AppAssets.logo,
               width: 280,
               height: 140,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Text(
-                  'ظ…ط³ط§ط­طھظƒ\nMsahtak',
+                  'مساحتك\nMsahtak',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 48,

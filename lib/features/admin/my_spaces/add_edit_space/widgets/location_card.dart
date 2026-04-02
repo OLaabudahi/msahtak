@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 
 class LocationCard extends StatelessWidget {
@@ -63,3 +63,5 @@ class LocationCard extends StatelessWidget {
     );
   }
 }
+
+

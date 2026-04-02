@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/search_users_usecase.dart';
 import 'users_event.dart';
 import 'users_state.dart';
@@ -28,3 +28,5 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   Future<void> _onQuery(UsersQueryChanged event, Emitter<UsersState> emit) async => _doSearch(emit, query: event.query);
   Future<void> _onFilter(UsersFilterChanged event, Emitter<UsersState> emit) async => _doSearch(emit, filter: event.filter);
 }
+
+

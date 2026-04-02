@@ -23,3 +23,5 @@ class BestForYouSpace extends Equatable {
   List<Object?> get props =>
       [id, name, location, distance, pricePerDay, rating, imageUrl];
 }
+
+

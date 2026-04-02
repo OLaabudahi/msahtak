@@ -13,3 +13,5 @@ class ProfileStarted extends ProfileEvent {
 class ProfileRefreshRequested extends ProfileEvent {
   const ProfileRefreshRequested();
 }
+
+

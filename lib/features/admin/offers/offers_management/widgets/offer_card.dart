@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/offer_entity.dart';
 import '../domain/entities/offer_type.dart';
@@ -100,3 +100,5 @@ class OfferCard extends StatelessWidget {
     }
   }
 }
+
+

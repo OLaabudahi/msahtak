@@ -9,7 +9,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
   @override
   Future<List<BookingRequestModel>> fetchBookings({required String status}) async {
-    
+
     final List<String> statuses = switch (status) {
       'pending' => ['pending', 'under_review'],
       'approved' => ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed'],
@@ -35,7 +35,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
         final bt = (b.data()['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
         return bt.compareTo(at);
       });
-    
+
     final spaceIds = sorted
         .map((doc) {
           final d = doc.data();
@@ -102,7 +102,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     final deadline = DateTime.now().add(const Duration(hours: 24));
     final bookingRef = _db.collection('bookings').doc(bookingId);
 
-    
+
     bool alreadyProcessed = false;
     String spaceId = '';
 
@@ -110,7 +110,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       final snap = await tx.get(bookingRef);
       if (!snap.exists) { alreadyProcessed = true; return; }
       final currentStatus = (snap.data()!['status'] ?? '') as String;
-      
+
       if (currentStatus != 'pending' && currentStatus != 'under_review') {
         alreadyProcessed = true;
         return;
@@ -125,7 +125,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
     if (alreadyProcessed) return;
 
-    
+    // تخفيض المقاعد المتاحة في المساحة
     if (spaceId.isNotEmpty) {
       try {
         final wsRef = _db.collection('spaces').doc(spaceId);
@@ -145,7 +145,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
   Future<void> rejectBooking({required String bookingId}) async {
     final bookingRef = _db.collection('bookings').doc(bookingId);
 
-    
+    // تحقق من الحالة قبل الرفض — إذا كان موافقاً عليه نُعيد المقعد
     String prevStatus = '';
     String spaceId = '';
     try {
@@ -162,7 +162,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    
+    // إعادة المقعد إذا كان قد تم قبول الحجز مسبقاً
     if (spaceId.isNotEmpty && (prevStatus == 'approved_waiting_payment' || prevStatus == 'approved' || prevStatus == 'payment_under_review')) {
       try {
         final wsRef = _db.collection('spaces').doc(spaceId);
@@ -179,7 +179,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     await _createNotification(bookingId: bookingId, type: 'bookingRejected');
   }
 
-  
+  /// ينشئ إشعاراً في مجموعة notifications لليوزر صاحب الحجز
   Future<void> _createNotification({
     required String bookingId,
     required String type,

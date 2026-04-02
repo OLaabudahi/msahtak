@@ -16,7 +16,7 @@ class AppStartRepoDummy implements AppStartRepo {
     final completed = await _storage.getHasCompletedOnboarding();
     if (!completed) return AppStartDecision.goOnboarding;
 
-    
+    // إذا كان المستخدم أدمن يُوجَّه لواجهة الإدارة
     final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
     if (role.contains('admin')) return AppStartDecision.goAdmin;
 

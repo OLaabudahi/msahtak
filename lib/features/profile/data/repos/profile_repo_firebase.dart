@@ -4,15 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/repos/profile_repo.dart';
 import '../models/user_model.dart';
 
-
+/// ✅ تنفيذ Firebase لـ ProfileRepo – يقرأ users/{uid}
 class ProfileRepoFirebase implements ProfileRepo {
   @override
   Future<UserModel> fetchProfile() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) {
-      throw Exception('Not logged in');
-
-    }
+    if (uid == null) throw Exception('Not logged in');
 
     final doc = await FirebaseFirestore.instance
         .collection('users')

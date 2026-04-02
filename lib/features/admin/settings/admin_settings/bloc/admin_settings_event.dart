@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class AdminSettingsEvent extends Equatable {
   const AdminSettingsEvent();
@@ -9,3 +9,5 @@ sealed class AdminSettingsEvent extends Equatable {
 class AdminSettingsLogoutPressed extends AdminSettingsEvent {
   const AdminSettingsLogoutPressed();
 }
+
+

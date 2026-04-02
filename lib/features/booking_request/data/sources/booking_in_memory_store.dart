@@ -7,9 +7,11 @@ class BookingInMemoryStore {
   final Map<String, BookingRequestEntity> _requests =
       <String, BookingRequestEntity>{};
 
-  BookingRequestEntity? get(String requestId) => _requests[requestId];
+  BookingRequestEntity? get(String bookingId) => _requests[bookingId];
 
-  void put(BookingRequestEntity entity) => _requests[entity.requestId] = entity;
+  void put(BookingRequestEntity entity) => _requests[entity.bookingId] = entity;
 
-  bool contains(String requestId) => _requests.containsKey(requestId);
+  bool contains(String bookingId) => _requests.containsKey(bookingId);
 }
+
+

@@ -16,7 +16,7 @@ import '../widgets/plan_card.dart';
 class WeeklyPlanPage extends StatelessWidget {
   const WeeklyPlanPage({super.key});
 
-  
+  /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
     final source = WeeklyPlanFirebaseSource();
     final repo = WeeklyPlanRepoDummy(source);
@@ -85,7 +85,7 @@ class WeeklyPlanPage extends StatelessWidget {
                       color: AppColors.textSecondary, fontSize: 12),
                 ),
                 const SizedBox(height: 14),
-                
+                // Hub Dropdown
                 _HubDropdown(
                   hubs: state.hubs,
                   selectedId: state.selectedHubId,

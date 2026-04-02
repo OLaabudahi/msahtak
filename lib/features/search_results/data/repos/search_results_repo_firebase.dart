@@ -34,7 +34,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
           distanceKm = _haversineKm(loc.latitude, loc.longitude, 31.7683, 35.2137);
         }
 
-        
+        // استخراج الموقع كـ lat/lng من Map أيضاً
         if (loc is Map && distanceKm == 0) {
           final lat = (loc['latitude'] as num?)?.toDouble();
           final lng = (loc['longitude'] as num?)?.toDouble();
@@ -43,7 +43,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
           }
         }
 
-        
+        // استخراج اسم الموقع كـ نص من loc إذا كان string
         String locationName =
             (d['location_name'] ?? d['locationName'] ?? '').toString();
         if (locationName.isEmpty) {
@@ -53,7 +53,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
           }
         }
 
-        
+        // السعر: الأدمن يكتب pricePerHour أو pricing.pricePerDay
         final pricing = d['pricing'] as Map?;
         final priceRaw = d['price_per_day'] ??
             d['pricePerDay'] ??
@@ -63,7 +63,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
         final pricePerDay =
             (priceRaw is num) ? priceRaw.toDouble() : 0.0;
 
-        
+        // التقييم: stats.averageRating كـ fallback
         final stats = d['stats'] as Map?;
         final rating = (d['rating'] is num)
             ? (d['rating'] as num).toDouble()
@@ -118,7 +118,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
         return const [
           FilterChipEntity(id: 'quiet', label: 'Quiet'),
           FilterChipEntity(id: 'wifi_fast', label: 'Fast Wi-Fi'),
-          FilterChipEntity(id: 'price_max_40', label: 'â‚ھ40 max'),
+          FilterChipEntity(id: 'price_max_40', label: '₪40 max'),
         ];
       }
 
@@ -133,7 +133,7 @@ class SearchResultsRepoFirebase implements SearchResultsRepo {
       return const [
         FilterChipEntity(id: 'quiet', label: 'Quiet'),
         FilterChipEntity(id: 'wifi_fast', label: 'Fast Wi-Fi'),
-        FilterChipEntity(id: 'price_max_40', label: 'â‚ھ40 max'),
+        FilterChipEntity(id: 'price_max_40', label: '₪40 max'),
       ];
     }
   }

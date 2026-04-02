@@ -5,7 +5,7 @@ import '../../domain/entities/home_featured_space_entity.dart';
 import '../../domain/repos/home_repo.dart';
 
 class HomeRepoDummy implements HomeRepo {
-  
+  // ✅ موقعك الوهمي (Center)
   static const double _meLat = 31.511136495468655;
   static const double _meLng = 34.45187681199389;
 
@@ -13,16 +13,16 @@ class HomeRepoDummy implements HomeRepo {
   Future<List<HomeFeaturedSpaceEntity>> fetchForYou() async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
 
-    
+    // ✅ أماكن حولك + أماكن إضافية
     final raw = <_RawSpace>[
       _RawSpace(
         id: 'SPACE-001',
         name: 'Downtown Hub',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'City Center â€¢ Quiet â€¢ Fast Wi-Fi',
+        subtitleLine: 'City Center • Quiet • Fast Wi-Fi',
         rating: 4.8,
         pricePerDay: 35,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.511605,
         lng: 34.447297,
       ),
@@ -30,10 +30,10 @@ class HomeRepoDummy implements HomeRepo {
         id: 'SPACE-002',
         name: 'Blue Owl',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'Cozy â€¢ Good lighting â€¢ Calm',
+        subtitleLine: 'Cozy • Good lighting • Calm',
         rating: 4.6,
         pricePerDay: 45,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.516397477736643,
         lng: 34.4493998718586,
       ),
@@ -41,10 +41,10 @@ class HomeRepoDummy implements HomeRepo {
         id: 'SPACE-003',
         name: 'Study Nest',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'Student Friendly â€¢ Power Backup',
+        subtitleLine: 'Student Friendly • Power Backup',
         rating: 4.7,
         pricePerDay: 30,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.522031386576206,
         lng: 34.44729701993432,
       ),
@@ -52,23 +52,23 @@ class HomeRepoDummy implements HomeRepo {
         id: 'SPACE-004',
         name: 'Private Corner',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'Private Office â€¢ Quiet Zone',
+        subtitleLine: 'Private Office • Quiet Zone',
         rating: 4.5,
         pricePerDay: 55,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.513233,
         lng: 34.444722,
       ),
 
-      
+      // ✅ إضافة أماكن أخرى (قريبة) لتغذية الواجهة
       _RawSpace(
         id: 'SPACE-005',
         name: 'Skyline Desk',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'Bright â€¢ City View â€¢ Coffee',
+        subtitleLine: 'Bright • City View • Coffee',
         rating: 4.4,
         pricePerDay: 40,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.5102,
         lng: 34.4560,
       ),
@@ -76,10 +76,10 @@ class HomeRepoDummy implements HomeRepo {
         id: 'SPACE-006',
         name: 'Work & Chill',
         imageAsset: 'assets/images/home.png',
-        subtitleLine: 'Relaxed â€¢ Meetings â€¢ Wi-Fi',
+        subtitleLine: 'Relaxed • Meetings • Wi-Fi',
         rating: 4.3,
         pricePerDay: 38,
-        currency: 'â‚ھ',
+        currency: '₪',
         lat: 31.5079,
         lng: 34.4489,
       ),
@@ -106,14 +106,14 @@ class HomeRepoDummy implements HomeRepo {
 
     return entities;
 
-    
-    
-    
+    // API-ready:
+    // final res = await dio.get('/home/for-you');
+    // return (res.data as List).map((e) => HomeFeaturedSpaceModel.fromJson(e).toEntity()).toList();
   }
 
-  
+  // ✅ Haversine distance
   double _distanceKm(double lat1, double lon1, double lat2, double lon2) {
-    const r = 6371.0; 
+    const r = 6371.0; // km
     final dLat = _degToRad(lat2 - lat1);
     final dLon = _degToRad(lon2 - lon1);
 

@@ -1,4 +1,4 @@
-﻿import 'analytics_source.dart';
+import 'analytics_source.dart';
 import '../models/analytics_model.dart';
 
 class AnalyticsDummySource implements AnalyticsSource {
@@ -18,3 +18,5 @@ class AnalyticsDummySource implements AnalyticsSource {
   @override
   Future<void> exportReport() async => Future<void>.delayed(const Duration(milliseconds: 180));
 }
+
+

@@ -54,3 +54,5 @@ class SearchSuggestionSelected extends SearchResultsEvent {
 class SearchRefresh extends SearchResultsEvent {
   const SearchRefresh();
 }
+
+

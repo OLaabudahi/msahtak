@@ -52,3 +52,5 @@ class NotificationsState extends Equatable {
         error,
       ];
 }
+
+

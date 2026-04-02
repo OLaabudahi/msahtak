@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/user_entity.dart';
+import '../../domain/entities/user_entity.dart';
 
 class UserModel {
   final String id;
@@ -39,3 +39,5 @@ class UserModel {
         flagged: flagged,
       );
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'user_profile_source.dart';
+import 'user_profile_source.dart';
 import '../models/user_profile_model.dart';
 
 class UserProfileDummySource implements UserProfileSource {
@@ -24,3 +24,5 @@ class UserProfileDummySource implements UserProfileSource {
   @override
   Future<void> addNote({required String userId, required String note}) async => Future<void>.delayed(const Duration(milliseconds: 120));
 }
+
+

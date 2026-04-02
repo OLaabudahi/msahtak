@@ -27,7 +27,9 @@ class PaymentReceiptModel extends PaymentReceiptEntity {
     'currency': currency,
     'method': method,
     'bookingId': bookingId,
-    'paidAt': paidAt.toIso8601String(),
+    'paidAt': paidAt,
     'invoiceUrl': invoiceUrl,
   };
 }
+
+

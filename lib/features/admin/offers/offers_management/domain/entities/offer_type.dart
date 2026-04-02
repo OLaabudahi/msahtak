@@ -1,6 +1,8 @@
-﻿enum OfferType {
+enum OfferType {
   discountPercent,
   fixedPriceOverride,
   packageMonths,
   bonus,
 }
+
+

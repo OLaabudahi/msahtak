@@ -1,4 +1,4 @@
-﻿import '../entities/booking_request_entity.dart';
+import '../entities/booking_request_entity.dart';
 import '../entities/booking_status.dart';
 
 abstract class AdminBookingsRepo {
@@ -6,3 +6,5 @@ abstract class AdminBookingsRepo {
   Future<void> acceptBooking({required String bookingId});
   Future<void> rejectBooking({required String bookingId});
 }
+
+

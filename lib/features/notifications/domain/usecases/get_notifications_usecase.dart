@@ -5,6 +5,6 @@ class GetNotificationsUseCase {
   final NotificationsRepo repo;
   GetNotificationsUseCase(this.repo);
 
-  
+  /// جلب جميع الإشعارات من المستودع
   Future<List<NotificationItem>> call() => repo.getNotifications();
 }

@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/price_unit.dart';
 import '../domain/entities/week_day.dart';
 
@@ -190,3 +190,5 @@ class AddEditSpacePaymentFieldChanged extends AddEditSpaceEvent {
   @override
   List<Object?> get props => [id, fieldKey, value];
 }
+
+

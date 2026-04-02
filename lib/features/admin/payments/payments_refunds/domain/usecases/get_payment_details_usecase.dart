@@ -1,4 +1,4 @@
-﻿import '../entities/payment_details_entity.dart';
+import '../entities/payment_details_entity.dart';
 import '../repos/payments_repo.dart';
 
 class GetPaymentDetailsUseCase {
@@ -7,3 +7,5 @@ class GetPaymentDetailsUseCase {
 
   Future<PaymentDetailsEntity> call({required String paymentId}) => repo.getPaymentDetails(paymentId: paymentId);
 }
+
+

@@ -1,1 +1,3 @@
-﻿enum BookingStatus { pending, approved, canceled, paymentReview }
+enum BookingStatus { pending, approved, canceled, paymentReview }
+
+

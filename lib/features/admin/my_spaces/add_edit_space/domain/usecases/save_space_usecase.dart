@@ -1,4 +1,4 @@
-﻿import '../entities/space_form_entity.dart';
+import '../entities/space_form_entity.dart';
 import '../repos/add_edit_space_repo.dart';
 
 class SaveSpaceUseCase {
@@ -7,3 +7,5 @@ class SaveSpaceUseCase {
 
   Future<void> call({required SpaceFormEntity form}) => repo.saveSpace(form: form);
 }
+
+

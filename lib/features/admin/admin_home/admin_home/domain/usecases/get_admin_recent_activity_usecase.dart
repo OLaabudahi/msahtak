@@ -7,3 +7,5 @@ class GetAdminRecentActivityUseCase {
 
   Future<List<AdminActivityItem>> call() => repo.getRecentActivity();
 }
+
+

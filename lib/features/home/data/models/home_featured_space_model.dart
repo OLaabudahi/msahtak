@@ -26,8 +26,8 @@ class HomeFeaturedSpaceModel {
     required this.distanceKm,
   });
 
-  
-  
+  /// ✅ API-ready (معلّق)
+  // factory HomeFeaturedSpaceModel.fromJson(Map<String, dynamic> json) { ... }
 
   HomeFeaturedSpaceEntity toEntity() => HomeFeaturedSpaceEntity(
     id: id,

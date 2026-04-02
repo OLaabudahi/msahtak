@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/settings_model.dart';
 import '../../domain/repos/settings_repo.dart';
 
-
+/// حفظ وجلب إعدادات المستخدم من Firestore
 class SettingsRepoFirebase implements SettingsRepo {
   final _db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;

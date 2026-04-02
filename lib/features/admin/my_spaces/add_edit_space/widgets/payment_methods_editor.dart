@@ -2,7 +2,7 @@
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 
-
+/// الطرق المتاحة للإضافة مع نوعها
 const _kAvailableMethods = [
   {'id': 'credit_card',       'name': 'Credit / Debit Card', 'type': 'card'},
   {'id': 'pal_pay',           'name': 'PalPay',              'type': 'wallet'},
@@ -16,7 +16,7 @@ String _methodType(String id) =>
 String _methodDisplayName(String id) =>
     _kAvailableMethods.firstWhere((m) => m['id'] == id, orElse: () => {'name': id})['name']!;
 
-
+/// محرر طرق الدفع — Dropdown + Add + حقول مخصصة لكل طريقة
 class PaymentMethodsEditor extends StatefulWidget {
   final List<Map<String, String>> selectedMethods;
   final void Function(String id, String name) onAdd;
@@ -46,14 +46,14 @@ class _PaymentMethodsEditorState extends State<PaymentMethodsEditor> {
   Widget build(BuildContext context) {
     final available = _available;
 
-    
+    // إذا الـ dropdown value لا يوجد في القائمة المتاحة → reset بعد الـ frame
     final effectiveDropdown = (available.any((m) => m['id'] == _dropdownValue)) ? _dropdownValue : null;
 
     return AdminCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
+          // ── Header ──
           Row(children: [
             const Icon(Icons.payment_outlined, size: 18, color: AdminColors.black75),
             const SizedBox(width: 8),
@@ -65,7 +65,7 @@ class _PaymentMethodsEditorState extends State<PaymentMethodsEditor> {
               style: AdminText.label12(color: AdminColors.black40)),
           const SizedBox(height: 14),
 
-          
+          // ── Dropdown + Add ──
           if (available.isNotEmpty)
             Row(children: [
               Expanded(
@@ -120,7 +120,7 @@ class _PaymentMethodsEditorState extends State<PaymentMethodsEditor> {
           if (available.isNotEmpty && widget.selectedMethods.isNotEmpty)
             const SizedBox(height: 14),
 
-          
+          // ── Added Methods ──
           ...widget.selectedMethods.map((m) {
             final id = m['id']!;
             final type = _methodType(id);
@@ -138,7 +138,7 @@ class _PaymentMethodsEditorState extends State<PaymentMethodsEditor> {
   }
 }
 
-
+/// كارد طريقة دفع واحدة مضافة مع حقولها المخصصة
 class _MethodCard extends StatelessWidget {
   final Map<String, String> method;
   final String type;
@@ -166,7 +166,7 @@ class _MethodCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
+          // ── اسم الطريقة + زر حذف ──
           Row(children: [
             Icon(_icon(), size: 18, color: AdminColors.primaryBlue),
             const SizedBox(width: 8),
@@ -184,7 +184,7 @@ class _MethodCard extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          
+          // ── الحقول حسب نوع الطريقة ──
           if (type == 'bank') ..._bankFields(context),
           if (type == 'wallet') ..._walletFields(context),
           if (type == 'card') ..._cardFields(context),

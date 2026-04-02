@@ -6,12 +6,12 @@ abstract class WeeklyPlanEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-
+/// تحميل بيانات الخطة الأسبوعية
 class WeeklyPlanStarted extends WeeklyPlanEvent {
   const WeeklyPlanStarted();
 }
 
-
+/// تغيير المساحة المختارة
 class WeeklyPlanHubChanged extends WeeklyPlanEvent {
   final String hubId;
   const WeeklyPlanHubChanged(this.hubId);
@@ -19,7 +19,7 @@ class WeeklyPlanHubChanged extends WeeklyPlanEvent {
   List<Object?> get props => [hubId];
 }
 
-
+/// الضغط على زر تفعيل الخطة
 class WeeklyPlanActivatePressed extends WeeklyPlanEvent {
   const WeeklyPlanActivatePressed();
 }

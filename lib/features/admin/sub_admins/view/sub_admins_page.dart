@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../_shared/admin_ui.dart';
 import '../../../../core/i18n/app_i18n.dart';
 
-
+/// صفحة إدارة المشرفين الفرعيين — للأدمن الكامل فقط
 class SubAdminsPage extends StatefulWidget {
   const SubAdminsPage({super.key});
 
@@ -91,7 +91,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
 
             setSt(() { creating = true; errorMsg = null; });
             try {
-              
+              // إنشاء حساب جديد بدون تسجيل خروج الأدمن الحالي
               final appName = 'sub_create_${DateTime.now().millisecondsSinceEpoch}';
               final secondaryApp = await Firebase.initializeApp(
                 name: appName,

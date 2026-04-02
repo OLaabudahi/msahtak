@@ -326,7 +326,7 @@ class _Step2Content extends StatelessWidget {
           ),
           AppSpacing.vMd,
           InfoBanner(
-            iconText: 'AI',
+            iconText: context.t('ai'),
             title: context.t('aiWillUseYourChoices'),
             subtitle: context.t('aiSubtitle'),
             footnote: context.t('aiFootnote'),
@@ -440,3 +440,5 @@ class _Step3Content extends StatelessWidget {
     );
   }
 }
+
+

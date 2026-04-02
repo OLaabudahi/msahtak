@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 enum UserStatus { active, blocked }
 
@@ -22,3 +22,5 @@ class UserEntity extends Equatable {
 
   Object? operator [](String other) {}
 }
+
+

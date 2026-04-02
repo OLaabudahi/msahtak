@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/space_entity.dart';
 
 enum MySpacesStatus { initial, loading, success, failure }
@@ -23,3 +23,5 @@ class MySpacesState extends Equatable {
   @override
   List<Object?> get props => [status, spaces, error];
 }
+
+

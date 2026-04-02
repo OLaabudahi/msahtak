@@ -1,4 +1,4 @@
-﻿import '../repos/analytics_repo.dart';
+import '../repos/analytics_repo.dart';
 
 class ExportReportUseCase {
   final AnalyticsRepo repo;
@@ -6,3 +6,5 @@ class ExportReportUseCase {
 
   Future<void> call() => repo.exportReport();
 }
+
+

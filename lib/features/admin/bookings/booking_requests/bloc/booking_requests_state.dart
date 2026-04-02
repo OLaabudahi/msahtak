@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/booking_request_entity.dart';
 import '../domain/entities/booking_status.dart';
 
@@ -40,3 +40,5 @@ class BookingRequestsState extends Equatable {
   @override
   List<Object?> get props => [status, activeTab, bookings, error];
 }
+
+

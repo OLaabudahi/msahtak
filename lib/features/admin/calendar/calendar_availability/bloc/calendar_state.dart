@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/day_availability_entity.dart';
 
 enum CalendarStatus { initial, loading, ready, saving, saved, failure }
@@ -23,3 +23,5 @@ class CalendarState extends Equatable {
   @override
   List<Object?> get props => [status, day, error];
 }
+
+

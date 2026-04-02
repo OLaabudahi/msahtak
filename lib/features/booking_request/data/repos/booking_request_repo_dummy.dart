@@ -46,9 +46,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       currency: space.currency,
     );
 
-    
-    
-    
+    // API-ready example:
+    // final res = await dio.post('/booking/quote', data: {...});
+    // return BookingPriceQuoteModel.fromJson(res.data);
   }
 
   @override
@@ -74,9 +74,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       addOns: addOns,
     );
 
-    final requestId = _generateId(prefix: 'REQ');
+    final bookingId = _generateId(prefix: 'REQ');
     final entity = BookingRequestModel(
-      requestId: requestId,
+      bookingId: bookingId,
       space: space,
       startDate: startDate,
       durationUnit: durationUnit,
@@ -90,37 +90,37 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       statusHint: 'Usually responds within 1â€“2 hours',
       totalAmount: quoteEntity.total,
       currency: quoteEntity.currency,
-      bookingId: null,
+
     );
 
     _store.put(entity);
     return entity;
 
-    
-    
-    
+    // API-ready example:
+    // final res = await dio.post('/booking/requests', data: BookingRequestModel(...).toJson());
+    // return BookingRequestModel.fromJson(res.data);
   }
 
   @override
-  Future<BookingRequestEntity> getStatus({required String requestId}) async {
+  Future<BookingRequestEntity> getStatus({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 250));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
     return current;
 
-    
-    
-    
+    // API-ready example:
+    // final res = await dio.get('/booking/requests/$bookingId');
+    // return BookingRequestModel.fromJson(res.data);
   }
 
   @override
   Future<BookingRequestEntity> refreshStatus({
-    required String requestId,
+    required String bookingId,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
@@ -135,7 +135,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     }
 
     if (current.status == BookingRequestStatus.underReview) {
-      
+      // Dummy behavior: 70% approve, 30% stay under review
       final shouldApprove = _random.nextInt(10) < 7;
       if (shouldApprove) {
         final updated = _copyRequest(
@@ -151,15 +151,15 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
 
     return current;
 
-    
-    
-    
+    // API-ready example:
+    // final res = await dio.post('/booking/requests/$bookingId/refresh');
+    // return BookingRequestModel.fromJson(res.data);
   }
 
   @override
-  Future<BookingRequestEntity> cancel({required String requestId}) async {
+  Future<BookingRequestEntity> cancel({required String bookingId}) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
-    final current = _store.get(requestId);
+    final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
@@ -175,9 +175,9 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     _store.put(updated);
     return updated;
 
-    
-    
-    
+    // API-ready example:
+    // final res = await dio.post('/booking/requests/$bookingId/cancel');
+    // return BookingRequestModel.fromJson(res.data);
   }
 
   BookingRequestEntity _copyRequest(
@@ -187,7 +187,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     String? bookingId,
   }) {
     return BookingRequestModel(
-      requestId: current.requestId,
+      bookingId: current.bookingId,
       space: current.space,
       startDate: current.startDate,
       durationUnit: current.durationUnit,
@@ -201,7 +201,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       statusHint: statusHint ?? current.statusHint,
       totalAmount: current.totalAmount,
       currency: current.currency,
-      bookingId: bookingId ?? current.bookingId,
+
     );
   }
 
@@ -218,7 +218,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
 
   int _calcOfferDiscount(int subtotal, String? offerId) {
     if (offerId == null) return 0;
-    
+    // Dummy: offer id "WEEKLY" gives 10%, "MONTHLY" gives 15%, otherwise 5%
     if (offerId == 'WEEKLY') return (subtotal * 0.10).round();
     if (offerId == 'MONTHLY') return (subtotal * 0.15).round();
     return (subtotal * 0.05).round();
@@ -229,3 +229,5 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     return '$prefix-$n';
   }
 }
+
+

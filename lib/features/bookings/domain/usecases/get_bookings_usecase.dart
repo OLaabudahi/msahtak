@@ -7,7 +7,7 @@ class GetBookingsUseCase {
 
   GetBookingsUseCase(this.repo);
 
-  Future<List<Booking>> call() {
+  Future<List<BookingModel>> call() {
     return repo.fetchBookings();
   }
 }

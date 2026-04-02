@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/offer_duration_unit.dart';
 import '../domain/entities/offer_entity.dart';
 import '../domain/entities/offer_type.dart';
@@ -207,3 +207,5 @@ class OffersManagementState extends Equatable {
   @override
   List<Object?> get props => [status, offers, createOpen, form, error];
 }
+
+

@@ -6,7 +6,9 @@ class GetPaymentSummaryUseCase {
 
   const GetPaymentSummaryUseCase(this.repo);
 
-  Future<PaymentSummaryEntity> call(String requestId) {
-    return repo.getSummary(requestId: requestId);
+  Future<PaymentSummaryEntity> call(String bookingId) {
+    return repo.getSummary(bookingId: bookingId);
   }
 }
+
+

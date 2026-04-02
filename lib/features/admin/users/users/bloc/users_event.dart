@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/user_flag.dart';
 
 sealed class UsersEvent extends Equatable {
@@ -24,3 +24,5 @@ class UsersFilterChanged extends UsersEvent {
   @override
   List<Object?> get props => [filter];
 }
+
+

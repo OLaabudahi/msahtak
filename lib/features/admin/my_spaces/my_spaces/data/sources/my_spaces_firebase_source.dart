@@ -33,3 +33,5 @@ class MySpacesFirebaseSource implements MySpacesSource{
     await api.delete(collection: 'spaces', docId: spaceId);
   }
 }
+
+

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../../../_shared/admin_ui.dart';
 
-
+/// محرر قائمة صور المساحة — رفع من الجهاز أو إدخال URL
 class ImagesEditor extends StatefulWidget {
   final List<String> images;
   final ValueChanged<String> onAdd;
@@ -41,7 +41,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
     _ctrl.clear();
   }
 
-  
+  /// يفتح منتقي الصور من الجهاز ثم يرفعها إلى Supabase Storage
   Future<void> _pickAndUpload() async {
     final picker = ImagePicker();
     final XFile? file = await picker.pickImage(
@@ -96,7 +96,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
               style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
           const SizedBox(height: 8),
 
-          
+          // الصور الحالية
           if (widget.images.isNotEmpty) ...[
             SizedBox(
               height: 90,
@@ -147,7 +147,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
             const SizedBox(height: 10),
           ],
 
-          
+          // زر رفع من الجهاز
           InkWell(
             onTap: _uploading ? null : _pickAndUpload,
             borderRadius: BorderRadius.circular(10),
@@ -187,7 +187,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
 
           const SizedBox(height: 8),
 
-          
+          // إدخال URL يدوياً (خيار ثانوي)
           Row(
             children: [
               Expanded(
@@ -195,7 +195,7 @@ class _ImagesEditorState extends State<ImagesEditor> {
                   controller: _ctrl,
                   style: AdminText.body14(color: AdminColors.text),
                   decoration: InputDecoration(
-                    hintText: 'Or paste image URLâ€¦',
+                    hintText: 'Or paste image URL…',
                     hintStyle: AdminText.body14(color: AdminColors.black40),
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

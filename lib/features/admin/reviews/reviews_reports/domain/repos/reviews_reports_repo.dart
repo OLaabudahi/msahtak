@@ -1,4 +1,4 @@
-﻿import '../entities/review_entity.dart';
+import '../entities/review_entity.dart';
 import '../entities/report_entity.dart';
 
 abstract class ReviewsReportsRepo {
@@ -7,3 +7,5 @@ abstract class ReviewsReportsRepo {
   Future<void> hideReview({required String reviewId});
   Future<void> replyReview({required String reviewId, required String reply});
 }
+
+

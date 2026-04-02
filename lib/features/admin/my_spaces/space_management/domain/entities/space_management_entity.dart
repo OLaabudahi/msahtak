@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class SpaceManagementEntity extends Equatable {
   final String id;
@@ -14,3 +14,5 @@ class SpaceManagementEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, hidden];
 }
+
+

@@ -31,3 +31,5 @@ class PaymentReceiptEntity extends Equatable {
     invoiceUrl,
   ];
 }
+
+

@@ -36,3 +36,5 @@ class OffersState extends Equatable {
   List<Object?> get props =>
       [allOffers, filteredOffers, searchQuery, isLoading, error];
 }
+
+

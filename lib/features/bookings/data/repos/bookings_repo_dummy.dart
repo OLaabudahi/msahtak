@@ -1,15 +1,15 @@
-﻿import '../../../../constants/app_assets.dart';
+import '../../../../constants/app_assets.dart';
 import '../models/booking_model.dart';
 import '../../domain/repos/bookings_repo.dart';
 
 class BookingsRepoDummy implements BookingsRepo {
-  
+  /// ✅ دالة: داتا وهمية للحجوزات (جاهزة للتشغيل)
   @override
-  Future<List<Booking>> fetchBookings() async {
+  Future<List<BookingModel>> fetchBookings() async {
     await Future.delayed(const Duration(milliseconds: 450));
 
-    return const [
-      Booking(
+    return [
+      BookingModel(
         bookingId: 'b_101',
         spaceId: 'space_0',
         spaceName: 'Downtown Hub',
@@ -17,10 +17,10 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '09:00 - 12:00',
         status: 'upcoming',
         totalPrice: 18.0,
-        currency: 'â‚ھ',
-        imageAsset: AppAssets.home,
+        currency: '₪',
+        imageUrl: AppAssets.home,
       ),
-      Booking(
+      BookingModel(
         bookingId: 'b_102',
         spaceId: 'space_1',
         spaceName: 'City Loft',
@@ -28,10 +28,10 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '03:00 - 06:00',
         status: 'upcoming',
         totalPrice: 25.0,
-        currency: 'â‚ھ',
-        imageAsset: AppAssets.home,
+        currency: '₪',
+        imageUrl: AppAssets.home,
       ),
-      Booking(
+      BookingModel(
         bookingId: 'b_201',
         spaceId: 'space_2',
         spaceName: 'Private Desk',
@@ -39,10 +39,10 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '10:00 - 01:00',
         status: 'completed',
         totalPrice: 35.0,
-        currency: 'â‚ھ',
-        imageAsset: AppAssets.home,
+        currency: '₪',
+        imageUrl: AppAssets.home,
       ),
-      Booking(
+      BookingModel(
         bookingId: 'b_301',
         spaceId: 'space_3',
         spaceName: 'Quiet Corner',
@@ -50,14 +50,14 @@ class BookingsRepoDummy implements BookingsRepo {
         timeText: '08:00 - 09:00',
         status: 'cancelled',
         totalPrice: 0.0,
-        currency: 'â‚ھ',
-        imageAsset: AppAssets.home,
+        currency: '₪',
+        imageUrl: AppAssets.home,
       ),
     ];
 
-    
-    
-    
+    // ✅ API READY (كومنت)
+    // final res = await dio.get('/bookings');
+    // return (res.data as List).map((e) => Booking.fromJson(e)).toList();
   }
 
   @override

@@ -17,7 +17,7 @@ import '../widgets/offers_search_bar.dart';
 class OffersPage extends StatelessWidget {
   const OffersPage({super.key});
 
-  
+  /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
     final source = OffersFirebaseSource();
     final repo = OffersRepoDummy(source);
@@ -52,7 +52,7 @@ class _OffersViewState extends State<_OffersView> {
     super.dispose();
   }
 
-  
+  /// التنقل إلى صفحة تفاصيل الفضاء عند الضغط على Deal
   void _openSpaceDetails(String spaceId) {
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/working_hours_entity.dart';
+import '../../domain/entities/working_hours_entity.dart';
 import '../../domain/entities/week_day.dart';
 import 'week_day_model.dart';
 
@@ -38,3 +38,5 @@ class WorkingHoursModel {
         closed: e.closed,
       );
 }
+
+

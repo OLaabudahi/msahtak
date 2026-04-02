@@ -6,14 +6,14 @@ class AlertBanner extends StatelessWidget {
   final SpaceAlert alert;
   const AlertBanner({super.key, required this.alert});
 
-  
+  /// ✅ دالة: تحويل hex إلى Color
   Color _hex(String v) {
     var s = v.replaceAll('#', '').trim();
     if (s.length == 6) s = 'FF$s';
     return Color(int.parse(s, radix: 16));
   }
 
-  
+  /// ✅ دالة: Banner ديناميكي حسب API (لون/عنوان/تفاصيل)
   @override
   Widget build(BuildContext context) {
     final bg = _hex(alert.colorHex);

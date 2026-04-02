@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/usecases/get_space_management_usecase.dart';
 import '../domain/usecases/set_space_hidden_usecase.dart';
 import 'space_management_event.dart';
@@ -28,3 +28,5 @@ class SpaceManagementBloc extends Bloc<SpaceManagementEvent, SpaceManagementStat
     add(SpaceManagementStarted(event.spaceId));
   }
 }
+
+

@@ -5,7 +5,7 @@ class SaveNotificationSettingsUseCase {
   final NotificationsRepo repo;
   SaveNotificationSettingsUseCase(this.repo);
 
-  
+  /// حفظ إعدادات الإشعارات المُحدَّثة
   Future<void> call(NotificationSettings settings) =>
       repo.saveNotificationSettings(settings);
 }

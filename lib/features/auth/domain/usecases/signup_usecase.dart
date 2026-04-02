@@ -1,3 +1,4 @@
+import '../../data/models/auth_user_model.dart';
 import '../repos/auth_repo.dart';
 
 class SignUpUseCase {
@@ -5,7 +6,7 @@ class SignUpUseCase {
 
   SignUpUseCase(this.repo);
 
-  Future call({
+  Future<AuthUserModel> call({
     required String fullName,
     required String email,
     required String password,
@@ -17,3 +18,16 @@ class SignUpUseCase {
     );
   }
 }
+/*import '../repos/auth_repo.dart';
+
+class SignupUseCase {
+  final AuthRepo repo;
+
+  SignupUseCase(this.repo);
+
+  Future call(String email, String password) {
+    return repo.signup(email, password);
+  }
+}*/
+
+

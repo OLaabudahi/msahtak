@@ -1,1 +1,3 @@
-﻿enum OfferDurationUnit { days, weeks, months }
+enum OfferDurationUnit { days, weeks, months }
+
+

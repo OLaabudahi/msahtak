@@ -11,7 +11,7 @@ class MapStarted extends MapEvent {
 }
 
 class MapRadiusChanged extends MapEvent {
-  final double radiusKm; 
+  final double radiusKm; // 0.5 .. 1.0
   const MapRadiusChanged(this.radiusKm);
 
   @override

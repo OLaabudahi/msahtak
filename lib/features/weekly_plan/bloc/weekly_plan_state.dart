@@ -52,3 +52,5 @@ class WeeklyPlanState extends Equatable {
         error,
       ];
 }
+
+

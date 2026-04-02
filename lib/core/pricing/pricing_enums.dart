@@ -1,4 +1,4 @@
-﻿enum PriceUnit { day, week, month }
+enum PriceUnit { day, week, month }
 
 enum OfferType {
   discountPercent,
@@ -8,3 +8,5 @@ enum OfferType {
 }
 
 enum OfferDurationUnit { days, weeks, months }
+
+

@@ -1,4 +1,4 @@
-﻿import 'calendar_source.dart';
+import 'calendar_source.dart';
 import '../models/day_availability_model.dart';
 
 class CalendarDummySource implements CalendarSource {
@@ -16,3 +16,5 @@ class CalendarDummySource implements CalendarSource {
     _day = day;
   }
 }
+
+

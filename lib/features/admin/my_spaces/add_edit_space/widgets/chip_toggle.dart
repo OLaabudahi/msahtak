@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 
 class ChipToggle extends StatelessWidget {
@@ -29,3 +29,5 @@ class ChipToggle extends StatelessWidget {
     );
   }
 }
+
+

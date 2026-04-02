@@ -6,7 +6,7 @@ class AdminDashboardStatEntity extends Equatable {
   final String label;
   final String value;
   final AdminStatIcon icon;
-  final int colorHex; 
+  final int colorHex;
 
   const AdminDashboardStatEntity({
     required this.label,

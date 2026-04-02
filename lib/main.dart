@@ -4,6 +4,7 @@ import 'package:Msahtak/features/auth/domain/usecases/login_with_google_usecase.
 import 'package:Msahtak/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:Msahtak/services/language_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/app_root.dart';
 import 'features/app_start/data/repos/app_start_repo_firebase.dart';
 import 'features/auth/data/repos/auth_repo_firebase.dart';
+import 'features/auth/data/sources/auth_firebase_source.dart';
 import 'features/auth/domain/usecases/logout_auth_usecase.dart';
 import 'firebase_options.dart';
 import 'theme/app_colors.dart';
@@ -21,11 +23,13 @@ import 'features/language/bloc/language_bloc.dart';
 import 'features/app_start/bloc/app_start_bloc.dart';
 import 'features/language/bloc/language_event.dart';
 import 'features/language/bloc/language_state.dart';
+import 'services/language_service.dart';
 import 'services/local_storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
+    // ignore: avoid_print
     print('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
   };
   try {
@@ -33,6 +37,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e, st) {
+    // ignore: avoid_print
     print('Firebase init error: $e\n$st');
     return;
   }
@@ -72,21 +77,22 @@ void main() async {
   );
 }
 
-Future<void> _seedspacesIfEmpty() async {
-  final col = FirebaseFirestore.instance.collection('spaces');
+/// تضيف مساحات عمل تجريبية إذا كانت workspaces فارغة
+Future<void> _seedWorkspacesIfEmpty() async {
+  final col = FirebaseFirestore.instance.collection('workspaces');
   final snap = await col.limit(1).get();
-  if (snap.docs.isNotEmpty) return;
+  if (snap.docs.isNotEmpty) return; // الداتا موجودة — لا شيء
 
  /* final spaces = [
     {
       'name': 'The Hub Workspace',
-      'subtitle': 'Modern coworking آ· Ramallah',
+      'subtitle': 'Modern coworking · Ramallah',
       'rating': 4.8,
       'price_per_day': 120,
-      'currency': 'â‚ھ',
+      'currency': '₪',
       'location': const GeoPoint(31.9038, 35.2034),
       'location_address': 'Al-Masyoun St, Ramallah',
-      'working_hours': 'Sun â€“ Thu: 8:00 AM â€“ 10:00 PM',
+      'working_hours': 'Sun – Thu: 8:00 AM – 10:00 PM',
       'tags': ['Wi-Fi', 'Quiet', 'Parking', 'Coffee'],
       'reviews_count': 42,
       'images': <String>[],
@@ -103,14 +109,9 @@ Future<void> _seedspacesIfEmpty() async {
         {'label': 'Students', 'percent': 15},
         {'label': 'Remote teams', 'percent': 10},
       ],
-      'why_people_come': [
-        'Fast Wi-Fi',
-        'Quiet environment',
-        'Good coffee',
-        'Central location',
-      ],
+      'why_people_come': ['Fast Wi-Fi', 'Quiet environment', 'Good coffee', 'Central location'],
       'review_summary': {
-        'header': '4.8 âک…',
+        'header': '4.8 ★',
         'meta': 'Based on 42 reviews',
         'top_positives': ['Excellent Wi-Fi', 'Very clean', 'Helpful staff'],
         'repeated_negatives': ['Parking can be limited'],
@@ -123,8 +124,7 @@ Future<void> _seedspacesIfEmpty() async {
           'user_name': 'Sana K.',
           'time_ago': '2 days ago',
           'stars': 5,
-          'comment':
-              'Amazing place to work! Fast internet and great atmosphere.',
+          'comment': 'Amazing place to work! Fast internet and great atmosphere.',
         },
         {
           'id': 'r2',
@@ -141,8 +141,8 @@ Future<void> _seedspacesIfEmpty() async {
           'badge_type': 'limited',
           'title': 'Monthly Pass',
           'price_line': 'Price:',
-          'old_price_text': 'â‚ھ2,800',
-          'new_price_text': 'â‚ھ2,200 / month',
+          'old_price_text': '₪2,800',
+          'new_price_text': '₪2,200 / month',
           'includes_text': 'Includes unlimited access + 4 meeting room hours',
           'valid_until_text': 'Valid until end of month',
         },
@@ -171,13 +171,13 @@ Future<void> _seedspacesIfEmpty() async {
     },
     {
       'name': 'Nablus Creative Space',
-      'subtitle': 'Creative studio آ· Nablus',
+      'subtitle': 'Creative studio · Nablus',
       'rating': 4.6,
       'price_per_day': 90,
-      'currency': 'â‚ھ',
+      'currency': '₪',
       'location': const GeoPoint(32.2211, 35.2544),
       'location_address': 'Rafidya, Nablus',
-      'working_hours': 'Daily: 9:00 AM â€“ 9:00 PM',
+      'working_hours': 'Daily: 9:00 AM – 9:00 PM',
       'tags': ['Wi-Fi', 'Creative', 'Lounge'],
       'reviews_count': 28,
       'images': <String>[],
@@ -192,13 +192,9 @@ Future<void> _seedspacesIfEmpty() async {
         {'label': 'Developers', 'percent': 30},
         {'label': 'Others', 'percent': 20},
       ],
-      'why_people_come': [
-        'Creative vibe',
-        'Good equipment',
-        'Affordable price',
-      ],
+      'why_people_come': ['Creative vibe', 'Good equipment', 'Affordable price'],
       'review_summary': {
-        'header': '4.6 âک…',
+        'header': '4.6 ★',
         'meta': 'Based on 28 reviews',
         'top_positives': ['Great design tools', 'Friendly community'],
         'repeated_negatives': ['No parking nearby'],
@@ -231,13 +227,13 @@ Future<void> _seedspacesIfEmpty() async {
     },
     {
       'name': 'Birzeit Tech Hub',
-      'subtitle': 'Tech-focused آ· Birzeit',
+      'subtitle': 'Tech-focused · Birzeit',
       'rating': 4.5,
       'price_per_day': 80,
-      'currency': 'â‚ھ',
+      'currency': '₪',
       'location': const GeoPoint(31.9800, 35.1900),
       'location_address': 'Main St, Birzeit',
-      'working_hours': 'Sun â€“ Thu: 8:00 AM â€“ 8:00 PM',
+      'working_hours': 'Sun – Thu: 8:00 AM – 8:00 PM',
       'tags': ['Wi-Fi', 'Tech', 'Quiet', 'Coffee'],
       'reviews_count': 19,
       'images': <String>[],
@@ -252,13 +248,9 @@ Future<void> _seedspacesIfEmpty() async {
         {'label': 'Startups', 'percent': 25},
         {'label': 'Students', 'percent': 15},
       ],
-      'why_people_come': [
-        'Blazing fast internet',
-        'Focused environment',
-        'Tech community',
-      ],
+      'why_people_come': ['Blazing fast internet', 'Focused environment', 'Tech community'],
       'review_summary': {
-        'header': '4.5 âک…',
+        'header': '4.5 ★',
         'meta': 'Based on 19 reviews',
         'top_positives': ['Best internet speed', 'Quiet and focused'],
         'repeated_negatives': ['Limited seating'],
@@ -271,8 +263,7 @@ Future<void> _seedspacesIfEmpty() async {
           'user_name': 'Ahmed T.',
           'time_ago': '5 days ago',
           'stars': 5,
-          'comment':
-              'The internet speed here is unmatched. Great for developers.',
+          'comment': 'The internet speed here is unmatched. Great for developers.',
         },
       ],
       'offers': <Map<String, dynamic>>[],
@@ -282,20 +273,23 @@ Future<void> _seedspacesIfEmpty() async {
         'sections': [
           {
             'title': 'General',
-            'bullets': ['Silence your phone', 'Use headphones for calls'],
+            'bullets': [
+              'Silence your phone',
+              'Use headphones for calls',
+            ],
           },
         ],
       },
     },
     {
       'name': 'Bethlehem Business Hub',
-      'subtitle': 'Professional space آ· Bethlehem',
+      'subtitle': 'Professional space · Bethlehem',
       'rating': 4.7,
       'price_per_day': 100,
-      'currency': 'â‚ھ',
+      'currency': '₪',
       'location': const GeoPoint(31.7054, 35.2024),
       'location_address': 'Star St, Bethlehem',
-      'working_hours': 'Sun â€“ Fri: 8:00 AM â€“ 9:00 PM',
+      'working_hours': 'Sun – Fri: 8:00 AM – 9:00 PM',
       'tags': ['Wi-Fi', 'Professional', 'Quiet', 'Meeting Rooms'],
       'reviews_count': 35,
       'images': <String>[],
@@ -311,13 +305,9 @@ Future<void> _seedspacesIfEmpty() async {
         {'label': 'Remote workers', 'percent': 35},
         {'label': 'Startups', 'percent': 25},
       ],
-      'why_people_come': [
-        'Professional setting',
-        'Meeting rooms',
-        'Central location',
-      ],
+      'why_people_come': ['Professional setting', 'Meeting rooms', 'Central location'],
       'review_summary': {
-        'header': '4.7 âک…',
+        'header': '4.7 ★',
         'meta': 'Based on 35 reviews',
         'top_positives': ['Professional atmosphere', 'Excellent facilities'],
         'repeated_negatives': ['Can get busy on weekdays'],
@@ -330,8 +320,7 @@ Future<void> _seedspacesIfEmpty() async {
           'user_name': 'Rania S.',
           'time_ago': '1 day ago',
           'stars': 5,
-          'comment':
-              'Great professional environment. Meeting rooms are perfect.',
+          'comment': 'Great professional environment. Meeting rooms are perfect.',
         },
       ],
       'offers': [
@@ -342,7 +331,7 @@ Future<void> _seedspacesIfEmpty() async {
           'title': 'Weekly Pass',
           'price_line': 'Price:',
           'old_price_text': null,
-          'new_price_text': 'â‚ھ450 / week',
+          'new_price_text': '₪450 / week',
           'includes_text': 'Includes 5 days access + 2 meeting room hours',
           'valid_until_text': 'No expiry',
         },
@@ -379,7 +368,7 @@ class MyApp extends StatelessWidget {
           locale: Locale(langState.code),
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
-
+            // ── NavigationBar: أيقونة ونص المختار = أزرق ──────────────
             navigationBarTheme: NavigationBarThemeData(
               backgroundColor: AppColors.background,
               indicatorColor: Colors.transparent,
@@ -411,7 +400,10 @@ class MyApp extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(14)),
                 ),
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
@@ -422,7 +414,10 @@ class MyApp extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(14)),
                 ),
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                textStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -475,9 +470,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: localization.currentLocale,
 
-          
-          
-          
+          // لو عندك delegates/supportedLocales ضيفيهم
+          // supportedLocales: const [Locale('en'), Locale('ar')],
+          // localizationsDelegates: const [...],
 
           home: const AppRoot(),
         );

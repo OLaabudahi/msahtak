@@ -6,7 +6,7 @@ class GetBestForYouUseCase {
   final BestForYouRepo repo;
   GetBestForYouUseCase(this.repo);
 
-  
+  /// جلب المساحة المقترحة ودرجة التطابق للهدف المحدد
   Future<({BestForYouSpace space, FitScore fitScore})> call(
       String goal) async {
     final space = await repo.getBestSpace(goal);

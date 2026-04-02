@@ -14,7 +14,7 @@ class CategoryChip extends StatelessWidget {
     required this.onTap,
   });
 
-  
+  /// ✅ دالة: بناء شكل الـ Chip مثل التصميم
   @override
   Widget build(BuildContext context) {
     return InkWell(

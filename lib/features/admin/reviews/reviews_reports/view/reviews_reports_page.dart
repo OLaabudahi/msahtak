@@ -58,7 +58,7 @@ class ReviewsReportsPage extends StatelessWidget {
 
                         const SizedBox(height: 16),
 
-                        
+                        // Segmented tabs like screenshot
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
@@ -263,7 +263,7 @@ class ReviewsReportsPage extends StatelessWidget {
     );
   }
 
-  
+  // ✅ no controller (fix disposed error)
   static Future<String?> _askReply(BuildContext context) async {
     String text = '';
     return showDialog<String>(

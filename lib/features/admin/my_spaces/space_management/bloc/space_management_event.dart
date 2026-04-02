@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class SpaceManagementEvent extends Equatable {
   const SpaceManagementEvent();
@@ -20,3 +20,5 @@ class SpaceManagementHiddenToggled extends SpaceManagementEvent {
   @override
   List<Object?> get props => [spaceId, hidden];
 }
+
+

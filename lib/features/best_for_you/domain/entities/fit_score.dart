@@ -1,7 +1,7 @@
 ﻿import 'package:equatable/equatable.dart';
 
 class FitScore extends Equatable {
-  final double percentage; 
+  final double percentage; // 0.0 – 1.0
   final List<String> reasons;
   final String headsUp;
 

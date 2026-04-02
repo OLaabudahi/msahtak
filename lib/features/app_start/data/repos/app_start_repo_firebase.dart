@@ -14,12 +14,12 @@ class AppStartRepoFirebase implements AppStartRepo {
   Future<AppStartDecision> decide() async {
     await Future.delayed(const Duration(milliseconds: 600));
 
-    
+
     final user = FirebaseAuth.instance.currentUser ??
         await FirebaseAuth.instance.authStateChanges().first;
     final isLoggedIn = await _storage.getIsLoggedIn();
 
-    debugPrint('[AppStart] decide: user=${user?.uid}, isLoggedIn=$isLoggedIn');
+    debugPrint('[AppStart] decide: user=${user?.uid}');
 
     if (user == null || !isLoggedIn) return AppStartDecision.goLogin;
 
@@ -27,9 +27,9 @@ class AppStartRepoFirebase implements AppStartRepo {
     debugPrint('[AppStart] decide: completed=$completed');
     if (!completed) return AppStartDecision.goOnboarding;
 
-    
+    // إذا كان المستخدم أدمن يُوجَّه لواجهة الإدارة
     final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
-    debugPrint('[AppStart] decide: role=$role  decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
+    debugPrint('[AppStart] decide: role=$role → decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
     if (role.contains('admin')) return AppStartDecision.goAdmin;
 
     return AppStartDecision.goHome;

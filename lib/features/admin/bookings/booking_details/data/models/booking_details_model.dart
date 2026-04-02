@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/booking_details_entity.dart';
+import '../../domain/entities/booking_details_entity.dart';
 
 class BookingDetailsModel {
   final String id;
@@ -93,3 +93,5 @@ class BookingDetailsModel {
     );
   }
 }
+
+

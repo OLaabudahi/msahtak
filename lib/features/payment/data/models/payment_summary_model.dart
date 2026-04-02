@@ -30,3 +30,5 @@ class PaymentSummaryModel extends PaymentSummaryEntity {
     'currency': currency,
   };
 }
+
+

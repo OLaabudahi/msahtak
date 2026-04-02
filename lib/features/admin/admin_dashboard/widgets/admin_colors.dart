@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AdminColors {
   static const primaryBlue = Color(0xFF5682AF);
@@ -6,3 +6,5 @@ class AdminColors {
   static const black75 = Color.fromRGBO(0, 0, 0, 0.75);
   static const black40 = Color.fromRGBO(0, 0, 0, 0.40);
 }
+
+

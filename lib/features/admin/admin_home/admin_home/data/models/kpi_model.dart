@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/kpi_entity.dart';
+import '../../domain/entities/kpi_entity.dart';
 
 class KpiModel {
   final String id;
@@ -24,3 +24,5 @@ class KpiModel {
 
   KpiEntity toEntity() => KpiEntity(id: id, title: title, value: value, delta: delta);
 }
+
+

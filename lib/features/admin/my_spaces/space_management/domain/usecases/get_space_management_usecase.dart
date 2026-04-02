@@ -1,4 +1,4 @@
-﻿import '../entities/space_management_entity.dart';
+import '../entities/space_management_entity.dart';
 import '../repos/space_management_repo.dart';
 
 class GetSpaceManagementUseCase {
@@ -7,3 +7,5 @@ class GetSpaceManagementUseCase {
 
   Future<SpaceManagementEntity> call({required String spaceId}) => repo.getSpace(spaceId: spaceId);
 }
+
+

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/user_entity.dart';
 
@@ -64,3 +64,5 @@ class UserRow extends StatelessWidget {
     );
   }
 }
+
+

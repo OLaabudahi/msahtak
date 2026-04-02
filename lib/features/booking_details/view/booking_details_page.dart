@@ -18,7 +18,7 @@ class BookingDetailsPage extends StatelessWidget {
 
   const BookingDetailsPage({super.key, required this.bookingId});
 
-  
+  /// ✅ دالة: فتح الصفحة مع Bloc جاهز (Dummy repo حالياً)
   static Widget withBloc({required String bookingId}) {
     return BlocProvider(
       create: (_) =>
@@ -28,13 +28,13 @@ class BookingDetailsPage extends StatelessWidget {
     );
   }
 
-  
+  /// ✅ دالة: تنسيق السعر
   String _money(String currency, num v) => '$currency ${v.toStringAsFixed(1)}';
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-      
+      /// ✅ دالة: بناء UI حسب حالة التحميل/البيانات
       builder: (context, state) {
         if (state.loading) {
           return const Scaffold(
@@ -51,13 +51,13 @@ class BookingDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('طµط§ط± ط®ط·ط£: ${state.error}', style: AppTextStyles.body),
+                    Text('صار خطأ: ${state.error}', style: AppTextStyles.body),
                     AppSpacing.vMd,
                     FilledButton(
                       onPressed: () => context.read<BookingDetailsBloc>().add(
                         BookingDetailsStarted(bookingId),
                       ),
-                      child: const Text('ط¥ط¹ط§ط¯ط© ط§ظ„ظ…ط­ط§ظˆظ„ط©'),
+                      child: const Text('إعادة المحاولة'),
                     ),
                   ],
                 ),
@@ -82,7 +82,7 @@ class BookingDetailsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
+                        // صورة المساحة
                         ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: ConstrainedBox(
@@ -103,7 +103,7 @@ class BookingDetailsPage extends StatelessWidget {
 
                         AppSpacing.vMd,
 
-                        
+                        // اسم المساحة + تقييم
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -135,7 +135,7 @@ class BookingDetailsPage extends StatelessWidget {
 
                         AppSpacing.vMd,
 
-                        
+                        // Tags
                         Wrap(
                           spacing: 10,
                           runSpacing: 10,
@@ -205,20 +205,20 @@ class BookingDetailsPage extends StatelessWidget {
                   ),
                 ),
 
-                
+                // زر ثابت تحت
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
                   child: SizedBox(
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: () {
-                        
+                        // ✅ لاحقاً: Cancel / Modify / Pay حسب التصميم اللي رح تبعتيه
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Action (placeholder)')),
                         );
 
-                        
-                        
+                        // ✅ API READY (كومنت)
+                        // await bookingRepo.cancelBooking(bookingId);
                       },
                       child: Text(context.t('manageBooking')),
                     ),

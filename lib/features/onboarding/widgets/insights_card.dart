@@ -52,3 +52,5 @@ class InsightsCard extends StatelessWidget {
     );
   }
 }
+
+

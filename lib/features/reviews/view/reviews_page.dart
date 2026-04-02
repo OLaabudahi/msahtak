@@ -16,7 +16,7 @@ import '../widgets/reviews_filter_chip.dart';
 class ReviewsPage extends StatelessWidget {
   const ReviewsPage({super.key});
 
-  
+  /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
     final source = ReviewsFirebaseSource();
     final repo = ReviewsRepoDummy(source);
@@ -47,7 +47,7 @@ class ReviewsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-                    
+                    // Header
                     Row(
                       children: [
                         GestureDetector(
@@ -66,11 +66,11 @@ class ReviewsPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    
+                    // Overall Rating Card
                     if (state.summary != null)
                       _OverallRatingCard(summary: state.summary!),
                     const SizedBox(height: 24),
-                    
+                    // Filter
                     Text(context.t('reviewsFilter'),
                         style: const TextStyle(
                             fontSize: 15,

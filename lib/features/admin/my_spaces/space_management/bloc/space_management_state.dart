@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 import '../domain/entities/space_management_entity.dart';
 
 enum SpaceManagementStatus { initial, loading, ready, failure }
@@ -23,3 +23,5 @@ class SpaceManagementState extends Equatable {
   @override
   List<Object?> get props => [status, space, error];
 }
+
+

@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/analytics_entity.dart';
+import '../../domain/entities/analytics_entity.dart';
 
 class AnalyticsModel {
   final String occupancy;
@@ -44,3 +44,5 @@ class AnalyticsModel {
         topSpaces: topSpaces,
       );
 }
+
+

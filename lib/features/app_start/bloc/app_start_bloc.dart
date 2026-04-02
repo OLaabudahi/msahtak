@@ -25,3 +25,5 @@ class AppStartBloc extends Bloc<AppStartEvent, AppStartState> {
     }
   }
 }
+
+

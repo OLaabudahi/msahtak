@@ -2,7 +2,7 @@
 import '../models/notification_item_model.dart';
 import '../models/notification_settings_model.dart';
 
-
+/// واجهة مصدر البيانات – استبدل FakeNotificationsSource بـ RealNotificationsSource عند ربط API
 abstract class NotificationsRemoteSource {
   Future<List<NotificationItemModel>> getNotifications();
   Future<NotificationSettingsModel> getNotificationSettings();
@@ -10,12 +10,12 @@ abstract class NotificationsRemoteSource {
 }
 
 class FakeNotificationsSource implements NotificationsRemoteSource {
-  
+  /// جلب بيانات الإشعارات التجريبية – استبدل بـ http.get() عند ربط API
   @override
   Future<List<NotificationItemModel>> getNotifications() async {
     await Future.delayed(const Duration(milliseconds: 400));
     return const [
-      
+      // --- TODAY (isRead: false) ---
       NotificationItemModel(
         id: '1',
         title: 'Booking approved',
@@ -40,7 +40,7 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
         type: NotificationType.offerSuggestion,
         isRead: false,
       ),
-      
+      // --- EARLIER (isRead: true) ---
       NotificationItemModel(
         id: '4',
         title: 'Booking rejected',
@@ -60,7 +60,7 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     ];
   }
 
-  
+  /// جلب إعدادات الإشعارات التجريبية – استبدل بـ http.get() عند ربط API
   @override
   Future<NotificationSettingsModel> getNotificationSettings() async {
     await Future.delayed(const Duration(milliseconds: 200));
@@ -73,10 +73,11 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     );
   }
 
-  
+  /// حفظ الإعدادات – استبدل بـ http.post() عند ربط API
   @override
   Future<void> saveNotificationSettings(
       NotificationSettingsModel settings) async {
     await Future.delayed(const Duration(milliseconds: 300));
+    // TODO: POST /api/notification-settings body: settings.toJson()
   }
 }

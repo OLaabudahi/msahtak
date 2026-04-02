@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/review_entity.dart';
+import '../../domain/entities/review_entity.dart';
 import '../../domain/entities/report_entity.dart';
 import '../../domain/repos/reviews_reports_repo.dart';
 import '../sources/reviews_reports_source.dart';
@@ -19,3 +19,5 @@ class ReviewsReportsRepoImpl implements ReviewsReportsRepo {
   @override
   Future<void> replyReview({required String reviewId, required String reply}) => source.replyReview(reviewId: reviewId, reply: reply);
 }
+
+

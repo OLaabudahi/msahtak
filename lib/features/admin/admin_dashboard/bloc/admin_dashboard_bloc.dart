@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/admin_dashboard_data_entity.dart';
 import '../domain/usecases/get_admin_dashboard_data_usecase.dart';
@@ -56,3 +56,5 @@ class AdminDashboardBloc extends Bloc<AdminDashboardEvent, AdminDashboardState> 
     emit(state.copyWith(navIndex: event.index));
   }
 }
+
+

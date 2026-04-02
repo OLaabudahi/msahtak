@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
-import '../data/repos/notifications_repo_dummy.dart';
+import '../data/repos/notifications_repo_impl.dart';
 import '../data/sources/notifications_firebase_source.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
@@ -17,10 +17,10 @@ import '../widgets/timing_chip.dart';
 class NotificationSettingsPage extends StatelessWidget {
   const NotificationSettingsPage({super.key});
 
-  
+  /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
     final source = NotificationsFirebaseSource();
-    final repo = NotificationsRepoDummy(source);
+    final repo = NotificationsRepoImpl(source);
     return BlocProvider(
       create: (_) => NotificationsBloc(
         getNotificationsUseCase: GetNotificationsUseCase(repo),
@@ -54,7 +54,7 @@ class NotificationSettingsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-                    
+                    // Header
                     Row(
                       children: [
                         GestureDetector(
@@ -87,7 +87,7 @@ class NotificationSettingsPage extends StatelessWidget {
                           fontSize: 14, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 16),
-                    
+                    // AI Badge
                     Container(
                       width: 44,
                       height: 44,
@@ -111,7 +111,7 @@ class NotificationSettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    
+                    // Booking Alerts
                     Text(context.t('bookingAlerts'),
                         style: const TextStyle(
                             fontSize: 16,
@@ -160,7 +160,7 @@ class NotificationSettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
+                    // Reminder Timing
                     Row(
                       children: [
                         Text(context.t('reminderTiming'),
@@ -208,7 +208,7 @@ class NotificationSettingsPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 28),
-                    
+                    // Offers & Plans
                     Text(context.t('notifSettingsOffersPlans'),
                         style: const TextStyle(
                             fontSize: 16,
@@ -233,7 +233,7 @@ class NotificationSettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    
+                    // Save Button
                     SizedBox(
                       width: double.infinity,
                       height: 52,

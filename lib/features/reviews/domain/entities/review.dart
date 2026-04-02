@@ -23,3 +23,5 @@ class Review extends Equatable {
   List<Object?> get props =>
       [id, spaceName, timeAgo, stars, text, tags, isMine];
 }
+
+

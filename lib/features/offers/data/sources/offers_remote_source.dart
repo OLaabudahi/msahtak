@@ -1,6 +1,6 @@
 ﻿import '../models/offer_model.dart';
 
-
+/// واجهة مصدر البيانات – استبدل FakeOffersSource بـ RealOffersSource عند ربط API
 abstract class OffersRemoteSource {
   Future<List<OfferModel>> getOffers();
   Future<List<OfferModel>> searchOffers(String query);
@@ -11,7 +11,7 @@ class FakeOffersSource implements OffersRemoteSource {
     OfferModel(
       id: '1',
       name: 'Downtown Hub',
-      location: 'City Center â€¢ Quiet',
+      location: 'City Center • Quiet',
       originalPrice: 60,
       discountedPrice: 45,
       discountPercent: 25,
@@ -20,7 +20,7 @@ class FakeOffersSource implements OffersRemoteSource {
     OfferModel(
       id: '2',
       name: 'Creative Zone',
-      location: 'West Side â€¢ Cozy',
+      location: 'West Side • Cozy',
       originalPrice: 50,
       discountedPrice: 35,
       discountPercent: 30,
@@ -29,7 +29,7 @@ class FakeOffersSource implements OffersRemoteSource {
     OfferModel(
       id: '3',
       name: 'City Study Room',
-      location: 'City Center â€¢ Silent',
+      location: 'City Center • Silent',
       originalPrice: 40,
       discountedPrice: 28,
       discountPercent: 30,
@@ -37,14 +37,14 @@ class FakeOffersSource implements OffersRemoteSource {
     ),
   ];
 
-  
+  /// جلب جميع العروض – استبدل بـ http.get('/offers') عند ربط API
   @override
   Future<List<OfferModel>> getOffers() async {
     await Future.delayed(const Duration(milliseconds: 400));
     return _allOffers;
   }
 
-  
+  /// البحث محلياً في البيانات – استبدل بـ http.get('/offers?q=query') عند ربط API
   @override
   Future<List<OfferModel>> searchOffers(String query) async {
     await Future.delayed(const Duration(milliseconds: 200));

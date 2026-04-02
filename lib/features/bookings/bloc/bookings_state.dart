@@ -1,12 +1,12 @@
-﻿import 'package:equatable/equatable.dart';
-import '../data/models/booking_model.dart';
+import 'package:Msahtak/features/bookings/domain/entities/booking_entity.dart';
+import 'package:equatable/equatable.dart';
 
 class BookingsState extends Equatable {
   final bool loading;
   final String? error;
 
-  final int segmentIndex; 
-  final List<Booking> bookings;
+  final int segmentIndex; // 0 upcoming, 1 past
+  final List<BookingEntity> bookings;
 
   const BookingsState({
     required this.loading,
@@ -22,17 +22,17 @@ class BookingsState extends Equatable {
     bookings: [],
   );
 
-  List<Booking> get upcoming =>
+  List<BookingEntity> get upcoming =>
       bookings.where((b) => b.status == 'upcoming' || b.status == 'confirmed').toList();
 
-  List<Booking> get past =>
+  List<BookingEntity> get past =>
       bookings.where((b) => b.status != 'upcoming' && b.status != 'confirmed').toList();
 
   BookingsState copyWith({
     bool? loading,
     String? error,
     int? segmentIndex,
-    List<Booking>? bookings,
+    List<BookingEntity>? bookings,
   }) {
     return BookingsState(
       loading: loading ?? this.loading,
@@ -45,3 +45,5 @@ class BookingsState extends Equatable {
   @override
   List<Object?> get props => [loading, error, segmentIndex, bookings];
 }
+
+

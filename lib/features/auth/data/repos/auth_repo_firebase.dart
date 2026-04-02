@@ -1,4 +1,4 @@
-﻿import 'package:Msahtak/features/auth/data/models/auth_user_model.dart';
+import 'package:Msahtak/features/auth/data/models/auth_user_model.dart';
 import 'package:Msahtak/features/auth/domain/entities/auth_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

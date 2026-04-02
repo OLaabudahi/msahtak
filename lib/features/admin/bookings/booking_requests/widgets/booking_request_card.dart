@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/booking_request_entity.dart';
 import '../domain/entities/booking_status.dart';
@@ -146,3 +146,5 @@ class _SeatsTag extends StatelessWidget {
 extension on AdminSpace {
   static const s12 = 12.0;
 }
+
+

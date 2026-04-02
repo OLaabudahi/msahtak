@@ -40,7 +40,7 @@ class _AppRootState extends State<AppRoot> {
       context,
     ).push(MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()));
 
-    
+
     await LocalStorageService().setHasCompletedOnboarding(true);
 
     if (mounted) {
@@ -61,7 +61,7 @@ class _AppRootState extends State<AppRoot> {
       },
       child: BlocBuilder<AppStartBloc, AppStartState>(
         builder: (context, state) {
-          
+
           if (state.loading || state.decision == null) {
             return const SplashPage();
           }

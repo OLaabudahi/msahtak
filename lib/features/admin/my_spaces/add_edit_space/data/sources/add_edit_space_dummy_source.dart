@@ -1,4 +1,4 @@
-﻿import 'add_edit_space_source.dart';
+import 'add_edit_space_source.dart';
 import '../models/amenity_model.dart';
 import '../models/space_form_model.dart';
 
@@ -53,7 +53,7 @@ class AddEditSpaceDummySource implements AddEditSpaceSource {
       name: 'Downtown Hub',
       address: '12 King St, Downtown',
       description: '',
-      price: '₪35/day',
+      price: '?35/day',
       hours: 'Sun - Thu, 8:00 AM - 10:00 PM',
       policies: 'Please read before booking.',
       basePriceValue: 35,
@@ -86,3 +86,5 @@ class AddEditSpaceDummySource implements AddEditSpaceSource {
     await Future<void>.delayed(const Duration(milliseconds: 180));
   }
 }
+
+

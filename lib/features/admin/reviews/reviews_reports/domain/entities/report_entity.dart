@@ -1,4 +1,4 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 class ReportEntity extends Equatable {
   final String id;
@@ -14,3 +14,5 @@ class ReportEntity extends Equatable {
   @override
   List<Object?> get props => [id, subject, reason];
 }
+
+

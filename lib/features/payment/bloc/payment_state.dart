@@ -17,12 +17,12 @@ class PaymentState extends Equatable {
   final PaymentSummaryEntity? summary;
   final PaymentReceiptEntity? receipt;
 
-  
+  // إشعار الدفع الذي رفعه المستخدم
   final Uint8List? receiptBytes;
   final String? receiptFileName;
   final String? receiptUploadedUrl;
 
-  
+  // حقول بطاقة الدفع
   final String cardNumber;
   final String cardExpiry;
   final String cardCvv;
@@ -92,16 +92,16 @@ class PaymentState extends Equatable {
   PaymentMethodEntity? get selectedMethodEntity =>
       selectedMethod == null ? null : methods.where((m) => m.type == selectedMethod).firstOrNull;
 
-  
+  /// هل طريقة الدفع المختارة بطاقة ائتمان/خصم؟
   bool get isCardPayment {
     if (selectedMethod == null) return false;
     final m = selectedMethod!.toLowerCase();
     return m.contains('credit') || m.contains('debit') || m.contains('card') || m.contains('visa') || m.contains('master');
   }
 
-  
-  
-  
+  /// يمكن الدفع:
+  /// - بطاقة: يجب أن تكون جميع حقول البطاقة ممتلئة
+  /// - طريقة أخرى: يجب رفع إشعار الدفع
   bool get canPay {
     if (selectedMethod == null || summary == null) return false;
     if (isCardPayment) {

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 
+/// صفحة مراجعة المدفوعات للأدمن
+/// تعرض الحجوزات التي في حالة payment_under_review
 class PaymentReviewPage extends StatefulWidget {
   const PaymentReviewPage({super.key});
 
@@ -14,6 +16,7 @@ class PaymentReviewPage extends StatefulWidget {
 }
 
 class _PaymentReviewPageState extends State<PaymentReviewPage> {
+  // الـ stream يُنشأ مرة واحدة فقط في initState — لا يتأثر بإعادة بناء الـ widget
   late final Stream<QuerySnapshot<Map<String, dynamic>>> _stream;
 
   @override
@@ -56,7 +59,7 @@ class _PaymentReviewPageState extends State<PaymentReviewPage> {
                       ),
                     );
                   }
-
+                  // ترتيب محلي بـ paidAt تنازلياً بدون Composite Index
                   final docs = List.of(snapshot.data?.docs ?? [])
                     ..sort((a, b) {
                       final at =
@@ -96,7 +99,6 @@ class _PaymentReviewPageState extends State<PaymentReviewPage> {
 
 class _PaymentReviewCard extends StatefulWidget {
   final QueryDocumentSnapshot<Map<String, dynamic>> doc;
-
   const _PaymentReviewCard({required this.doc});
 
   @override
@@ -192,11 +194,8 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
         d['spaceName'] as String? ?? d['workspaceName'] as String? ?? 'Space';
     final userName = d['userName'] as String? ?? 'User';
     final amount = d['totalAmount']?.toString() ?? '-';
-    final currency = d['currency'] as String? ?? 'â‚ھ';
-    final method =
-        d['paymentMethodName'] as String? ??
-        d['paymentMethod'] as String? ??
-        '-';
+    final currency = d['currency'] as String? ?? '₪';
+    final method = d['paymentMethodName'] as String? ?? d['paymentMethod'] as String? ?? '-';
     final paidTs = d['paidAt'] as Timestamp?;
     final paidAt = paidTs != null ? _fmt(paidTs.toDate()) : '-';
     final receiptUrl = d['paymentReceiptUrl'] as String?;
@@ -244,7 +243,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
           _row(context.t('adminPaymentMethod'), method),
           _row(context.t('adminPaymentPaidAt'), paidAt),
           const SizedBox(height: 8),
-
+          // ── بيانات البطاقة أو إشعار الدفع ──
           if (cardLast4 != null && cardLast4.isNotEmpty)
             _CardInfoSection(
               cardLast4: cardLast4,
@@ -294,8 +293,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
                     ),
                   ),
                 ),
-              ],
-            ),
+            ]),
         ],
       ),
     );
@@ -326,18 +324,15 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
     final mi = dt.minute.toString().padLeft(2, '0');
     return '$dd/$mm/${dt.year} $hh:$mi';
   }
+
 }
 
+/// ويدجت عرض بيانات البطاقة في كارد مراجعة الأدمن
 class _CardInfoSection extends StatelessWidget {
   final String cardLast4;
   final String? cardHolder;
   final String? cardExpiry;
-
-  const _CardInfoSection({
-    required this.cardLast4,
-    this.cardHolder,
-    this.cardExpiry,
-  });
+  const _CardInfoSection({required this.cardLast4, this.cardHolder, this.cardExpiry});
 
   @override
   Widget build(BuildContext context) {
@@ -382,9 +377,9 @@ class _CardInfoSection extends StatelessWidget {
   }
 }
 
+/// ويدجت عرض إشعار الدفع في كارد مراجعة الأدمن
 class _ReceiptSection extends StatelessWidget {
   final String? receiptUrl;
-
   const _ReceiptSection({this.receiptUrl});
 
   @override

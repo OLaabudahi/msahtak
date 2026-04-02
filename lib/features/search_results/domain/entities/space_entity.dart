@@ -24,3 +24,5 @@ class SpaceEntity extends Equatable {
   @override
   List<Object?> get props => [id, name, locationName, distanceKm, pricePerDay, rating, tags, imageUrl];
 }
+
+

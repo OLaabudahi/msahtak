@@ -1,17 +1,17 @@
 ﻿import 'package:equatable/equatable.dart';
 
 enum BookingRequestStatus {
-  pending,              
-  underReview,          
-  approvedWaitingPayment, 
-  paymentUnderReview,   
-  confirmed,            
-  rejected,             
-  cancelled,            
-  expired,              
-  
-  approved,             
-  paid,                 
+  pending,              // بانتظار موافقة الأدمن
+  underReview,          // الأدمن يراجع الطلب
+  approvedWaitingPayment, // تمت الموافقة، بانتظار الدفع خلال 24 ساعة
+  paymentUnderReview,   // تم إرسال الدفع، بانتظار تأكيد الأدمن
+  confirmed,            // تم تأكيد الحجز نهائياً
+  rejected,             // تم الرفض
+  cancelled,            // تم الإلغاء
+  expired,              // انتهت مهلة الدفع
+  // legacy aliases
+  approved,             // قديم → approvedWaitingPayment
+  paid,                 // قديم → confirmed
 }
 
 enum DurationUnit { days, weeks, months }
@@ -19,7 +19,7 @@ enum DurationUnit { days, weeks, months }
 class SpaceSummaryEntity extends Equatable {
   final String id;
   final String name;
-  final int basePricePerDay; 
+  final int basePricePerDay; // smallest currency unit not enforced here (dummy)
   final String currency;
 
   const SpaceSummaryEntity({
@@ -36,8 +36,8 @@ class SpaceSummaryEntity extends Equatable {
 class AddOnEntity extends Equatable {
   final String id;
   final String title;
-  final int price; 
-  final String unitLabel; 
+  final int price; // per unit (hour/day) simplified
+  final String unitLabel; // e.g. "/ hour"
   final bool isSelected;
 
   const AddOnEntity({
@@ -63,7 +63,7 @@ class AddOnEntity extends Equatable {
 }
 
 class BookingRequestEntity extends Equatable {
-  final String requestId;
+  final String bookingId;
   final SpaceSummaryEntity space;
   final DateTime startDate;
   final DurationUnit durationUnit;
@@ -79,20 +79,21 @@ class BookingRequestEntity extends Equatable {
 
   final BookingRequestStatus status;
 
-  
+  /// UI helper text (API-ready: comes from backend policy/SLAs)
   final String? statusHint;
 
   final int totalAmount;
   final String currency;
 
-  
-  final String? bookingId;
+  /// Present after payment (to link to Booking Details feature)
 
-  
+
+  /// مهلة الدفع: 24 ساعة من وقت الموافقة
   final DateTime? paymentDeadline;
+  final DateTime? createdAt;
 
   const BookingRequestEntity({
-    required this.requestId,
+    required this.bookingId,
     required this.space,
     required this.startDate,
     required this.durationUnit,
@@ -106,8 +107,8 @@ class BookingRequestEntity extends Equatable {
     required this.statusHint,
     required this.totalAmount,
     required this.currency,
-    required this.bookingId,
     this.paymentDeadline,
+    this.createdAt,
   });
 
   bool get canCancelBeforeApproval =>
@@ -128,7 +129,7 @@ class BookingRequestEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    requestId,
+    bookingId,
     space,
     startDate,
     durationUnit,

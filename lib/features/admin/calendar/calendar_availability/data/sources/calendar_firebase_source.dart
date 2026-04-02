@@ -2,7 +2,7 @@
 import 'calendar_source.dart';
 import '../models/day_availability_model.dart';
 
-
+/// مصدر Firebase لتوافر الأيام — يحفظ في calendar_availability/{spaceId}/days/{dayId}
 class CalendarFirebaseSource implements CalendarSource {
   CalendarFirebaseSource({required this.spaceId});
 

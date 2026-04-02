@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/space_location_entity.dart';
+import '../../domain/entities/space_location_entity.dart';
 
 class SpaceLocationModel {
   final double lat;
@@ -17,3 +17,5 @@ class SpaceLocationModel {
 
   static SpaceLocationModel fromEntity(SpaceLocationEntity e) => SpaceLocationModel(lat: e.lat, lng: e.lng);
 }
+
+

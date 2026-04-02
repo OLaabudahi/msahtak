@@ -66,7 +66,7 @@ class BestForYouPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
+                // ─── قسم أعلى 5 مساحات قريبة ───
                 const Text(
                   'Top Rated Spaces Near You',
                   style: TextStyle(
@@ -102,7 +102,7 @@ class BestForYouPage extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                
+                // ─── قسم الهدف وFit Score ───
                 const Divider(),
                 const SizedBox(height: 12),
                 const Text(
@@ -136,7 +136,7 @@ class BestForYouPage extends StatelessWidget {
   }
 }
 
-
+/// عنصر مساحة واحدة في القائمة — نفس تصميم SpaceResultCard
 class _SpaceListItem extends StatelessWidget {
   final BestForYouSpace space;
   final VoidCallback onView;
@@ -202,7 +202,7 @@ class _SpaceListItem extends StatelessWidget {
                             const SizedBox(height: 6),
                           ],
                           Text(
-                            'â‚ھ${space.pricePerDay}/day',
+                            '₪${space.pricePerDay}/day',
                             style: const TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 13),
                           ),

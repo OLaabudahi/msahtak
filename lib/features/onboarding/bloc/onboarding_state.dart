@@ -99,3 +99,5 @@ class OnboardingState extends Equatable {
     goHome,
   ];
 }
+
+

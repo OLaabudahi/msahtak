@@ -1,4 +1,4 @@
-﻿import '../entities/space_entity.dart';
+import '../entities/space_entity.dart';
 import '../repos/my_spaces_repo.dart';
 
 class GetMySpacesUseCase {
@@ -7,3 +7,5 @@ class GetMySpacesUseCase {
 
   Future<List<SpaceEntity>> call() => repo.getSpaces();
 }
+
+

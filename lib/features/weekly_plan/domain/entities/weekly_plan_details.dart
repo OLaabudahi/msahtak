@@ -19,3 +19,5 @@ class WeeklyPlanDetails extends Equatable {
   List<Object?> get props =>
       [hubId, hubName, pricePerWeek, features, tip];
 }
+
+

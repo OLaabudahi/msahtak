@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/amenity_entity.dart';
@@ -541,3 +541,5 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     return _copyForm(f, price: priceStr, hours: hoursStr, policies: pol);
   }
 }
+
+

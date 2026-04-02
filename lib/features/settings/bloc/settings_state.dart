@@ -7,7 +7,7 @@ class SettingsState extends Equatable {
 
   final SettingsModel? settings;
 
-  
+  /// ✅ للإشعار باللوج آوت (Navigation)
 
   const SettingsState({
     required this.loading,

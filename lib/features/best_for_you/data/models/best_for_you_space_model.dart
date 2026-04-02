@@ -23,3 +23,5 @@ class BestForYouSpaceModel extends BestForYouSpace {
     );
   }
 }
+
+

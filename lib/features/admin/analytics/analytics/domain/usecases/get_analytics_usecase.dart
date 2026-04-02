@@ -1,4 +1,4 @@
-﻿import '../entities/analytics_entity.dart';
+import '../entities/analytics_entity.dart';
 import '../repos/analytics_repo.dart';
 
 class GetAnalyticsUseCase {
@@ -7,3 +7,5 @@ class GetAnalyticsUseCase {
 
   Future<AnalyticsEntity> call() => repo.getAnalytics();
 }
+
+

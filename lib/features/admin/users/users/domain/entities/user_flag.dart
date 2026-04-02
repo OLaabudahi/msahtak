@@ -1,1 +1,3 @@
-﻿enum UserFlag { all, newUsers, flagged }
+enum UserFlag { all, newUsers, flagged }
+
+

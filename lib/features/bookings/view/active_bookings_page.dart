@@ -47,7 +47,7 @@ class ActiveBookingsPage extends StatelessWidget {
                 }
 
                 final docs = snapshot.data?.docs ?? [];
-                
+
                 docs.sort((a, b) {
                   final at = (a['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
                   final bt = (b['createdAt'] as Timestamp?)?.millisecondsSinceEpoch ?? 0;
@@ -121,14 +121,14 @@ class _ActiveBookingCard extends StatelessWidget {
       final dt = startTs.toDate();
       dateText = '${dt.day}/${dt.month}/${dt.year}';
       timeText = _fmt(dt);
-      if (endTs != null) timeText += ' â€“ ${_fmt(endTs.toDate())}';
+      if (endTs != null) timeText += ' – ${_fmt(endTs.toDate())}';
     }
 
     final imageUrls = (data['images'] as List?)?.cast<String>() ?? const [];
     final imageUrl = imageUrls.isNotEmpty ? imageUrls.first : null;
 
     final totalAmount = (data['totalAmount'] as num?)?.toInt() ?? 0;
-    final currency = data['currency'] as String? ?? 'â‚ھ';
+    final currency = data['currency'] as String? ?? '₪';
 
     return Material(
       elevation: 2,
@@ -141,7 +141,7 @@ class _ActiveBookingCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  
+
                   ClipRRect(
                     borderRadius: BorderRadius.circular(14),
                     child: SizedBox(
@@ -154,7 +154,7 @@ class _ActiveBookingCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  
+
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _ActiveBookingCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '$dateText  â€¢  $timeText',
+                          '$dateText  •  $timeText',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

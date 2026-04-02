@@ -15,7 +15,7 @@ class NotificationItem extends Equatable {
   final String time;
   final NotificationType type;
   final bool isRead;
-  final String? requestId;
+  final String? bookingId;
 
   const NotificationItem({
     required this.id,
@@ -24,9 +24,11 @@ class NotificationItem extends Equatable {
     required this.time,
     required this.type,
     this.isRead = false,
-    this.requestId,
+    this.bookingId,
   });
 
   @override
-  List<Object?> get props => [id, title, subtitle, time, type, isRead, requestId];
+  List<Object?> get props => [id, title, subtitle, time, type, isRead, bookingId];
 }
+
+

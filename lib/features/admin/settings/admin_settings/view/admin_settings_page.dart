@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
@@ -139,3 +139,5 @@ class AdminSettingsPage extends StatelessWidget {
     );
   }
 }
+
+

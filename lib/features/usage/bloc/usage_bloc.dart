@@ -18,13 +18,13 @@ class UsageBloc extends Bloc<UsageEvent, UsageState> {
     on<UsagePlanApplied>(_onPlanApplied);
   }
 
-  
+  /// تحميل الإحصاءات وخيارات الباقات
   Future<void> _onStarted(
       UsageStarted event, Emitter<UsageState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final result = await getUsageUseCase();
-      
+      // حدد الباقة الأفضل كـ default
       final bestIndex =
           result.plans.indexWhere((p) => p.isBest);
       emit(state.copyWith(
@@ -37,14 +37,14 @@ class UsageBloc extends Bloc<UsageEvent, UsageState> {
     }
   }
 
-  
+  /// تحديث الباقة المختارة
   void _onPlanSelected(
       UsagePlanSelected event, Emitter<UsageState> emit) {
     emit(state.copyWith(
         selectedPlanIndex: event.index, isApplied: false));
   }
 
-  
+  /// تطبيق الباقة المختارة
   Future<void> _onPlanApplied(
       UsagePlanApplied event, Emitter<UsageState> emit) async {
     if (state.plans.isEmpty) return;
