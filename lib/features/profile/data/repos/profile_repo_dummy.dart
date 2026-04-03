@@ -14,6 +14,7 @@ class ProfileRepoDummy implements ProfileRepo {
       phoneNumber: '+970 595 959 595',
       avatarAsset: 'assets/images/home.png',
       totalBookings: 12,
+      isEmailVerified: false,
       completedBookings: 5,
       savedSpaces: 7,
     );
@@ -21,5 +22,29 @@ class ProfileRepoDummy implements ProfileRepo {
     // ✅ API READY (كومنت)
     // final res = await dio.get('/profile');
     // return UserModel.fromJson(res.data);
+  }
+
+  @override
+  Future<void> changePassword() {
+    // TODO: implement changePassword
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateProfile({required String name, required String email, required String phone}) {
+    // TODO: implement updateProfile
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> verifyEmail() {
+    // TODO: implement verifyEmail
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> syncEmailVerification() {
+    // TODO: implement syncEmailVerification
+    throw UnimplementedError();
   }
 }

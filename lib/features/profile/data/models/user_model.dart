@@ -1,11 +1,13 @@
 ﻿import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/user_entity.dart';
+
 /// ✅ موديل بيانات المستخدم
 class UserModel extends Equatable {
   final String userId;
   final String fullName;
   final String email;
-
+  final bool isEmailVerified;
   final String? phoneNumber;
 
   final String? avatarAsset;
@@ -19,6 +21,7 @@ class UserModel extends Equatable {
     required this.userId,
     required this.fullName,
     required this.email,
+    required this.isEmailVerified,
     this.phoneNumber,
     this.avatarAsset,
     this.avatarUrl,
@@ -53,4 +56,18 @@ class UserModel extends Equatable {
     completedBookings,
     savedSpaces,
   ];
+
+  UserEntity toEntity() {
+    return UserEntity(
+      userId: userId,
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      avatarUrl: avatarUrl,
+      totalBookings: totalBookings,
+      completedBookings: completedBookings,
+      savedSpaces: savedSpaces,
+      isEmailVerified: isEmailVerified,
+    );
+  }
 }

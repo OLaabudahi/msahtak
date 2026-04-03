@@ -1,17 +1,17 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:Msahtak/features/profile/domain/entities/user_entity.dart';
+import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 
-import '../data/models/user_model.dart';
 import 'profile_stat_item.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
-  final UserModel user;
+  final UserEntity user;
 
   const ProfileHeaderCard({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    final avatarAsset = user.avatarAsset;
+    final avatarAsset = user.avatarUrl;
 
     return Container(
       width: double.infinity,

@@ -1,4 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:Msahtak/features/profile/domain/usecases/sync_email_verification_usecase.dart';
+import 'package:flutter/material.dart';
+import '../../../core/services/firestore_api.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,6 +15,11 @@ import '../../../constants/app_spacing.dart';
 import '../../auth/view/login_page.dart';
 import '../../reviews/view/reviews_page.dart';
 import '../../usage/view/usage_page.dart';
+import '../data/sources/profile_firebase_source.dart';
+import '../domain/usecases/change_password_usecase.dart';
+import '../domain/usecases/get_profile_usecase.dart';
+import '../domain/usecases/update_profile_usecase.dart';
+import '../domain/usecases/verify_email_usecase.dart';
 import 'payments_receipts_page.dart';
 import 'personal_info_page.dart';
 import 'saved_spaces_page.dart';
@@ -27,8 +34,17 @@ class ProfileTabPage extends StatefulWidget {
   const ProfileTabPage({super.key});
 
   static Widget withBloc() {
+    final source = ProfileFirebaseSource(FirestoreApi());
+    final repo = ProfileRepoFirebase(source);
+
     return BlocProvider(
-      create: (_) => ProfileBloc(repo: ProfileRepoFirebase())..add(const ProfileStarted()),
+      create: (_) => ProfileBloc(
+        getProfile: GetProfileUseCase(repo),
+        updateProfile: UpdateProfileUseCase(repo),
+        changePassword: ChangePasswordUseCase(repo),
+        verifyEmail: VerifyEmailUseCase(repo),
+        source: source, syncEmailVerification: SyncEmailVerificationUseCase(repo),
+      )..add(const ProfileStarted()),
       child: const ProfileTabPage(),
     );
   }
@@ -46,7 +62,10 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 13, color: AppColors.textDark)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 13, color: AppColors.textDark),
+          ),
           Text(
             value,
             style: const TextStyle(fontSize: 13, color: Colors.black),
@@ -90,7 +109,6 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             leadingText: r'$',
             onTap: onPaymentsReceipts,
           ),
-
 
           Column(
             children: [
@@ -140,7 +158,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
   Widget _buildLogoutRow(BuildContext context) {
     return GestureDetector(
-      onTap: () =>{ context.read<AuthBloc>().add(const AuthLogoutRequested())},
+      onTap: () => {context.read<AuthBloc>().add(const AuthLogoutRequested())},
       child: Row(
         children: [
           Container(
@@ -180,7 +198,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (_) => LoginPage()),
-                (route) => false,
+            (route) => false,
           );
         }
         if (state.status == AuthStatus.error && state.errorMessage != null) {
@@ -223,21 +241,31 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
 
                           _buildMenuSection(
                             context,
-                            onPersonalInfo: () => Navigator.of(context).push(
+                            onPersonalInfo: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: context.read<ProfileBloc>(),
+                                  child: const PersonalInfoPage(),
+                                ),
+                              ),
+                            ) /*  Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => const PersonalInfoPage(),
                               ),
-                            ),
+                            )*/,
                             onUsage: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => UsagePage.withBloc(),
                               ),
                             ),
-                            onPaymentsReceipts: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const PaymentsReceiptsPage(),
-                              ),
-                            ),
+                            onPaymentsReceipts: () =>
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const PaymentsReceiptsPage(),
+                                  ),
+                                ),
                             onPaymentDetails: () {},
                             onReviews: () => Navigator.of(context).push(
                               MaterialPageRoute(
@@ -266,5 +294,3 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
     );
   }
 }
-
-

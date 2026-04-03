@@ -1,36 +1,55 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/repos/profile_repo.dart';
 import '../models/user_model.dart';
+import '../sources/profile_firebase_source.dart';
 
-/// ✅ تنفيذ Firebase لـ ProfileRepo – يقرأ users/{uid}
 class ProfileRepoFirebase implements ProfileRepo {
+  final ProfileFirebaseSource source;
+
+  ProfileRepoFirebase(this.source);
+
   @override
   Future<UserModel> fetchProfile() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) throw Exception('Not logged in');
-
-    final doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .get();
-    final d = doc.data() ?? {};
+    final d = await source.fetchProfile();
 
     return UserModel(
-      userId: uid,
-      fullName: d['fullName'] as String? ??
-          d['full_name'] as String? ??
-          FirebaseAuth.instance.currentUser?.displayName ??
-          'User',
-      email: d['email'] as String? ??
-          FirebaseAuth.instance.currentUser?.email ??
-          '',
-      phoneNumber: d['phoneNumber'] as String? ?? d['phone_number'] as String?,
-      avatarUrl: d['avatarUrl'] as String? ?? d['avatar_url'] as String?,
-      totalBookings: (d['totalBookings'] as num?)?.toInt() ?? 0,
-      completedBookings: (d['completedBookings'] as num?)?.toInt() ?? 0,
-      savedSpaces: (d['savedSpaces'] as num?)?.toInt() ?? 0,
+      userId: d['uid'],
+      fullName: d['fullName'] ?? d['displayName'] ?? 'User',
+      email: d['email'] ?? '',
+      phoneNumber: d['phoneNumber'],
+      avatarUrl: d['avatarUrl'],
+      totalBookings: (d['totalBookings'] ?? 0),
+      completedBookings: (d['completedBookings'] ?? 0),
+      savedSpaces: (d['savedSpaces'] ?? 0),
+      isEmailVerified:
+          FirebaseAuth.instance.currentUser?.emailVerified ??
+          d['isEmailVerified'] ??
+          false,
     );
+  }
+
+  @override
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+  }) {
+    return source.updateProfile(name: name, email: email, phone: phone);
+  }
+
+  @override
+  Future<void> changePassword() {
+    return source.changePassword();
+  }
+
+  @override
+  Future<void> verifyEmail() {
+    return source.verifyEmail();
+  }
+
+  @override
+  Future<void> syncEmailVerification() {
+    throw source.syncEmailVerification();
   }
 }

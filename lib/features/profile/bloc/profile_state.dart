@@ -1,10 +1,11 @@
 ﻿import 'package:equatable/equatable.dart';
 import '../data/models/user_model.dart';
+import '../domain/entities/user_entity.dart';
 
 class ProfileState extends Equatable {
   final bool loading;
   final String? error;
-  final UserModel? user;
+  final UserEntity? user;
 
   const ProfileState({
     required this.loading,
@@ -15,7 +16,7 @@ class ProfileState extends Equatable {
   factory ProfileState.initial() =>
       const ProfileState(loading: true, error: null, user: null);
 
-  ProfileState copyWith({bool? loading, String? error, UserModel? user}) {
+  ProfileState copyWith({bool? loading, String? error, UserEntity? user}) {
     return ProfileState(
       loading: loading ?? this.loading,
       error: error,
@@ -25,6 +26,7 @@ class ProfileState extends Equatable {
 
   @override
   List<Object?> get props => [loading, error, user];
+
 }
 
 
