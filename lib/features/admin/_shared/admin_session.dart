@@ -15,9 +15,10 @@ class AdminSession {
 
   static Future<void> load() async {
     final storage = LocalStorageService();
-
     userId = await storage.getUserId() ?? '';
     userName = await storage.getUserName() ?? '';
+    print("USER ID: $userId");
+    print("USER NAME: $userName");
 
     role = await storage.getUserRole() ?? '';
     assignedSpaceIds = await storage.getAssignedSpaceIds();

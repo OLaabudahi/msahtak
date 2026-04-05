@@ -192,3 +192,24 @@ class AddEditSpacePaymentFieldChanged extends AddEditSpaceEvent {
 }
 
 
+class AddEditSpaceExtraPriceAdded extends AddEditSpaceEvent {
+  final String value;
+  final PriceUnit unit;
+
+  const AddEditSpaceExtraPriceAdded({
+    required this.value,
+    required this.unit,
+  });
+
+  @override
+  List<Object?> get props => [value, unit];
+}
+
+class AddEditSpaceExtraPriceRemoved extends AddEditSpaceEvent {
+  final int index;
+
+  const AddEditSpaceExtraPriceRemoved({required this.index});
+
+  @override
+  List<Object?> get props => [index];
+}

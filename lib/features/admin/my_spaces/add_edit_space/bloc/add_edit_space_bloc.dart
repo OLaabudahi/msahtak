@@ -1,8 +1,11 @@
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../services/local_storage_service.dart';
+import '../../../_shared/admin_session.dart';
 import '../domain/entities/amenity_entity.dart';
 import '../domain/entities/policy_section_entity.dart';
+import '../domain/entities/price_entity.dart';
 import '../domain/entities/price_unit.dart';
 import '../domain/entities/space_form_entity.dart';
 import '../domain/entities/space_location_entity.dart';
@@ -57,35 +60,51 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     on<AddEditSpacePaymentMethodRemoved>(_onPaymentMethodRemoved);
     on<AddEditSpacePaymentFieldChanged>(_onPaymentFieldChanged);
     on<AddEditSpaceSavePressed>(_onSave);
+    on<AddEditSpaceExtraPriceAdded>(_onAddExtraPrice);
+    on<AddEditSpaceExtraPriceRemoved>(_onRemoveExtraPrice);
   }
 
-  Future<void> _onStarted(AddEditSpaceStarted event, Emitter<AddEditSpaceState> emit) async {
+  Future<void> _onStarted(
+    AddEditSpaceStarted event,
+    Emitter<AddEditSpaceState> emit,
+  ) async {
     emit(state.copyWith(status: AddEditSpaceStatus.loading, error: null));
+    final s =await LocalStorageService();
+    final id = s.getUserId();
+    print('getUserId 12$id /  asdd space getUserName${AdminSession.userName}');
+
     try {
       final form = await getForm(spaceId: event.spaceId);
       final normalized = _normalizeDefaults(form);
-      emit(state.copyWith(
-        status: AddEditSpaceStatus.ready,
-        form: _deriveCompat(normalized),
-        clearNameError: true,
-        clearAddressError: true,
-        clearBasePriceError: true,
-        clearWorkingHoursError: true,
-        clearPoliciesError: true,
-      ));
+      emit(
+        state.copyWith(
+          status: AddEditSpaceStatus.ready,
+          form: _deriveCompat(normalized),
+          clearNameError: true,
+          clearAddressError: true,
+          clearBasePriceError: true,
+          clearWorkingHoursError: true,
+          clearPoliciesError: true,
+        ),
+      );
       add(const AddEditSpaceAmenityCatalogRequested());
     } catch (e) {
-      emit(state.copyWith(status: AddEditSpaceStatus.failure, error: e.toString()));
+      emit(
+        state.copyWith(status: AddEditSpaceStatus.failure, error: e.toString()),
+      );
     }
   }
 
   SpaceFormEntity _normalizeDefaults(SpaceFormEntity f) {
-    final wh = f.workingHours.isNotEmpty ? f.workingHours : _defaultWorkingHours();
+    final wh = f.workingHours.isNotEmpty
+        ? f.workingHours
+        : _defaultWorkingHours();
     return SpaceFormEntity(
       id: f.id,
       name: f.name,
       address: f.address,
       description: f.description,
+      extraPrices: f.extraPrices,
       price: f.price,
       hours: f.hours,
       policies: f.policies,
@@ -107,53 +126,118 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     const open = '08:00';
     const close = '22:00';
     return const [
-      WorkingHoursEntity(day: WeekDay.sun, open: open, close: close, closed: false),
-      WorkingHoursEntity(day: WeekDay.mon, open: open, close: close, closed: false),
-      WorkingHoursEntity(day: WeekDay.tue, open: open, close: close, closed: false),
-      WorkingHoursEntity(day: WeekDay.wed, open: open, close: close, closed: false),
-      WorkingHoursEntity(day: WeekDay.thu, open: open, close: close, closed: false),
-      WorkingHoursEntity(day: WeekDay.fri, open: open, close: close, closed: true),
-      WorkingHoursEntity(day: WeekDay.sat, open: open, close: close, closed: true),
+      WorkingHoursEntity(
+        day: WeekDay.sun,
+        open: open,
+        close: close,
+        closed: false,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.mon,
+        open: open,
+        close: close,
+        closed: false,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.tue,
+        open: open,
+        close: close,
+        closed: false,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.wed,
+        open: open,
+        close: close,
+        closed: false,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.thu,
+        open: open,
+        close: close,
+        closed: false,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.fri,
+        open: open,
+        close: close,
+        closed: true,
+      ),
+      WorkingHoursEntity(
+        day: WeekDay.sat,
+        open: open,
+        close: close,
+        closed: true,
+      ),
     ];
   }
 
-  Future<void> _onAmenityCatalog(AddEditSpaceAmenityCatalogRequested event, Emitter<AddEditSpaceState> emit) async {
+  Future<void> _onAmenityCatalog(
+    AddEditSpaceAmenityCatalogRequested event,
+    Emitter<AddEditSpaceState> emit,
+  ) async {
     final f = state.form;
     if (f == null) return;
 
     emit(state.copyWith(amenityCatalogLoading: true));
     try {
       final catalog = await getAmenityCatalog();
-      final selectedIds = f.amenities.where((a) => a.selected).map((a) => a.id).toSet();
-      final customInForm = f.amenities.where((a) => a.isCustom).toList(growable: false);
+      final selectedIds = f.amenities
+          .where((a) => a.selected)
+          .map((a) => a.id)
+          .toSet();
+      final customInForm = f.amenities
+          .where((a) => a.isCustom)
+          .toList(growable: false);
 
       final merged = <AmenityEntity>[
-        ...catalog.map((a) => AmenityEntity(id: a.id, name: a.name, selected: selectedIds.contains(a.id), isCustom: a.isCustom)),
+        ...catalog.map(
+          (a) => AmenityEntity(
+            id: a.id,
+            name: a.name,
+            selected: selectedIds.contains(a.id),
+            isCustom: a.isCustom,
+          ),
+        ),
         ...customInForm.where((c) => !catalog.any((a) => a.id == c.id)),
       ];
 
-      emit(state.copyWith(
-        amenityCatalogLoading: false,
-        form: _deriveCompat(_copyForm(f, amenities: merged)),
-      ));
+      emit(
+        state.copyWith(
+          amenityCatalogLoading: false,
+          form: _deriveCompat(_copyForm(f, amenities: merged)),
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(amenityCatalogLoading: false, error: e.toString()));
     }
   }
 
-  void _onAmenityToggle(AddEditSpaceAmenityToggled event, Emitter<AddEditSpaceState> emit) {
+  void _onAmenityToggle(
+    AddEditSpaceAmenityToggled event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
-    final next = f.amenities.map((a) {
-      if (a.id != event.amenityId) return a;
-      return AmenityEntity(id: a.id, name: a.name, selected: !a.selected, isCustom: a.isCustom);
-    }).toList(growable: false);
+    final next = f.amenities
+        .map((a) {
+          if (a.id != event.amenityId) return a;
+          return AmenityEntity(
+            id: a.id,
+            name: a.name,
+            selected: !a.selected,
+            isCustom: a.isCustom,
+          );
+        })
+        .toList(growable: false);
 
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, amenities: next))));
   }
 
-  Future<void> _onAmenityAdd(AddEditSpaceAmenityAddRequested event, Emitter<AddEditSpaceState> emit) async {
+  Future<void> _onAmenityAdd(
+    AddEditSpaceAmenityAddRequested event,
+    Emitter<AddEditSpaceState> emit,
+  ) async {
     final f = state.form;
     if (f == null) return;
     final name = event.name.trim();
@@ -163,16 +247,29 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     try {
       final created = await addAmenity(name: name);
       final next = [
-        AmenityEntity(id: created.id, name: created.name, selected: true, isCustom: true),
+        AmenityEntity(
+          id: created.id,
+          name: created.name,
+          selected: true,
+          isCustom: true,
+        ),
         ...f.amenities,
       ];
-      emit(state.copyWith(amenityCatalogLoading: false, form: _deriveCompat(_copyForm(f, amenities: next))));
+      emit(
+        state.copyWith(
+          amenityCatalogLoading: false,
+          form: _deriveCompat(_copyForm(f, amenities: next)),
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(amenityCatalogLoading: false, error: e.toString()));
     }
   }
 
-  void _onField(AddEditSpaceFieldChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onField(
+    AddEditSpaceFieldChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
@@ -184,7 +281,9 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
         return;
       case 'address':
         next = _copyForm(f, address: event.value);
-        emit(state.copyWith(form: _deriveCompat(next), clearAddressError: true));
+        emit(
+          state.copyWith(form: _deriveCompat(next), clearAddressError: true),
+        );
         return;
       case 'description':
         next = _copyForm(f, description: event.value);
@@ -197,33 +296,68 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     }
   }
 
-  void _onHidden(AddEditSpaceHiddenToggled event, Emitter<AddEditSpaceState> emit) {
+  void _onHidden(
+    AddEditSpaceHiddenToggled event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, hidden: event.hidden))));
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, hidden: event.hidden))),
+    );
   }
 
-  void _onBasePrice(AddEditSpaceBasePriceChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onBasePrice(
+    AddEditSpaceBasePriceChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
     final cleaned = event.value.replaceAll(',', '.').trim();
     final v = double.tryParse(cleaned) ?? 0;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, basePriceValue: max(0, v))), clearBasePriceError: true));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, basePriceValue: max(0, v))),
+        clearBasePriceError: true,
+      ),
+    );
   }
 
-  void _onBaseUnit(AddEditSpaceBaseUnitChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onBaseUnit(
+    AddEditSpaceBaseUnitChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, basePriceUnit: event.unit))));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, basePriceUnit: event.unit)),
+      ),
+    );
   }
 
-  void _onLocation(AddEditSpaceLocationSet event, Emitter<AddEditSpaceState> emit) {
+  void _onLocation(
+    AddEditSpaceLocationSet event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, location: SpaceLocationEntity(lat: event.lat, lng: event.lng)))));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(
+          _copyForm(
+            f,
+            location: SpaceLocationEntity(lat: event.lat, lng: event.lng),
+          ),
+        ),
+      ),
+    );
   }
 
-  void _onWorkingEnabled(AddEditSpaceWorkingDayEnabledToggled event, Emitter<AddEditSpaceState> emit) {
+  void _onWorkingEnabled(
+    AddEditSpaceWorkingDayEnabledToggled event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
@@ -232,185 +366,354 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     final next = List<WorkingHoursEntity>.from(existing);
 
     if (idx == -1) {
-      next.add(WorkingHoursEntity(day: event.day, open: '08:00', close: '22:00', closed: !event.enabled));
+      next.add(
+        WorkingHoursEntity(
+          day: event.day,
+          open: '08:00',
+          close: '22:00',
+          closed: !event.enabled,
+        ),
+      );
     } else {
       final cur = existing[idx];
-      next[idx] = WorkingHoursEntity(day: cur.day, open: cur.open, close: cur.close, closed: !event.enabled ? true : false);
+      next[idx] = WorkingHoursEntity(
+        day: cur.day,
+        open: cur.open,
+        close: cur.close,
+        closed: !event.enabled ? true : false,
+      );
     }
 
-    emit(state.copyWith(
-      form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))),
-      clearWorkingHoursError: true,
-    ));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))),
+        clearWorkingHoursError: true,
+      ),
+    );
   }
 
-  void _onWorkingClosed(AddEditSpaceWorkingDayClosedToggled event, Emitter<AddEditSpaceState> emit) {
+  void _onWorkingClosed(
+    AddEditSpaceWorkingDayClosedToggled event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
-    final next = f.workingHours.map((x) {
-      if (x.day != event.day) return x;
-      return WorkingHoursEntity(day: x.day, open: x.open, close: x.close, closed: event.closed);
-    }).toList(growable: false);
+    final next = f.workingHours
+        .map((x) {
+          if (x.day != event.day) return x;
+          return WorkingHoursEntity(
+            day: x.day,
+            open: x.open,
+            close: x.close,
+            closed: event.closed,
+          );
+        })
+        .toList(growable: false);
 
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))), clearWorkingHoursError: true));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))),
+        clearWorkingHoursError: true,
+      ),
+    );
   }
 
-  void _onWorkingTime(AddEditSpaceWorkingTimeChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onWorkingTime(
+    AddEditSpaceWorkingTimeChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
-    final next = f.workingHours.map((x) {
-      if (x.day != event.day) return x;
-      return WorkingHoursEntity(day: x.day, open: event.open, close: event.close, closed: x.closed);
-    }).toList(growable: false);
+    final next = f.workingHours
+        .map((x) {
+          if (x.day != event.day) return x;
+          return WorkingHoursEntity(
+            day: x.day,
+            open: event.open,
+            close: event.close,
+            closed: x.closed,
+          );
+        })
+        .toList(growable: false);
 
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))), clearWorkingHoursError: true));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, workingHours: _sortWH(next))),
+        clearWorkingHoursError: true,
+      ),
+    );
   }
 
   List<WorkingHoursEntity> _sortWH(List<WorkingHoursEntity> list) {
     int order(WeekDay d) => switch (d) {
-          WeekDay.sun => 0,
-          WeekDay.mon => 1,
-          WeekDay.tue => 2,
-          WeekDay.wed => 3,
-          WeekDay.thu => 4,
-          WeekDay.fri => 5,
-          WeekDay.sat => 6,
-        };
+      WeekDay.sun => 0,
+      WeekDay.mon => 1,
+      WeekDay.tue => 2,
+      WeekDay.wed => 3,
+      WeekDay.thu => 4,
+      WeekDay.fri => 5,
+      WeekDay.sat => 6,
+    };
     list.sort((a, b) => order(a.day).compareTo(order(b.day)));
     return list;
   }
 
-  void _onPolicyAddSection(AddEditSpacePolicySectionAdded event, Emitter<AddEditSpaceState> emit) {
+  void _onPolicyAddSection(
+    AddEditSpacePolicySectionAdded event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    final id = 'sec_${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(999)}';
-    final next = [...f.policySections, PolicySectionEntity(id: id, title: 'New Section', bullets: const [])];
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
+    final id =
+        'sec_${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(999)}';
+    final next = [
+      ...f.policySections,
+      PolicySectionEntity(id: id, title: 'New Section', bullets: const []),
+    ];
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, policySections: next)),
+        clearPoliciesError: true,
+      ),
+    );
   }
 
-  void _onPolicyRemoveSection(AddEditSpacePolicySectionRemoved event, Emitter<AddEditSpaceState> emit) {
+  void _onPolicyRemoveSection(
+    AddEditSpacePolicySectionRemoved event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    final next = f.policySections.where((s) => s.id != event.sectionId).toList(growable: false);
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
+    final next = f.policySections
+        .where((s) => s.id != event.sectionId)
+        .toList(growable: false);
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, policySections: next)),
+        clearPoliciesError: true,
+      ),
+    );
   }
 
-  void _onPolicyTitle(AddEditSpacePolicySectionTitleChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onPolicyTitle(
+    AddEditSpacePolicySectionTitleChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    final next = f.policySections.map((s) {
-      if (s.id != event.sectionId) return s;
-      return PolicySectionEntity(id: s.id, title: event.title, bullets: s.bullets);
-    }).toList(growable: false);
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
+    final next = f.policySections
+        .map((s) {
+          if (s.id != event.sectionId) return s;
+          return PolicySectionEntity(
+            id: s.id,
+            title: event.title,
+            bullets: s.bullets,
+          );
+        })
+        .toList(growable: false);
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, policySections: next)),
+        clearPoliciesError: true,
+      ),
+    );
   }
 
-  void _onPolicyAddBullet(AddEditSpacePolicyBulletAdded event, Emitter<AddEditSpaceState> emit) {
+  void _onPolicyAddBullet(
+    AddEditSpacePolicyBulletAdded event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
     final text = event.text.trim();
     if (text.isEmpty) return;
 
-    final next = f.policySections.map((s) {
-      if (s.id != event.sectionId) return s;
-      return PolicySectionEntity(id: s.id, title: s.title, bullets: [...s.bullets, text]);
-    }).toList(growable: false);
+    final next = f.policySections
+        .map((s) {
+          if (s.id != event.sectionId) return s;
+          return PolicySectionEntity(
+            id: s.id,
+            title: s.title,
+            bullets: [...s.bullets, text],
+          );
+        })
+        .toList(growable: false);
 
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, policySections: next)),
+        clearPoliciesError: true,
+      ),
+    );
   }
 
-  void _onPolicyRemoveBullet(AddEditSpacePolicyBulletRemoved event, Emitter<AddEditSpaceState> emit) {
+  void _onPolicyRemoveBullet(
+    AddEditSpacePolicyBulletRemoved event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
 
-    final next = f.policySections.map((s) {
-      if (s.id != event.sectionId) return s;
-      final b = List<String>.from(s.bullets);
-      if (event.index >= 0 && event.index < b.length) b.removeAt(event.index);
-      return PolicySectionEntity(id: s.id, title: s.title, bullets: b);
-    }).toList(growable: false);
+    final next = f.policySections
+        .map((s) {
+          if (s.id != event.sectionId) return s;
+          final b = List<String>.from(s.bullets);
+          if (event.index >= 0 && event.index < b.length)
+            b.removeAt(event.index);
+          return PolicySectionEntity(id: s.id, title: s.title, bullets: b);
+        })
+        .toList(growable: false);
 
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, policySections: next)), clearPoliciesError: true));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, policySections: next)),
+        clearPoliciesError: true,
+      ),
+    );
   }
 
-  void _onImageAdded(AddEditSpaceImageAdded event, Emitter<AddEditSpaceState> emit) {
+  void _onImageAdded(
+    AddEditSpaceImageAdded event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
     final url = event.url.trim();
     if (url.isEmpty) return;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, images: [...f.images, url]))));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(_copyForm(f, images: [...f.images, url])),
+      ),
+    );
   }
 
-  void _onImageRemoved(AddEditSpaceImageRemoved event, Emitter<AddEditSpaceState> emit) {
+  void _onImageRemoved(
+    AddEditSpaceImageRemoved event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
     final next = List<String>.from(f.images);
-    if (event.index >= 0 && event.index < next.length) next.removeAt(event.index);
+    if (event.index >= 0 && event.index < next.length)
+      next.removeAt(event.index);
     emit(state.copyWith(form: _deriveCompat(_copyForm(f, images: next))));
   }
 
-  void _onSeats(AddEditSpaceSeatsChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onSeats(
+    AddEditSpaceSeatsChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
     final v = int.tryParse(event.value.trim()) ?? 0;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, totalSeats: max(0, v)))));
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, totalSeats: max(0, v)))),
+    );
   }
 
-  void _onAdmin(AddEditSpaceAdminChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onAdmin(
+    AddEditSpaceAdminChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, adminId: event.adminId, adminName: event.adminName))));
+    emit(
+      state.copyWith(
+        form: _deriveCompat(
+          _copyForm(f, adminId: event.adminId, adminName: event.adminName),
+        ),
+      ),
+    );
   }
 
-  void _onPaymentMethodAdded(AddEditSpacePaymentMethodAdded event, Emitter<AddEditSpaceState> emit) {
+  void _onPaymentMethodAdded(
+    AddEditSpacePaymentMethodAdded event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    if (f.paymentMethods.any((m) => m['id'] == event.id)) return; 
-    final next = [...f.paymentMethods, {'id': event.id, 'name': event.name}];
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+    if (f.paymentMethods.any((m) => m['id'] == event.id)) return;
+    final next = [
+      ...f.paymentMethods,
+      {'id': event.id, 'name': event.name},
+    ];
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))),
+    );
   }
 
-  void _onPaymentMethodRemoved(AddEditSpacePaymentMethodRemoved event, Emitter<AddEditSpaceState> emit) {
+  void _onPaymentMethodRemoved(
+    AddEditSpacePaymentMethodRemoved event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    final next = f.paymentMethods.where((m) => m['id'] != event.id).toList(growable: false);
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+    final next = f.paymentMethods
+        .where((m) => m['id'] != event.id)
+        .toList(growable: false);
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))),
+    );
   }
 
-  void _onPaymentFieldChanged(AddEditSpacePaymentFieldChanged event, Emitter<AddEditSpaceState> emit) {
+  void _onPaymentFieldChanged(
+    AddEditSpacePaymentFieldChanged event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
     final f = state.form;
     if (f == null) return;
-    final next = f.paymentMethods.map((m) {
-      if (m['id'] != event.id) return m;
-      return {...m, event.fieldKey: event.value};
-    }).toList(growable: false);
-    emit(state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))));
+    final next = f.paymentMethods
+        .map((m) {
+          if (m['id'] != event.id) return m;
+          return {...m, event.fieldKey: event.value};
+        })
+        .toList(growable: false);
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, paymentMethods: next))),
+    );
   }
 
-  Future<void> _onSave(AddEditSpaceSavePressed event, Emitter<AddEditSpaceState> emit) async {
+  Future<void> _onSave(
+    AddEditSpaceSavePressed event,
+    Emitter<AddEditSpaceState> emit,
+  ) async {
     final f0 = state.form;
     if (f0 == null) return;
 
     final errors = _validate(f0);
     if (errors.isNotEmpty) {
-      emit(state.copyWith(
-        nameError: errors['name'],
-        addressError: errors['address'],
-        basePriceError: errors['basePrice'],
-        workingHoursError: errors['workingHours'],
-        policiesError: errors['policies'],
-      ));
+      print("SAVE ERROR TRIGGERED$errors");
+      emit(
+        state.copyWith(
+          nameError: errors['name'],
+          addressError: errors['address'],
+          basePriceError: errors['basePrice'],
+          workingHoursError: errors['workingHours'],
+          policiesError: errors['policies'],
+        ),
+      );
       return;
     }
-
     emit(state.copyWith(status: AddEditSpaceStatus.saving, error: null));
     try {
-      await save(form: _deriveCompat(f0));
+
+      print(' SAVE getUserId ${LocalStorageService().getUserId()} / getUserName${LocalStorageService().getUserName()}');
+      final updatedForm = _copyForm(
+        f0,
+        adminId: AdminSession.userId,
+        adminName: AdminSession.userName,
+      );
+
+      await save(form: _deriveCompat(updatedForm));
       emit(state.copyWith(status: AddEditSpaceStatus.saved));
+      print("SAVE 12 TRIGGERED");
     } catch (e) {
-      emit(state.copyWith(status: AddEditSpaceStatus.failure, error: e.toString()));
+      emit(
+        state.copyWith(status: AddEditSpaceStatus.failure, error: e.toString()),
+      );
+      print("SAVE E TRIGGERED $e");
     }
   }
 
@@ -418,19 +721,27 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     final out = <String, String>{};
 
     final name = f.name.trim();
-    if (name.isEmpty) out['name'] = 'Name is required';
-    else if (name.length < 3) out['name'] = 'Name must be at least 3 characters';
-    else if (name.length > 50) out['name'] = 'Name is too long';
+    if (name.isEmpty)
+      out['name'] = 'Name is required';
+    else if (name.length < 3)
+      out['name'] = 'Name must be at least 3 characters';
+    else if (name.length > 50)
+      out['name'] = 'Name is too long';
 
     final addr = f.address.trim();
-    if (addr.isEmpty) out['address'] = 'Address is required';
-    else if (addr.length < 8) out['address'] = 'Address must be at least 8 characters';
-    else if (addr.length > 80) out['address'] = 'Address is too long';
+    if (addr.isEmpty)
+      out['address'] = 'Address is required';
+    else if (addr.length < 8)
+      out['address'] = 'Address must be at least 8 characters';
+    else if (addr.length > 80)
+      out['address'] = 'Address is too long';
 
-    if (f.basePriceValue <= 0) out['basePrice'] = 'Base price must be greater than 0';
-
-    
-    final enabled = f.workingHours.where((w) => !w.closed).toList(growable: false);
+    if (f.extraPrices.isEmpty) {
+      out['basePrice'] = 'Add at least one price';
+    }
+    final enabled = f.workingHours
+        .where((w) => !w.closed)
+        .toList(growable: false);
     if (enabled.isEmpty) {
       out['workingHours'] = 'Select at least one working day';
     } else {
@@ -443,10 +754,10 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
           break;
         }
       }
-      if (invalidTime) out['workingHours'] = 'Invalid time range (open must be before close)';
+      if (invalidTime)
+        out['workingHours'] = 'Invalid time range (open must be before close)';
     }
 
-    
     if (f.policySections.isNotEmpty) {
       for (final s in f.policySections) {
         if (s.title.trim().isEmpty) {
@@ -473,7 +784,6 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     return h * 60 + m;
   }
 
-  
   SpaceFormEntity _copyForm(
     SpaceFormEntity f, {
     String? name,
@@ -489,6 +799,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     List<PolicySectionEntity>? policySections,
     List<AmenityEntity>? amenities,
     List<String>? images,
+    List<PriceEntity>? extraPrices,
     bool? hidden,
     int? totalSeats,
     Object? adminId = _sentinel,
@@ -502,6 +813,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       description: description ?? f.description,
       price: price ?? f.price,
       hours: hours ?? f.hours,
+      extraPrices: extraPrices ?? f.extraPrices,
       policies: policies ?? f.policies,
       basePriceValue: basePriceValue ?? f.basePriceValue,
       basePriceUnit: basePriceUnit ?? f.basePriceUnit,
@@ -521,25 +833,83 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
   static const _sentinel = Object();
 
   SpaceFormEntity _deriveCompat(SpaceFormEntity f) {
-    final unit = switch (f.basePriceUnit) { PriceUnit.week => 'week', PriceUnit.month => 'month', _ => 'day' };
-    final priceStr = (f.basePriceValue <= 0) ? f.price : '${f.basePriceValue.toStringAsFixed(f.basePriceValue % 1 == 0 ? 0 : 2)}/$unit';
+    final unit = switch (f.basePriceUnit) {
+      PriceUnit.week => 'week',
+      PriceUnit.month => 'month',
+      _ => 'day',
+    };
+    final prices = [
+      if (f.basePriceValue > 0)
+        '${f.basePriceValue.toStringAsFixed(f.basePriceValue % 1 == 0 ? 0 : 2)}/$unit',
 
-    final enabledDays = f.workingHours.where((w) => !w.closed).toList(growable: false);
+      ...f.extraPrices.map((e) => '${e.value}/${e.unit.name}'),
+    ];
+
+    final priceStr = prices.join(' | ');
+    final enabledDays = f.workingHours
+        .where((w) => !w.closed)
+        .toList(growable: false);
     String hoursStr = f.hours;
     if (enabledDays.isNotEmpty) {
       final open = enabledDays.first.open;
       final close = enabledDays.first.close;
-      final days = enabledDays.map((e) => e.day.name.toUpperCase()).toList(growable: false);
+      final days = enabledDays
+          .map((e) => e.day.name.toUpperCase())
+          .toList(growable: false);
       hoursStr = '${days.first}-${days.last}, $open-$close';
     }
 
     String pol = f.policies;
     if (f.policySections.isNotEmpty) {
-      pol = f.policySections.map((s) => '${s.title}: ${s.bullets.join(" • ")}').join('\n');
+      pol = f.policySections
+          .map((s) => '${s.title}: ${s.bullets.join(" • ")}')
+          .join('\n');
     }
 
     return _copyForm(f, price: priceStr, hours: hoursStr, policies: pol);
   }
+
+  void _onAddExtraPrice(
+    AddEditSpaceExtraPriceAdded event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
+    final f = state.form;
+    if (f == null) return;
+
+    final value = double.tryParse(event.value.replaceAll(',', '.'));
+    if (value == null || value <= 0) return;
+
+    final updated = List<PriceEntity>.from(f.extraPrices);
+
+    final index = updated.indexWhere((e) => e.unit == event.unit);
+    if (index != -1) {
+      /// 🔥 تعديل بدل إضافة
+      updated[index] = PriceEntity(value: value, unit: event.unit);
+    } else {
+      /// 🔥 إضافة جديدة
+      updated.add(PriceEntity(value: value, unit: event.unit));
+    }
+
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, extraPrices: updated))),
+    );
+  }
+
+  void _onRemoveExtraPrice(
+    AddEditSpaceExtraPriceRemoved event,
+    Emitter<AddEditSpaceState> emit,
+  ) {
+    final f = state.form;
+    if (f == null) return;
+
+    final updated = List<PriceEntity>.from(f.extraPrices);
+
+    if (event.index < 0 || event.index >= updated.length) return;
+
+    updated.removeAt(event.index);
+
+    emit(
+      state.copyWith(form: _deriveCompat(_copyForm(f, extraPrices: updated))),
+    );
+  }
 }
-
-

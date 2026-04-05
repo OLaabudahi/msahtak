@@ -1,24 +1,37 @@
+import 'package:Msahtak/features/admin/my_spaces/add_edit_space/domain/entities/price_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/price_unit.dart';
 
-class PriceEditor extends StatelessWidget {
-  final String valueText;
-  final PriceUnit unit;
-  final ValueChanged<String> onValueChanged;
-  final ValueChanged<PriceUnit> onUnitChanged;
-  final String? errorText;
+class PriceEditor extends StatefulWidget {
+  final List<PriceEntity> prices;
+  final Function(String value, PriceUnit unit) onAdd;
+  final Function(int index) onRemove;
 
   const PriceEditor({
     super.key,
-    required this.valueText,
-    required this.unit,
-    required this.onValueChanged,
-    required this.onUnitChanged,
-    required this.errorText,
+    required this.prices,
+    required this.onAdd,
+    required this.onRemove,
   });
+
+  @override
+  State<PriceEditor> createState() => _PriceEditorState();
+}
+
+class _PriceEditorState extends State<PriceEditor> {
+  final _controller = TextEditingController();
+  PriceUnit _unit = PriceUnit.day;
+
+  void _add() {
+    final value = _controller.text.trim();
+    if (value.isEmpty) return;
+
+    widget.onAdd(value, _unit);
+    _controller.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,53 +39,70 @@ class PriceEditor extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Base Price', style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
-          const SizedBox(height: 8),
+          Text("Additional Prices",
+              style: AdminText.body14(
+                  color: AdminColors.black75, w: FontWeight.w700)),
+
+          const SizedBox(height: 10),
+
+          /// 🔥 list
+          ...List.generate(widget.prices.length, (i) {
+            final p = widget.prices[i];
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "${p.value} / ${p.unit.name}",
+                      style: AdminText.body14(),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => widget.onRemove(i),
+                    icon: const Icon(Icons.delete, size: 18),
+                  )
+                ],
+              ),
+            );
+          }),
+
+          const SizedBox(height: 10),
+
+          /// 🔥 add row
           Row(
             children: [
               Expanded(
                 child: TextField(
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*([.,]\d{0,2})?$')),
-                  ],
-                  onChanged: onValueChanged,
-                  controller: TextEditingController(text: valueText)
-                    ..selection = TextSelection.collapsed(offset: valueText.length),
-                  style: AdminText.body16(),
-                  decoration: InputDecoration(
-                    hintText: 'e.g. 35',
-                    hintStyle: AdminText.body16(color: AdminColors.black40),
-                    errorText: errorText,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15)),
+                  controller: _controller,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: "Price",
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AdminColors.black15, width: 1),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<PriceUnit>(
-                    value: unit,
-                    items: [
-                      DropdownMenuItem(value: PriceUnit.day, child: Text(context.t('day'))),
-                      DropdownMenuItem(value: PriceUnit.week, child: Text(context.t('week'))),
-                      DropdownMenuItem(value: PriceUnit.month, child: Text(context.t('month'))),
-                    ],
-                    onChanged: (v) {
-                      if (v != null) onUnitChanged(v);
-                    },
-                  ),
-                ),
+              const SizedBox(width: 8),
+
+              DropdownButton<PriceUnit>(
+                value: _unit,
+                items: const [
+                  DropdownMenuItem(value: PriceUnit.day, child: Text("Day")),
+                  DropdownMenuItem(value: PriceUnit.week, child: Text("Week")),
+                  DropdownMenuItem(
+                      value: PriceUnit.month, child: Text("Month")),
+                ],
+                onChanged: (v) {
+                  if (v != null) setState(() => _unit = v);
+                },
               ),
+
+              const SizedBox(width: 8),
+
+              IconButton(
+                onPressed: _add,
+                icon: const Icon(Icons.add),
+              )
             ],
           ),
         ],

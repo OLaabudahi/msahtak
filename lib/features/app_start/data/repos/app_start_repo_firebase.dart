@@ -18,7 +18,8 @@ class AppStartRepoFirebase implements AppStartRepo {
     final user = FirebaseAuth.instance.currentUser ??
         await FirebaseAuth.instance.authStateChanges().first;
     final isLoggedIn = await _storage.getIsLoggedIn();
-
+    _storage.setUserId(user!.uid);
+    _storage.setUserName(user.displayName.toString());
     debugPrint('[AppStart] decide: user=${user?.uid}');
 
     if (user == null || !isLoggedIn) return AppStartDecision.goLogin;

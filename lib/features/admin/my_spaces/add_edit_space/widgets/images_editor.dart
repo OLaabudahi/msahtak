@@ -25,7 +25,8 @@ class _ImagesEditorState extends State<ImagesEditor> {
   bool _uploading = false;
 
   static const _supabaseUrl = 'https://fbepuxcsyrerfhzpqvmy.supabase.co';
-  static const _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiZXB1eGNzeXJlcmZoenBxdm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzg0MjcsImV4cCI6MjA4ODcxNDQyN30.mNJOsm7RGIaX9OMw1c5R-3O9QV9bixoGc0rZKKecOLk';
+  static const _supabaseKey =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiZXB1eGNzeXJlcmZoenBxdm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzg0MjcsImV4cCI6MjA4ODcxNDQyN30.mNJOsm7RGIaX9OMw1c5R-3O9QV9bixoGc0rZKKecOLk';
   static const _bucket = 'image_masahtak';
 
   @override
@@ -44,33 +45,43 @@ class _ImagesEditorState extends State<ImagesEditor> {
   /// يفتح منتقي الصور من الجهاز ثم يرفعها إلى Supabase Storage
   Future<void> _pickAndUpload() async {
     final picker = ImagePicker();
-    final XFile? file = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (file == null) return;
 
+    final List<XFile>? files = await picker.pickMultiImage(imageQuality: 85);
+    if (files == null || files.isEmpty) return;
     setState(() => _uploading = true);
+    if (files.length > 5) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("حد أقصى 5 صور")));
+      setState(() => _uploading = false); /// 🔥 مهم
+      return;
+    }
+
     try {
-      final bytes = await file.readAsBytes();
-      final ext = file.name.contains('.') ? file.name.split('.').last.toLowerCase() : 'jpg';
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.$ext';
-      final uploadUrl = '$_supabaseUrl/storage/v1/object/$_bucket/$fileName';
+      for (int i = 0; i < files.length; i++) {
+        final bytes = await files[i].readAsBytes();
+        final ext = files[i].name.contains('.')
+            ? files[i].name.split('.').last.toLowerCase()
+            : 'jpg';
+        final fileName = '${DateTime.now().millisecondsSinceEpoch}.$ext';
+        final uploadUrl = '$_supabaseUrl/storage/v1/object/$_bucket/$fileName';
 
-      final response = await http.post(
-        Uri.parse(uploadUrl),
-        headers: {
-          'Authorization': 'Bearer $_supabaseKey',
-          'Content-Type': 'image/$ext',
-        },
-        body: bytes,
-      );
+        final response = await http.post(
+          Uri.parse(uploadUrl),
+          headers: {
+            'Authorization': 'Bearer $_supabaseKey',
+            'Content-Type': 'image/$ext',
+          },
+          body: bytes,
+        );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final publicUrl = '$_supabaseUrl/storage/v1/object/public/$_bucket/$fileName';
-        widget.onAdd(publicUrl);
-      } else {
-        throw Exception('${response.statusCode}: ${response.body}');
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final publicUrl =
+              '$_supabaseUrl/storage/v1/object/public/$_bucket/$fileName';
+          widget.onAdd(publicUrl);
+        } else {
+          throw Exception('${response.statusCode}: ${response.body}');
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -92,8 +103,13 @@ class _ImagesEditorState extends State<ImagesEditor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Images',
-              style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+          Text(
+            'Images',
+            style: AdminText.body14(
+              color: AdminColors.black75,
+              w: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 8),
 
           // الصور الحالية
@@ -119,8 +135,10 @@ class _ImagesEditorState extends State<ImagesEditor> {
                             width: 90,
                             height: 90,
                             color: AdminColors.black15,
-                            child: const Icon(Icons.broken_image_outlined,
-                                color: AdminColors.black40),
+                            child: const Icon(
+                              Icons.broken_image_outlined,
+                              color: AdminColors.black40,
+                            ),
                           ),
                         ),
                       ),
@@ -135,7 +153,11 @@ class _ImagesEditorState extends State<ImagesEditor> {
                               shape: BoxShape.circle,
                             ),
                             padding: const EdgeInsets.all(3),
-                            child: const Icon(Icons.close, size: 14, color: Colors.white),
+                            child: const Icon(
+                              Icons.close,
+                              size: 14,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -159,7 +181,9 @@ class _ImagesEditorState extends State<ImagesEditor> {
                     : AdminColors.primaryBlue.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: _uploading ? AdminColors.black15 : AdminColors.primaryBlue,
+                  color: _uploading
+                      ? AdminColors.black15
+                      : AdminColors.primaryBlue,
                   width: 1,
                 ),
               ),
@@ -173,12 +197,18 @@ class _ImagesEditorState extends State<ImagesEditor> {
                   : Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.upload_rounded, size: 18, color: AdminColors.primaryBlue),
+                        Icon(
+                          Icons.upload_rounded,
+                          size: 18,
+                          color: AdminColors.primaryBlue,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           'Pick from device',
                           style: AdminText.body14(
-                              color: AdminColors.primaryBlue, w: FontWeight.w700),
+                            color: AdminColors.primaryBlue,
+                            w: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -197,20 +227,31 @@ class _ImagesEditorState extends State<ImagesEditor> {
                   decoration: InputDecoration(
                     hintText: 'Or paste image URL…',
                     hintStyle: AdminText.body14(color: AdminColors.black40),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: AdminColors.black15, width: 1)),
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: AdminColors.black15,
+                        width: 1,
+                      ),
+                    ),
                     enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: AdminColors.black15, width: 1)),
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: AdminColors.black15,
+                        width: 1,
+                      ),
+                    ),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                            color: AdminColors.primaryBlue, width: 1.5)),
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: AdminColors.primaryBlue,
+                        width: 1.5,
+                      ),
+                    ),
                   ),
                   onFieldSubmitted: (_) => _addUrl(),
                 ),
@@ -230,9 +271,10 @@ class _ImagesEditorState extends State<ImagesEditor> {
                   child: const Text(
                     'Add',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),

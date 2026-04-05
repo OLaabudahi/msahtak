@@ -1,4 +1,4 @@
-import 'package:Msahtak/theme/app_colors.dart';
+/*
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,450 +27,6 @@ import 'location_picker_page.dart';
 import '../widgets/policies_editor.dart';
 import '../widgets/price_editor.dart';
 import '../widgets/working_hours_editor.dart';
-
-class AddEditSpacePage extends StatefulWidget {
-  final String? spaceId;
-
-  const AddEditSpacePage({super.key, required this.spaceId});
-
-  @override
-  State<AddEditSpacePage> createState() => _AddEditSpacePageState();
-
-  static Widget withBloc({required String? spaceId}) {
-    final source = AddEditSpaceFirebaseSource();
-    final repo = AddEditSpaceRepoImpl(source);
-    return BlocProvider(
-      create: (_) => AddEditSpaceBloc(
-        getForm: GetSpaceFormUseCase(repo),
-        save: SaveSpaceUseCase(repo),
-        getAmenityCatalog: GetAmenityCatalogUseCase(repo),
-        addAmenity: AddAmenityUseCase(repo),
-      )..add(AddEditSpaceStarted(spaceId)),
-      child: AddEditSpacePage(spaceId: spaceId),
-    );
-  }
-}
-
-class _AddEditSpacePageState extends State<AddEditSpacePage> {
-  int currentStep = 0;
-  bool _validateStep(AddEditSpaceState s) {
-    final f = s.form!;
-    switch (currentStep) {
-      case 0:
-        return f.name.isNotEmpty && f.address.isNotEmpty && f.location != null;
-
-      case 1:
-        return f.extraPrices.isNotEmpty &&
-            f.images.length >= 2 &&
-            f.paymentMethods.isNotEmpty;
-
-      case 2:
-        return f.totalSeats > 0 && f.workingHours.any((e) => !e.closed);
-
-      case 3:
-        return true;
-
-      default:
-        return true;
-    }
-  }
-
-  void _next(AddEditSpaceState s) {
-    if (!_validateStep(s)) return;
-
-    if (currentStep < 3) {
-      setState(() => currentStep++);
-    } else {
-      context.read<AddEditSpaceBloc>().add(const AddEditSpaceSavePressed());
-    }
-  }
-
-  void _back() {
-    if (currentStep > 0) {
-      setState(() => currentStep--);
-    } else {
-      Navigator.pop(context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AddEditSpaceBloc, AddEditSpaceState>(
-      builder: (context, state) {
-        final f = state.form;
-        final isSaving = state.status == AddEditSpaceStatus.saving;
-
-        if (f == null) return const Center(child: CircularProgressIndicator());
-
-        final isValid = _validateStep(state);
-        return Scaffold(
-          backgroundColor: AdminColors.bg,
-          body: SafeArea(
-            child: Column(
-              children: [
-                /// 🔥 HEADER
-                AdminAppBar(
-                  title: widget.spaceId == null ? "Add Space" : "Edit Space",
-                  subtitle: "Step ${currentStep + 1} of 4",
-                  onBack: _back,
-                ),
-
-                /// 🔥 PROGRESS
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(_stepTitle(), style: AdminText.h2()),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: LinearProgressIndicator(value: (currentStep + 1) / 4),
-                ),
-
-                /// 🔥 BODY
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: _buildStep(state),
-                  ),
-                ),
-
-                /// 🔥 ACTIONS
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      if (currentStep > 0)
-                        Expanded(
-                          child: AdminButton.outline(
-                            label: "Back",
-                            onTap: _back,
-                            bg: AppColors.amber,
-                            fg: AppColors.amber,
-                          ),
-                        ),
-                      if (currentStep > 0) const SizedBox(width: 10),
-                      Expanded(
-                        child: AdminButton.filled(
-                          label: isSaving
-                              ? "Saving..."
-                              : currentStep == 3
-                              ? (widget.spaceId == null ? "Add Space" : "Update Space")
-                              : "Next",
-
-                          onTap: (isValid && !isSaving)
-                              ? () => _next(state)
-                              : null,
-
-                          bg: isValid?  AdminColors.primaryBlue: AppColors.secondary,
-                        )
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  String _stepTitle() {
-    switch (currentStep) {
-      case 0:
-        return "المعلومات الأساسية";
-      case 1:
-        return "الصور والسعر والدفع";
-      case 2:
-        return "توافر المساحة";
-      case 3:
-        return "المميزات والسياسات";
-      default:
-        return "";
-    }
-  }
-
-  /// 🔥 STEPS
-
-  Widget _buildStep(AddEditSpaceState state) {
-    switch (currentStep) {
-      case 0:
-        return _stepBasic(state);
-      case 1:
-        return _stepMediaPricing(state);
-      case 2:
-        return _stepAvailability(state);
-      case 3:
-        return _stepDetails(state);
-      default:
-        return const SizedBox();
-    }
-  }
-
-  /// 🟢 STEP 1
-  Widget _stepBasic(AddEditSpaceState state) {
-    final f = state.form!;
-    final loc = f.location;
-
-    return ListView(
-      children: [
-        _Field(
-          label: "اسم المساحة",
-          value: f.name,
-          hint: "مثال: مساحة عمل هادئة للدراسة والعمل",
-          errorText: state.nameError,
-          onChanged: (v) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceFieldChanged('name', v),
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        _Field(
-          label: "العنوان",
-          value: f.address,
-          hint: "مثال: نابلس - شارع...",
-          errorText: state.addressError,
-          onChanged: (v) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceFieldChanged('address', v),
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        LocationCard(
-          lat: loc?.lat,
-          lng: loc?.lng,
-          onPick: () async {
-            final res = await LocationPickerPage.show(context);
-            if (res != null) {
-              context.read<AddEditSpaceBloc>().add(
-                AddEditSpaceLocationSet(res.$1, res.$2),
-              );
-            }
-          },
-        ),
-
-        const SizedBox(height: 12),
-
-        _Field(
-          label: "الوصف",
-          value: f.description,
-          hint:
-              "اكتب وصف يحتوي كلمات مفتاحية مثل: هادئ، إنترنت سريع، مناسب للدراسة، قريب من الخدمات...",
-          errorText: null,
-          onChanged: (v) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceFieldChanged('description', v),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 🟢 STEP 2
-  Widget _stepMediaPricing(AddEditSpaceState state) {
-    final f = state.form!;
-
-    return ListView(
-      children: [
-        ImagesEditor(
-          images: f.images,
-          onAdd: (url) =>
-              context.read<AddEditSpaceBloc>().add(AddEditSpaceImageAdded(url)),
-          onRemove: (i) =>
-              context.read<AddEditSpaceBloc>().add(AddEditSpaceImageRemoved(i)),
-        ),
-        const SizedBox(height: 12),
-
-        PriceEditor(
-          prices: f.extraPrices,
-          onAdd: (v, u) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceExtraPriceAdded(value: v, unit: u),
-          ),
-          onRemove: (i) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceExtraPriceRemoved(index: i),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        PaymentMethodsEditor(
-          selectedMethods: f.paymentMethods,
-          onAdd: (id, name) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePaymentMethodAdded(id: id, name: name),
-          ),
-          onRemove: (id) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePaymentMethodRemoved(id: id),
-          ),
-          onFieldChanged: (id, key, val) =>
-              context.read<AddEditSpaceBloc>().add(
-                AddEditSpacePaymentFieldChanged(
-                  id: id,
-                  fieldKey: key,
-                  value: val,
-                ),
-              ),
-        ),
-      ],
-    );
-  }
-
-  /// 🟢 STEP 3
-  Widget _stepAvailability(AddEditSpaceState state) {
-    final f = state.form!;
-
-    return ListView(
-      children: [
-        SwitchListTile(
-          value: f.hidden,
-          title: const Text("إتاحة المساحة"),
-          onChanged: (v) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceHiddenToggled(v),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        TextFormField(
-          initialValue: f.totalSeats.toString(),
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: "عدد المقاعد"),
-          onChanged: (v) =>
-              context.read<AddEditSpaceBloc>().add(AddEditSpaceSeatsChanged(v)),
-        ),
-
-        const SizedBox(height: 12),
-
-        WorkingHoursEditor(
-          hours: f.workingHours,
-          errorText: state.workingHoursError,
-          onDayEnabled: (d, enabled) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceWorkingDayEnabledToggled(d, enabled),
-          ),
-          onClosed: (d, closed) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceWorkingDayClosedToggled(d, closed),
-          ),
-          onTimeChanged: (d, o, c) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceWorkingTimeChanged(d, o, c),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 🟢 STEP 4
-  Widget _stepDetails(AddEditSpaceState state) {
-    final f = state.form!;
-
-    return ListView(
-      children: [
-        AmenitiesEditor(
-          amenities: f.amenities,
-          loading: state.amenityCatalogLoading,
-          onToggle: (id) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceAmenityToggled(id),
-          ),
-          onAdd: (name) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpaceAmenityAddRequested(name),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        PoliciesEditor(
-          sections: f.policySections,
-          errorText: state.policiesError,
-          onAddSection: () => context.read<AddEditSpaceBloc>().add(
-            const AddEditSpacePolicySectionAdded(),
-          ),
-          onRemoveSection: (id) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePolicySectionRemoved(id),
-          ),
-          onTitleChanged: (id, title) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePolicySectionTitleChanged(id, title),
-          ),
-          onAddBullet: (id, text) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePolicyBulletAdded(id, text),
-          ),
-          onRemoveBullet: (id, index) => context.read<AddEditSpaceBloc>().add(
-            AddEditSpacePolicyBulletRemoved(id, index),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  final String label;
-  final String value;
-  final String hint;
-  final String? errorText;
-  final ValueChanged<String> onChanged;
-  final int maxLength;
-
-  const _Field({
-    required this.label,
-    required this.value,
-    required this.hint,
-    required this.errorText,
-    required this.onChanged,
-    this.maxLength = 80,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AdminCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: AdminText.body14(
-              color: AdminColors.black75,
-              w: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            initialValue: value,
-            onChanged: onChanged,
-            maxLength: maxLength,
-            style: AdminText.body16(color: AdminColors.text),
-            decoration: InputDecoration(
-              counterText: '',
-              hintText: hint,
-              hintStyle: AdminText.body16(color: AdminColors.black40),
-              errorText: errorText,
-              contentPadding: const EdgeInsets.all(14),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AdminColors.black15,
-                  width: 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AdminColors.black15,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AdminColors.black15,
-                  width: 1,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/*
-
 
 class AddEditSpacePage extends StatelessWidget {
   final String? spaceId;
@@ -501,16 +57,7 @@ class AddEditSpacePage extends StatelessWidget {
           listenWhen: (p, n) => p.status != n.status,
           listener: (context, state) {
             if (state.status == AddEditSpaceStatus.saved) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("تم حفظ المساحة بنجاح")),
-              );
               Navigator.of(context).maybePop();
-            }
-
-            if (state.status == AddEditSpaceStatus.failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error ?? "حدث خطأ")),
-              );
             }
           },
           builder: (context, state) {
@@ -540,11 +87,7 @@ class AddEditSpacePage extends StatelessWidget {
               return const Center(child: SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 3)));
             }
 
-            final baseText = (f.basePriceValue <= 0)
-                ? ''
-                : (f.basePriceValue % 1 == 0
-                ? f.basePriceValue.toStringAsFixed(0)
-                : f.basePriceValue.toStringAsFixed(2));
+            final baseText = (f.basePriceValue <= 0) ? '' : (f.basePriceValue % 1 == 0 ? f.basePriceValue.toStringAsFixed(0) : f.basePriceValue.toStringAsFixed(2));
             final loc = f.location;
 
             return SingleChildScrollView(
@@ -618,11 +161,11 @@ class AddEditSpacePage extends StatelessWidget {
                         const SizedBox(height: 12),
 
                         PriceEditor(
-                          prices: f.extraPrices,
-                          onAdd: (v, u) => context.read<AddEditSpaceBloc>()
-                              .add(AddEditSpaceExtraPriceAdded(value: v, unit: u)),
-                          onRemove: (i) => context.read<AddEditSpaceBloc>()
-                              .add(AddEditSpaceExtraPriceRemoved(index: i)),
+                          valueText: baseText,
+                          unit: f.basePriceUnit,
+                          errorText: state.basePriceError,
+                          onValueChanged: (v) => context.read<AddEditSpaceBloc>().add(AddEditSpaceBasePriceChanged(v)),
+                          onUnitChanged: (u) => context.read<AddEditSpaceBloc>().add(AddEditSpaceBaseUnitChanged(u)),
                         ),
 
                         const SizedBox(height: 12),
@@ -867,6 +410,53 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
                   Icon(AdminIconMapper.chevronDown(), size: 16, color: AdminColors.black40),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Field extends StatelessWidget {
+  final String label;
+  final String value;
+  final String hint;
+  final String? errorText;
+  final ValueChanged<String> onChanged;
+  final int maxLength;
+
+  const _Field({
+    required this.label,
+    required this.value,
+    required this.hint,
+    required this.errorText,
+    required this.onChanged,
+    this.maxLength = 80,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AdminCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: AdminText.body14(color: AdminColors.black75, w: FontWeight.w700)),
+          const SizedBox(height: 8),
+          TextFormField(
+            initialValue: value,
+            onChanged: onChanged,
+            maxLength: maxLength,
+            style: AdminText.body16(color: AdminColors.text),
+            decoration: InputDecoration(
+              counterText: '',
+              hintText: hint,
+              hintStyle: AdminText.body16(color: AdminColors.black40),
+              errorText: errorText,
+              contentPadding: const EdgeInsets.all(14),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15, width: 1)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15, width: 1)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AdminColors.black15, width: 1)),
             ),
           ),
         ],
