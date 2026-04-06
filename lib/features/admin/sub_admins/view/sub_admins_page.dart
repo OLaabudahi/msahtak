@@ -2,6 +2,469 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../_shared/admin_ui.dart';
+import '../../../../core/i18n/app_i18n.dart';
+
+import '../bloc/sub_admins_bloc.dart';
+import '../bloc/sub_admins_event.dart';
+import '../bloc/sub_admins_state.dart';
+import '../data/repos/sub_admins_repo_impl.dart';
+import '../data/sources/sub_admins_firebase_source.dart';
+import '../domain/usecases/get_admin_spaces_usecase.dart';
+
+class SubAdminsPage extends StatefulWidget {
+  const SubAdminsPage({super.key});
+
+  static Widget withBloc() {
+    final source = SubAdminsFirebaseSource();
+    final repo = SubAdminsRepoImpl(source);
+    final usecase = GetAdminSpacesUseCase(repo);
+
+    return BlocProvider(
+      create: (_) => SubAdminsBloc(usecase)..add(LoadSubAdminsEvent()),
+      child: const SubAdminsPage(),
+    );
+  }
+
+  @override
+  State<SubAdminsPage> createState() => _SubAdminsPageState();
+}
+
+class _SubAdminsPageState extends State<SubAdminsPage> {
+  final _db = FirebaseFirestore.instance;
+
+  /// =========================
+  /// CREATE
+  /// =========================
+  Future<void> _showCreateDialog() async {
+    final nameCtrl = TextEditingController();
+    final emailCtrl = TextEditingController();
+    final passCtrl = TextEditingController();
+
+    final selectedIds = <String>{};
+
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setSt) {
+          String? error;
+
+          Future<void> create() async {
+            final name = nameCtrl.text.trim();
+            final email = emailCtrl.text.trim();
+            final pass = passCtrl.text.trim();
+
+            if (name.isEmpty || email.isEmpty || pass.isEmpty) {
+              setSt(() => error = 'Fill all fields');
+              return;
+            }
+
+            try {
+              final app = await Firebase.initializeApp(
+                name: DateTime.now().millisecondsSinceEpoch.toString(),
+                options: Firebase.app().options,
+              );
+
+              final cred = await FirebaseAuth.instanceFor(app: app)
+                  .createUserWithEmailAndPassword(
+                email: email,
+                password: pass,
+              );
+
+              final uid = cred.user!.uid;
+
+              await _db.collection('users').doc(uid).set({
+                'uid': uid,
+                'email': email,
+                'fullName': name,
+                'role': 'sub_admin',
+                'assignedSpaceIds': selectedIds.toList(),
+              });
+
+              await app.delete();
+
+              Navigator.pop(ctx);
+              context.read<SubAdminsBloc>().add(LoadSubAdminsEvent());
+            } catch (e) {
+              setSt(() => error = e.toString());
+            }
+          }
+
+          final spaces = context.read<SubAdminsBloc>().state.spaces;
+
+          return AlertDialog(
+            backgroundColor: AdminColors.bg,
+            title: const Text('Create Sub Admin'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Name')),
+                  TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
+                  TextField(controller: passCtrl, decoration: const InputDecoration(labelText: 'Password')),
+
+                  const SizedBox(height: 12),
+
+                  ...spaces.map((s) {
+                    final id = s['id'];
+                    final name = s['spaceName'] ?? s['name'];
+                    final selected = selectedIds.contains(id);
+
+                    return CheckboxListTile(
+                      value: selected,
+                      title: Text(name),
+                      onChanged: (_) {
+                        setSt(() {
+                          selected
+                              ? selectedIds.remove(id)
+                              : selectedIds.add(id);
+                        });
+                      },
+                    );
+                  }),
+
+                  if (error != null)
+                    Text(error!, style: const TextStyle(color: Colors.red)),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              TextButton(onPressed: create, child: const Text('Create')),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  /// =========================
+  /// BUILD
+  /// =========================
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SubAdminsBloc, SubAdminsState>(
+      builder: (context, state) {
+
+        final spaces = state.spaces;
+        final users = state.subAdmins;
+
+        final spaceOptions = spaces.map((d) {
+          final name = d['spaceName'] ?? d['name'] ?? d['id'];
+          return _SpaceOption(id: d['id'], name: name);
+        }).toList();
+
+        final items = users.map((d) {
+          final rawIds = d['assignedSpaceIds'];
+
+          final assignedIds = rawIds is List
+              ? rawIds.map((e) => e.toString()).toList()
+              : <String>[];
+
+          final assignedNames = assignedIds.map((id) {
+            return spaceOptions.firstWhere(
+                  (s) => s.id == id,
+              orElse: () => _SpaceOption(id: id, name: id),
+            ).name;
+          }).toList();
+
+          return _SubAdminItem(
+            uid: d['id'],
+            name: d['fullName'] ?? d['full_name'] ?? 'Unknown',
+            email: d['email'] ?? '',
+            assignedSpaceIds: assignedIds,
+            assignedSpaceNames: assignedNames,
+          );
+        }).toList();
+
+        return Scaffold(
+          backgroundColor: AdminColors.bg,
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'sub_admins_fab',
+            backgroundColor: AdminColors.primaryAmber,
+            onPressed: _showCreateDialog,
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 390),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AdminAppBar(
+                        title: context.t('subAdminsTitle'),
+                        subtitle: context.t('subAdminsSubtitle'),
+                      ),
+
+                      if (state.loading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 48),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      else if (items.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 48),
+                          child: Center(
+                            child: Text(context.t('subAdminsNoItems')),
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: items.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            itemBuilder: (_, i) => _SubAdminCard(
+                              item: items[i],
+                              onEdit: () => _showEditDialog(items[i]),
+                              onRemove: () => _removeSubAdmin(items[i]),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// =========================
+  /// EDIT
+  /// =========================
+  Future<void> _showEditDialog(_SubAdminItem item) async {
+    final selectedIds = item.assignedSpaceIds.toSet();
+    final spaces = context.read<SubAdminsBloc>().state.spaces;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setSt) {
+
+          Future<void> save() async {
+            await _db.collection('users').doc(item.uid).update({
+              'assignedSpaceIds': selectedIds.toList(),
+            });
+
+            Navigator.pop(ctx);
+            context.read<SubAdminsBloc>().add(LoadSubAdminsEvent());
+          }
+
+          return AlertDialog(
+            backgroundColor: AdminColors.bg,
+            title: const Text('Edit Sub Admin'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...spaces.map((s) {
+                  final id = s['id'];
+                  final name = s['spaceName'] ?? s['name'];
+                  final selected = selectedIds.contains(id);
+
+                  return CheckboxListTile(
+                    value: selected,
+                    title: Text(name),
+                    onChanged: (_) {
+                      setSt(() {
+                        selected
+                            ? selectedIds.remove(id)
+                            : selectedIds.add(id);
+                      });
+                    },
+                  );
+                }),
+              ],
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              TextButton(onPressed: save, child: const Text('Save')),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  /// =========================
+  /// DELETE
+  /// =========================
+  Future<void> _removeSubAdmin(_SubAdminItem item) async {
+    await _db.collection('users').doc(item.uid).update({
+      'role': 'user',
+      'assignedSpaceIds': [],
+    });
+
+    context.read<SubAdminsBloc>().add(LoadSubAdminsEvent());
+  }
+}
+
+class _SubAdminCard extends StatelessWidget {
+  final _SubAdminItem item;
+  final VoidCallback onEdit;
+  final VoidCallback onRemove;
+
+  const _SubAdminCard({
+    required this.item,
+    required this.onEdit,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AdminCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AdminColors.primaryBlue.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              item.name.isNotEmpty
+                  ? item.name[0].toUpperCase()
+                  : '?',
+              style: AdminText.body16(
+                color: AdminColors.primaryBlue,
+                w: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          /// 🔹 البيانات
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AdminText.body16(w: FontWeight.w700),
+                ),
+                Text(
+                  item.email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AdminText.body14(),
+                ),
+
+                if (item.assignedSpaceNames.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: item.assignedSpaceNames.map((name) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: AdminColors.primaryBlue.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          name,
+                          style: AdminText.label12(
+                            color: AdminColors.primaryBlue,
+                            w: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ] else ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    context.t('subAdminNoSpaces'),
+                    style: AdminText.label12(
+                      color: AdminColors.danger,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          /// 🔹 الأزرار
+          Column(
+            children: [
+              InkWell(
+                onTap: onEdit,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: Icon(
+                    AdminIconMapper.edit(),
+                    size: 18,
+                    color: AdminColors.primaryBlue,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: onRemove,
+                borderRadius: BorderRadius.circular(8),
+                child: const Padding(
+                  padding: EdgeInsets.all(6),
+                  child: Icon(
+                    Icons.person_remove_outlined,
+                    size: 18,
+                    color: AdminColors.danger,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// =========================
+/// MODELS (UI ONLY)
+/// =========================
+class _SubAdminItem {
+  final String uid;
+  final String name;
+  final String email;
+  final List<String> assignedSpaceIds;
+  final List<String> assignedSpaceNames;
+
+  const _SubAdminItem({
+    required this.uid,
+    required this.name,
+    required this.email,
+    required this.assignedSpaceIds,
+    required this.assignedSpaceNames,
+  });
+}
+
+class _SpaceOption {
+  final String id;
+  final String name;
+
+  const _SpaceOption({
+    required this.id,
+    required this.name,
+  });
+}
+/*
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import '../../_shared/admin_ui.dart';
 import '../../../../core/i18n/app_i18n.dart';
 
@@ -502,3 +965,4 @@ class _SpaceOption {
   final String name;
   const _SpaceOption({required this.id, required this.name});
 }
+*/

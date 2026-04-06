@@ -69,9 +69,6 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     Emitter<AddEditSpaceState> emit,
   ) async {
     emit(state.copyWith(status: AddEditSpaceStatus.loading, error: null));
-    final s =await LocalStorageService();
-    final id = s.getUserId();
-    print('getUserId 12$id /  asdd space getUserName${AdminSession.userName}');
 
     try {
       final form = await getForm(spaceId: event.spaceId);
@@ -699,7 +696,6 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     emit(state.copyWith(status: AddEditSpaceStatus.saving, error: null));
     try {
 
-      print(' SAVE getUserId ${LocalStorageService().getUserId()} / getUserName${LocalStorageService().getUserName()}');
       final updatedForm = _copyForm(
         f0,
         adminId: AdminSession.userId,
@@ -707,6 +703,7 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       );
 
       await save(form: _deriveCompat(updatedForm));
+
       emit(state.copyWith(status: AddEditSpaceStatus.saved));
       print("SAVE 12 TRIGGERED");
     } catch (e) {

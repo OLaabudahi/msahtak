@@ -22,7 +22,8 @@ class AdminDashboardPage extends StatelessWidget {
     final usecase = GetAdminDashboardDataUseCase(repo);
 
     return BlocProvider(
-      create: (_) => AdminDashboardBloc(usecase)..add(const AdminDashboardStarted()),
+      create: (_) =>
+          AdminDashboardBloc(usecase)..add(const AdminDashboardStarted()),
       child: const AdminDashboardPage(),
     );
   }
@@ -51,12 +52,15 @@ class AdminDashboardPage extends StatelessWidget {
 
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+
                         child: AdminSpaceDropdown(
-                          selected: data?.selectedSpace ?? 'Downtown Hub',
-                          spaces: data?.spaces ?? const ['Downtown Hub'],
+                          selected: data != null ? data.selectedSpace : '',
+                          spaces: data != null ? data.spaces : const [''],
                           open: state.dropdownOpen,
-                          onToggle: () => bloc.add(const AdminDashboardDropdownToggled()),
-                          onSelect: (s) => bloc.add(AdminDashboardSpaceSelected(s)),
+                          onToggle: () =>
+                              bloc.add(const AdminDashboardDropdownToggled()),
+                          onSelect: (s) =>
+                              bloc.add(AdminDashboardSpaceSelected(s)),
                         ),
                       ),
 
@@ -71,14 +75,23 @@ class AdminDashboardPage extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {},
-                            icon: const Icon(Icons.add_rounded, size: 20, color: Colors.white),
-                            label: const Text('Add New Space', style: TextStyle(fontFamily: 'SF Pro Text')),
+                            icon: const Icon(
+                              Icons.add_rounded,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'Add New Space',
+                              style: TextStyle(fontFamily: 'SF Pro Text'),
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AdminColors.primaryBlue,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.all(16),
                               elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                           ),
                         ),
@@ -88,7 +101,11 @@ class AdminDashboardPage extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                         child: Text(
                           'Recent Activity',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: 'SF Pro Text'),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'SF Pro Text',
+                          ),
                         ),
                       ),
                       Padding(
@@ -97,7 +114,12 @@ class AdminDashboardPage extends StatelessWidget {
                           children: (data?.activities ?? const []).map((a) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 12),
-                              child: AdminActivityTile(user: a.user, action: a.action, space: a.space, time: a.time),
+                              child: AdminActivityTile(
+                                user: a.user,
+                                action: a.action,
+                                space: a.space,
+                                time: a.time,
+                              ),
                             );
                           }).toList(),
                         ),
@@ -107,7 +129,11 @@ class AdminDashboardPage extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                         child: Text(
                           'Quick Actions',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, fontFamily: 'SF Pro Text'),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'SF Pro Text',
+                          ),
                         ),
                       ),
                       Padding(
@@ -119,10 +145,22 @@ class AdminDashboardPage extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           children: [
-                            AdminQuickActionButton(label: 'View Requests', onTap: () {}),
-                            AdminQuickActionButton(label: 'Manage Calendar', onTap: () {}),
-                            AdminQuickActionButton(label: 'Create Offer', onTap: () {}),
-                            AdminQuickActionButton(label: 'View Reviews', onTap: () {}),
+                            AdminQuickActionButton(
+                              label: 'View Requests',
+                              onTap: () {},
+                            ),
+                            AdminQuickActionButton(
+                              label: 'Manage Calendar',
+                              onTap: () {},
+                            ),
+                            AdminQuickActionButton(
+                              label: 'Create Offer',
+                              onTap: () {},
+                            ),
+                            AdminQuickActionButton(
+                              label: 'View Reviews',
+                              onTap: () {},
+                            ),
                           ],
                         ),
                       ),
@@ -154,9 +192,22 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
-        Text('Admin Dashboard', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600, fontFamily: 'SF Pro Text')),
+        Text(
+          'Admin Dashboard',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'SF Pro Text',
+          ),
+        ),
         SizedBox(height: 8),
-        Text('Manage your coworking spaces', style: TextStyle(color: AdminColors.black40, fontFamily: 'SF Pro Text')),
+        Text(
+          'Manage your coworking spaces',
+          style: TextStyle(
+            color: AdminColors.black40,
+            fontFamily: 'SF Pro Text',
+          ),
+        ),
       ],
     );
   }
@@ -184,7 +235,12 @@ class _StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (status == AdminDashboardStatus.loading) {
-      return const Center(child: Padding(padding: EdgeInsets.all(8), child: CircularProgressIndicator()));
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     final stats = data?.stats ?? const [];

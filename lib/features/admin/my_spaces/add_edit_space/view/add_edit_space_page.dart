@@ -75,13 +75,20 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
     }
   }
 
-  void _next(AddEditSpaceState s) {
+  void _next(AddEditSpaceState s, bool isSaving) {
     if (!_validateStep(s)) return;
 
     if (currentStep < 3) {
       setState(() => currentStep++);
     } else {
       context.read<AddEditSpaceBloc>().add(const AddEditSpaceSavePressed());
+    }
+    if (isSaving){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("تم حفظ المساحة بنجاح")),
+      );
+       Navigator.pop(context);
+
     }
   }
 
@@ -122,7 +129,7 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
-                  child: LinearProgressIndicator(value: (currentStep + 1) / 4),
+                  child: LinearProgressIndicator(trackGap: 2,value: (currentStep + 1) / 4),
                 ),
 
                 /// 🔥 BODY
@@ -156,9 +163,7 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                               ? (widget.spaceId == null ? "Add Space" : "Update Space")
                               : "Next",
 
-                          onTap: (isValid && !isSaving)
-                              ? () => _next(state)
-                              : null,
+                          onTap: (isValid) ? () => _next(state,isSaving) : null,
 
                           bg: isValid?  AdminColors.primaryBlue: AppColors.secondary,
                         )

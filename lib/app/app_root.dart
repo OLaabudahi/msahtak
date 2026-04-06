@@ -14,12 +14,10 @@ import '../services/local_storage_service.dart';
 
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
-
   static Widget withBloc() {
     final storage = LocalStorageService();
     return BlocProvider(
-      create: (_) =>
-          AppStartBloc(AppStartRepoFirebase(storage))
+      create: (_) => AppStartBloc(AppStartRepoFirebase(storage))
             ..add(const AppStartStarted()),
       child: const AppRoot(),
     );

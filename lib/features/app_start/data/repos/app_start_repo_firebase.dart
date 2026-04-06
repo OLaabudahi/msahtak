@@ -18,19 +18,22 @@ class AppStartRepoFirebase implements AppStartRepo {
     final user = FirebaseAuth.instance.currentUser ??
         await FirebaseAuth.instance.authStateChanges().first;
     final isLoggedIn = await _storage.getIsLoggedIn();
-    _storage.setUserId(user!.uid);
+    if (user == null) {
+      return AppStartDecision.goLogin;
+    }
+    _storage.setUserId(user.uid);
     _storage.setUserName(user.displayName.toString());
-    debugPrint('[AppStart] decide: user=${user?.uid}');
+    print('[AppStart] decide: user=${user.uid}');
 
-    if (user == null || !isLoggedIn) return AppStartDecision.goLogin;
+    if (!isLoggedIn) return AppStartDecision.goLogin;
 
     final completed = await _storage.getHasCompletedOnboarding();
-    debugPrint('[AppStart] decide: completed=$completed');
+    ('[AppStart] decide: completed=$completed');
     if (!completed) return AppStartDecision.goOnboarding;
 
     // إذا كان المستخدم أدمن يُوجَّه لواجهة الإدارة
     final role = (await _storage.getUserRole())?.toLowerCase() ?? '';
-    debugPrint('[AppStart] decide: role=$role → decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
+    print('[AppStart] decide: role=$role → decision=${role.contains('admin') ? 'goAdmin' : 'goHome'}');
     if (role.contains('admin')) return AppStartDecision.goAdmin;
 
     return AppStartDecision.goHome;

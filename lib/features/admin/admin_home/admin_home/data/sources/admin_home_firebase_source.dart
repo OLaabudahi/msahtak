@@ -1,102 +1,143 @@
 ﻿import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../../../core/services/firestore_api.dart';
+import '../../../../../../services/local_storage_service.dart';
+
 import 'admin_home_source.dart';
 import '../models/kpi_model.dart';
 import '../../domain/entities/admin_space_item.dart';
 import '../../domain/entities/admin_activity_item.dart';
-import '../../../../_shared/admin_session.dart';
-
 
 class AdminHomeFirebaseSource implements AdminHomeSource {
-  final _db = FirebaseFirestore.instance;
+  final FirestoreApi _api = FirestoreApi();
+  final LocalStorageService _storage = LocalStorageService();
 
+  /// =========================
+  /// SPACES (🔥 أهم جزء)
+  /// =========================
   @override
   Future<List<AdminSpaceItem>> fetchSpaces() async {
-    final all = await _db.collection('spaces').get();
-    final assigned = AdminSession.assignedSpaceIds;
-    return all.docs
-        .where((d) => assigned.isEmpty || assigned.contains(d.id))
-        .map((d) {
-          final name = d.data()['spaceName'] as String? ?? d.data()['name'] as String? ?? d.id;
-          return AdminSpaceItem(id: d.id, name: name);
-        })
-        .toList();
-  }
+    final adminId = await _storage.getUserId();
 
-  @override
-  Future<List<AdminActivityItem>> fetchRecentActivity() async {
-    final assigned = AdminSession.assignedSpaceIds;
-    final snap = await _db
-        .collection('bookings')
-        .orderBy('createdAt', descending: true)
-        .limit(assigned.isEmpty ? 5 : 20)
-        .get();
+    final spaces = await _api.getCollection(collection: 'spaces');
 
-    final filtered = assigned.isEmpty
-        ? snap.docs
-        : snap.docs.where((doc) {
-            final d = doc.data();
-            final spaceId = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
-            return assigned.contains(spaceId);
-          }).take(5).toList();
+    final filtered = spaces.where((space) {
+      final ownerId = space['adminId'] ?? space['ownerId'] ?? '';
+      return ownerId == adminId;
+    }).toList();
 
-    return filtered.map((doc) {
-      final d = doc.data();
-      final userName = d['userName'] as String? ?? d['user_name'] as String? ?? d['guestName'] as String? ?? 'User';
-      final spaceName = d['spaceName'] as String? ?? d['workspaceName'] as String? ?? 'Space';
-      final status = d['status'] as String? ?? 'pending';
-      final ts = d['createdAt'] as Timestamp?;
-      final createdAt = ts?.toDate() ?? DateTime.now();
-      return AdminActivityItem(userName: userName, spaceName: spaceName, status: status, createdAt: createdAt);
+    return filtered.map((space) {
+      final name =
+          space['spaceName'] ??
+              space['name'] ??
+              'No Name';
+
+      return AdminSpaceItem(
+        id: space['id'],
+        name: name,
+      );
     }).toList();
   }
 
+  /// =========================
+  /// ACTIVITY
+  /// =========================
+  @override
+  Future<List<AdminActivityItem>> fetchRecentActivity() async {
+    final adminId = await _storage.getUserId();
+
+    final bookings = await _api.getCollection(collection: 'bookings');
+
+    final filtered = bookings.where((b) {
+      final ownerId = b['adminId'] ?? b['ownerId'] ?? '';
+      return ownerId == adminId;
+    }).toList();
+
+    filtered.sort((a, b) {
+      final aDate = (a['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now();
+      final bDate = (b['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now();
+      return bDate.compareTo(aDate);
+    });
+
+    return filtered.take(5).map((d) {
+      final userName =
+          d['userName'] ??
+              d['user_name'] ??
+              'User';
+
+      final spaceName =
+          d['spaceName'] ??
+              d['workspaceName'] ??
+              'Space';
+
+      final status = d['status'] ?? 'pending';
+
+      final ts = d['createdAt'] as Timestamp?;
+      final createdAt = ts?.toDate() ?? DateTime.now();
+
+      return AdminActivityItem(
+        userName: userName,
+        spaceName: spaceName,
+        status: status,
+        createdAt: createdAt,
+      );
+    }).toList();
+  }
+
+  /// =========================
+  /// KPI
+  /// =========================
   @override
   Future<List<KpiModel>> fetchKpis({required String spaceId}) async {
-    final assigned = AdminSession.assignedSpaceIds;
+    final adminId = await _storage.getUserId();
 
-    bool inScope(DocumentSnapshot<Map<String, dynamic>> doc) {
-      if (assigned.isEmpty) return true;
-      final d = doc.data() ?? {};
-      final sid = (d['workspaceId'] ?? d['spaceId'] ?? d['space_id'] ?? '') as String;
-      return assigned.contains(sid);
-    }
+    final bookings = await _api.getCollection(collection: 'bookings');
+    final spaces = await _api.getCollection(collection: 'spaces');
 
-    
-    final todayStart = DateTime.now().copyWith(hour: 0, minute: 0, second: 0, millisecond: 0);
-    final todayEnd   = todayStart.add(const Duration(days: 1));
+    /// فلترة حسب الأدمن
+    final filteredBookings = bookings.where((b) {
+      final ownerId = b['adminId'] ?? b['ownerId'] ?? '';
+      return ownerId == adminId;
+    }).toList();
 
-    final todaySnap = await _db
-        .collection('bookings')
-        .where('startDate', isGreaterThanOrEqualTo: Timestamp.fromDate(todayStart))
-        .where('startDate', isLessThan: Timestamp.fromDate(todayEnd))
-        .get();
-    final todayCount = todaySnap.docs.where(inScope).length;
+    /// اليوم
+    final todayStart = DateTime.now()
+        .copyWith(hour: 0, minute: 0, second: 0);
 
-    
-    final pendingSnap = await _db
-        .collection('bookings')
-        .where('status', isEqualTo: 'pending')
-        .get();
-    final pendingCount = pendingSnap.docs.where(inScope).length;
+    final todayCount = filteredBookings.where((b) {
+      final ts = b['startDate'] as Timestamp?;
+      final date = ts?.toDate();
+      return date != null && date.isAfter(todayStart);
+    }).length;
 
-    
+    /// pending
+    final pendingCount = filteredBookings
+        .where((b) => b['status'] == 'pending')
+        .length;
+
+    /// revenue
     final weekStart = DateTime.now().subtract(const Duration(days: 7));
-    final weekStatuses = ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed', 'paid'];
-    final weekSnaps = await Future.wait(weekStatuses.map((s) => _db.collection('bookings').where('status', isEqualTo: s).get()));
-    final allWeekDocs = weekSnaps.expand((s) => s.docs).where(inScope).toList();
-    final weekRevenue = allWeekDocs.fold<num>(0, (sum, doc) {
-      final d = doc.data();
-      final ts = d['createdAt'] as Timestamp?;
-      if (ts != null && ts.toDate().isBefore(weekStart)) return sum;
-      final price = d['total_price'] as num? ?? d['totalPrice'] as num? ?? d['totalAmount'] as num? ?? 0;
+
+    final weekRevenue = filteredBookings.fold<num>(0, (sum, b) {
+      final ts = b['createdAt'] as Timestamp?;
+      final date = ts?.toDate();
+
+      if (date == null || date.isBefore(weekStart)) return sum;
+
+      final price =
+          b['total_price'] ??
+              b['totalPrice'] ??
+              b['totalAmount'] ??
+              0;
+
       return sum + price;
     });
 
-    
-    final spacesSnap = await _db.collection('spaces').get();
-    final activeSpaces = spacesSnap.docs.where((d) {
-      if (assigned.isNotEmpty && !assigned.contains(d.id)) return false;
-      return d.data()['isActive'] as bool? ?? true;
+    /// active spaces
+    final activeSpaces = spaces.where((s) {
+      final ownerId = s['adminId'] ?? s['ownerId'] ?? '';
+      final isActive = s['isActive'] ?? true;
+      return ownerId == adminId && isActive;
     }).length;
 
     return [
@@ -121,7 +162,7 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
       KpiModel(
         id: 'revenue',
         title: 'kpiRevenueTitle',
-        value: '${weekRevenue.toStringAsFixed(0)} â‚ھ',
+        value: '${weekRevenue.toStringAsFixed(0)} ₪',
         delta: 'kpiRevenueDelta',
       ),
     ];
