@@ -1,4 +1,5 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:Msahtak/core/services/firestore_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class SubAdminsPage extends StatefulWidget {
 }
 
 class _SubAdminsPageState extends State<SubAdminsPage> {
-  final _db = FirebaseFirestore.instance;
+  final _api =FirestoreApi();
 
   /// =========================
   /// CREATE
@@ -75,7 +76,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
 
               final uid = cred.user!.uid;
 
-              await _db.collection('users').doc(uid).set({
+              await _api.updateFields(collection: 'users', docId: uid, data: {
                 'uid': uid,
                 'email': email,
                 'fullName': name,
@@ -250,7 +251,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
         return StatefulBuilder(builder: (ctx, setSt) {
 
           Future<void> save() async {
-            await _db.collection('users').doc(item.uid).update({
+            await _api.updateFields(collection:'users', docId:item.uid, data: {
               'assignedSpaceIds': selectedIds.toList(),
             });
 
@@ -297,7 +298,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
   /// DELETE
   /// =========================
   Future<void> _removeSubAdmin(_SubAdminItem item) async {
-    await _db.collection('users').doc(item.uid).update({
+    await _api.updateFields(collection:'users', docId: item.uid, data: {
       'role': 'user',
       'assignedSpaceIds': [],
     });
