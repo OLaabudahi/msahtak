@@ -16,7 +16,9 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
 
     final List<String> statuses = switch (status) {
       'pending' => ['pending', 'under_review'],
-      'approved' => ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed'],
+      'awaiting_payment' => ['approved', 'approved_waiting_payment'],
+      'awaiting_confirmation' => ['payment_under_review'],
+      'booked' => ['confirmed', 'paid', 'active', 'completed'],
       'canceled' => ['canceled', 'rejected', 'expired'],
       _ => [status],
     };
@@ -85,10 +87,11 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
               'Space';
 
       final plan =
-          d['plan'] ??
+          d['purposeLabel'] ??
+              d['plan'] ??
               d['bookingType'] ??
               d['type'] ??
-              'Desk';
+              '-';
 
       final spaceId = d['spaceId'] ?? '';
 
@@ -96,20 +99,25 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       final totalSeats = (ws['totalSeats'] as num?)?.toInt() ?? 0;
       final availableSeats =
           (ws['availableSeats'] as num?)?.toInt() ?? totalSeats;
+      final cancellationMeta = _buildCancellationMeta(d);
 
+      final durationText = _durationFromRequest(d, startTs, endTs);
       return BookingRequestModel(
         id: d['id'],
         userName: userName,
         userAvatar: _initials(userName),
         date: _formatDate(startTs),
-        time: _formatTimeRange(startTs, endTs),
-        duration: _calcDuration(startTs, endTs),
+        time: '-',
+        duration: durationText,
         plan: plan,
         space: spaceName,
         status: d['status'],
         spaceId: spaceId,
         totalSeats: totalSeats,
         availableSeats: availableSeats,
+        cancellationTitle: cancellationMeta.title,
+        cancellationReason: cancellationMeta.reason,
+        cancellationCompensation: cancellationMeta.compensation,
       );
     }).toList();
   }
@@ -141,6 +149,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       docId: bookingId,
       data: {
         'status': 'approved_waiting_payment',
+        'statusHint': 'Approved by space owner, waiting for payment.',
         'paymentDeadline': Timestamp.fromDate(deadline),
         'updatedAt': FieldValue.serverTimestamp(),
       },
@@ -170,10 +179,15 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       bookingId: bookingId,
       type: 'bookingApproved',
     );
+    await _notifySuperAdminsStatusChange(
+      bookingId: bookingId,
+      newStatus: 'approved_waiting_payment',
+    );
   }
 
   @override
   Future<void> rejectBooking({required String bookingId}) async {
+    final actorId = await _storage.getUserId() ?? '';
     final booking = await _api.getDoc(
       collection: 'bookings',
       docId: bookingId,
@@ -192,6 +206,14 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       docId: bookingId,
       data: {
         'status': 'canceled',
+        'statusHint': 'Cancelled by space owner.',
+        'cancelledBy': {
+          'role': 'space_owner',
+          'uid': actorId,
+        },
+        'cancelledAt': FieldValue.serverTimestamp(),
+        'cancellationStage': _resolveCancellationStage(prevStatus),
+        'cancellationCompensation': _resolveCompensationText(prevStatus),
         'updatedAt': FieldValue.serverTimestamp(),
       },
     );
@@ -226,6 +248,10 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     await _createNotification(
       bookingId: bookingId,
       type: 'bookingRejected',
+    );
+    await _notifySuperAdminsStatusChange(
+      bookingId: bookingId,
+      newStatus: 'canceled',
     );
   }
 
@@ -270,6 +296,44 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     });
   }
 
+  Future<void> _notifySuperAdminsStatusChange({
+    required String bookingId,
+    required String newStatus,
+  }) async {
+    final actorId = await _storage.getUserId() ?? '';
+    final actorName = await _storage.getUserName() ?? 'Unknown';
+    final actorRole = await _storage.getUserRole() ?? 'admin';
+
+    final supers = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'super_admin')
+        .get();
+
+    if (supers.docs.isEmpty) return;
+
+    final batch = FirebaseFirestore.instance.batch();
+    for (final doc in supers.docs) {
+      final ref = FirebaseFirestore.instance.collection('notifications').doc();
+      batch.set(ref, {
+        'userId': doc.id,
+        'title': 'Booking status changed',
+        'subtitle': '$actorName ($actorRole) changed booking $bookingId to $newStatus',
+        'type': 'tip',
+        'requestId': bookingId,
+        'bookingId': bookingId,
+        'isRead': false,
+        'createdAt': FieldValue.serverTimestamp(),
+        'changedBy': {
+          'uid': actorId,
+          'name': actorName,
+          'role': actorRole,
+        },
+      });
+    }
+
+    await batch.commit();
+  }
+
   /// =========================
   /// Helpers
   /// =========================
@@ -277,10 +341,11 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     if (ts == null) return '-';
     final d = ts.toDate();
     const months = [
-      'Jan','Feb','Mar','Apr','May','Jun',
-      'Jul','Aug','Sep','Oct','Nov','Dec'
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-    return '${months[d.month - 1]} ${d.day}, ${d.year}';
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return '${days[d.weekday - 1]}, ${months[d.month - 1]} ${d.day}, ${d.year}';
   }
 
   String _formatTimeRange(Timestamp? start, Timestamp? end) {
@@ -305,6 +370,20 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     return h == 1 ? '1 hour' : '$h hours';
   }
 
+  String _durationFromRequest(
+    Map<String, dynamic> d,
+    Timestamp? start,
+    Timestamp? end,
+  ) {
+    final value = (d['durationValue'] as num?)?.toInt();
+    final unit = (d['durationUnit'] ?? '').toString();
+    if (value != null && value > 0 && unit.isNotEmpty) {
+      final normalized = unit.endsWith('s') ? unit : '${unit}s';
+      return '$value $normalized';
+    }
+    return _calcDuration(start, end);
+  }
+
   String _initials(String name) {
     final parts = name.trim().split(' ');
     if (parts.length >= 2) {
@@ -312,6 +391,73 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     }
     return name.isNotEmpty ? name[0].toUpperCase() : '?';
   }
+
+  String _resolveCancellationStage(String prevStatus) {
+    if (prevStatus == 'approved_waiting_payment' || prevStatus == 'approved') {
+      return 'before_payment';
+    }
+    if (prevStatus == 'payment_under_review' ||
+        prevStatus == 'confirmed' ||
+        prevStatus == 'paid') {
+      return 'after_payment';
+    }
+    return 'owner_rejected';
+  }
+
+  String _resolveCompensationText(String prevStatus) {
+    if (prevStatus == 'payment_under_review' ||
+        prevStatus == 'confirmed' ||
+        prevStatus == 'paid') {
+      return 'Compensation status: pending review.';
+    }
+    return '';
+  }
+
+  _CancellationMeta _buildCancellationMeta(Map<String, dynamic> booking) {
+    final status = (booking['status'] ?? '').toString().toLowerCase();
+    if (!(status == 'canceled' || status == 'cancelled' || status == 'rejected' || status == 'expired')) {
+      return const _CancellationMeta();
+    }
+
+    final stage = (booking['cancellationStage'] ?? '').toString().toLowerCase();
+    final hasPayment = booking['paidAt'] != null ||
+        (booking['paymentId']?.toString().isNotEmpty == true) ||
+        (booking['paymentReceiptUrl']?.toString().isNotEmpty == true);
+    final reason = (booking['cancelReason'] ??
+            booking['cancellationReason'] ??
+            booking['rejectionReason'] ??
+            booking['adminNote'] ??
+            '')
+        .toString();
+    final compensation = (booking['cancellationCompensation'] ?? '').toString();
+
+    if (stage == 'after_payment' || (stage.isEmpty && hasPayment)) {
+      return _CancellationMeta(
+        title: 'Cancelled after payment',
+        reason: reason.isEmpty ? 'Booking was cancelled after payment verification stage.' : reason,
+        compensation: compensation.isEmpty ? 'Compensation status: pending review.' : compensation,
+      );
+    }
+    if (stage == 'before_payment') {
+      return _CancellationMeta(
+        title: 'Cancelled before payment',
+        reason: reason.isEmpty ? 'Booking was cancelled before the customer completed payment.' : reason,
+        compensation: compensation,
+      );
+    }
+    return _CancellationMeta(
+      title: 'Rejected by space owner',
+      reason: reason.isEmpty ? 'Booking request was rejected by the space owner.' : reason,
+      compensation: compensation,
+    );
+  }
+}
+
+class _CancellationMeta {
+  final String? title;
+  final String? reason;
+  final String? compensation;
+  const _CancellationMeta({this.title, this.reason, this.compensation});
 }
 /*
 import 'package:cloud_firestore/cloud_firestore.dart';

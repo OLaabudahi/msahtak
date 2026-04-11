@@ -42,6 +42,13 @@ class BookingRequestFirebaseSource {
     );
   }
 
+  Future<Map<String, dynamic>?> getSpace(String spaceId) async {
+    return await api.getDoc(
+      collection: 'spaces',
+      docId: spaceId,
+    );
+  }
+
   /// =========================
   /// Update Booking
   /// =========================

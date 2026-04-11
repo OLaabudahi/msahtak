@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../../../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/i18n/app_i18n.dart';
@@ -138,13 +139,21 @@ class RequestBookingPage extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {
-                              
+                            onPressed: () async {
+                              final offers = await _loadOfferItems();
+                              _PickItem? firstReal;
+                              for (final item in offers) {
+                                if (item.id != null) {
+                                  firstReal = item;
+                                  break;
+                                }
+                              }
+                              if (firstReal == null || !context.mounted) return;
                               context.read<BookingRequestBloc>().add(
-                                const OfferChanged(offerId: 'WEEKLY', offerLabel: 'Weekly plan'),
+                                OfferChanged(offerId: firstReal.id, offerLabel: firstReal.label),
                               );
                             },
-                            child: const Text('Switch'),
+                            child: Text(context.t('switch')),
                           ),
                         ],
                       ),
@@ -156,19 +165,13 @@ class RequestBookingPage extends StatelessWidget {
                       hint: 'Choose an offer or skip',
                       value: state.offerLabel,
                       onTap: () async {
-                        final picked = await _pickFromBottomSheet(
-                          context,
-                          title: 'Offer',
-                          items: const [
-                            _PickItem(id: null, label: 'Skip'),
-                            _PickItem(id: 'WEEKLY', label: 'Weekly plan'),
-                            _PickItem(id: 'MONTHLY', label: 'Monthly plan'),
-                            _PickItem(id: 'PROMO', label: 'Promo'),
-                          ],
-                        );
+                        final picked = await _pickOffer(context);
                         if (picked != null && context.mounted) {
                           context.read<BookingRequestBloc>().add(
-                            OfferChanged(offerId: picked.id, offerLabel: picked.label == 'Skip' ? null : picked.label),
+                            OfferChanged(
+                              offerId: picked.id,
+                              offerLabel: picked.id == null ? null : picked.label,
+                            ),
                           );
                         }
                       },
@@ -231,6 +234,34 @@ class RequestBookingPage extends StatelessWidget {
     );
   }
 
+  Future<List<_PickItem>> _loadOfferItems() async {
+    final doc = await FirebaseFirestore.instance.collection('spaces').doc(space.id).get();
+    final data = doc.data() ?? <String, dynamic>{};
+    final rawOffers = (data['offers'] as List?) ?? const [];
+
+    final items = <_PickItem>[const _PickItem(id: null, label: 'Skip')];
+
+    for (final item in rawOffers) {
+      if (item is! Map) continue;
+      final offer = Map<String, dynamic>.from(item);
+      final id = (offer['id'] ?? '').toString().trim();
+      if (id.isEmpty) continue;
+      final label = (offer['title'] ?? offer['label'] ?? id).toString().trim();
+      items.add(_PickItem(id: id, label: label.isEmpty ? id : label));
+    }
+
+    return items;
+  }
+
+  Future<_PickItem?> _pickOffer(BuildContext context) async {
+    final offers = await _loadOfferItems();
+    return _pickFromBottomSheet(
+      context,
+      title: context.t('offerOptional'),
+      items: offers,
+    );
+  }
+
   static String _fmtDate(DateTime d) {
     final mm = d.month.toString().padLeft(2, '0');
     final dd = d.day.toString().padLeft(2, '0');
@@ -239,7 +270,7 @@ class RequestBookingPage extends StatelessWidget {
 }
 
 extension on AddOnEntity {
-  String get currencySymbol => 'â‚ھ';
+  String get currencySymbol => '₪';
 }
 
 class _Label extends StatelessWidget {

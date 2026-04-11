@@ -104,11 +104,11 @@ class StatusRefreshRequested extends BookingRequestEvent {
 
 class CancelRequestPressed extends BookingRequestEvent {
   final String requestId;
+  final String reason;
 
-  const CancelRequestPressed(this.requestId);
+  const CancelRequestPressed(this.requestId, {required this.reason});
 
   @override
-  List<Object?> get props => [requestId];
+  List<Object?> get props => [requestId, reason];
 }
-
 

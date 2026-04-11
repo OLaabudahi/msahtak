@@ -10,21 +10,7 @@ class SpaceRequestRepoImpl implements SpaceRequestRepo {
 
   @override
   Future<void> submitRequest(SpaceRequestEntity request) async {
-    final model = SpaceRequestModel(
-      idRequest: request.idRequest,
-      nameSpace: request.nameSpace,
-      descriptionSpace: request.descriptionSpace,
-      locationDes: request.locationDes,
-      phoneNo: request.phoneNo,
-      whatsAppNo: request.whatsAppNo,
-      contactName: request.contactName,
-      pricePerDay: request.pricePerDay,
-      capacity: request.capacity,
-      workingHours: request.workingHours,
-      createdAt: request.createdAt,
-    );
+    final model = SpaceRequestModel.fromEntity(request);
     await source.submitRequest(model);
   }
 }
-
-

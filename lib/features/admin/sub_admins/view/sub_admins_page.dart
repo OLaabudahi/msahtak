@@ -80,7 +80,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                 'uid': uid,
                 'email': email,
                 'fullName': name,
-                'role': 'sub_admin',
+                'role': 'sup_admin',
                 'assignedSpaceIds': selectedIds.toList(),
               });
 
@@ -496,7 +496,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
     try {
       final results = await Future.wait([
         _db.collection('spaces').get(),
-        _db.collection('users').where('role', isEqualTo: 'sub_admin').get(),
+        _db.collection('users').where('role', whereIn: ['sub_admin', 'sup_admin']).get(),
       ]);
 
       final spacesSnap = results[0];
@@ -569,7 +569,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                   'uid': uid,
                   'email': email,
                   'fullName': name,
-                  'role': 'sub_admin',
+                  'role': 'sup_admin',
                   'assignedSpaceIds': selectedIds.toList(),
                   'status': 'active',
                   'createdAt': FieldValue.serverTimestamp(),

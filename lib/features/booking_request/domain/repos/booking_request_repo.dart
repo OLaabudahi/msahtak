@@ -27,7 +27,9 @@ abstract class BookingRequestRepo {
 
   Future<BookingRequestEntity> refreshStatus({required String bookingId});
 
-  Future<BookingRequestEntity> cancel({required String bookingId});
+  Future<BookingRequestEntity> cancel({
+    required String bookingId,
+    required String reason,
+  });
 }
-
 

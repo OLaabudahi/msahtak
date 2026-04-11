@@ -1,14 +1,29 @@
-abstract class SpaceRequestState {}
+import 'package:equatable/equatable.dart';
 
-class SpaceRequestInitial extends SpaceRequestState {}
+abstract class SpaceRequestState extends Equatable {
+  const SpaceRequestState();
 
-class SpaceRequestLoading extends SpaceRequestState {}
+  @override
+  List<Object?> get props => [];
+}
 
-class SpaceRequestSuccess extends SpaceRequestState {}
+class SpaceRequestInitial extends SpaceRequestState {
+  const SpaceRequestInitial();
+}
+
+class SpaceRequestLoading extends SpaceRequestState {
+  const SpaceRequestLoading();
+}
+
+class SpaceRequestSuccess extends SpaceRequestState {
+  const SpaceRequestSuccess();
+}
 
 class SpaceRequestError extends SpaceRequestState {
   final String message;
 
-  SpaceRequestError(this.message);
-}
+  const SpaceRequestError(this.message);
 
+  @override
+  List<Object?> get props => [message];
+}

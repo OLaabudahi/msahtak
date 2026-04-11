@@ -26,8 +26,10 @@ class PaymentRepoFirebase implements PaymentRepo {
     final space = await source.getSpace(spaceId);
     if (space == null) return [];
 
-    final rawMethods =
-        (space['paymentMethods'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final rawMethods = (space['paymentMethods'] as List? ?? const [])
+        .whereType<Map>()
+        .map((m) => Map<String, dynamic>.from(m))
+        .toList(growable: false);
 
     return rawMethods.where((m) => (m['id'] as String? ?? '').isNotEmpty).map((
       m,
@@ -45,6 +47,10 @@ class PaymentRepoFirebase implements PaymentRepo {
 
   String _buildDetails(Map<String, dynamic> m) {
     final parts = <String>[];
+
+    if ((m['accountDetails'] as String?)?.isNotEmpty == true) {
+      parts.add(m['accountDetails'] as String);
+    }
 
     if ((m['iban'] as String?)?.isNotEmpty == true) {
       parts.add('IBAN: ${m['iban']}');
@@ -66,8 +72,8 @@ class PaymentRepoFirebase implements PaymentRepo {
     final booking = await source.getBooking(bookingId);
     if (booking == null) throw Exception('Booking not found');
 
-    final totalAmount = (booking['totalPrice'] as num?)?.toInt() ?? 0;
-    final currency = booking['currency'] as String? ?? 'â‚ھ';
+    final totalAmount = _readTotalAmount(booking);
+    final currency = _readCurrency(booking);
 
     return PaymentSummaryModel(
       items: [PaymentLineItemEntity(label: 'Booking', amount: totalAmount)],
@@ -86,6 +92,9 @@ class PaymentRepoFirebase implements PaymentRepo {
     String? cardExpiry,
     String? cardCvv,
     String? cardHolder,
+    String? transferAccountHolder,
+    String? transferTime,
+    String? transferReference,
     Uint8List? receiptBytes,
     String? receiptFileName,
   }) async {
@@ -104,9 +113,8 @@ class PaymentRepoFirebase implements PaymentRepo {
       throw Exception('Not allowed to pay');
     }
 
-    final totalAmount = (booking['totalPrice'] as num?)?.toInt() ?? 0;
-
-    final currency = booking['currency'] as String? ?? 'â‚ھ';
+    final totalAmount = _readTotalAmount(booking);
+    final currency = _readCurrency(booking);
 
     final userId = booking['userId'] as String? ?? '';
 
@@ -129,6 +137,7 @@ class PaymentRepoFirebase implements PaymentRepo {
     }
  final updateData = {
       'status': 'payment_under_review',
+      'statusHint': 'Payment submitted by user and waiting verification.',
       'paymentId': paymentId,
       'paymentMethod': method,
       'paymentMethodName': methodName,
@@ -145,6 +154,16 @@ class PaymentRepoFirebase implements PaymentRepo {
 
       updateData['cardHolder'] = cardHolder ?? '';
       updateData['cardExpiry'] = cardExpiry ?? '';
+    }
+
+    if (transferAccountHolder != null && transferAccountHolder.isNotEmpty) {
+      updateData['payerAccountHolder'] = transferAccountHolder;
+    }
+    if (transferTime != null && transferTime.isNotEmpty) {
+      updateData['payerTransferTime'] = transferTime;
+    }
+    if (transferReference != null && transferReference.isNotEmpty) {
+      updateData['payerReferenceNumber'] = transferReference;
     }
 
     await source.submitPayment(bookingId: bookingId, data: updateData);
@@ -178,9 +197,47 @@ class PaymentRepoFirebase implements PaymentRepo {
     );
   }
 
-  /// ًں”¥ ظ†ظپط³ ظپظƒط±ط© booking
+  /// Reuse booking currency/value logic.
   String _generatePaymentId() {
     return "PAY-${DateTime.now().millisecondsSinceEpoch}";
+  }
+
+  int _readTotalAmount(Map<String, dynamic> booking) {
+    final direct = booking['totalAmount'] ?? booking['totalPrice'];
+    if (direct is num) return direct.toInt();
+
+    final quote = booking['quote'];
+    if (quote is Map<String, dynamic>) {
+      final quoteTotal = quote['total'];
+      if (quoteTotal is num) return quoteTotal.toInt();
+    } else if (quote is Map) {
+      final quoteTotal = quote['total'];
+      if (quoteTotal is num) return quoteTotal.toInt();
+    }
+
+    return 0;
+  }
+
+  String _readCurrency(Map<String, dynamic> booking) {
+    final directCurrency = booking['currency'];
+    if (directCurrency is String && directCurrency.isNotEmpty) {
+      return directCurrency;
+    }
+
+    final space = booking['space'];
+    if (space is Map<String, dynamic>) {
+      final spaceCurrency = space['currency'];
+      if (spaceCurrency is String && spaceCurrency.isNotEmpty) {
+        return spaceCurrency;
+      }
+    } else if (space is Map) {
+      final spaceCurrency = space['currency'];
+      if (spaceCurrency is String && spaceCurrency.isNotEmpty) {
+        return spaceCurrency;
+      }
+    }
+
+    return '₪';
   }
 }
 

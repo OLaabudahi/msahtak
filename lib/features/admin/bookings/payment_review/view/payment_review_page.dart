@@ -116,6 +116,7 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
           .doc(widget.doc.id)
           .update({
             'status': 'confirmed',
+            'statusHint': 'Payment verified by space owner. Booking confirmed.',
             'updatedAt': FieldValue.serverTimestamp(),
           });
 
@@ -145,6 +146,12 @@ class _PaymentReviewCardState extends State<_PaymentReviewCard> {
       final db = FirebaseFirestore.instance;
       await db.collection('bookings').doc(widget.doc.id).update({
         'status': 'rejected',
+        'statusHint': 'Payment rejected by space owner review.',
+        'cancelledBy': {'role': 'space_owner'},
+        'cancelledAt': FieldValue.serverTimestamp(),
+        'cancellationStage': 'after_payment',
+        'cancellationReason': 'Payment was not verified by admin review.',
+        'cancellationCompensation': 'Compensation status: pending review.',
         'updatedAt': FieldValue.serverTimestamp(),
       });
       final d = widget.doc.data();

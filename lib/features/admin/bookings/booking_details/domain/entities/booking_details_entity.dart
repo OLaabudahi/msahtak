@@ -19,6 +19,16 @@ class BookingDetailsEntity extends Equatable {
   final String total;
 
   final String status;
+  final String paymentMethod;
+  final String paymentStatus;
+  final String paymentReceiptUrl;
+  final String payerAccountHolder;
+  final String payerTransferTime;
+  final String payerReferenceNumber;
+  final String cancelReason;
+  final String cancellationStage;
+  final String cancelledBy;
+  final String cancelledAt;
 
   const BookingDetailsEntity({
     required this.id,
@@ -36,6 +46,16 @@ class BookingDetailsEntity extends Equatable {
     required this.price,
     required this.total,
     required this.status,
+    this.paymentMethod = '-',
+    this.paymentStatus = '-',
+    this.paymentReceiptUrl = '',
+    this.payerAccountHolder = '',
+    this.payerTransferTime = '',
+    this.payerReferenceNumber = '',
+    this.cancelReason = '',
+    this.cancellationStage = '',
+    this.cancelledBy = '',
+    this.cancelledAt = '',
   });
 
   @override
@@ -55,7 +75,15 @@ class BookingDetailsEntity extends Equatable {
         price,
         total,
         status,
+        paymentMethod,
+        paymentStatus,
+        paymentReceiptUrl,
+        payerAccountHolder,
+        payerTransferTime,
+        payerReferenceNumber,
+        cancelReason,
+        cancellationStage,
+        cancelledBy,
+        cancelledAt,
       ];
 }
-
-

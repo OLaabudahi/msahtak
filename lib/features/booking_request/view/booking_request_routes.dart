@@ -44,14 +44,17 @@ class BookingRequestRoutes {
   static Route<void> bookingStatus({
     required BookingRequestBloc bloc,
     required String bookingId,
+    bool openCancelDialog = false,
   }) {
     return MaterialPageRoute(
       builder: (_) => BlocProvider.value(
         value: bloc..add(BookingRequestStatusOpened(bookingId)),
-        child: BookingStatusPage(bookingId: bookingId),
+        child: BookingStatusPage(
+          bookingId: bookingId,
+          openCancelDialogOnLoad: openCancelDialog,
+        ),
       ),
     );
   }
 
 }
-

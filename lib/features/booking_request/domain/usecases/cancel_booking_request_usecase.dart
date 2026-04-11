@@ -6,9 +6,11 @@ class CancelBookingRequestUseCase {
 
   const CancelBookingRequestUseCase(this.repo);
 
-  Future<BookingRequestEntity> call(String bookingId) {
-    return repo.cancel(bookingId: bookingId);
+  Future<BookingRequestEntity> call({
+    required String bookingId,
+    required String reason,
+  }) {
+    return repo.cancel(bookingId: bookingId, reason: reason);
   }
 }
-
 

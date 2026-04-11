@@ -92,6 +92,7 @@ class LocalStorageService {
     await sp.remove(_kUserId);
     await sp.remove(_kUserName);
     await sp.remove(_kAssignedSpaceIds);
+    await sp.remove(_kHasCompletedOnboarding);
   }
 }
 

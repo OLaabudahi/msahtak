@@ -14,6 +14,9 @@ class BookingRequestModel {
   final String spaceId;
   final int totalSeats;
   final int availableSeats;
+  final String? cancellationTitle;
+  final String? cancellationReason;
+  final String? cancellationCompensation;
 
   const BookingRequestModel({
     required this.id,
@@ -28,6 +31,9 @@ class BookingRequestModel {
     this.spaceId = '',
     this.totalSeats = 0,
     this.availableSeats = 0,
+    this.cancellationTitle,
+    this.cancellationReason,
+    this.cancellationCompensation,
   });
 
   factory BookingRequestModel.fromJson(Map<String, dynamic> json) => BookingRequestModel(
@@ -40,6 +46,9 @@ class BookingRequestModel {
         plan: (json['plan'] ?? '').toString(),
         space: (json['space'] ?? '').toString(),
         status: (json['status'] ?? 'pending').toString(),
+        cancellationTitle: json['cancellationTitle']?.toString(),
+        cancellationReason: json['cancellationReason']?.toString(),
+        cancellationCompensation: json['cancellationCompensation']?.toString(),
       );
 
   Map<String, dynamic> toJson() => {'id': id, 'userName': userName, 'userAvatar': userAvatar, 'date': date, 'time': time, 'duration': duration, 'plan': plan, 'space': space, 'status': status};
@@ -57,9 +66,23 @@ class BookingRequestModel {
         spaceId: spaceId,
         totalSeats: totalSeats,
         availableSeats: availableSeats,
+        cancellationTitle: cancellationTitle,
+        cancellationReason: cancellationReason,
+        cancellationCompensation: cancellationCompensation,
       );
 
-  BookingStatus _parse(String s) => switch (s) { 'approved' => BookingStatus.approved, 'canceled' => BookingStatus.canceled, _ => BookingStatus.pending };
+  BookingStatus _parse(String s) => switch (s) {
+        'approved_waiting_payment' => BookingStatus.awaitingPayment,
+        'payment_under_review' => BookingStatus.awaitingConfirmation,
+        'approved' => BookingStatus.awaitingPayment,
+        'confirmed' => BookingStatus.booked,
+        'paid' => BookingStatus.booked,
+        'active' => BookingStatus.booked,
+        'completed' => BookingStatus.booked,
+        'canceled' => BookingStatus.canceled,
+        'cancelled' => BookingStatus.canceled,
+        'rejected' => BookingStatus.canceled,
+        'expired' => BookingStatus.canceled,
+        _ => BookingStatus.pending,
+      };
 }
-
-

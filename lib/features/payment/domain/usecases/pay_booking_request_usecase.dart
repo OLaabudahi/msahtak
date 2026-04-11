@@ -18,6 +18,9 @@ class PayBookingRequestUseCase {
     String? cardExpiry,
     String? cardCvv,
     String? cardHolder,
+    String? transferAccountHolder,
+    String? transferTime,
+    String? transferReference,
     Uint8List? receiptBytes,
     String? receiptFileName,
   }) {
@@ -30,9 +33,12 @@ class PayBookingRequestUseCase {
       cardExpiry: cardExpiry,
       cardCvv: cardCvv,
       cardHolder: cardHolder,
-
+      transferAccountHolder: transferAccountHolder,
+      transferTime: transferTime,
+      transferReference: transferReference,
+      receiptBytes: receiptBytes,
+      receiptFileName: receiptFileName,
     );
   }
 }
-
 

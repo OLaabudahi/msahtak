@@ -11,16 +11,43 @@ import '../../bloc/booking_request_state.dart';
 import '../../domain/entities/booking_request_entity.dart';
 import '../../widgets/booking_progress_timeline.dart';
 import '../../widgets/booking_request_summary_card.dart';
+import 'report_issue_page.dart';
 
-class BookingStatusPage extends StatelessWidget {
+class BookingStatusPage extends StatefulWidget {
   final String bookingId;
+  final bool openCancelDialogOnLoad;
 
-  const BookingStatusPage({super.key, required this.bookingId});
+  const BookingStatusPage({
+    super.key,
+    required this.bookingId,
+    this.openCancelDialogOnLoad = false,
+  });
+
+  @override
+  State<BookingStatusPage> createState() => _BookingStatusPageState();
+}
+
+class _BookingStatusPageState extends State<BookingStatusPage> {
+  bool _cancelDialogOpened = false;
 
   static const _pagePadding = EdgeInsets.symmetric(
     horizontal: 16,
     vertical: 12,
   );
+
+  bool _isOwnerCancellationAfterPayment(BookingRequestEntity? request) {
+    if (request == null) return false;
+    final cancelledBy = (request.cancelledBy ?? '').toLowerCase();
+    final cancelledByOwner = cancelledBy.contains('owner') ||
+        cancelledBy.contains('space_owner') ||
+        cancelledBy.contains('admin') ||
+        cancelledBy.contains('sub_admin') ||
+        cancelledBy.contains('sup_admin');
+    if (!cancelledByOwner) return false;
+    final stage = (request.cancellationStage ?? '').toLowerCase();
+    if (stage == 'after_payment') return true;
+    return (request.paymentReceiptUrl ?? '').trim().isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +69,35 @@ class BookingStatusPage extends StatelessWidget {
                 context,
               ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
             }
+            if (!_cancelDialogOpened &&
+                widget.openCancelDialogOnLoad &&
+                state.createdRequest != null) {
+              final req = state.createdRequest!;
+              final canOpen = req.canCancelBeforeApproval ||
+                  req.status == BookingRequestStatus.approvedWaitingPayment ||
+                  req.status == BookingRequestStatus.approved ||
+                  req.status == BookingRequestStatus.paymentUnderReview ||
+                  req.status == BookingRequestStatus.confirmed ||
+                  req.status == BookingRequestStatus.paid;
+              if (canOpen) {
+                _cancelDialogOpened = true;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  _showCancelDialog(context, req);
+                });
+              }
+            }
           },
           builder: (context, state) {
             final req = state.createdRequest;
             final isBusy = state.uiStatus == BookingRequestUiStatus.loading;
+            final showComplaintInsteadOfRefresh =
+                _isOwnerCancellationAfterPayment(req);
 
             return RefreshIndicator(
               onRefresh: () async {
                 context.read<BookingRequestBloc>().add(
-                  StatusRefreshRequested(bookingId),
+                  StatusRefreshRequested(widget.bookingId),
                 );
               },
               child: ListView(
@@ -61,7 +108,6 @@ class BookingStatusPage extends StatelessWidget {
                   _StatusHeaderCard(request: req),
                   const SizedBox(height: 14),
 
-                  // ظ…ط¤ظ‚طھ ظ…ظ‡ظ„ط© ط§ظ„ط¯ظپط¹
                   if (req != null &&
                       (req.status ==
                               BookingRequestStatus.approvedWaitingPayment ||
@@ -82,32 +128,58 @@ class BookingStatusPage extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           height: 52,
-                          child: ElevatedButton(
-                            onPressed: () => context
-                                .read<BookingRequestBloc>()
-                                .add(StatusRefreshRequested(bookingId)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.amber,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26),
-                              ),
-                            ),
-                            child: Text(context.t('bookingStatusRefreshBtn')),
-                          ),
+                          child: showComplaintInsteadOfRefresh
+                              ? OutlinedButton.icon(
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => ReportIssuePage(
+                                        bookingId: req!.bookingId,
+                                        spaceName: req.space.name,
+                                        bookingStatus: req.status,
+                                      ),
+                                    ),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                    side: const BorderSide(
+                                      color: AppColors.danger,
+                                    ),
+                                  ),
+                                  icon: const Icon(Icons.report_problem_outlined),
+                                  label: Text(context.t('submitComplaint')),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () => context
+                                      .read<BookingRequestBloc>()
+                                      .add(StatusRefreshRequested(widget.bookingId)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.amber,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                  ),
+                                  child: Text(context.t('bookingStatusRefreshBtn')),
+                                ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
 
-                  if (req != null && req.canCancelBeforeApproval) ...[
+                  if (req != null &&
+                      (req.canCancelBeforeApproval ||
+                          req.status == BookingRequestStatus.approvedWaitingPayment ||
+                          req.status == BookingRequestStatus.approved ||
+                          req.status == BookingRequestStatus.paymentUnderReview ||
+                          req.status == BookingRequestStatus.confirmed ||
+                          req.status == BookingRequestStatus.paid)) ...[
                     SizedBox(
                       width: double.infinity,
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () => context.read<BookingRequestBloc>().add(
-                          CancelRequestPressed(bookingId),
-                        ),
+                        onPressed: () => _showCancelDialog(context, req),
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(26),
@@ -120,7 +192,6 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // ط²ط± ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ظ…ظˆط§ظپظ‚ط©
                   if (req != null &&
                       (req.status ==
                               BookingRequestStatus.approvedWaitingPayment ||
@@ -132,7 +203,7 @@ class BookingStatusPage extends StatelessWidget {
                         onPressed: () => Navigator.of(context).push(
                           PaymentRoutes.payment(
                             bloc: AppInjector.createPaymentBloc(),
-                            bookingId: bookingId,
+                            bookingId: widget.bookingId,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
@@ -147,7 +218,6 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // ط¨ط§ظ†طھط¸ط§ط± طھط£ظƒظٹط¯ ط§ظ„ط¯ظپط¹
                   if (req != null &&
                       req.status ==
                           BookingRequestStatus.paymentUnderReview) ...[
@@ -177,7 +247,48 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
-                  // ظ…ط¤ظƒط¯ ظ†ظ‡ط§ط¦ظٹط§ظ‹
+                  if (req != null &&
+                      req.status == BookingRequestStatus.paymentRejected) ...[
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF0F0),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.danger),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.error_outline, color: AppColors.danger),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  context.t('paymentRejectedMessage'),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.danger,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () => _showIssueReportHint(context),
+                              icon: const Icon(Icons.report_problem_outlined),
+                              label: Text(context.t('reportIssue')),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
                   if (req != null &&
                       (req.status == BookingRequestStatus.confirmed ||
                           req.status == BookingRequestStatus.paid)) ...[
@@ -205,9 +316,78 @@ class BookingStatusPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          final url = (req.paymentReceiptUrl ?? '').trim();
+                          if (url.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(context.t('receiptUnavailable'))),
+                            );
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${context.t('downloadReceipt')}: $url')),
+                          );
+                        },
+                        icon: const Icon(Icons.download_outlined),
+                        label: Text(context.t('downloadReceipt')),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                   ],
 
-                  // ظ…ظ†طھظ‡ظٹط© ط§ظ„ظ…ظ‡ظ„ط©
+
+                  if (req != null && req.status == BookingRequestStatus.active) ...[
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9F7EF),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFF71C99A)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.play_circle_fill, color: Color(0xFF2A8B57)),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              context.t('bookingActiveMessage'),
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
+                  if (req != null && req.status == BookingRequestStatus.completed) ...[
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEFF3FF),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFF9BB2FF)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.task_alt, color: Color(0xFF3558C5)),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              context.t('bookingCompletedMessage'),
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
                   if (req != null &&
                       req.status == BookingRequestStatus.expired) ...[
                     Container(
@@ -236,12 +416,218 @@ class BookingStatusPage extends StatelessWidget {
                     const SizedBox(height: 12),
                   ],
 
+                  if (req != null &&
+                      (req.status == BookingRequestStatus.cancelled ||
+                          req.status == BookingRequestStatus.rejected)) ...[
+                    _CancellationInfoCard(
+                      request: req,
+                      canSubmitComplaint: showComplaintInsteadOfRefresh,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
                   const SizedBox(height: 40),
                 ],
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_cancelDialogOpened || !widget.openCancelDialogOnLoad) return;
+    final req = context.read<BookingRequestBloc>().state.createdRequest;
+    if (req == null) return;
+    final canOpen = req.canCancelBeforeApproval ||
+        req.status == BookingRequestStatus.approvedWaitingPayment ||
+        req.status == BookingRequestStatus.approved ||
+        req.status == BookingRequestStatus.paymentUnderReview ||
+        req.status == BookingRequestStatus.confirmed ||
+        req.status == BookingRequestStatus.paid;
+    if (!canOpen) return;
+    _cancelDialogOpened = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _showCancelDialog(context, req);
+    });
+  }
+
+  Future<void> _showCancelDialog(BuildContext context, BookingRequestEntity req) async {
+    final noteCtrl = TextEditingController();
+    final customCtrl = TextEditingController();
+    final reasons = _cancelReasonsLocalized(context);
+    String selected = reasons.first;
+    final afterPayment = req.status == BookingRequestStatus.paymentUnderReview ||
+        req.status == BookingRequestStatus.confirmed ||
+        req.status == BookingRequestStatus.paid;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx2, setState) {
+            return AlertDialog(
+              title: Text(context.t('bookingStatusCancelBtn')),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: selected,
+                      items: reasons
+                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .toList(),
+                      onChanged: (v) => setState(() => selected = v ?? reasons.first),
+                    ),
+                    if (selected == context.t('cancelReasonOther')) ...[
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: customCtrl,
+                        decoration: InputDecoration(hintText: context.t('cancelReasonAddNew')),
+                      ),
+                    ],
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: noteCtrl,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: afterPayment
+                            ? context.t('cancelDescriptionRequired')
+                            : context.t('cancelDescriptionOptional'),
+                      ),
+                    ),
+                    if (afterPayment) ...[
+                      const SizedBox(height: 10),
+                      Text(
+                        context.t('cancelFeeWarning'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                if (afterPayment)
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx2).pop();
+                      _showIssueReportHint(context);
+                    },
+                    child: Text(context.t('reportIssue')),
+                  ),
+                TextButton(
+                  onPressed: () => Navigator.of(ctx2).pop(),
+                  child: Text(context.t('cancel')),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final note = noteCtrl.text.trim();
+                    if (afterPayment && note.isEmpty) return;
+                    final reason = selected == context.t('cancelReasonOther')
+                        ? (customCtrl.text.trim().isEmpty ? context.t('cancelReasonOther') : customCtrl.text.trim())
+                        : selected;
+                    context.read<BookingRequestBloc>().add(
+                          CancelRequestPressed(
+                            widget.bookingId,
+                            reason: note.isEmpty ? reason : '$reason — $note',
+                          ),
+                        );
+                    Navigator.of(ctx2).pop();
+                  },
+                  child: Text(context.t('confirm')),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    noteCtrl.dispose();
+    customCtrl.dispose();
+  }
+
+  List<String> _cancelReasonsLocalized(BuildContext context) {
+    return [
+      context.t('cancelReasonPlanChanged'),
+      context.t('cancelReasonFoundOther'),
+      context.t('cancelReasonHighPrice'),
+      context.t('cancelReasonPaymentIssue'),
+      context.t('cancelReasonTimeNotSuitable'),
+      context.t('cancelReasonDetailsWrong'),
+      context.t('cancelReasonDifferentLocation'),
+      context.t('cancelReasonMoreSeats'),
+      context.t('cancelReasonFewerSeats'),
+      context.t('cancelReasonEmergency'),
+      context.t('cancelReasonPolicyIssue'),
+      context.t('cancelReasonOther'),
+    ];
+  }
+}
+
+class _CancellationInfoCard extends StatelessWidget {
+  final BookingRequestEntity request;
+  final bool canSubmitComplaint;
+
+  const _CancellationInfoCard({
+    required this.request,
+    required this.canSubmitComplaint,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cancelledAt = request.cancelledAt;
+    String cancelledAtText = '-';
+    if (cancelledAt != null) {
+      final mm = cancelledAt.month.toString().padLeft(2, '0');
+      final dd = cancelledAt.day.toString().padLeft(2, '0');
+      final hh = cancelledAt.hour.toString().padLeft(2, '0');
+      final mi = cancelledAt.minute.toString().padLeft(2, '0');
+      cancelledAtText = '$dd/$mm/${cancelledAt.year} $hh:$mi';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF0F0),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.danger),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(context.t('cancelInfoTitle'),
+              style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.danger)),
+          const SizedBox(height: 8),
+          Text('${context.t('cancelledByLabel')}: ${request.cancelledBy ?? '-'}'),
+          Text('${context.t('cancelReasonLabel')}: ${request.cancelReason ?? '-'}'),
+          Text('${context.t('cancelledAtLabel')}: $cancelledAtText'),
+          Text('${context.t('cancellationStageLabel')}: ${request.cancellationStage ?? '-'}'),
+          if (canSubmitComplaint) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ReportIssuePage(
+                      bookingId: request.bookingId,
+                      spaceName: request.space.name,
+                      bookingStatus: request.status,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.report_problem_outlined),
+                label: Text(context.t('submitComplaint')),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -343,6 +729,24 @@ class _StatusHeaderCard extends StatelessWidget {
           AppColors.approvedBg,
           AppColors.approvedText,
         );
+      case BookingRequestStatus.paymentRejected:
+        return _Badge(
+          context.t('paymentRejectedLabel'),
+          const Color(0xFFFFF0F0),
+          AppColors.danger,
+        );
+      case BookingRequestStatus.active:
+        return _Badge(
+          context.t('activeStatusLabel'),
+          const Color(0xFFE9F7EF),
+          const Color(0xFF2A8B57),
+        );
+      case BookingRequestStatus.completed:
+        return _Badge(
+          context.t('completedStatusLabel'),
+          const Color(0xFFEFF3FF),
+          const Color(0xFF3558C5),
+        );
       case BookingRequestStatus.rejected:
         return _Badge(
           context.t('rejected'),
@@ -371,6 +775,21 @@ class _StatusHeaderCard extends StatelessWidget {
   }
 }
 
+void _showIssueReportHint(BuildContext context) {
+  final req = context.read<BookingRequestBloc>().state.createdRequest;
+  if (req == null) return;
+
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => ReportIssuePage(
+        bookingId: req.bookingId,
+        spaceName: req.space.name,
+        bookingStatus: req.status,
+      ),
+    ),
+  );
+}
+
 class _Badge {
   final String label;
   final Color bg;
@@ -379,7 +798,6 @@ class _Badge {
   const _Badge(this.label, this.bg, this.fg);
 }
 
-/// ظ…ط¤ظ‚طھ ط§ظ„ط¹ط¯ ط§ظ„طھظ†ط§ط²ظ„ظٹ ظ„ظ…ظ‡ظ„ط© ط§ظ„ط¯ظپط¹
 class _DeadlineCountdown extends StatefulWidget {
   final DateTime deadline;
 
@@ -462,5 +880,3 @@ class _DeadlineCountdownState extends State<_DeadlineCountdown> {
     );
   }
 }
-
-

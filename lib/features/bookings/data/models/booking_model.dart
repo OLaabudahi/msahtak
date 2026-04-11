@@ -10,9 +10,13 @@ class BookingModel extends BookingEntity {
     required super.dateText,
     required super.timeText,
     required super.status,
+    required super.rawStatus,
     required super.totalPrice,
     required super.currency,
     super.imageUrl,
+    super.cancelledBy,
+    super.cancelReason,
+    super.cancellationStage,
   });
 
   factory BookingModel.fromMap(Map<String, dynamic> map) {
@@ -25,7 +29,7 @@ class BookingModel extends BookingEntity {
     if (startTs != null) {
       final start = startTs.toDate();
 
-      dateText = '${start.day}/${start.month}/${start.year}';
+      dateText = _dateWithDay(start);
 
       if (endTs != null) {
         final end = endTs.toDate();
@@ -43,19 +47,39 @@ class BookingModel extends BookingEntity {
       dateText: dateText,
       timeText: timeText,
       status: _normalizeStatus(map['status']),
+      rawStatus: (map['status'] ?? '').toString().toLowerCase(),
       totalPrice:
       (map['totalAmount'] ?? map['totalPrice'] ?? 0)
           .toDouble(),
-      currency: map['currency'] ?? 'â‚ھ',
+      currency: map['currency'] ?? '₪',
       imageUrl: map['imageUrl'],
+      cancelledBy: _parseCancelledBy(map['cancelledBy']),
+      cancelReason: (map['cancelReason'] ?? map['cancellationReason'] ?? '').toString(),
+      cancellationStage: (map['cancellationStage'] ?? '').toString(),
     );
+  }
+
+  static String _dateWithDay(DateTime date) {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return '${days[date.weekday - 1]} ${date.day}/${date.month}/${date.year}';
+  }
+
+  static String _parseCancelledBy(dynamic value) {
+    if (value is Map) {
+      final name = (value['name'] ?? '').toString().trim();
+      if (name.isNotEmpty) return name;
+      final role = (value['role'] ?? '').toString().trim();
+      if (role.isNotEmpty) return role;
+      return '';
+    }
+    return (value ?? '').toString();
   }
 
   static String _fmt(DateTime dt) {
     return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
   }
 
-  /// âœ… imageProvider
+  /// Image provider helper.
   ImageProvider get imageProvider {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return NetworkImage(imageUrl!);
@@ -65,14 +89,22 @@ class BookingModel extends BookingEntity {
 
   static String _normalizeStatus(String? raw) {
     switch (raw?.toLowerCase()) {
+      case 'payment_under_review':
+        return 'awaiting_confirmation';
+      case 'paid':
+      case 'active':
+        return 'confirmed';
       case 'approved':
+      case 'approved_waiting_payment':
       case 'confirmed':
         return 'confirmed';
       case 'pending':
       case 'under_review':
         return 'upcoming';
       case 'cancelled':
+      case 'canceled':
       case 'rejected':
+      case 'expired':
         return 'cancelled';
       case 'completed':
         return 'completed';
@@ -130,7 +162,7 @@ class BookingModel extends BookingEntity {
       totalPrice:
       (map['totalAmount'] ?? map['totalPrice'] ?? 0)
           .toDouble(),
-      currency: map['currency'] ?? 'â‚ھ',
+      currency: map['currency'] ?? '₪',
       imageUrl: map['imageUrl'],
     );
   }
@@ -164,19 +196,19 @@ class BookingModel extends BookingEntity {
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// âœ… ظ…ظˆط¯ظٹظ„ ط§ظ„ط­ط¬ط² (Dummy ط§ظ„ط¢ظ† - ط¬ط§ظ‡ط² ظ„ظ„ظ€ API)
+/// Booking model (dummy now, API-ready structure).
 class Booking extends Equatable {
   final String bookingId;
   final String spaceId;
 
   final String spaceName;
-  final String dateText; // ظ…ط«ط§ظ„: "Mon, 12 Aug"
-  final String timeText; // ظ…ط«ط§ظ„: "09:00 - 12:00"
+  final String dateText; // Example: "Mon, 12 Aug"
+  final String timeText; // Example: "09:00 - 12:00"
   final String status; // upcoming / completed / cancelled
   final double totalPrice;
   final String currency;
 
-  /// طµظˆط±ط© (asset ط§ظ„ط¢ظ† - url ظ„ط§ط­ظ‚ط§ظ‹)
+  /// Image (asset for now, URL later).
   final String? imageAsset;
   final String? imageUrl;
 
@@ -193,7 +225,7 @@ class Booking extends Equatable {
     this.imageUrl,
   });
 
-  /// âœ… imageProvider (API-ready)
+  /// Image provider helper (API-ready).
   ImageProvider get imageProvider {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return NetworkImage(imageUrl!);
@@ -201,7 +233,7 @@ class Booking extends Equatable {
     return AssetImage(imageAsset ?? 'assets/images/home.png');
   }
 
-  /// âœ… (API READY - ظƒظˆظ…ظ†طھ) ظ…ظ† JSON
+  /// Deserialize from JSON (API-ready).
   // factory Booking.fromJson(Map<String, dynamic> json) {
   //   return Booking(
   //     bookingId: json['bookingId'].toString(),
@@ -231,5 +263,3 @@ class Booking extends Equatable {
   ];
 }
 */
-
-

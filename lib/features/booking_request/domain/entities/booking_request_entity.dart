@@ -1,17 +1,20 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 enum BookingRequestStatus {
-  pending,              // بانتظار موافقة الأدمن
-  underReview,          // الأدمن يراجع الطلب
-  approvedWaitingPayment, // تمت الموافقة، بانتظار الدفع خلال 24 ساعة
-  paymentUnderReview,   // تم إرسال الدفع، بانتظار تأكيد الأدمن
-  confirmed,            // تم تأكيد الحجز نهائياً
-  rejected,             // تم الرفض
-  cancelled,            // تم الإلغاء
-  expired,              // انتهت مهلة الدفع
+  pending,
+  underReview,
+  approvedWaitingPayment,
+  paymentUnderReview,
+  paymentRejected,
+  confirmed,
+  active,
+  completed,
+  rejected,
+  cancelled,
+  expired,
   // legacy aliases
-  approved,             // قديم → approvedWaitingPayment
-  paid,                 // قديم → confirmed
+  approved,
+  paid,
 }
 
 enum DurationUnit { days, weeks, months }
@@ -19,7 +22,7 @@ enum DurationUnit { days, weeks, months }
 class SpaceSummaryEntity extends Equatable {
   final String id;
   final String name;
-  final int basePricePerDay; // smallest currency unit not enforced here (dummy)
+  final int basePricePerDay;
   final String currency;
 
   const SpaceSummaryEntity({
@@ -36,8 +39,8 @@ class SpaceSummaryEntity extends Equatable {
 class AddOnEntity extends Equatable {
   final String id;
   final String title;
-  final int price; // per unit (hour/day) simplified
-  final String unitLabel; // e.g. "/ hour"
+  final int price;
+  final String unitLabel;
   final bool isSelected;
 
   const AddOnEntity({
@@ -68,29 +71,22 @@ class BookingRequestEntity extends Equatable {
   final DateTime startDate;
   final DurationUnit durationUnit;
   final int durationValue;
-
   final String? purposeId;
   final String? purposeLabel;
-
   final String? offerId;
   final String? offerLabel;
-
   final List<AddOnEntity> addOns;
-
   final BookingRequestStatus status;
-
-  /// UI helper text (API-ready: comes from backend policy/SLAs)
   final String? statusHint;
-
   final int totalAmount;
   final String currency;
-
-  /// Present after payment (to link to Booking Details feature)
-
-
-  /// مهلة الدفع: 24 ساعة من وقت الموافقة
   final DateTime? paymentDeadline;
   final DateTime? createdAt;
+  final String? cancelReason;
+  final String? cancellationStage;
+  final DateTime? cancelledAt;
+  final String? cancelledBy;
+  final String? paymentReceiptUrl;
 
   const BookingRequestEntity({
     required this.bookingId,
@@ -109,18 +105,30 @@ class BookingRequestEntity extends Equatable {
     required this.currency,
     this.paymentDeadline,
     this.createdAt,
+    this.cancelReason,
+    this.cancellationStage,
+    this.cancelledAt,
+    this.cancelledBy,
+    this.paymentReceiptUrl,
   });
 
   bool get canCancelBeforeApproval =>
       status == BookingRequestStatus.pending ||
-      status == BookingRequestStatus.underReview;
+      status == BookingRequestStatus.underReview ||
+      status == BookingRequestStatus.approvedWaitingPayment ||
+      status == BookingRequestStatus.approved ||
+      status == BookingRequestStatus.paymentUnderReview ||
+      status == BookingRequestStatus.confirmed ||
+      status == BookingRequestStatus.paid;
 
   bool get isApproved =>
       status == BookingRequestStatus.approvedWaitingPayment ||
       status == BookingRequestStatus.approved ||
       status == BookingRequestStatus.paymentUnderReview ||
       status == BookingRequestStatus.confirmed ||
-      status == BookingRequestStatus.paid;
+      status == BookingRequestStatus.paid ||
+      status == BookingRequestStatus.active ||
+      status == BookingRequestStatus.completed;
 
   bool get isDeadlineExpired {
     if (paymentDeadline == null) return false;
@@ -129,21 +137,26 @@ class BookingRequestEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    bookingId,
-    space,
-    startDate,
-    durationUnit,
-    durationValue,
-    purposeId,
-    purposeLabel,
-    offerId,
-    offerLabel,
-    addOns,
-    status,
-    statusHint,
-    totalAmount,
-    currency,
-    bookingId,
-    paymentDeadline,
-  ];
+        bookingId,
+        space,
+        startDate,
+        durationUnit,
+        durationValue,
+        purposeId,
+        purposeLabel,
+        offerId,
+        offerLabel,
+        addOns,
+        status,
+        statusHint,
+        totalAmount,
+        currency,
+        paymentDeadline,
+        createdAt,
+        cancelReason,
+        cancellationStage,
+        cancelledAt,
+        cancelledBy,
+        paymentReceiptUrl,
+      ];
 }

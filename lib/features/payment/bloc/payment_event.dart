@@ -58,6 +58,21 @@ class PaymentCardFieldChanged extends PaymentEvent {
   List<Object?> get props => [cardNumber, cardExpiry, cardCvv, cardHolder];
 }
 
+class PaymentTransferDetailsChanged extends PaymentEvent {
+  final String accountHolder;
+  final String transferTime;
+  final String referenceNumber;
+
+  const PaymentTransferDetailsChanged({
+    required this.accountHolder,
+    required this.transferTime,
+    required this.referenceNumber,
+  });
+
+  @override
+  List<Object?> get props => [accountHolder, transferTime, referenceNumber];
+}
+
 class PayNowPressed extends PaymentEvent {
   final String bookingId;
 

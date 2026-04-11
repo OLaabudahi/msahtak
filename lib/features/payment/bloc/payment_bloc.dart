@@ -22,6 +22,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<PaymentMethodSelected>(_onMethodSelected);
     on<PaymentReceiptPicked>(_onReceiptPicked);
     on<PaymentCardFieldChanged>(_onCardFieldChanged);
+    on<PaymentTransferDetailsChanged>(_onTransferDetailsChanged);
     on<PayNowPressed>(_onPayNow);
   }
 
@@ -84,6 +85,18 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     ));
   }
 
+  void _onTransferDetailsChanged(
+    PaymentTransferDetailsChanged event,
+    Emitter<PaymentState> emit,
+  ) {
+    emit(state.copyWith(
+      transferAccountHolder: event.accountHolder,
+      transferTime: event.transferTime,
+      transferReference: event.referenceNumber,
+      clearError: true,
+    ));
+  }
+
   Future<void> _onPayNow(
     PayNowPressed event,
     Emitter<PaymentState> emit,
@@ -94,7 +107,11 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
 
     final isCard = state.isCardPayment;
-    if (!isCard && state.receiptBytes == null) {
+    if (!isCard &&
+        state.receiptBytes == null &&
+        (state.transferAccountHolder.trim().isEmpty ||
+            state.transferTime.trim().isEmpty ||
+            state.transferReference.trim().isEmpty)) {
       emit(state.copyWith(uiStatus: PaymentUiStatus.failure, errorMessage: 'paymentReceiptRequired'));
       return;
     }
@@ -114,6 +131,9 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         cardExpiry: isCard ? state.cardExpiry : null,
         cardCvv: isCard ? state.cardCvv : null,
         cardHolder: isCard ? state.cardHolder : null,
+        transferAccountHolder: isCard ? null : state.transferAccountHolder,
+        transferTime: isCard ? null : state.transferTime,
+        transferReference: isCard ? null : state.transferReference,
       );
       emit(
         state.copyWith(
@@ -132,5 +152,4 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
   }
 }
-
 

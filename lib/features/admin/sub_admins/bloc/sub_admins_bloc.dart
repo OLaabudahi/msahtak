@@ -27,7 +27,7 @@ class SubAdminsBloc extends Bloc<SubAdminsEvent, SubAdminsState> {
       final users = await api.queryWhereEqual(
         collection: 'users',
         field: 'role',
-        value: 'sub_admin',
+        value: 'sup_admin',
       );
 
       emit(state.copyWith(

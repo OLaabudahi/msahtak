@@ -24,6 +24,8 @@ class BookingListItem extends StatelessWidget {
   bool get _isUpcoming =>
       booking.status.toLowerCase() == 'upcoming' ||
           booking.status.toLowerCase() == 'confirmed';
+  bool get _isAwaitingConfirmation =>
+      booking.status.toLowerCase() == 'awaiting_confirmation';
 
   bool get _isCompleted =>
       booking.status.toLowerCase() == 'completed';
@@ -31,8 +33,7 @@ class BookingListItem extends StatelessWidget {
   bool get _isCancelled =>
       booking.status.toLowerCase() == 'cancelled';
 
-  String _dateLine() =>
-      '${booking.dateText} â€¢ ${booking.timeText}';
+  String _dateLine() => booking.dateText;
 
   String _priceLine(BuildContext context) {
     final value = booking.totalPrice % 1 == 0
@@ -43,6 +44,26 @@ class BookingListItem extends StatelessWidget {
   }
 
   Widget _statusChip(BuildContext context) {
+    if (booking.status.toLowerCase() == 'awaiting_confirmation') {
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEAF3FF),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFF5D8BF4), width: 1.0),
+        ),
+        child: Text(
+          context.t('bookingStatusAwaitingConfirmation'),
+          style: const TextStyle(
+            color: Color(0xFF2F5CC4),
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
+
     if (booking.status.toLowerCase() == 'confirmed') {
       return Container(
         padding:
@@ -53,8 +74,8 @@ class BookingListItem extends StatelessWidget {
           border: Border.all(
               color: const Color(0xFF22C55E), width: 1.2),
         ),
-        child: const Text(
-          'Confirmed',
+        child: Text(
+          context.t('bookingStatusConfirmed'),
           style: TextStyle(
             color: Color(0xFF16A34A),
             fontWeight: FontWeight.w700,
@@ -150,7 +171,7 @@ class BookingListItem extends StatelessWidget {
       );
     }
 
-    if (_isUpcoming) {
+    if (_isUpcoming || _isAwaitingConfirmation) {
       return TwoButtonsBar(
         leftText: context.t('view'),
         leftFilled: true,
@@ -245,6 +266,26 @@ class BookingListItem extends StatelessWidget {
                             color: AppColors.textDark,
                           ),
                         ),
+                        if (_isCancelled &&
+                            ((booking.cancelledBy ?? '').isNotEmpty ||
+                                (booking.cancelReason ?? '').isNotEmpty ||
+                                (booking.cancellationStage ?? '').isNotEmpty)) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            '${context.t('cancelledByLabel')}: ${booking.cancelledBy?.isNotEmpty == true ? booking.cancelledBy : '-'}',
+                            style: TextStyle(fontSize: 11.5, color: AppColors.textDark),
+                          ),
+                          Text(
+                            '${context.t('cancellationStageLabel')}: ${booking.cancellationStage?.isNotEmpty == true ? booking.cancellationStage : '-'}',
+                            style: TextStyle(fontSize: 11.5, color: AppColors.textDark),
+                          ),
+                          Text(
+                            '${context.t('cancelReasonLabel')}: ${booking.cancelReason?.isNotEmpty == true ? booking.cancelReason : '-'}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 11.5, color: AppColors.textDark),
+                          ),
+                        ],
                         const SizedBox(height: 8),
                         Row(
                           children: [
@@ -294,10 +335,10 @@ class BookingListItem extends StatelessWidget {
   final Booking booking;
   final VoidCallback onView;
 
-  /// âœ… ظپظ‚ط· ظ„ظ„ظ€ Upcoming
+  /// Upcoming-only helper.
   final VoidCallback? onCancel;
 
-  /// âœ… ظپظ‚ط· ظ„ظ„ظ€ Completed
+  /// Completed-only helper.
   final VoidCallback? onRebook;
 
   static const _blue = AppColors.btnSecondary;
@@ -306,7 +347,7 @@ class BookingListItem extends StatelessWidget {
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
   bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
 
-  String _dateLine() => '${booking.dateText} â€¢ ${booking.timeText}';
+  String _dateLine() => '${booking.dateText} • ${booking.timeText}';
 
   String _priceLine(BuildContext context) {
     final value = booking.totalPrice % 1 == 0
@@ -485,7 +526,7 @@ class BookingListItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // âœ… Name
+                        // Name
                         Text(
                           booking.spaceName,
                           maxLines: 1,
@@ -498,7 +539,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
 
-                        // âœ… date/time
+                        // Date/time
                         Text(
                           _dateLine(),
                           maxLines: 1,
@@ -510,7 +551,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
 
-                        // âœ… booking id
+                        // Booking id
                         Text(
                           '${context.t('bookingIdLabel')} ${booking.bookingId}',
                           maxLines: 1,
@@ -522,7 +563,7 @@ class BookingListItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
 
-                        // âœ… Price + Status chip
+                        // Price + status chip
                         Row(
                           children: [
                             Flexible(
@@ -557,5 +598,3 @@ class BookingListItem extends StatelessWidget {
   }
 }
 */
-
-

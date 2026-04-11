@@ -314,7 +314,7 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
     try {
       final snap = await FirebaseFirestore.instance
           .collection('users')
-          .where('role', isEqualTo: 'sub_admin')
+          .where('role', whereIn: ['sub_admin', 'sup_admin'])
           .get();
       final list = snap.docs.map((d) {
         final name = d.data()['fullName'] as String? ?? d.data()['full_name'] as String? ?? 'Unknown';

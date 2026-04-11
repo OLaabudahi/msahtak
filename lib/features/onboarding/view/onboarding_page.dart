@@ -6,7 +6,6 @@ import '../../../constants/app_spacing.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
-import '../../home/view/home_page.dart';
 import '../bloc/onboarding_bloc.dart';
 import '../widgets/check_option_card.dart';
 import '../widgets/info_banner.dart';
@@ -58,9 +57,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       listenWhen: (p, c) => p.stepIndex != c.stepIndex || p.goHome != c.goHome,
       listener: (context, state) {
         if (state.goHome) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => HomePage.withBloc()),
-          );
+          Navigator.of(context).pop(true);
           return;
         }
         _animateTo(state.stepIndex);

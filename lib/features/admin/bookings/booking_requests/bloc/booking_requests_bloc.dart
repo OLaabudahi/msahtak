@@ -35,11 +35,6 @@ class BookingRequestsBloc extends Bloc<BookingRequestsEvent, BookingRequestsStat
   Future<void> _onStarted(BookingRequestsStarted event, Emitter<BookingRequestsState> emit) async => _load(emit, state.activeTab);
 
   Future<void> _onTabChanged(BookingRequestsTabChanged event, Emitter<BookingRequestsState> emit) async {
-    
-    if (event.tab == BookingStatus.paymentReview) {
-      emit(state.copyWith(activeTab: event.tab, bookings: [], status: BookingRequestsLoadStatus.success));
-      return;
-    }
     return _load(emit, event.tab);
   }
 
@@ -53,5 +48,4 @@ class BookingRequestsBloc extends Bloc<BookingRequestsEvent, BookingRequestsStat
     await _load(emit, state.activeTab);
   }
 }
-
 

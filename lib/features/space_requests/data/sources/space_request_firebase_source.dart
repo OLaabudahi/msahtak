@@ -10,10 +10,9 @@ class SpaceRequestFirebaseSource implements SpaceRequestSource {
   @override
   Future<void> submitRequest(SpaceRequestModel model) async {
     await api.create(
-      collection: "spaceRequests",
-      docId: model.idRequest,
+      collection: 'spaceRequests',
+      docId: model.requestId,
       data: model.toMap(),
     );
   }
 }
-

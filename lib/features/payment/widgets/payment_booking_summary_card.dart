@@ -11,6 +11,7 @@ class PaymentBookingSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = summary;
+    final currency = s?.currency ?? '₪';
 
     return Container(
       width: double.infinity,
@@ -26,14 +27,14 @@ class PaymentBookingSummaryCard extends StatelessWidget {
           const Text('Booking Summary', style: TextStyle(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           if (s == null)
-            Text('â€”', style: TextStyle(color: AppColors.textDark))
+            Text('—', style: TextStyle(color: AppColors.textDark))
           else ...[
             ...s.items.map((i) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
                   Expanded(child: Text(i.label, style: TextStyle(color: AppColors.textDark))),
-                  Text('â‚ھ${i.amount}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                  Text('$currency${i.amount}', style: const TextStyle(fontWeight: FontWeight.w700)),
                 ],
               ),
             )),
@@ -42,7 +43,7 @@ class PaymentBookingSummaryCard extends StatelessWidget {
             Row(
               children: [
                 const Expanded(child: Text('Total', style: TextStyle(fontWeight: FontWeight.w800))),
-                Text('â‚ھ${s.total}', style: const TextStyle(fontWeight: FontWeight.w800)),
+                Text('$currency${s.total}', style: const TextStyle(fontWeight: FontWeight.w800)),
               ],
             ),
           ],
@@ -51,6 +52,5 @@ class PaymentBookingSummaryCard extends StatelessWidget {
     );
   }
 }
-
 
 

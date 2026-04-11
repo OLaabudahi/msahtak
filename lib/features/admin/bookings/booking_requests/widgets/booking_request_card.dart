@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../_shared/admin_ui.dart';
 import '../domain/entities/booking_request_entity.dart';
 import '../domain/entities/booking_status.dart';
+import '../../../../../../services/language_service.dart';
 
 class BookingRequestCard extends StatelessWidget {
   final BookingRequestEntity booking;
   final VoidCallback onOpenDetails;
-  final VoidCallback? onAccept;
-  final VoidCallback? onReject;
 
   const BookingRequestCard({
     super.key,
     required this.booking,
     required this.onOpenDetails,
-    this.onAccept,
-    this.onReject,
   });
 
   @override
@@ -61,13 +58,11 @@ class BookingRequestCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _KV(k: 'Date', v: booking.date)),
+                      Expanded(child: _KV(k: context.t('date'), v: booking.date)),
                       const SizedBox(width: 8),
-                      Expanded(child: _KV(k: 'Duration', v: booking.duration)),
+                      Expanded(child: _KV(k: context.t('duration'), v: booking.duration)),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  _KV(k: 'Time', v: booking.time, twoLines: true),
                 ],
               ),
             ),
@@ -81,18 +76,56 @@ class BookingRequestCard extends StatelessWidget {
                 ],
               ],
             ),
-            if (booking.status == BookingStatus.pending) ...[
+            if (booking.status == BookingStatus.canceled &&
+                (booking.cancellationReason?.isNotEmpty == true ||
+                    booking.cancellationCompensation?.isNotEmpty == true ||
+                    booking.cancellationTitle?.isNotEmpty == true)) ...[
               const SizedBox(height: AdminSpace.s12),
-              Row(
-                children: [
-                  Expanded(child: AdminButton.filled(label: 'Accept', onTap: onAccept, bg: AdminColors.success)),
-                  const SizedBox(width: AdminSpace.s8),
-                  Expanded(child: AdminButton.filled(label: 'Reject', onTap: onReject, bg: AdminColors.danger)),
-                ],
-              ),
+              _CancellationNoteBox(booking: booking),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CancellationNoteBox extends StatelessWidget {
+  final BookingRequestEntity booking;
+  const _CancellationNoteBox({required this.booking});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AdminColors.danger.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AdminColors.danger.withOpacity(0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            booking.cancellationTitle ?? context.t('cancelInfoTitle'),
+            style: AdminText.body14(color: AdminColors.danger, w: FontWeight.w700),
+          ),
+          if (booking.cancellationReason?.isNotEmpty == true) ...[
+            const SizedBox(height: 4),
+            Text(
+              booking.cancellationReason!,
+              style: AdminText.body14(color: AdminColors.text),
+            ),
+          ],
+          if (booking.cancellationCompensation?.isNotEmpty == true) ...[
+            const SizedBox(height: 4),
+            Text(
+              booking.cancellationCompensation!,
+              style: AdminText.label12(color: AdminColors.black75),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -127,7 +160,7 @@ class _SeatsTag extends StatelessWidget {
     final isFull = available <= 0;
     final bg = isFull ? AdminColors.danger.withOpacity(0.12) : AdminColors.success.withOpacity(0.12);
     final fg = isFull ? AdminColors.danger : AdminColors.success;
-    final label = isFull ? 'Full' : '$available/$total seats';
+    final label = isFull ? context.t('full') : '$available/$total ${context.t('adminSeats')}';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
@@ -146,5 +179,4 @@ class _SeatsTag extends StatelessWidget {
 extension on AdminSpace {
   static const s12 = 12.0;
 }
-
 

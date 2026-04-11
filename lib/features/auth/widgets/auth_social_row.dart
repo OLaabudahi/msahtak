@@ -29,7 +29,11 @@ class AuthSocialRow extends StatelessWidget {
         ),
         const SizedBox(width: 40),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Apple login coming soon')),
+            );
+          },
           borderRadius: BorderRadius.circular(30),
           child: Container(
             width: 60,
@@ -47,5 +51,3 @@ class AuthSocialRow extends StatelessWidget {
     );
   }
 }
-
-

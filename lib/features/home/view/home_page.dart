@@ -151,7 +151,18 @@ class _MySearchBarState extends State<MySearchBar> {
           );
         }
       },
-      onSearchTap: () {},
+      onSearchTap: () {
+        final q = _searchController.text.trim();
+        if (q.isEmpty) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SearchResultsPage.withBloc(
+              originKey: q,
+              originTitle: q,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -224,7 +235,6 @@ class _HomeTabState extends State<_HomeTab> {
   }
 
   void _openInsightDetails(BuildContext context, InsightItem item) {
-    // Meeting-ready: يفتح صفحة الحجوزات الفعّالة فقط
     if (item.id == 'ins_4') {
       Navigator.of(context).push(ActiveBookingsPage.route());
       return;
@@ -442,8 +452,6 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                   itemBuilder: (context, index) {
                     final item = state.insights[index];
-                    // Builder ضروري عشان context.t() يستخدم context.select
-                    // وهو ممنوع مباشرة داخل Sliver itemBuilder
                     return Builder(
                       builder: (ctx) => InsightTile(
                         imageAsset: item.imageAsset ?? 'assets/images/home.jpg',

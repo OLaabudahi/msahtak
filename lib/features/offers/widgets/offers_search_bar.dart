@@ -42,9 +42,11 @@ class OffersSearchBar extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 2),
             child: IconButton(
-              icon: Icon(Icons.filter_list,
-                  color: AppColors.textMuted, size: 20),
-              onPressed: () {},
+              icon: Icon(Icons.filter_list, color: AppColors.textMuted, size: 20),
+              onPressed: () {
+                controller.clear();
+                onChanged('');
+              },
             ),
           ),
         ],
@@ -52,5 +54,4 @@ class OffersSearchBar extends StatelessWidget {
     );
   }
 }
-
 

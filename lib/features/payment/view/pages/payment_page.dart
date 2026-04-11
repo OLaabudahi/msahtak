@@ -113,12 +113,20 @@ class PaymentPage extends StatelessWidget {
                   // ── إدخال بيانات البطاقة أو رفع إشعار الدفع ──
                   if (state.isCardPayment)
                     _CardDetailsForm(state: state)
-                  else
+                  else ...[
                     _ReceiptUploadButton(
                       hasReceipt: state.receiptBytes != null,
                       fileName: state.receiptFileName,
                       onPick: () => _pickReceipt(context),
                     ),
+                    const SizedBox(height: 10),
+                    Text(
+                      context.t('paymentOrEnterTransferData'),
+                      style: const TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 8),
+                    _TransferDetailsForm(state: state),
+                  ],
 
                   const SizedBox(height: 14),
 
@@ -422,6 +430,166 @@ class _ExpiryFormatter extends TextInputFormatter {
     return next.copyWith(
       text: str,
       selection: TextSelection.collapsed(offset: str.length),
+    );
+  }
+}
+
+class _TransferDetailsForm extends StatefulWidget {
+  final PaymentState state;
+  const _TransferDetailsForm({required this.state});
+
+  @override
+  State<_TransferDetailsForm> createState() => _TransferDetailsFormState();
+}
+
+class _TransferDetailsFormState extends State<_TransferDetailsForm> {
+  late final TextEditingController _holderCtrl;
+  late final TextEditingController _timeCtrl;
+  late final TextEditingController _refCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _holderCtrl = TextEditingController(text: widget.state.transferAccountHolder);
+    _timeCtrl = TextEditingController(text: widget.state.transferTime);
+    _refCtrl = TextEditingController(text: widget.state.transferReference);
+  }
+
+  @override
+  void dispose() {
+    _holderCtrl.dispose();
+    _timeCtrl.dispose();
+    _refCtrl.dispose();
+    super.dispose();
+  }
+
+  void _notify() {
+    context.read<PaymentBloc>().add(
+          PaymentTransferDetailsChanged(
+            accountHolder: _holderCtrl.text,
+            transferTime: _timeCtrl.text,
+            referenceNumber: _refCtrl.text,
+          ),
+        );
+  }
+
+  Future<void> _pickTransferDateTime() async {
+    final now = DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 2),
+      lastDate: DateTime(now.year + 2),
+    );
+    if (pickedDate == null) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now),
+    );
+    if (pickedTime == null) return;
+
+    final dt = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    final mm = dt.month.toString().padLeft(2, '0');
+    final dd = dt.day.toString().padLeft(2, '0');
+    final hh = dt.hour.toString().padLeft(2, '0');
+    final mi = dt.minute.toString().padLeft(2, '0');
+    _timeCtrl.text = '$dd/$mm/${dt.year} $hh:$mi';
+    _notify();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFDCE7FF)),
+      ),
+      child: Column(
+        children: [
+          _CardField(
+            controller: _holderCtrl,
+            label: context.t('paymentPayerAccountName'),
+            hint: context.t('paymentPayerAccountNameHint'),
+            keyboardType: TextInputType.name,
+            onChanged: (_) => _notify(),
+          ),
+          const SizedBox(height: 8),
+          _DateTimePickerField(
+            controller: _timeCtrl,
+            label: context.t('paymentTransferTime'),
+            hint: context.t('paymentTransferTimeHint'),
+            onTap: _pickTransferDateTime,
+          ),
+          const SizedBox(height: 8),
+          _CardField(
+            controller: _refCtrl,
+            label: context.t('paymentReferenceNumber'),
+            hint: context.t('paymentReferenceNumberHint'),
+            keyboardType: TextInputType.text,
+            onChanged: (_) => _notify(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DateTimePickerField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String hint;
+  final VoidCallback onTap;
+
+  const _DateTimePickerField({
+    required this.controller,
+    required this.label,
+    required this.hint,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: const TextStyle(
+                fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1565C0))),
+        const SizedBox(height: 4),
+        TextField(
+          controller: controller,
+          readOnly: true,
+          onTap: onTap,
+          decoration: InputDecoration(
+            hintText: hint,
+            suffixIcon: const Icon(Icons.alarm),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFBBD6F7)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFBBD6F7)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFF1565C0), width: 1.5),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/i18n/app_i18n.dart';
 
+import '../../../core/i18n/app_i18n.dart';
 import '../bloc/space_request_bloc.dart';
 import '../bloc/space_request_event.dart';
 import '../bloc/space_request_state.dart';
+import '../domain/entities/space_request_entity.dart';
 
 class SpaceRequestPage extends StatefulWidget {
   const SpaceRequestPage({super.key});
@@ -26,16 +27,40 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
   final capacityController = TextEditingController();
   final hoursController = TextEditingController();
 
-  void _clearForm() {
-    nameController.clear();
-    descController.clear();
-    locationController.clear();
-    phoneController.clear();
-    whatsappController.clear();
-    contactController.clear();
-    priceController.clear();
-    capacityController.clear();
-    hoursController.clear();
+  @override
+  void dispose() {
+    nameController.dispose();
+    descController.dispose();
+    locationController.dispose();
+    phoneController.dispose();
+    whatsappController.dispose();
+    contactController.dispose();
+    priceController.dispose();
+    capacityController.dispose();
+    hoursController.dispose();
+    super.dispose();
+  }
+
+  void _submitRequest() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final request = SpaceRequestEntity(
+      requestId: DateTime.now().millisecondsSinceEpoch.toString(),
+      spaceName: nameController.text.trim(),
+      spaceDescription: descController.text.trim(),
+      locationDescription: locationController.text.trim(),
+      phoneNumber: phoneController.text.trim(),
+      whatsappNumber: whatsappController.text.trim(),
+      contactName: contactController.text.trim(),
+      pricePerDay: double.parse(priceController.text.trim()),
+      capacity: int.parse(capacityController.text.trim()),
+      workingHours: hoursController.text.trim(),
+      createdAt: DateTime.now(),
+    );
+
+    context.read<SpaceRequestBloc>().add(SubmitSpaceRequestEvent(request));
   }
 
   @override
@@ -52,11 +77,6 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(context.t('requestSuccess'))),
                 );
-                /*    _clearForm();
-
-
-
-                context.read<SpaceRequestBloc>().add(ResetSpaceRequestEvent());*/
               }
             },
             builder: (context, state) {
@@ -67,8 +87,6 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
                 child: ListView(
                   children: [
                     const SizedBox(height: 60),
-
-                    // ًں”¹ Title
                     Text(
                       context.t('addSpace'),
                       style: const TextStyle(
@@ -76,17 +94,12 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 8),
-
-                    // ًں”¹ Note
                     Text(
                       context.t('spaceRequestNote'),
                       style: const TextStyle(fontSize: 13, color: Colors.grey),
                     ),
-
                     const SizedBox(height: 30),
-
                     _input(context, 'spaceName', nameController),
                     _input(context, 'description', descController),
                     _input(context, 'location', locationController),
@@ -96,38 +109,9 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
                     _numberInput(context, 'pricePD', priceController),
                     _numberInput(context, 'capacity', capacityController),
                     _input(context, 'workingHours', hoursController),
-
                     const SizedBox(height: 30),
-
-                    // ًں”¥ Button
                     GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                              if (!_formKey.currentState!.validate()) return;
-
-                              final data = {
-                                "idRequest": DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
-                                "nameSpace": nameController.text.trim(),
-                                "descriptionSpace": descController.text.trim(),
-                                "locationDes": locationController.text.trim(),
-                                "phoneNo": phoneController.text.trim(),
-                                "whatsAppNo": whatsappController.text.trim(),
-                                "contactName": contactController.text.trim(),
-                                "pricePerDay": double.parse(
-                                  priceController.text,
-                                ),
-                                "capacity": int.parse(capacityController.text),
-                                "workingHours": hoursController.text.trim(),
-                                "createdAt": DateTime.now(),
-                              };
-
-                              context.read<SpaceRequestBloc>().add(
-                                SubmitSpaceRequestEvent(data),
-                              );
-                            },
+                      onTap: isLoading ? null : _submitRequest,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         decoration: BoxDecoration(
@@ -164,10 +148,6 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
     );
   }
 
-  // =======================
-  // Inputs
-  // =======================
-
   Widget _input(
     BuildContext context,
     String key,
@@ -177,7 +157,8 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: controller,
-        validator: (v) => v == null || v.isEmpty ? context.t('required') : null,
+        validator: (value) =>
+            value == null || value.isEmpty ? context.t('required') : null,
         decoration: InputDecoration(
           labelText: context.t(key),
           enabledBorder: const UnderlineInputBorder(),
@@ -196,11 +177,9 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
       child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.number,
-        validator: (v) {
-          if (v == null || v.isEmpty) return context.t('required');
-          if (double.tryParse(v) == null) {
-            return context.t('invalidNumber');
-          }
+        validator: (value) {
+          if (value == null || value.isEmpty) return context.t('required');
+          if (double.tryParse(value) == null) return context.t('invalidNumber');
           return null;
         },
         decoration: InputDecoration(
@@ -221,9 +200,9 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
       child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.phone,
-        validator: (v) {
-          if (v == null || v.isEmpty) return context.t('required');
-          if (v.length < 9) return context.t('invalidPhone');
+        validator: (value) {
+          if (value == null || value.isEmpty) return context.t('required');
+          if (value.length < 9) return context.t('invalidPhone');
           return null;
         },
         decoration: InputDecoration(
@@ -234,5 +213,3 @@ class _SpaceRequestPageState extends State<SpaceRequestPage> {
     );
   }
 }
-
-

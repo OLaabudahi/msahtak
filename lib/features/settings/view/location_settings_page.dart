@@ -25,7 +25,7 @@ class LocationSettingsPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Nearby & map search â€” coming soon.',
+              'Nearby & map search — coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

@@ -34,12 +34,9 @@ class _AppRootState extends State<AppRoot> {
     if (_openingOnboarding) return;
     _openingOnboarding = true;
 
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()));
-
-
-    await LocalStorageService().setHasCompletedOnboarding(true);
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => OnboardingPage.withBloc()),
+    );
 
     if (mounted) {
       context.read<AppStartBloc>().add(const AppStartStarted());

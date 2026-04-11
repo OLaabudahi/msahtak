@@ -19,40 +19,37 @@ class BookingTabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = active ? AdminColors.primaryBlue : AdminColors.black15;
-    final bg = active ? AdminColors.primaryBlue.withOpacity(0.15) : Colors.transparent;
-    final iconColor = active ? activeIconColor : AdminColors.black40;
+    final borderColor = active ? AdminColors.primaryAmber : AdminColors.black15;
+    final bg = active ? AdminColors.primaryAmber.withOpacity(0.15) : Colors.transparent;
+    final iconColor = active ? AdminColors.primaryAmber : AdminColors.black40;
 
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 16, color: iconColor),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AdminText.body14(color: AdminColors.text, w: active ? FontWeight.w600 : FontWeight.w400),
-                ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        constraints: const BoxConstraints(minWidth: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: borderColor, width: 1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: iconColor),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              maxLines: 1,
+              style: AdminText.body14(
+                color: AdminColors.text,
+                w: active ? FontWeight.w600 : FontWeight.w400,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-

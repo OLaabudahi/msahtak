@@ -38,6 +38,14 @@ class BookingsRepoFirebase implements BookingsRepo {
       } catch (_) {}
     }
 
+    // Safety filter: never show bookings that belong to another user.
+    docs = docs.where((doc) {
+      final d = doc.data();
+      final ownerA = (d['userId'] ?? '').toString();
+      final ownerB = (d['user_id'] ?? '').toString();
+      return ownerA == uid || ownerB == uid;
+    }).toList(growable: false);
+
     docs.sort((a, b) {
       // الأدمن يكتب createdAt ، التطبيق القديم created_at
       final aTs = a.data()['createdAt'] ?? a.data()['created_at'];

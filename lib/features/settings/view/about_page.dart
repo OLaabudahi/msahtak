@@ -30,7 +30,7 @@ class AboutPage extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'Terms & Privacy â€” coming soon.',
+              'Terms & Privacy — coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

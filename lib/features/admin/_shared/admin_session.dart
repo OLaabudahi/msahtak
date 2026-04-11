@@ -10,7 +10,7 @@ class AdminSession {
   static List<String> assignedSpaceIds = [];
 
   static bool get isSuperAdmin => role == 'admin' || role == 'super_admin';
-  static bool get isSubAdmin => role == 'sub_admin';
+  static bool get isSubAdmin => role == 'sub_admin' || role == 'sup_admin';
 
 
   static Future<void> load() async {

@@ -6,13 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app_start/bloc/app_start_bloc.dart';
 import '../../app_start/bloc/app_start_event.dart';
 import '../../../core/i18n/app_i18n.dart';
-import '../../../services/local_storage_service.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../data/repos/auth_repo_dummy.dart';
 import '../widgets/auth_language_header.dart';
-import '../widgets/auth_social_row.dart';
 import '../widgets/auth_text_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -38,18 +35,13 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _notifyAppRoot(BuildContext context) {
-    // Capture bloc before popping (context becomes invalid after pop)
     final appStartBloc = context.read<AppStartBloc>();
-    // Pop SignUpPage so onboarding opens cleanly without SignUpPage in the stack
     if (Navigator.of(context).canPop()) Navigator.of(context).pop();
-    // After signup repo sets: isLoggedIn=true, hasCompletedOnboarding=false
-    // AppRoot will open Onboarding.
     appStartBloc.add(const AppStartStarted());
   }
 
   @override
   Widget build(BuildContext context) {
-    final apple = context.t('apple');
     return Directionality(
       textDirection: context.isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
@@ -93,9 +85,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             width: 200,
                             height: 80,
                             alignment: Alignment.center,
-                            child: const Text(
-                              'Msahtak',
-                              style: TextStyle(
+                            child: Text(
+                              context.t('msahtak'),
+                              style: const TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.secondary,
@@ -214,84 +206,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
 
                     const SizedBox(height: 24),
-
-                  /*  Row(
-                      children: [
-                        Expanded(
-                          child: Container(height: 1, color: Colors.grey),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            context.t('or'),
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(height: 1, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            context.read<AuthBloc>().add(AuthGoogleLoginRequested());
-                          },
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: AppColors.secondaryTint25,
-                              shape: BoxShape.circle,
-
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.g_mobiledata, size: 34, color: Colors.black),
-
-                            ),
-
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                        InkWell(
-                          onTap:() {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:  Text(apple),
-                              behavior: SnackBarBehavior.floating,
-                              margin: const EdgeInsets.all(16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          );
-                        },
-
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: AppColors.secondaryTint25,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.apple, size: 28, color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),*/
-
                     const SizedBox(height: 24),
                   ],
                 ),

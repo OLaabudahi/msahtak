@@ -1,13 +1,23 @@
 class RoleMapper {
+  /// Keeps Firebase role values stable so web + mobile stay compatible.
   static String map(String? role) {
-    switch (role) {
+    switch (role?.trim().toLowerCase()) {
       case 'admin':
       case 'owner':
+      case 'spaceowner':
+      case 'space_owner':
         return 'admin';
 
+      case 'sup_admin':
       case 'sub_admin':
       case 'assistant':
-        return 'sub_admin';
+      case 'spaceassistant':
+      case 'space_assistant':
+        return 'sup_admin';
+
+      case 'super_admin':
+      case 'superadmin':
+        return 'super_admin';
 
       default:
         return 'user';
@@ -15,11 +25,16 @@ class RoleMapper {
   }
 
   static bool isOwner(String? role) {
-    return map(role) == 'admin';
+    final value = map(role);
+    return value == 'admin' || value == 'super_admin';
   }
 
   static bool isAssistant(String? role) {
-    return map(role) == 'sub_admin';
+    return map(role) == 'sup_admin';
+  }
+
+  static bool isSuperAdmin(String? role) {
+    return map(role) == 'super_admin';
   }
 
   static bool isUser(String? role) {

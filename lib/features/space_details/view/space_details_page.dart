@@ -1,10 +1,13 @@
 ﻿import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../booking_request/domain/entities/booking_request_entity.dart';
 import '../../booking_request/view/booking_request_routes.dart';
 import '../../../../core/di/app_injector.dart';
@@ -153,6 +156,59 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
       index,
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOut,
+    );
+  }
+
+  Future<bool> _ensureBookingRequirements(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.t('bookingLoginRequired'))),
+      );
+      return false;
+    }
+
+    final usersRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final snap = await usersRef.get();
+    final data = snap.data() ?? <String, dynamic>{};
+
+    final phone = (data['phoneNumber'] ?? '').toString().trim();
+
+    if (phone.isNotEmpty && user.emailVerified) {
+      return true;
+    }
+
+    final ok = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => _BookingRequirementsDialog(
+        initialPhone: phone,
+        email: user.email ?? '',
+        emailVerified: user.emailVerified,
+        onSavePhone: (value) async {
+          await usersRef.set({
+            'phoneNumber': value.trim(),
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+        },
+      ),
+    );
+
+    return ok == true;
+  }
+
+  Future<void> _onRequestBookingPressed(
+    BuildContext context,
+    SpaceSummaryEntity summary,
+  ) async {
+    final canProceed = await _ensureBookingRequirements(context);
+    if (!canProceed || !mounted) return;
+
+    Navigator.of(context).push(
+      BookingRequestRoutes.requestBooking(
+        bloc: AppInjector.createBookingBloc(),
+        space: summary,
+      ),
     );
   }
 
@@ -670,9 +726,9 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       backgroundColor: AppColors.amber,
                       shape: const StadiumBorder(),
                     ),
-                    child: const Text(
-                      'Request Booking',
-                      style: TextStyle(
+                    child: Text(
+                      context.t('requestBookingCta'),
+                      style: const TextStyle(
                         fontWeight: FontWeight.w900,
                         color: Colors.black,
                       ),
@@ -684,13 +740,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                         basePricePerDay: d.pricePerDay,
                         currency: d.currency,
                       );
-                      Navigator.of(context).push(
-                        BookingRequestRoutes.requestBooking(
-                          bloc: AppInjector.createBookingBloc(),
-                          space: summary,
-                        ),
-                      );
-
+                      _onRequestBookingPressed(context, summary);
                     },
                   ),
                 ),
@@ -699,6 +749,179 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
           );
         },
       ),
+    );
+  }
+}
+
+class _BookingRequirementsDialog extends StatefulWidget {
+  const _BookingRequirementsDialog({
+    required this.initialPhone,
+    required this.email,
+    required this.emailVerified,
+    required this.onSavePhone,
+  });
+
+  final String initialPhone;
+  final String email;
+  final bool emailVerified;
+  final Future<void> Function(String value) onSavePhone;
+
+  @override
+  State<_BookingRequirementsDialog> createState() =>
+      _BookingRequirementsDialogState();
+}
+
+class _BookingRequirementsDialogState extends State<_BookingRequirementsDialog> {
+  late final TextEditingController _phoneController;
+  late bool _emailVerified;
+  bool _sendingEmail = false;
+  bool _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController = TextEditingController(text: widget.initialPhone);
+    _emailVerified = widget.emailVerified;
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  bool get _hasPhone => _phoneController.text.trim().isNotEmpty;
+
+  bool get _canContinue => _hasPhone && _emailVerified;
+
+  Future<void> _sendVerificationEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() => _sendingEmail = true);
+    try {
+      await user.sendEmailVerification();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.t('bookingVerifyEmailSent').replaceAll('{email}', widget.email),
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _sendingEmail = false);
+    }
+  }
+
+  Future<void> _refreshEmailStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await user.reload();
+    final refreshed = FirebaseAuth.instance.currentUser;
+    if (!mounted) return;
+    setState(() => _emailVerified = refreshed?.emailVerified == true);
+  }
+
+  Future<void> _continue() async {
+    if (!_canContinue || _saving) return;
+
+    setState(() => _saving = true);
+    try {
+      if (_hasPhone) {
+        await widget.onSavePhone(_phoneController.text.trim());
+      }
+      if (!mounted) return;
+      Navigator.of(context).pop(true);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(context.t('bookingRequirementsTitle')),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.t('bookingRequirementsSubtitle')),
+            const SizedBox(height: 14),
+            Text(context.t('phone'), style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                hintText: context.t('bookingPhoneHint'),
+                border: const OutlineInputBorder(),
+              ),
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: 12),
+            Text(context.t('bookingEmailLabel'), style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            Text(widget.email.isEmpty ? '-' : widget.email),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(
+                  _emailVerified ? Icons.check_circle : Icons.error_outline,
+                  size: 18,
+                  color: _emailVerified ? Colors.green : Colors.orange,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _emailVerified
+                        ? context.t('bookingEmailVerified')
+                        : context.t('bookingEmailNotVerified'),
+                  ),
+                ),
+              ],
+            ),
+            if (!_emailVerified) ...[
+              const SizedBox(height: 10),
+              Text(
+                context.t('bookingVerifyEmailHelp'),
+                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton(
+                    onPressed: _sendingEmail ? null : _sendVerificationEmail,
+                    child: Text(
+                      _sendingEmail
+                          ? context.t('submitting')
+                          : context.t('bookingSendVerificationBtn'),
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: _refreshEmailStatus,
+                    child: Text(context.t('bookingRefreshVerificationBtn')),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _saving ? null : () => Navigator.of(context).pop(false),
+          child: Text(context.t('cancel')),
+        ),
+        FilledButton(
+          onPressed: _canContinue && !_saving ? _continue : null,
+          child: Text(context.t('bookingContinueToRequestBtn')),
+        ),
+      ],
     );
   }
 }

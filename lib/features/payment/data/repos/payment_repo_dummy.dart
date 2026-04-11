@@ -55,6 +55,9 @@ class PaymentRepoDummy implements PaymentRepo {
     String? cardExpiry,
     String? cardCvv,
     String? cardHolder,
+    String? transferAccountHolder,
+    String? transferTime,
+    String? transferReference,
     Uint8List? receiptBytes,
     String? receiptFileName,
   }) async {
@@ -99,5 +102,4 @@ class PaymentRepoDummy implements PaymentRepo {
     return '$prefix-$n';
   }
 }
-
 

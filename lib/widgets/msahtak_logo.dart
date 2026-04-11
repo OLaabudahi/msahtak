@@ -47,7 +47,7 @@ class MsahtakLogo extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'ظ…ط³ط§ط­طھظƒ',
+                  'مساحتك',
                   style: TextStyle(
                     fontSize: fontSize * 0.65,
                     fontWeight: FontWeight.w500,

@@ -10,7 +10,9 @@ class AdminBookingsRepoImpl implements AdminBookingsRepo {
   @override
   Future<List<BookingRequestEntity>> getBookings({required BookingStatus status}) async {
     final s = switch (status) {
-      BookingStatus.approved => 'approved',
+      BookingStatus.awaitingPayment => 'awaiting_payment',
+      BookingStatus.awaitingConfirmation => 'awaiting_confirmation',
+      BookingStatus.booked => 'booked',
       BookingStatus.canceled => 'canceled',
       _ => 'pending',
     };
@@ -24,5 +26,3 @@ class AdminBookingsRepoImpl implements AdminBookingsRepo {
   @override
   Future<void> rejectBooking({required String bookingId}) => source.rejectBooking(bookingId: bookingId);
 }
-
-

@@ -83,12 +83,11 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
     } else {
       context.read<AddEditSpaceBloc>().add(const AddEditSpaceSavePressed());
     }
-    if (isSaving){
+    if (isSaving) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("تم حفظ المساحة بنجاح")),
+        SnackBar(content: Text(context.t('adminSpaceSavedSuccess'))),
       );
-       Navigator.pop(context);
-
+      Navigator.pop(context);
     }
   }
 
@@ -117,8 +116,11 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
               children: [
                 /// 🔥 HEADER
                 AdminAppBar(
-                  title: widget.spaceId == null ? "Add Space" : "Edit Space",
-                  subtitle: "Step ${currentStep + 1} of 4",
+                  title: widget.spaceId == null
+                      ? context.t('adminAddSpace')
+                      : context.t('adminEditSpace'),
+                  subtitle:
+                      '${context.t('adminStep')} ${currentStep + 1} ${context.t('adminOf')} 4',
                   onBack: _back,
                 ),
 
@@ -129,7 +131,10 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
-                  child: LinearProgressIndicator(trackGap: 2,value: (currentStep + 1) / 4),
+                  child: LinearProgressIndicator(
+                    trackGap: 2,
+                    value: (currentStep + 1) / 4,
+                  ),
                 ),
 
                 /// 🔥 BODY
@@ -148,7 +153,7 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                       if (currentStep > 0)
                         Expanded(
                           child: AdminButton.outline(
-                            label: "Back",
+                            label: context.t('adminBack'),
                             onTap: _back,
                             bg: AppColors.amber,
                             fg: AppColors.amber,
@@ -158,15 +163,18 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                       Expanded(
                         child: AdminButton.filled(
                           label: isSaving
-                              ? "Saving..."
+                              ? context.t('adminSaving')
                               : currentStep == 3
-                              ? (widget.spaceId == null ? "Add Space" : "Update Space")
-                              : "Next",
+                                  ? (widget.spaceId == null
+                                        ? context.t('adminAddSpace')
+                                        : context.t('adminUpdateSpace'))
+                                  : context.t('next'),
 
-                          onTap: (isValid) ? () => _next(state,isSaving) : null,
-
-                          bg: isValid?  AdminColors.primaryBlue: AppColors.secondary,
-                        )
+                          onTap: isValid ? () => _next(state, isSaving) : null,
+                          bg: isValid
+                              ? AdminColors.primaryBlue
+                              : AppColors.secondary,
+                        ),
                       ),
                     ],
                   ),
@@ -182,13 +190,13 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
   String _stepTitle() {
     switch (currentStep) {
       case 0:
-        return "المعلومات الأساسية";
+        return context.t('adminStepBasicInfo');
       case 1:
-        return "الصور والسعر والدفع";
+        return context.t('adminStepMediaPricing');
       case 2:
-        return "توافر المساحة";
+        return context.t('adminStepAvailability');
       case 3:
-        return "المميزات والسياسات";
+        return context.t('adminStepDetailsPolicies');
       default:
         return "";
     }
@@ -507,14 +515,14 @@ class AddEditSpacePage extends StatelessWidget {
           listener: (context, state) {
             if (state.status == AddEditSpaceStatus.saved) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("تم حفظ المساحة بنجاح")),
+                SnackBar(content: Text(context.t('adminSpaceSavedSuccess'))),
               );
               Navigator.of(context).maybePop();
             }
 
             if (state.status == AddEditSpaceStatus.failure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error ?? "حدث خطأ")),
+                SnackBar(content: Text(state.error ?? context.t('error'))),
               );
             }
           },
@@ -776,7 +784,7 @@ class _AdminPickerCardState extends State<_AdminPickerCard> {
     try {
       final snap = await FirebaseFirestore.instance
           .collection('users')
-          .where('role', isEqualTo: 'sub_admin')
+          .where('role', whereIn: ['sub_admin', 'sup_admin'])
           .get();
       final list = snap.docs.map((d) {
         final name = d.data()['fullName'] as String? ?? d.data()['full_name'] as String? ?? 'Unknown';

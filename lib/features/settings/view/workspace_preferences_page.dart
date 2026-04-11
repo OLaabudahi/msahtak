@@ -25,7 +25,7 @@ class WorkspacePreferencesPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Study, work, meetings â€” coming soon.',
+              'Study, work, meetings — coming soon.',
               style: TextStyle(color: Colors.grey),
             ),
           ],

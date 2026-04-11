@@ -46,6 +46,9 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
 
   Future<void> _openCancelSheet(BuildContext context) async {
     _reason.text = '';
+    final reasons = _localizedReasons(context);
+    String selected = reasons.first;
+    String customReason = '';
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -71,27 +74,59 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                     const SizedBox(height: 16),
                     Text(context.t('adminCancelReason'), style: AdminText.body14(color: AdminColors.black75)),
                     const SizedBox(height: 16),
-                    TextField(
-                      controller: _reason,
-                      maxLines: 4,
-                      style: AdminText.body16(),
-                      decoration: InputDecoration(
-                        hintText: context.t('adminCancelReasonHint'),
-                        hintStyle: AdminText.body16(color: AdminColors.black40),
-                        contentPadding: const EdgeInsets.all(16),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AdminColors.black15, width: 1),
+                    StatefulBuilder(
+                      builder: (ctx2, setInner) {
+                        final bookingStatus = context.read<BookingDetailsBloc>().state.details?.status ?? '';
+                        final noteRequired = bookingStatus == 'payment_under_review' ||
+                            bookingStatus == 'confirmed' ||
+                            bookingStatus == 'paid';
+                        return Column(
+                          children: [
+                            DropdownButtonFormField<String>(
+                              value: selected,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: AdminColors.black15, width: 1),
+                                ),
+                              ),
+                              items: reasons
+                                  .map((e) => DropdownMenuItem(value: e, child: Text(e, style: AdminText.body14())))
+                                  .toList(),
+                              onChanged: (v) => setInner(() => selected = v ?? reasons.first),
+                            ),
+                            if (selected == context.t('cancelReasonOther')) ...[
+                              const SizedBox(height: 10),
+                              TextField(
+                                maxLines: 2,
+                                onChanged: (v) => customReason = v.trim(),
+                                decoration: InputDecoration(
+                                  hintText: context.t('cancelReasonAddNew'),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: _reason,
+                              maxLines: 3,
+                              style: AdminText.body16(),
+                              decoration: InputDecoration(
+                                hintText: noteRequired
+                                    ? context.t('cancelDescriptionRequired')
+                                    : context.t('cancelDescriptionOptional'),
+                                hintStyle: AdminText.body16(color: AdminColors.black40),
+                                contentPadding: const EdgeInsets.all(16),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: AdminColors.black15, width: 1),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AdminColors.black15, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AdminColors.black15, width: 1),
-                        ),
-                      ),
+                      },
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -109,10 +144,22 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                           child: AdminButton.filled(
                             label: context.t('adminConfirmCancel'),
                             onTap: () {
-                              final r = _reason.text.trim();
-                              if (r.isEmpty) return;
+                              final bookingStatus = context.read<BookingDetailsBloc>().state.details?.status ?? '';
+                              final noteRequired = bookingStatus == 'payment_under_review' ||
+                                  bookingStatus == 'confirmed' ||
+                                  bookingStatus == 'paid';
+                              final note = _reason.text.trim();
+                              final reason = selected == context.t('cancelReasonOther')
+                                  ? (customReason.isEmpty ? context.t('cancelReasonOther') : customReason)
+                                  : selected;
+                              if (noteRequired && note.isEmpty) return;
                               Navigator.of(ctx).pop();
-                              context.read<BookingDetailsBloc>().add(BookingDetailsCanceled(widget.bookingId, r));
+                              context.read<BookingDetailsBloc>().add(
+                                    BookingDetailsCanceled(
+                                      widget.bookingId,
+                                      note.isEmpty ? reason : '$reason — $note',
+                                    ),
+                                  );
                               Navigator.of(context).maybePop();
                             },
                             bg: AdminColors.danger,
@@ -184,7 +231,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                       children: [
                                         Text(b.userName, maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body16(w: FontWeight.w600)),
                                         const SizedBox(height: 4),
-                                        AdminTag(text: 'Pending', tint: AdminColors.primaryAmber.withOpacity(0.15), textColor: AdminColors.primaryAmber),
+                                        AdminTag(text: _statusText(b.status), tint: AdminColors.primaryAmber.withOpacity(0.15), textColor: AdminColors.primaryAmber),
                                       ],
                                     ),
                                   ),
@@ -255,18 +302,83 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       ),
 
                       const SizedBox(height: 16),
+                      if (b.paymentMethod != '-' || b.paymentReceiptUrl.isNotEmpty || b.payerReferenceNumber.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text('Payment Information', style: AdminText.h2()),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: AdminCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                KvRow(label: 'Payment status', value: b.paymentStatus, last: false),
+                                KvRow(label: 'Method', value: b.paymentMethod, last: false),
+                                KvRow(label: 'Account name', value: b.payerAccountHolder.isEmpty ? '-' : b.payerAccountHolder, last: false),
+                                KvRow(label: 'Transfer time', value: b.payerTransferTime.isEmpty ? '-' : b.payerTransferTime, last: false),
+                                KvRow(label: 'Reference #', value: b.payerReferenceNumber.isEmpty ? '-' : b.payerReferenceNumber, last: b.paymentReceiptUrl.isEmpty),
+                                if (b.paymentReceiptUrl.isNotEmpty)
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(b.paymentReceiptUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      if (b.cancelReason.isNotEmpty ||
+                          b.cancellationStage.isNotEmpty ||
+                          b.cancelledBy.isNotEmpty ||
+                          b.cancelledAt.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(context.t('cancelInfoTitle'), style: AdminText.h2()),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: AdminCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                KvRow(label: context.t('cancelledByLabel'), value: b.cancelledBy.isEmpty ? '-' : b.cancelledBy, last: false),
+                                KvRow(label: context.t('cancelReasonLabel'), value: b.cancelReason.isEmpty ? '-' : b.cancelReason, last: false),
+                                KvRow(label: context.t('cancelledAtLabel'), value: b.cancelledAt.isEmpty ? '-' : b.cancelledAt, last: false),
+                                KvRow(label: context.t('cancellationStageLabel'), value: b.cancellationStage.isEmpty ? '-' : b.cancellationStage, last: true),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
                         child: Column(
                           children: [
-                            AdminButton.filled(
-                              label: context.t('adminConfirmBooking'),
-                              onTap: () {
-                                context.read<BookingDetailsBloc>().add(BookingDetailsConfirmed(widget.bookingId));
-                                Navigator.of(context).maybePop();
-                              },
-                              bg: AdminColors.success,
-                            ),
+                            if (b.status == 'pending' || b.status == 'under_review')
+                              AdminButton.filled(
+                                label: 'Approve Booking',
+                                onTap: () {
+                                  context.read<BookingDetailsBloc>().add(BookingDetailsConfirmed(widget.bookingId));
+                                  Navigator.of(context).maybePop();
+                                },
+                                bg: AdminColors.success,
+                              ),
+                            if (b.status == 'payment_under_review') ...[
+                              const SizedBox(height: 8),
+                              AdminButton.filled(
+                                label: 'Confirm Booking',
+                                onTap: () {
+                                  context.read<BookingDetailsBloc>().add(BookingDetailsConfirmed(widget.bookingId));
+                                  Navigator.of(context).maybePop();
+                                },
+                                bg: AdminColors.primaryBlue,
+                              ),
+                            ],
                             const SizedBox(height: 12),
                             AdminButton.outline(
                               label: context.t('adminCancelBooking'),
@@ -287,6 +399,38 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
       ),
     );
   }
+
+  String _statusText(String status) {
+    switch (status) {
+      case 'approved_waiting_payment':
+        return 'Awaiting payment';
+      case 'payment_under_review':
+        return 'Payment under review';
+      case 'confirmed':
+      case 'paid':
+        return 'Booked';
+      case 'canceled':
+      case 'rejected':
+        return 'Cancelled';
+      default:
+        return 'Pending';
+    }
+  }
+
+  List<String> _localizedReasons(BuildContext context) {
+    return [
+      context.t('cancelReasonNoAvailability'),
+      context.t('cancelReasonMaintenance'),
+      context.t('cancelReasonPolicyIssue'),
+      context.t('cancelReasonPricingConflict'),
+      context.t('cancelReasonDuplicate'),
+      context.t('cancelReasonClosed'),
+      context.t('cancelReasonEmergency'),
+      context.t('cancelReasonInsufficientDetails'),
+      context.t('cancelReasonPaymentIssue'),
+      context.t('cancelReasonSecurity'),
+      context.t('cancelReasonTimeNotSuitable'),
+      context.t('cancelReasonOther'),
+    ];
+  }
 }
-
-

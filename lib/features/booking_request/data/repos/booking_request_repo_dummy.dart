@@ -87,7 +87,7 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
       offerLabel: offerLabel,
       addOns: addOns,
       status: BookingRequestStatus.pending,
-      statusHint: 'Usually responds within 1â€“2 hours',
+      statusHint: 'Usually responds within 1–2 hours',
       totalAmount: quoteEntity.total,
       currency: quoteEntity.currency,
 
@@ -157,16 +157,15 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
   }
 
   @override
-  Future<BookingRequestEntity> cancel({required String bookingId}) async {
+  Future<BookingRequestEntity> cancel({
+    required String bookingId,
+    required String reason,
+  }) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     final current = _store.get(bookingId);
     if (current == null) {
       throw StateError('Request not found');
     }
-    if (!current.canCancelBeforeApproval) {
-      throw StateError('Cancellation is not allowed after approval');
-    }
-
     final updated = _copyRequest(
       current,
       status: BookingRequestStatus.cancelled,
@@ -229,5 +228,3 @@ class BookingRequestRepoDummy implements BookingRequestRepo {
     return '$prefix-$n';
   }
 }
-
-

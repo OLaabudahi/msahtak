@@ -77,7 +77,7 @@ class PoliciesSheet extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(bottom: 6),
                                         child: Text(
-                                          'â€¢ $b',
+                                          '• $b',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,

@@ -22,22 +22,31 @@ import '../../booking_request/view/booking_request_routes.dart';
 class NotificationsListPage extends StatelessWidget {
   const NotificationsListPage({super.key});
 
+  void _openBookingStatus(BuildContext context, String bookingId) {
+    Navigator.of(context).push(
+      BookingRequestRoutes.bookingStatus(
+        bloc: AppInjector.createBookingBloc(),
+        bookingId: bookingId,
+      ),
+    );
+  }
+
   void _onNotificationTap(BuildContext context, NotificationItem item) {
     switch (item.type) {
       case NotificationType.bookingApproved:
         if (item.bookingId != null) {
-          Navigator.of(context).push(
-            BookingRequestRoutes.bookingStatus(
-              bloc: AppInjector.createBookingBloc(),
-              bookingId: item.bookingId!,
-            ),          );
+          _openBookingStatus(context, item.bookingId!);
         } else {
           Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
         }
         break;
       case NotificationType.bookingRejected:
       case NotificationType.reminder:
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
+        if (item.bookingId != null) {
+          _openBookingStatus(context, item.bookingId!);
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingsTabPage.withBloc()));
+        }
         break;
       case NotificationType.offerSuggestion:
         Navigator.of(context).push(MaterialPageRoute(builder: (_) => OffersPage.withBloc()));

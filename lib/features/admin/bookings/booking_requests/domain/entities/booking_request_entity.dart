@@ -14,6 +14,9 @@ class BookingRequestEntity extends Equatable {
   final String spaceId;
   final int totalSeats;
   final int availableSeats;
+  final String? cancellationTitle;
+  final String? cancellationReason;
+  final String? cancellationCompensation;
 
   const BookingRequestEntity({
     required this.id,
@@ -28,12 +31,30 @@ class BookingRequestEntity extends Equatable {
     this.spaceId = '',
     this.totalSeats = 0,
     this.availableSeats = 0,
+    this.cancellationTitle,
+    this.cancellationReason,
+    this.cancellationCompensation,
   });
 
   bool get seatsExhausted => totalSeats > 0 && availableSeats <= 0;
 
   @override
-  List<Object?> get props => [id, userName, userAvatar, date, time, duration, plan, space, status, spaceId, totalSeats, availableSeats];
+  List<Object?> get props => [
+        id,
+        userName,
+        userAvatar,
+        date,
+        time,
+        duration,
+        plan,
+        space,
+        status,
+        spaceId,
+        totalSeats,
+        availableSeats,
+        cancellationTitle,
+        cancellationReason,
+        cancellationCompensation,
+      ];
 }
-
 

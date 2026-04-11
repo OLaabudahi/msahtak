@@ -1,6 +1,7 @@
 
 import '../../../../../../core/services/firestore_api.dart';
 import '../../../../_shared/admin_session.dart';
+import '../../../../../../services/local_storage_service.dart';
 import '../models/amenity_model.dart';
 import '../models/space_form_model.dart';
 import 'add_edit_space_source.dart';
@@ -92,11 +93,13 @@ class AddEditSpaceFirebaseSource implements AddEditSpaceSource {
   @override
   Future<void> saveSpace({required SpaceFormModel form}) async {
     final data = form.toJson();
+    final localUserId = await LocalStorageService().getUserId();
 
     data.remove('id');
 
-    data['adminId'] = form.adminId ?? AdminSession.userId;
-    data['updatedAt'] = DateTime.now(); // âœ… Timestamp
+    data['adminId'] =
+        form.adminId ?? localUserId ?? AdminSession.userId;
+    data['updatedAt'] = DateTime.now();
 
     if (form.id == null) {
       final spaceId = "SP-${DateTime.now().millisecondsSinceEpoch}";

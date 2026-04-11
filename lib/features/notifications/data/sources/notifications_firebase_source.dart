@@ -84,7 +84,7 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
   /*  return docs.map((doc) {
       final d = doc.data();*/
     return docs.map((d) {
-      // ط§ظ„ط£ط¯ظ…ظ† ظٹظƒطھط¨ isRead طŒ ط§ظ„طھط·ط¨ظٹظ‚ ط§ظ„ظ‚ط¯ظٹظ… is_read
+      // Keep backward compatibility: web may write `isRead`, old app reads `is_read`.
       final isRead = d['isRead'] as bool? ?? d['is_read'] as bool? ?? false;
       // الأدمن يكتب message ، التطبيق يقرأ subtitle ثم body
       final subtitle = d['subtitle'] as String? ??
@@ -93,7 +93,6 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
           '';
       final ts = d['createdAt'] as Timestamp? ?? d['created_at'] as Timestamp?;
       return NotificationItemModel(
-        // id: doc.id,
         id: d['id'],
         title: d['title'] as String? ?? '',
         subtitle: subtitle,
@@ -103,7 +102,9 @@ class NotificationsFirebaseSource implements NotificationsRemoteSource {
           orElse: () => NotificationType.tip,
         ),
         isRead: isRead,
-        bookingId: d['bookingId'] as String?,
+        bookingId: d['bookingId'] as String? ??
+            d['requestId'] as String? ??
+            d['request_id'] as String?,
       );
     }).toList();
   }

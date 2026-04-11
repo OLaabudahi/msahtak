@@ -25,7 +25,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     return const ConciergeStepPayload(
       stepIndex: 1,
       totalSteps: 4,
-      stepMeta: 'Step 1 of 4 â€¢ 30 sec',
+      stepMeta: 'Step 1 of 4 • 30 sec',
       newMessages: [
         ConciergeMessage(
           id: 'm1',
@@ -55,7 +55,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       return ConciergeStepPayload(
         stepIndex: 2,
         totalSteps: 4,
-        stepMeta: 'Step 2 of 4 â€¢ 30 sec',
+        stepMeta: 'Step 2 of 4 • 30 sec',
         newMessages: [
           ConciergeMessage(id: 'u1', sender: ConciergeSender.user, text: answer),
           const ConciergeMessage(
@@ -79,7 +79,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       return ConciergeStepPayload(
         stepIndex: 3,
         totalSteps: 4,
-        stepMeta: 'Step 3 of 4 â€¢ 30 sec',
+        stepMeta: 'Step 3 of 4 • 30 sec',
         newMessages: [
           ConciergeMessage(id: 'u2', sender: ConciergeSender.user, text: answer),
         ],
@@ -96,7 +96,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     return ConciergeStepPayload(
       stepIndex: 4,
       totalSteps: 4,
-      stepMeta: 'Step 4 of 4 â€¢ 30 sec',
+      stepMeta: 'Step 4 of 4 • 30 sec',
       newMessages: const [
         ConciergeMessage(
           id: 'b4',
@@ -110,7 +110,7 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     );
   }
 
-  /// ًں”¥ ظ‡ظ†ط§ ط§ظ„ط°ظƒط§ط، ط§ظ„ط­ظ‚ظٹظ‚ظٹ
+  /// Fetches and ranks the best match from Firestore.
   Future<ConciergeTopMatch> _getBestMatchFromFirebase() async {
     final spaces = await firestoreApi.getCollection(collection: 'spaces');
 
@@ -130,29 +130,28 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
       throw Exception('No matching spaces found');
     }
 
-    /// طھط±طھظٹط¨ ط­ط³ط¨ ط§ظ„ط£ظپط¶ظ„
     filtered.sort((a, b) => _score(b).compareTo(_score(a)));
 
     final best = filtered.first;
 
-    String why = "";
-
-    if (best['quiet'] == true) why += "ظ‡ط§ط¯ط¦ â€¢ ";
-    if (best['wifi'] == 'strong') why += "WiFi ظ‚ظˆظٹ â€¢ ";
-    if ((best['distance'] ?? 100) < 15) why += "ظ‚ط±ظٹط¨ â€¢ ";
+    final reasons = <String>[];
+    if (best['quiet'] == true) reasons.add('very quiet');
+    if (best['wifi'] == 'strong') reasons.add('strong Wi-Fi');
+    if ((best['distance'] ?? 100) < 15) reasons.add('nearby');
+    final why = reasons.join(' • ');
 
     return ConciergeTopMatch(
       spaceId: best['id'],
       title: "Top Match: ${best['name']}",
       whyLine: "Why: $why",
-      planLine: "Plan suggestion: ${_duration?.toUpperCase()} ظٹظˆظپط± ط£ظƒط«ط± ًں’°",
+      planLine: "Plan suggestion: ${_duration?.toUpperCase()} saves you more",
       priceLine:
-      "Daily â‚ھ${best['priceDaily']} â€¢ Weekly â‚ھ${best['priceWeekly']}",
+          "Daily ₪${best['priceDaily']} • Weekly ₪${best['priceWeekly']}",
       imageAsset: 'assets/images/home.png',
     );
   }
 
-  /// ًں”¥ ظ†ط¸ط§ظ… طھظ‚ظٹظٹظ… (ط°ظƒط§ط، ط¨ط³ظٹط·)
+  /// Basic score-based ranking.
   int _score(Map space) {
     int s = 0;
 
@@ -163,4 +162,3 @@ class AiConciergeRepoDummy implements AiConciergeRepo {
     return s;
   }
 }
-

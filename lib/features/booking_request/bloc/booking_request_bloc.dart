@@ -292,7 +292,10 @@ class BookingRequestBloc
       ),
     );
     try {
-      final updated = await _cancelUseCase.call(event.requestId);
+      final updated = await _cancelUseCase.call(
+        bookingId: event.requestId,
+        reason: event.reason,
+      );
       emit(
         state.copyWith(
           uiStatus: BookingRequestUiStatus.ready,
@@ -338,5 +341,4 @@ class BookingRequestBloc
     }
   }
 }
-
 

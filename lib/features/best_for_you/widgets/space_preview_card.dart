@@ -64,7 +64,7 @@ class SpacePreviewCard extends StatelessWidget {
                         mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('â‚ھ${space.pricePerDay}/day',
+                          Text('₪${space.pricePerDay}/day',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13)),

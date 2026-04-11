@@ -1,23 +1,21 @@
-﻿import 'package:Msahtak/features/auth/domain/usecases/forgot_usecase.dart';
+import 'package:Msahtak/features/auth/domain/usecases/forgot_usecase.dart';
 import 'package:Msahtak/features/auth/domain/usecases/login_usecase.dart';
 import 'package:Msahtak/features/auth/domain/usecases/login_with_google_usecase.dart';
 import 'package:Msahtak/features/auth/domain/usecases/signup_usecase.dart';
-import 'package:Msahtak/services/language_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/app_root.dart';
-import 'features/admin/_shared/admin_session.dart';
 import 'features/app_start/data/repos/app_start_repo_firebase.dart';
 import 'features/auth/data/repos/auth_repo_firebase.dart';
-import 'features/auth/data/sources/auth_firebase_source.dart';
 import 'features/auth/domain/usecases/logout_auth_usecase.dart';
 import 'firebase_options.dart';
 import 'theme/app_colors.dart';
+import 'core/services/firebase/fcm_service.dart';
 import 'features/app_start/bloc/app_start_event.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/language/bloc/language_bloc.dart';
@@ -27,26 +25,32 @@ import 'features/language/bloc/language_state.dart';
 import 'services/language_service.dart';
 import 'services/local_storage_service.dart';
 
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
-    // ignore: avoid_print
-    print('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
+    debugPrint('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
   };
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    FCMService.instance.attachNavigatorKey(appNavigatorKey);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    await FCMService.instance.init();
+    await _seedGazaSpacesOnce();
   } catch (e, st) {
-    // ignore: avoid_print
-    print('Firebase init error: $e\n$st');
+    debugPrint('Firebase init error: $e\n$st');
     return;
   }
-/*
-  try {
-    await _seedspacesIfEmpty();
-  } catch (_) {}
-*/
 
   final storage = LocalStorageService();
   final languageService = LanguageService(storage);
@@ -57,9 +61,9 @@ void main() async {
         BlocProvider(
           create: (_) => AuthBloc(
             loginUseCase: LoginUseCase(repo),
-            signUpUseCase:SignUpUseCase(repo),
-            forgotUseCase:ForgotPasswordUseCase(repo),
-            logoutUseCase:LogoutAuthUseCase(repo),
+            signUpUseCase: SignUpUseCase(repo),
+            forgotUseCase: ForgotPasswordUseCase(repo),
+            logoutUseCase: LogoutAuthUseCase(repo),
             googleUseCase: LoginWithGoogleUseCase(repo),
           ),
         ),
@@ -73,66 +77,183 @@ void main() async {
               LanguageBloc(languageService)..add(const LanguageStarted()),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
-/// تضيف مساحات عمل تجريبية إذا كانت workspaces فارغة
-Future<void> _seedWorkspacesIfEmpty() async {
-  final col = FirebaseFirestore.instance.collection('workspaces');
-  final snap = await col.limit(1).get();
-  if (snap.docs.isNotEmpty) return; // الداتا موجودة — لا شيء
+Future<void> _seedGazaSpacesOnce() async {
+  final db = FirebaseFirestore.instance;
+  final markerRef = db.collection('app_meta').doc('seed_gaza_spaces_v1');
+  final marker = await markerRef.get();
+  if (marker.exists) return;
 
- /* final spaces = [
+  final spaces = _gazaSpacesSeedData();
+  final batch = db.batch();
+  var created = 0;
+
+  for (final space in spaces) {
+    final id = space['id'] as String;
+    final ref = db.collection('spaces').doc(id);
+    final existing = await ref.get();
+    if (existing.exists) continue;
+
+    final data = Map<String, dynamic>.from(space)..remove('id');
+    batch.set(ref, data);
+    created++;
+  }
+
+  if (created > 0) {
+    await batch.commit();
+  }
+
+  await markerRef.set({
+    'createdCount': created,
+    'totalTemplateCount': spaces.length,
+    'createdAt': FieldValue.serverTimestamp(),
+  });
+}
+
+List<Map<String, dynamic>> _gazaSpacesSeedData() {
+  const defaultAmenities = [
+    {'id': 'a1', 'name': 'WiFi', 'selected': true, 'isCustom': false},
+    {'id': 'a2', 'name': 'Electricity', 'selected': true, 'isCustom': false},
+    {'id': 'a3', 'name': 'Meeting Room', 'selected': true, 'isCustom': false},
+    {'id': 'a4', 'name': 'Coffee', 'selected': true, 'isCustom': false},
+    {'id': 'a5', 'name': 'Parking', 'selected': true, 'isCustom': false},
+    {'id': 'a6', 'name': 'Printer', 'selected': true, 'isCustom': false},
+  ];
+
+  const workingHours = [
+    {'day': 'Sun', 'open': '08:00', 'close': '21:00', 'closed': false},
+    {'day': 'Mon', 'open': '08:00', 'close': '21:00', 'closed': false},
+    {'day': 'Tue', 'open': '08:00', 'close': '21:00', 'closed': false},
+    {'day': 'Wed', 'open': '08:00', 'close': '21:00', 'closed': false},
+    {'day': 'Thu', 'open': '08:00', 'close': '21:00', 'closed': false},
+    {'day': 'Fri', 'open': '14:00', 'close': '22:00', 'closed': false},
+    {'day': 'Sat', 'open': '10:00', 'close': '20:00', 'closed': false},
+  ];
+
+  const policySections = [
     {
-      'name': 'The Hub Workspace',
-      'subtitle': 'Modern coworking · Ramallah',
-      'rating': 4.8,
-      'price_per_day': 120,
+      'id': 'p1',
+      'title': 'General',
+      'bullets': [
+        'No loud calls in shared area',
+        'Keep workspace clean',
+        'Smoking is prohibited indoors',
+      ],
+    },
+    {
+      'id': 'p2',
+      'title': 'Meeting Rooms',
+      'bullets': [
+        'Booking required in advance',
+        'Max 2 hours per reservation',
+      ],
+    },
+  ];
+
+  const paymentMethods = [
+    {
+      'id': 'bank_transfer',
+      'name': 'Bank Transfer',
+      'accountName': 'Msahtak Workspace',
+      'accountDetails': 'Bank of Palestine - IBAN: PS00 1234 5678 9012',
+    },
+    {
+      'id': 'jawwal_pay',
+      'name': 'Jawwal Pay',
+      'accountName': 'Msahtak Wallet',
+      'accountDetails': '+970599000000',
+    },
+  ];
+
+  Map<String, dynamic> space({
+    required String id,
+    required String name,
+    required String subtitle,
+    required String description,
+    required String city,
+    required String address,
+    required double lat,
+    required double lng,
+    required int pricePerDay,
+    required int totalSeats,
+    required double rating,
+    required int reviewsCount,
+    required List<String> tags,
+  }) {
+    return {
+      'id': id,
+      'name': name,
+      'subtitle': subtitle,
+      'description': description,
+      'address': address,
+      'location_address': '$address, $city, Gaza',
+      'location': {
+        'lat': lat,
+        'lng': lng,
+        'city': city,
+        'address': address,
+      },
       'currency': '₪',
-      'location': const GeoPoint(31.9038, 35.2034),
-      'location_address': 'Al-Masyoun St, Ramallah',
-      'working_hours': 'Sun – Thu: 8:00 AM – 10:00 PM',
-      'tags': ['Wi-Fi', 'Quiet', 'Parking', 'Coffee'],
-      'reviews_count': 42,
-      'images': <String>[],
+      'basePriceValue': pricePerDay,
+      'basePriceUnit': 'day',
+      'pricePerDay': pricePerDay,
+      'price_per_day': pricePerDay,
+      'rating': rating,
+      'reviews_count': reviewsCount,
+      'tags': tags,
+      'images': [
+        'https://images.unsplash.com/photo-1497366216548-37526070297c',
+        'https://images.unsplash.com/photo-1497366754035-f200968a6e72',
+      ],
       'features': [
-        'High-speed Wi-Fi (500 Mbps)',
-        'Private meeting rooms',
-        'Coffee & snacks included',
-        'Standing desks available',
-        'Printer & scanner',
+        'High-speed internet',
+        'Quiet work zones',
+        'Private meeting room',
+        'Power backup',
       ],
+      'amenities': defaultAmenities,
+      'workingHours': workingHours,
+      'policySections': policySections,
+      'paymentMethods': paymentMethods,
+      'totalSeats': totalSeats,
+      'availableSeats': totalSeats,
+      'hidden': false,
       'usage_stats': [
-        {'label': 'Freelancers', 'percent': 45},
-        {'label': 'Startups', 'percent': 30},
-        {'label': 'Students', 'percent': 15},
-        {'label': 'Remote teams', 'percent': 10},
+        {'label': 'Students', 'percent': 35},
+        {'label': 'Freelancers', 'percent': 40},
+        {'label': 'Startups', 'percent': 25},
       ],
-      'why_people_come': ['Fast Wi-Fi', 'Quiet environment', 'Good coffee', 'Central location'],
+      'why_people_come': [
+        'Reliable electricity',
+        'Strong Wi-Fi',
+        'Quiet environment',
+      ],
       'review_summary': {
-        'header': '4.8 ★',
-        'meta': 'Based on 42 reviews',
-        'top_positives': ['Excellent Wi-Fi', 'Very clean', 'Helpful staff'],
-        'repeated_negatives': ['Parking can be limited'],
+        'header': '$rating ★',
+        'meta': 'Based on $reviewsCount reviews',
+        'top_positives': ['Fast internet', 'Clean space', 'Friendly staff'],
+        'repeated_negatives': ['Limited parking in peak hours'],
         'crowd_level': 'Moderate',
-        'noise': 'Quiet',
+        'noise': 'Low',
       },
       'latest_reviews': [
         {
           'id': 'r1',
-          'user_name': 'Sana K.',
+          'user_name': 'Ahmad',
           'time_ago': '2 days ago',
           'stars': 5,
-          'comment': 'Amazing place to work! Fast internet and great atmosphere.',
+          'comment': 'Great place for deep focus and remote work.',
         },
         {
           'id': 'r2',
-          'user_name': 'Omar A.',
+          'user_name': 'Mona',
           'time_ago': '1 week ago',
-          'stars': 5,
-          'comment': 'Best coworking space in Ramallah. Highly recommend!',
+          'stars': 4,
+          'comment': 'Comfortable and organized workspace.',
         },
       ],
       'offers': [
@@ -140,236 +261,171 @@ Future<void> _seedWorkspacesIfEmpty() async {
           'id': 'off1',
           'badge_text': 'LIMITED',
           'badge_type': 'limited',
-          'title': 'Monthly Pass',
-          'price_line': 'Price:',
-          'old_price_text': '₪2,800',
-          'new_price_text': '₪2,200 / month',
-          'includes_text': 'Includes unlimited access + 4 meeting room hours',
-          'valid_until_text': 'Valid until end of month',
-        },
-      ],
-      'policies': {
-        'title': 'House Rules',
-        'subtitle': 'Please respect all members',
-        'sections': [
-          {
-            'title': 'General',
-            'bullets': [
-              'No loud phone calls in open area',
-              'Clean your desk before leaving',
-              'Guests must register at reception',
-            ],
-          },
-          {
-            'title': 'Meeting Rooms',
-            'bullets': [
-              'Book in advance via the app',
-              'Max 2-hour sessions per booking',
-            ],
-          },
-        ],
-      },
-    },
-    {
-      'name': 'Nablus Creative Space',
-      'subtitle': 'Creative studio · Nablus',
-      'rating': 4.6,
-      'price_per_day': 90,
-      'currency': '₪',
-      'location': const GeoPoint(32.2211, 35.2544),
-      'location_address': 'Rafidya, Nablus',
-      'working_hours': 'Daily: 9:00 AM – 9:00 PM',
-      'tags': ['Wi-Fi', 'Creative', 'Lounge'],
-      'reviews_count': 28,
-      'images': <String>[],
-      'features': [
-        'Design-friendly environment',
-        'Large monitors available',
-        'Lounge area',
-        'Whiteboards & projectors',
-      ],
-      'usage_stats': [
-        {'label': 'Designers', 'percent': 50},
-        {'label': 'Developers', 'percent': 30},
-        {'label': 'Others', 'percent': 20},
-      ],
-      'why_people_come': ['Creative vibe', 'Good equipment', 'Affordable price'],
-      'review_summary': {
-        'header': '4.6 ★',
-        'meta': 'Based on 28 reviews',
-        'top_positives': ['Great design tools', 'Friendly community'],
-        'repeated_negatives': ['No parking nearby'],
-        'crowd_level': 'Low',
-        'noise': 'Moderate',
-      },
-      'latest_reviews': [
-        {
-          'id': 'r3',
-          'user_name': 'Lina M.',
-          'time_ago': '3 days ago',
-          'stars': 5,
-          'comment': 'Perfect for designers. The equipment is top notch.',
-        },
-      ],
-      'offers': <Map<String, dynamic>>[],
-      'policies': {
-        'title': 'Space Rules',
-        'subtitle': '',
-        'sections': [
-          {
-            'title': 'Usage',
-            'bullets': [
-              'Equipment must be returned after use',
-              'No food near design equipment',
-            ],
-          },
-        ],
-      },
-    },
-    {
-      'name': 'Birzeit Tech Hub',
-      'subtitle': 'Tech-focused · Birzeit',
-      'rating': 4.5,
-      'price_per_day': 80,
-      'currency': '₪',
-      'location': const GeoPoint(31.9800, 35.1900),
-      'location_address': 'Main St, Birzeit',
-      'working_hours': 'Sun – Thu: 8:00 AM – 8:00 PM',
-      'tags': ['Wi-Fi', 'Tech', 'Quiet', 'Coffee'],
-      'reviews_count': 19,
-      'images': <String>[],
-      'features': [
-        'Gigabit fiber internet',
-        'Server room access',
-        'Standing desk pods',
-        'Coffee & tea',
-      ],
-      'usage_stats': [
-        {'label': 'Developers', 'percent': 60},
-        {'label': 'Startups', 'percent': 25},
-        {'label': 'Students', 'percent': 15},
-      ],
-      'why_people_come': ['Blazing fast internet', 'Focused environment', 'Tech community'],
-      'review_summary': {
-        'header': '4.5 ★',
-        'meta': 'Based on 19 reviews',
-        'top_positives': ['Best internet speed', 'Quiet and focused'],
-        'repeated_negatives': ['Limited seating'],
-        'crowd_level': 'Low',
-        'noise': 'Very quiet',
-      },
-      'latest_reviews': [
-        {
-          'id': 'r4',
-          'user_name': 'Ahmed T.',
-          'time_ago': '5 days ago',
-          'stars': 5,
-          'comment': 'The internet speed here is unmatched. Great for developers.',
-        },
-      ],
-      'offers': <Map<String, dynamic>>[],
-      'policies': {
-        'title': 'Rules',
-        'subtitle': 'Keep the environment productive',
-        'sections': [
-          {
-            'title': 'General',
-            'bullets': [
-              'Silence your phone',
-              'Use headphones for calls',
-            ],
-          },
-        ],
-      },
-    },
-    {
-      'name': 'Bethlehem Business Hub',
-      'subtitle': 'Professional space · Bethlehem',
-      'rating': 4.7,
-      'price_per_day': 100,
-      'currency': '₪',
-      'location': const GeoPoint(31.7054, 35.2024),
-      'location_address': 'Star St, Bethlehem',
-      'working_hours': 'Sun – Fri: 8:00 AM – 9:00 PM',
-      'tags': ['Wi-Fi', 'Professional', 'Quiet', 'Meeting Rooms'],
-      'reviews_count': 35,
-      'images': <String>[],
-      'features': [
-        'Premium Wi-Fi',
-        'Dedicated desks',
-        '3 private meeting rooms',
-        'Printing & scanning',
-        'Reception services',
-      ],
-      'usage_stats': [
-        {'label': 'Consultants', 'percent': 40},
-        {'label': 'Remote workers', 'percent': 35},
-        {'label': 'Startups', 'percent': 25},
-      ],
-      'why_people_come': ['Professional setting', 'Meeting rooms', 'Central location'],
-      'review_summary': {
-        'header': '4.7 ★',
-        'meta': 'Based on 35 reviews',
-        'top_positives': ['Professional atmosphere', 'Excellent facilities'],
-        'repeated_negatives': ['Can get busy on weekdays'],
-        'crowd_level': 'Moderate',
-        'noise': 'Quiet',
-      },
-      'latest_reviews': [
-        {
-          'id': 'r5',
-          'user_name': 'Rania S.',
-          'time_ago': '1 day ago',
-          'stars': 5,
-          'comment': 'Great professional environment. Meeting rooms are perfect.',
-        },
-      ],
-      'offers': [
-        {
-          'id': 'off2',
-          'badge_text': 'NEW',
-          'badge_type': 'new',
           'title': 'Weekly Pass',
           'price_line': 'Price:',
           'old_price_text': null,
-          'new_price_text': '₪450 / week',
-          'includes_text': 'Includes 5 days access + 2 meeting room hours',
-          'valid_until_text': 'No expiry',
+          'new_price_text': '₪${(pricePerDay * 6)} / week',
+          'includes_text': 'Includes 7-day access + 2 meeting room hours',
+          'valid_until_text': 'Valid through this month',
         },
       ],
-      'policies': {
-        'title': 'Business Hub Rules',
-        'subtitle': 'Maintain a professional environment',
-        'sections': [
-          {
-            'title': 'Conduct',
-            'bullets': [
-              'Business attire recommended',
-              'Keep noise to a minimum',
-              'Meetings by appointment only in shared areas',
-            ],
-          },
-        ],
-      },
-    },
-  ];*/
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+  }
 
- /* for (final w in spaces) {
-    await col.add(w);
-  }*/
+  return [
+    space(
+      id: 'GZA-SP-001',
+      name: 'Gaza Sky Hub',
+      subtitle: 'Downtown co-working for focus and teams',
+      description: 'Modern workspace near Gaza city center for study and work.',
+      city: 'Gaza City',
+      address: 'Omar Al-Mukhtar St',
+      lat: 31.5225,
+      lng: 34.4532,
+      pricePerDay: 70,
+      totalSeats: 42,
+      rating: 4.7,
+      reviewsCount: 118,
+      tags: ['wifi', 'quiet', 'meeting', 'central'],
+    ),
+    space(
+      id: 'GZA-SP-002',
+      name: 'Rimal Work Loft',
+      subtitle: 'Quiet desks with premium internet',
+      description: 'A calm workspace in Al-Rimal district with private booths.',
+      city: 'Gaza City',
+      address: 'Al-Rimal, Al-Jalaa St',
+      lat: 31.5293,
+      lng: 34.4581,
+      pricePerDay: 65,
+      totalSeats: 30,
+      rating: 4.6,
+      reviewsCount: 84,
+      tags: ['wifi', 'study', 'quiet'],
+    ),
+    space(
+      id: 'GZA-SP-003',
+      name: 'Shifa Innovation Space',
+      subtitle: 'Startup-friendly collaborative floor',
+      description: 'Open collaboration area plus meeting rooms for small teams.',
+      city: 'Gaza City',
+      address: 'Al-Nasr St',
+      lat: 31.5321,
+      lng: 34.4667,
+      pricePerDay: 60,
+      totalSeats: 36,
+      rating: 4.5,
+      reviewsCount: 73,
+      tags: ['startup', 'team', 'wifi'],
+    ),
+    space(
+      id: 'GZA-SP-004',
+      name: 'Khan Younis Study Lounge',
+      subtitle: 'Student-first workspace',
+      description: 'Affordable desks and extended evening hours for students.',
+      city: 'Khan Younis',
+      address: 'Jalal St',
+      lat: 31.3469,
+      lng: 34.3039,
+      pricePerDay: 45,
+      totalSeats: 28,
+      rating: 4.4,
+      reviewsCount: 66,
+      tags: ['students', 'budget', 'quiet'],
+    ),
+    space(
+      id: 'GZA-SP-005',
+      name: 'Mawasi Remote Base',
+      subtitle: 'Remote-work ready with backup power',
+      description: 'Reliable internet and generator-backed power for remote teams.',
+      city: 'Khan Younis',
+      address: 'Mawasi Road',
+      lat: 31.3285,
+      lng: 34.2574,
+      pricePerDay: 55,
+      totalSeats: 24,
+      rating: 4.5,
+      reviewsCount: 52,
+      tags: ['remote', 'power', 'wifi'],
+    ),
+    space(
+      id: 'GZA-SP-006',
+      name: 'Deir Al-Balah WorkPoint',
+      subtitle: 'Balanced space for focus and meetings',
+      description: 'Comfortable seats with smart booking for meeting rooms.',
+      city: 'Deir al-Balah',
+      address: 'Salah Al-Din Rd',
+      lat: 31.4177,
+      lng: 34.3503,
+      pricePerDay: 50,
+      totalSeats: 26,
+      rating: 4.3,
+      reviewsCount: 49,
+      tags: ['meeting', 'wifi', 'focus'],
+    ),
+    space(
+      id: 'GZA-SP-007',
+      name: 'Nuseirat Tech Corner',
+      subtitle: 'Tech-enabled desks for creators',
+      description: 'Designed for developers and creatives with long-hour access.',
+      city: 'Nuseirat',
+      address: 'Camp Market St',
+      lat: 31.4478,
+      lng: 34.3902,
+      pricePerDay: 52,
+      totalSeats: 22,
+      rating: 4.4,
+      reviewsCount: 41,
+      tags: ['tech', 'creative', 'wifi'],
+    ),
+    space(
+      id: 'GZA-SP-008',
+      name: 'Jabalia Focus Center',
+      subtitle: 'Community workspace for deep focus',
+      description: 'A practical and affordable workspace with stable connectivity.',
+      city: 'Jabalia',
+      address: 'Main Market St',
+      lat: 31.5386,
+      lng: 34.4951,
+      pricePerDay: 48,
+      totalSeats: 25,
+      rating: 4.2,
+      reviewsCount: 39,
+      tags: ['community', 'quiet', 'study'],
+    ),
+    space(
+      id: 'GZA-SP-009',
+      name: 'Rafah Business Desk',
+      subtitle: 'Professional setup for business users',
+      description: 'Dedicated workspace with private corners for client calls.',
+      city: 'Rafah',
+      address: 'Al-Bahr St',
+      lat: 31.2978,
+      lng: 34.2432,
+      pricePerDay: 58,
+      totalSeats: 20,
+      rating: 4.3,
+      reviewsCount: 44,
+      tags: ['business', 'calls', 'meeting'],
+    ),
+  ];
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LanguageBloc, LanguageState>(
       builder: (context, langState) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          navigatorKey: appNavigatorKey,
           locale: Locale(langState.code),
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
-            // ── NavigationBar: أيقونة ونص المختار = أزرق ──────────────
             navigationBarTheme: NavigationBarThemeData(
               backgroundColor: AppColors.background,
               indicatorColor: Colors.transparent,
@@ -436,92 +492,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-/*import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-
-import 'app/app_root.dart';
-import 'features/session/bloc/session_bloc.dart';
-
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => LocalizationService()),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => SessionBloc()),
-        ],
-        child: const MyApp(),
-      ),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<LocalizationService>(
-      builder: (context, localization, _) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          locale: localization.currentLocale,
-
-          // لو عندك delegates/supportedLocales ضيفيهم
-          // supportedLocales: const [Locale('en'), Locale('ar')],
-          // localizationsDelegates: const [...],
-
-          home: const AppRoot(),
-        );
-      },
-    );
-  }
-}*/
-
-/*
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => LocalizationService(),
-      child: const MyApp(),
-    ),
-  );
-}*/
-
-/*class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<LocalizationService>(
-      builder: (context, localizationService, child) {
-        return MaterialApp(
-          title: 'Msahtak',
-          debugShowCheckedModeBanner: false,
-          locale: localizationService.currentLocale,
-          supportedLocales: const [
-            Locale('en', ''),
-            Locale('ar', ''),
-          ],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          theme: ThemeData(
-            primaryColor: const Color(0xFF5B8FB9),
-            scaffoldBackgroundColor: Colors.white,
-            fontFamily: 'Roboto',
-          ),
-          home: const SplashScreen(),
-        );
-      },
-    );
-  }
-}*/

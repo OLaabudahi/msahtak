@@ -27,6 +27,9 @@ class PaymentState extends Equatable {
   final String cardExpiry;
   final String cardCvv;
   final String cardHolder;
+  final String transferAccountHolder;
+  final String transferTime;
+  final String transferReference;
 
   const PaymentState({
     required this.uiStatus,
@@ -42,6 +45,9 @@ class PaymentState extends Equatable {
     this.cardExpiry = '',
     this.cardCvv = '',
     this.cardHolder = '',
+    this.transferAccountHolder = '',
+    this.transferTime = '',
+    this.transferReference = '',
   });
 
   factory PaymentState.initial() {
@@ -69,6 +75,9 @@ class PaymentState extends Equatable {
     String? cardExpiry,
     String? cardCvv,
     String? cardHolder,
+    String? transferAccountHolder,
+    String? transferTime,
+    String? transferReference,
     bool clearError = false,
     bool clearReceipt = false,
   }) {
@@ -86,6 +95,9 @@ class PaymentState extends Equatable {
       cardExpiry: cardExpiry ?? this.cardExpiry,
       cardCvv: cardCvv ?? this.cardCvv,
       cardHolder: cardHolder ?? this.cardHolder,
+      transferAccountHolder: transferAccountHolder ?? this.transferAccountHolder,
+      transferTime: transferTime ?? this.transferTime,
+      transferReference: transferReference ?? this.transferReference,
     );
   }
 
@@ -110,7 +122,11 @@ class PaymentState extends Equatable {
           cardCvv.trim().isNotEmpty &&
           cardHolder.trim().isNotEmpty;
     }
-    return receiptBytes != null;
+    final hasReceipt = receiptBytes != null;
+    final hasManual = transferAccountHolder.trim().isNotEmpty &&
+        transferTime.trim().isNotEmpty &&
+        transferReference.trim().isNotEmpty;
+    return hasReceipt || hasManual;
   }
 
   @override
@@ -127,5 +143,8 @@ class PaymentState extends Equatable {
     cardExpiry,
     cardCvv,
     cardHolder,
+    transferAccountHolder,
+    transferTime,
+    transferReference,
   ];
 }
