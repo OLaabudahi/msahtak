@@ -131,7 +131,7 @@ class BookingsRepoFirebase implements BookingsRepo {
         spaceName: spaceName,
         dateText: dateText,
         timeText: timeText,
-        status: _normalizeStatus(d['status'] as String?),
+        status: _normalizeStatus(d['status'] as String?), rawStatus: _normalizeStatus(d['rawStatus'] as String?),
         totalPrice: totalPrice,
         currency: d['currency'] as String? ?? '₪',
         imageUrl: imageUrl,

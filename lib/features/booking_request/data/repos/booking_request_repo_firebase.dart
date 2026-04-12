@@ -357,7 +357,7 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
     required String newStatus,
     required String actorRole,
     required String actorName,
-    required String actorId,
+    required String? actorId,
   }) async {
     final supers = await _db
         .collection('users')

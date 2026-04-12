@@ -125,7 +125,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               ),
                             ),
                           ],
-                        ),
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
