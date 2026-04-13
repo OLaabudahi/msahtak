@@ -27,7 +27,7 @@ class NoInternetScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+                    color: AppColors.planCardBg,
                   ),
                 ),
                 AppSpacing.vXl,

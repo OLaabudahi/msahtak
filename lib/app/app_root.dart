@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/di/app_injector.dart';
+import '../features/app_start/domain/repos/app_start_repo.dart';
 import '../features/app_start/view/splash_page.dart';
 import '../features/admin/navigation/admin_root/view/admin_root_page.dart';
 import '../features/app_start/bloc/app_start_bloc.dart';
