@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/app_root.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../app_start/bloc/app_start_bloc.dart';
 import '../../app_start/bloc/app_start_event.dart';
 import '../../space_requests/bloc/space_request_bloc.dart';
@@ -126,46 +127,21 @@ class _LoginPageState extends State<LoginPage> {
                       builder: (context, state) {
                         final loading = state.status == AuthStatus.loading;
 
-                        return SizedBox(
+                        return AppButton(
                           width: double.infinity,
                           height: 50,
-                          child: ElevatedButton(
-                            onPressed: loading
-                                ? null
-                                : () {
-                                    FocusScope.of(context).unfocus();
-                                    context.read<AuthBloc>().add(
-                                      AuthLoginRequested(
-                                        email: _email.text.trim(),
-                                        password: _password.text,
-                                      ),
-                                    );
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.amber,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: loading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.5,
-                                    ),
-                                  )
-                                : Text(
-                                    context.t('login'),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                          borderRadius: 25,
+                          loading: loading,
+                          label: context.t('login'),
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            context.read<AuthBloc>().add(
+                                  AuthLoginRequested(
+                                    email: _email.text.trim(),
+                                    password: _password.text,
                                   ),
-                          ),
+                                );
+                          },
                         );
                       },
                     ),

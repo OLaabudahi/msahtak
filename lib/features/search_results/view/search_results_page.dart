@@ -6,8 +6,11 @@ import '../bloc/search_results_bloc.dart';
 import '../bloc/search_results_event.dart';
 import '../bloc/search_results_state.dart';
 import '../data/repos/search_results_repo_firebase.dart';
+import '../data/sources/search_results_remote_source.dart';
 import '../domain/usecases/get_preferred_filter_chips_usecase.dart';
+import '../domain/usecases/filter_spaces_usecase.dart';
 import '../domain/usecases/search_spaces_usecase.dart';
+import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/preferred_chips_row.dart';
 import '../widgets/space_result_card.dart';
 
@@ -25,11 +28,12 @@ class SearchResultsPage extends StatefulWidget {
     required String originKey,
     required String originTitle,
   }) {
-    final repo = SearchResultsRepoFirebase();
+    final source = SearchResultsFirebaseSource();
+    final repo = SearchResultsRepoFirebase(source: source);
 
     return BlocProvider(
       create: (_) => SearchResultsBloc(
-        searchSpacesUseCase: SearchSpacesUseCase(repo),
+        searchSpacesUseCase: SearchSpacesUseCase(repo, const FilterSpacesUseCase()),
         getPreferredFilterChipsUseCase: GetPreferredFilterChipsUseCase(repo),
       )..add(SearchResultsStarted(originKey: originKey, originTitle: originTitle)),
       child: SearchResultsPage(originKey: originKey, originTitle: originTitle),
@@ -62,8 +66,21 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   void _openFilters(BuildContext context) {
-    context.read<SearchResultsBloc>().add(
-      const SearchApplyFilters({'priceMax': 40, 'quiet': true, 'wifi': 'fast'}),
+    final bloc = context.read<SearchResultsBloc>();
+    final state = bloc.state;
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => FilterBottomSheet(
+        initialFilters: state.selectedFilters,
+        onApply: (filters) {
+          bloc.add(SearchApplyFilters(filters));
+        },
+        onReset: () {
+          bloc.add(const SearchResetFilters());
+        },
+      ),
     );
   }
 
@@ -212,5 +229,3 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     );
   }
 }
-
-

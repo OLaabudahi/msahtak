@@ -4,6 +4,8 @@ import '../models/space_details_model.dart';
 import '../../domain/repos/space_details_repo.dart';
 
 class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
+  static final Set<String> _favoriteIds = <String>{};
+
   /// ✅ دالة: داتا وهمية جاهزة للتشغيل
   @override
   Future<SpaceDetails> fetchSpaceDetails(String spaceId) async {
@@ -157,6 +159,24 @@ class SpaceDetailsRepoDummy implements SpaceDetailsRepo {
       basePricePerDay: space.pricePerDay,
       currency: space.currency,
     );
+  }
+
+  @override
+  Future<void> addToFavorites({
+    required String spaceId,
+    required SpaceDetails details,
+  }) async {
+    _favoriteIds.add(spaceId);
+  }
+
+  @override
+  Future<List<String>> getFavorites() async {
+    return _favoriteIds.toList(growable: false);
+  }
+
+  @override
+  Future<void> removeFromFavorites(String spaceId) async {
+    _favoriteIds.remove(spaceId);
   }
 
 }

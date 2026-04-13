@@ -7,6 +7,17 @@ abstract class NotificationsRemoteSource {
   Future<List<NotificationItemModel>> getNotifications();
   Future<NotificationSettingsModel> getNotificationSettings();
   Future<void> saveNotificationSettings(NotificationSettingsModel settings);
+  Future<void> sendNotification({
+    required String userId,
+    required String bookingId,
+    required String title,
+    required String body,
+  });
+  Future<String?> getFcmToken();
+  Future<void> saveFcmToken(String token);
+  Stream<Map<String, dynamic>> listenNotifications();
+
+  Future<void> markAllAsRead();
 }
 
 class FakeNotificationsSource implements NotificationsRemoteSource {
@@ -80,4 +91,31 @@ class FakeNotificationsSource implements NotificationsRemoteSource {
     await Future.delayed(const Duration(milliseconds: 300));
     // TODO: POST /api/notification-settings body: settings.toJson()
   }
+
+  @override
+  Future<void> sendNotification({
+    required String userId,
+    required String bookingId,
+    required String title,
+    required String body,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 80));
+  }
+
+  @override
+  Future<String?> getFcmToken() async {
+    await Future.delayed(const Duration(milliseconds: 80));
+    return null;
+  }
+
+  @override
+  Future<void> saveFcmToken(String token) async {
+    await Future.delayed(const Duration(milliseconds: 80));
+  }
+
+  @override
+  Stream<Map<String, dynamic>> listenNotifications() async* {}
+
+  @override
+  Future<void> markAllAsRead() async {}
 }

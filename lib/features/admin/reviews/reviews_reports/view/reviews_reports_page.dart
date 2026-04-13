@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/widgets/app_tabs.dart';
 import '../../../_shared/admin_ui.dart';
 
 import '../bloc/reviews_reports_bloc.dart';
@@ -58,28 +59,13 @@ class ReviewsReportsPage extends StatelessWidget {
 
                         const SizedBox(height: 16),
 
-                        // Segmented tabs like screenshot
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AdminColors.black15, width: 1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              _SegTab(
-                                label: 'Reviews',
-                                active: state.tab == 0,
-                                onTap: () => context.read<ReviewsReportsBloc>().add(const ReviewsReportsTabChanged(0)),
-                              ),
-                              const SizedBox(width: 6),
-                              _SegTab(
-                                label: 'Reports',
-                                active: state.tab == 1,
-                                onTap: () => context.read<ReviewsReportsBloc>().add(const ReviewsReportsTabChanged(1)),
-                              ),
-                            ],
-                          ),
+                        AppTabs(
+                          labels: const ['Reviews', 'Reports'],
+                          selectedIndex: state.tab,
+                          onChanged: (i) => context
+                              .read<ReviewsReportsBloc>()
+                              .add(ReviewsReportsTabChanged(i)),
+                          scrollable: false,
                         ),
 
                         const SizedBox(height: 16),
@@ -305,38 +291,5 @@ class ReviewsReportsPage extends StatelessWidget {
     final a = parts.first.isNotEmpty ? parts.first[0] : 'U';
     final b = parts.length > 1 && parts[1].isNotEmpty ? parts[1][0] : '';
     return (a + b).toUpperCase();
-  }
-}
-
-class _SegTab extends StatelessWidget {
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  const _SegTab({required this.label, required this.active, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            color: active ? AdminColors.primaryBlue.withOpacity(0.15) : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: active ? AdminColors.primaryBlue : AdminColors.black15, width: 1),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AdminText.body14(color: active ? AdminColors.primaryBlue : AdminColors.black75, w: FontWeight.w700),
-          ),
-        ),
-      ),
-    );
   }
 }

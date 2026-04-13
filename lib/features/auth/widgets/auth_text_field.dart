@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/widgets/app_text_field.dart';
 
 class AuthTextField extends StatelessWidget {
   const AuthTextField({
@@ -17,31 +18,11 @@ class AuthTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return AppTextField(
       controller: controller,
+      label: label,
       keyboardType: keyboardType,
       obscureText: obscureText,
-      style: const TextStyle(fontSize: 15),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(fontSize: 15, color: Colors.black54),
-        floatingLabelStyle: const TextStyle(
-          fontSize: 13,
-          color: Colors.black87,
-        ),
-        border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColors.amber, width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8),
-      ),
     );
   }
 }
-
-

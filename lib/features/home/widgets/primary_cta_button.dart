@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
+import '../../../core/widgets/app_button.dart';
 
 class PrimaryCtaButton extends StatelessWidget {
   final String text;
@@ -13,17 +13,12 @@ class PrimaryCtaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return AppButton(
+      label: text,
+      onPressed: onPressed,
       width: double.infinity,
-      child: FilledButton(
-        onPressed: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Text(text),
-        ),
-      ),
+      borderRadius: 24,
     );
   }
 }
-
 

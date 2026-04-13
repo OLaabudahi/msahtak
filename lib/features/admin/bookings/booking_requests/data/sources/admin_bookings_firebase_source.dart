@@ -1,7 +1,9 @@
 ﻿import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 import '../../../../../../core/services/firestore_api.dart';
+import '../../../../../notifications/data/repos/notifications_repo_impl.dart';
+import '../../../../../notifications/data/sources/notifications_firebase_source.dart';
+import '../../../../../notifications/domain/usecases/send_notification_usecase.dart';
 import '../../../../../../services/local_storage_service.dart';
 import 'admin_bookings_source.dart';
 import '../models/booking_request_model.dart';
@@ -9,6 +11,10 @@ import '../models/booking_request_model.dart';
 class AdminBookingsFirebaseSource implements AdminBookingsSource {
   final FirestoreApi _api = FirestoreApi();
   final LocalStorageService _storage = LocalStorageService();
+  final SendNotificationUseCase _sendNotificationUseCase =
+      SendNotificationUseCase(
+        NotificationsRepoImpl(NotificationsFirebaseSource()),
+      );
 
   @override
   Future<List<BookingRequestModel>> fetchBookings({required String status}) async {
@@ -294,6 +300,17 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       'isRead': false,
       'createdAt': FieldValue.serverTimestamp(),
     });
+
+    try {
+      await _sendNotificationUseCase(
+        userId: uid,
+        bookingId: bookingId,
+        title: isApproved ? 'Booking Approved' : 'Booking Rejected',
+        body: isApproved
+            ? 'Your booking for $spaceName has been approved. Proceed to payment.'
+            : 'Your booking for $spaceName has been rejected.',
+      );
+    } catch (_) {}
   }
 
   Future<void> _notifySuperAdminsStatusChange({

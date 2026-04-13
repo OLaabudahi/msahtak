@@ -1,4 +1,4 @@
-﻿import '../../domain/entities/notification_item.dart';
+import '../../domain/entities/notification_item.dart';
 import '../../domain/entities/notification_settings.dart';
 import '../../domain/repos/notifications_repo.dart';
 import '../models/notification_settings_model.dart';
@@ -14,13 +14,11 @@ class NotificationsRepoImpl implements NotificationsRepo {
     return source.getNotifications();
   }
 
-  /// جلب إعدادات الإشعارات وتحويلها إلى entity
   @override
   Future<NotificationSettings> getNotificationSettings() {
     return source.getNotificationSettings();
   }
 
-  /// حفظ الإعدادات عبر تحويل entity إلى model
   @override
   Future<void> saveNotificationSettings(NotificationSettings settings) {
     return source.saveNotificationSettings(
@@ -33,4 +31,31 @@ class NotificationsRepoImpl implements NotificationsRepo {
       ),
     );
   }
+
+  @override
+  Future<void> sendNotification({
+    required String userId,
+    required String bookingId,
+    required String title,
+    required String body,
+  }) {
+    return source.sendNotification(
+      userId: userId,
+      bookingId: bookingId,
+      title: title,
+      body: body,
+    );
+  }
+
+  @override
+  Future<String?> getFcmToken() => source.getFcmToken();
+
+  @override
+  Future<void> saveFcmToken(String token) => source.saveFcmToken(token);
+
+  @override
+  Stream<Map<String, dynamic>> listenNotifications() => source.listenNotifications();
+
+  @override
+  Future<void> markAllAsRead() => source.markAllAsRead();
 }

@@ -1,80 +1,41 @@
-import 'package:Msahtak/features/auth/domain/usecases/forgot_usecase.dart';
-import 'package:Msahtak/features/auth/domain/usecases/login_usecase.dart';
-import 'package:Msahtak/features/auth/domain/usecases/login_with_google_usecase.dart';
-import 'package:Msahtak/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/app_root.dart';
-import 'features/app_start/data/repos/app_start_repo_firebase.dart';
-import 'features/auth/data/repos/auth_repo_firebase.dart';
-import 'features/auth/domain/usecases/logout_auth_usecase.dart';
-import 'firebase_options.dart';
+import 'core/di/app_injector.dart';
+import 'core/navigation/app_navigator.dart';
 import 'theme/app_colors.dart';
-import 'core/services/firebase/fcm_service.dart';
-import 'features/app_start/bloc/app_start_event.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/language/bloc/language_bloc.dart';
 import 'features/app_start/bloc/app_start_bloc.dart';
-import 'features/language/bloc/language_event.dart';
-import 'features/language/bloc/language_state.dart';
-import 'services/language_service.dart';
-import 'services/local_storage_service.dart';
+import 'features/internet/bloc/internet_bloc.dart';
+import 'features/internet/bloc/internet_event.dart';
+import 'features/internet/bloc/internet_state.dart';
+import 'features/internet/view/no_internet_screen.dart';
 
-final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
-
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-}
-
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  setupInjector();
   FlutterError.onError = (details) {
     debugPrint('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
   };
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    FCMService.instance.attachNavigatorKey(appNavigatorKey);
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await FCMService.instance.init();
-    await _seedGazaSpacesOnce();
-  } catch (e, st) {
-    debugPrint('Firebase init error: $e\n$st');
-    return;
-  }
 
-  final storage = LocalStorageService();
-  final languageService = LanguageService(storage);
-  final repo = AuthRepoFirebase(LocalStorageService());
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => AuthBloc(
-            loginUseCase: LoginUseCase(repo),
-            signUpUseCase: SignUpUseCase(repo),
-            forgotUseCase: ForgotPasswordUseCase(repo),
-            logoutUseCase: LogoutAuthUseCase(repo),
-            googleUseCase: LoginWithGoogleUseCase(repo),
-          ),
+          create: (_) => getIt<AuthBloc>(),
         ),
         BlocProvider(
-          create: (_) =>
-              AppStartBloc(AppStartRepoFirebase(LocalStorageService()))
-                ..add(const AppStartStarted()),
+          create: (_) => getIt<AppStartBloc>()..add(const AppStartStarted()),
         ),
         BlocProvider<LanguageBloc>(
-          create: (_) =>
-              LanguageBloc(languageService)..add(const LanguageStarted()),
+          create: (_) => getIt<LanguageBloc>()..add(const LanguageStarted()),
+        ),
+        BlocProvider<InternetBloc>(
+          create: (_) => getIt<InternetBloc>()..add(const CheckConnection()),
         ),
       ],
       child: const MyApp(),
@@ -422,7 +383,7 @@ class MyApp extends StatelessWidget {
       builder: (context, langState) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          navigatorKey: appNavigatorKey,
+          navigatorKey: AppNavigator.key,
           locale: Locale(langState.code),
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
@@ -486,7 +447,16 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
 
-          home: AppRoot.withBloc(),
+          home: BlocBuilder<InternetBloc, InternetState>(
+            builder: (context, internetState) {
+              if (internetState is InternetDisconnected) {
+                return NoInternetScreen(
+                  onRetry: () => context.read<InternetBloc>().add(const CheckConnection()),
+                );
+              }
+              return AppRoot.withBloc();
+            },
+          ),
         );
       },
     );

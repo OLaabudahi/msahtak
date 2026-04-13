@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 class AuthSocialRow extends StatelessWidget {
@@ -31,7 +32,7 @@ class AuthSocialRow extends StatelessWidget {
         InkWell(
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Apple login coming soon')),
+              SnackBar(content: Text(context.t('apple'))),
             );
           },
           borderRadius: BorderRadius.circular(30),

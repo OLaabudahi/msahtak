@@ -1,46 +1,28 @@
-﻿import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../theme/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/app_injector.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_tabs.dart';
+import '../../../core/ui/widgets/app_search_bar.dart';
+import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
-
-import '../bloc/bookings_bloc.dart';
-import '../bloc/bookings_event.dart';
-import '../bloc/bookings_state.dart';
-
-import '../domain/entities/booking_entity.dart';
-import '../domain/usecases/get_bookings_usecase.dart';
-import '../domain/usecases/cancel_booking_usecase.dart';
-
-import '../data/repos/bookings_repo_impl.dart';
-import '../data/sources/bookings_firebase_source.dart';
-import '../../../core/services/firestore_api.dart';
-
-import '../widgets/booking_list_item.dart';
 import '../../booking_request/bloc/booking_request_event.dart';
 import '../../booking_request/domain/entities/booking_request_entity.dart';
 import '../../booking_request/view/booking_request_routes.dart';
+import '../bloc/bookings_bloc.dart';
+import '../bloc/bookings_event.dart';
+import '../bloc/bookings_state.dart';
+import '../domain/entities/booking_entity.dart';
+import '../domain/usecases/get_booking_by_id_usecase.dart';
+import '../widgets/booking_list_item.dart';
 
 class BookingsTabPage extends StatefulWidget {
   const BookingsTabPage({super.key});
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => BookingsBloc(
-        getBookings: GetBookingsUseCase(
-          BookingsRepoImpl(
-            BookingsFirebaseSource(FirestoreApi()),
-          ),
-        ),
-        cancelBooking: CancelBookingUseCase(
-          BookingsRepoImpl(
-            BookingsFirebaseSource(FirestoreApi()),
-          ),
-        ),
-      )..add(const BookingsStarted()),
+      create: (_) => getIt<BookingsBloc>()..add(const BookingsStarted()),
       child: const BookingsTabPage(),
     );
   }
@@ -69,7 +51,8 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
   }
 
   DateTime _parseDate(String value) {
-    final parts = value.split('/');
+    final raw = value.contains(' ') ? value.split(' ').last : value;
+    final parts = raw.split('/');
     if (parts.length == 3) {
       final day = int.tryParse(parts[0]);
       final month = int.tryParse(parts[1]);
@@ -82,44 +65,14 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
   }
 
   Future<void> _rebookFromBooking(BuildContext context, BookingEntity booking) async {
-    final bookingDoc = await FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(booking.bookingId)
-        .get();
-    final bookingData = bookingDoc.data() ?? <String, dynamic>{};
-
-    final spaceDoc = await FirebaseFirestore.instance
-        .collection('spaces')
-        .doc(booking.spaceId)
-        .get();
-    final spaceData = spaceDoc.data() ?? <String, dynamic>{};
+    final bookingModel = await getIt<GetBookingByIdUseCase>().call(booking.bookingId);
 
     final space = SpaceSummaryEntity(
       id: booking.spaceId,
-      name: (spaceData['name'] as String?) ?? booking.spaceName,
-      basePricePerDay:
-          (spaceData['pricePerDay'] as num?)?.toInt() ??
-          (spaceData['basePricePerDay'] as num?)?.toInt() ??
-          booking.totalPrice.toInt(),
-      currency: (spaceData['currency'] as String?) ?? booking.currency,
+      name: bookingModel?.spaceName ?? booking.spaceName,
+      basePricePerDay: (bookingModel?.totalPrice ?? booking.totalPrice).toInt(),
+      currency: bookingModel?.currency ?? booking.currency,
     );
-
-    final startDate = bookingData['startDate'] is Timestamp
-        ? (bookingData['startDate'] as Timestamp).toDate()
-        : _parseDate(booking.dateText);
-
-    final durationValue = (bookingData['durationValue'] as num?)?.toInt() ?? 1;
-    final durationRaw = (bookingData['durationUnit'] as String?)?.toLowerCase();
-    final durationUnit = switch (durationRaw) {
-      'weeks' => DurationUnit.weeks,
-      'months' => DurationUnit.months,
-      _ => DurationUnit.days,
-    };
-
-    final purposeId = bookingData['purposeId'] as String?;
-    final purposeLabel = bookingData['purposeLabel'] as String?;
-    final offerId = bookingData['offerId'] as String?;
-    final offerLabel = bookingData['offerLabel'] as String?;
 
     final bookingBloc = AppInjector.createBookingBloc();
 
@@ -133,27 +86,9 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
 
     Future.microtask(() {
       bookingBloc
-        ..add(StartDateChanged(startDate))
-        ..add(DurationUnitChanged(durationUnit))
-        ..add(DurationValueChanged(durationValue));
-
-      if (purposeId != null || purposeLabel != null) {
-        bookingBloc.add(
-          PurposeChanged(
-            purposeId: purposeId ?? '',
-            purposeLabel: purposeLabel ?? '',
-          ),
-        );
-      }
-
-      if (offerId != null || offerLabel != null) {
-        bookingBloc.add(
-          OfferChanged(
-            offerId: offerId,
-            offerLabel: offerLabel,
-          ),
-        );
-      }
+        ..add(StartDateChanged(_parseDate(bookingModel?.dateText ?? booking.dateText)))
+        ..add(const DurationUnitChanged(DurationUnit.days))
+        ..add(const DurationValueChanged(1));
     });
   }
 
@@ -165,57 +100,19 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w900,
-          color: Colors.black,
+          color: AppColors.text,
         ),
       ),
     );
   }
 
   Widget _searchBar(String hintText, String aiLabel) {
-    return Container(
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.search, color: AppColors.textMuted),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _search,
-              decoration: InputDecoration(
-                hintText: hintText,
-                border: InputBorder.none,
-                isDense: true,
-              ),
-              style: const TextStyle(fontSize: 14),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            height: 34,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              gradient: const LinearGradient(
-                colors: [AppColors.amber, AppColors.secondary],
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              aiLabel,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return AppSearchBar(
+      controller: _search,
+      hintText: hintText,
+      onChanged: (_) => setState(() {}),
+      trailingLabel: aiLabel,
+      onTrailingTap: () {},
     );
   }
 
@@ -230,46 +127,31 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
         }
 
         if (state.error != null) {
-          return Center(child: Text('Error: ${state.error}'));
+          return Center(child: Text('${context.t('bookingLoadErrorPrefix')} ${state.error}'));
         }
 
         final list = state.bookings;
 
-        final upcoming = list
-            .where((b) => b.status.toLowerCase() == 'upcoming')
-            .toList();
-
-        final awaitingConfirmation = list
-            .where((b) => b.status.toLowerCase() == 'awaiting_confirmation')
-            .toList();
-
-        final confirmed = list
-            .where((b) => b.status.toLowerCase() == 'confirmed')
-            .toList();
-
-        final completed = list
-            .where((b) => b.status.toLowerCase() == 'completed')
-            .toList();
-
-        final cancelled = list
-            .where((b) => b.status.toLowerCase() == 'cancelled')
-            .toList();
+        final upcoming = list.where((b) => b.status.toLowerCase() == 'upcoming').toList();
+        final awaitingConfirmation = list.where((b) => b.status.toLowerCase() == 'awaiting_confirmation').toList();
+        final confirmed = list.where((b) => b.status.toLowerCase() == 'confirmed').toList();
+        final completed = list.where((b) => b.status.toLowerCase() == 'completed').toList();
+        final cancelled = list.where((b) => b.status.toLowerCase() == 'cancelled').toList();
 
         final q = _search.text.trim().toLowerCase();
 
         List<BookingEntity> filter(List<BookingEntity> src) {
           if (q.isEmpty) return src;
-          return src.where((b) {
-            return b.spaceName.toLowerCase().contains(q) ||
-                b.bookingId.toLowerCase().contains(q);
-          }).toList();
+          return src.where((b) => b.spaceName.toLowerCase().contains(q) || b.bookingId.toLowerCase().contains(q)).toList();
         }
 
-        final upcomingF = filter(upcoming);
-        final awaitingConfirmationF = filter(awaitingConfirmation);
-        final confirmedF = filter(confirmed);
-        final completedF = filter(completed);
-        final cancelledF = filter(cancelled);
+        final tabData = [
+          filter(upcoming),
+          filter(awaitingConfirmation),
+          filter(confirmed),
+          filter(completed),
+          filter(cancelled),
+        ];
 
         final tabs = [
           context.t('upcomingBookings'),
@@ -279,13 +161,6 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
           context.t('cancelledBookings'),
         ];
 
-        final tabData = [
-          upcomingF,
-          awaitingConfirmationF,
-          confirmedF,
-          completedF,
-          cancelledF,
-        ];
         final currentList = tabData[_activeTabIndex];
 
         return RefreshIndicator(
@@ -294,47 +169,17 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             children: [
               const SizedBox(height: 6),
-              Text(
-                context.t('navBookings'),
-                style: AppTextStyles.sectionBarTitle,
-              ),
+              Text(context.t('navBookings'), style: AppTextStyles.sectionBarTitle),
               const SizedBox(height: 14),
-              _searchBar(
-                context.t('searchHint'),
-                context.t('aiConcierge'),
-              ),
+              _searchBar(context.t('searchHint'), context.t('aiConcierge')),
               const SizedBox(height: 14),
-              SizedBox(
-                height: 44,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: tabs.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, i) {
-                    final active = _activeTabIndex == i;
-                    return ChoiceChip(
-                      label: Text(tabs[i]),
-                      selected: active,
-                      onSelected: (_) => setState(() => _activeTabIndex = i),
-                      selectedColor: AppColors.amber,
-                      backgroundColor: AppColors.surface,
-                      labelStyle: TextStyle(
-                        color: active ? Colors.black : AppColors.textSecondary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        side: BorderSide(
-                          color: active ? AppColors.amber : AppColors.inputBorder,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              AppTabs(
+                labels: tabs,
+                selectedIndex: _activeTabIndex,
+                onChanged: (i) => setState(() => _activeTabIndex = i),
               ),
               const SizedBox(height: 8),
               _sectionTitle(tabs[_activeTabIndex]),
-
               ...currentList.map(
                 (b) => BookingListItem(
                   booking: b,
@@ -348,22 +193,14 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
                             ),
                           )
                       : null,
-                  onRebook: _activeTabIndex == 3
-                      ? () async {
-                          await _rebookFromBooking(context, b);
-                        }
-                      : null,
+                  onRebook: _activeTabIndex == 3 ? () async => _rebookFromBooking(context, b) : null,
                 ),
               ),
-
               if (currentList.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
-                  child: Center(
-                    child: Text(context.t('noBookingsYet')),
-                  ),
+                  child: Center(child: Text(context.t('noBookingsYet'))),
                 ),
-
               const SizedBox(height: 20),
             ],
           ),

@@ -6,11 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/notifications_bloc.dart';
 import '../bloc/notifications_event.dart';
 import '../bloc/notifications_state.dart';
-import '../data/repos/notifications_repo_impl.dart';
-import '../data/sources/notifications_firebase_source.dart';
-import '../domain/usecases/get_notification_settings_usecase.dart';
-import '../domain/usecases/get_notifications_usecase.dart';
-import '../domain/usecases/save_notification_settings_usecase.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../widgets/notification_group.dart';
 import 'notification_settings_page.dart';
@@ -58,16 +53,10 @@ class NotificationsListPage extends StatelessWidget {
 
   /// إنشاء الصفحة مع BLoC خاص بها
   static Widget withBloc() {
-    final source = NotificationsFirebaseSource();
-    final repo = NotificationsRepoImpl(source);
     return BlocProvider(
-      create: (_) => NotificationsBloc(
-        getNotificationsUseCase: GetNotificationsUseCase(repo),
-        getNotificationSettingsUseCase:
-            GetNotificationSettingsUseCase(repo),
-        saveNotificationSettingsUseCase:
-            SaveNotificationSettingsUseCase(repo),
-      )..add(const NotificationsStarted()),
+      create: (_) =>
+          AppInjector.createNotificationsBloc()
+            ..add(const NotificationsStarted()),
       child: const NotificationsListPage(),
     );
   }

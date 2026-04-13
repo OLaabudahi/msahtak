@@ -171,6 +171,11 @@ class AuthService {
     return role == 'admin';
   }
 
+  Future<Map<String, dynamic>?> getUserProfile({required String uid}) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    return doc.data();
+  }
+
   Future<void> signOut() async {
 
     await _googleSignIn?.signOut();

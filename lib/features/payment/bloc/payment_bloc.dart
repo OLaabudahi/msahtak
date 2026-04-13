@@ -1,23 +1,28 @@
-﻿import 'package:bloc/bloc.dart';
-import '../domain/repos/payment_repo.dart';
-import '../domain/usecases/get_payment_summary_usecase.dart';
-import '../domain/usecases/pay_booking_request_usecase.dart';
+import 'package:bloc/bloc.dart';
+
+import '../domain/usecases/get_payment_details_usecase.dart';
+import '../domain/usecases/submit_payment_usecase.dart';
+import '../domain/usecases/upload_payment_receipt_usecase.dart';
+import '../domain/usecases/verify_payment_usecase.dart';
 import 'payment_event.dart';
 import 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
-  final PaymentRepo _repo;
-  final GetPaymentSummaryUseCase _getSummaryUseCase;
-  final PayBookingRequestUseCase _payUseCase;
+  final GetPaymentDetailsUseCase _getPaymentDetailsUseCase;
+  final SubmitPaymentUseCase _submitPaymentUseCase;
+  final VerifyPaymentUseCase _verifyPaymentUseCase;
+  final UploadPaymentReceiptUseCase _uploadPaymentReceiptUseCase;
 
   PaymentBloc({
-    required PaymentRepo repo,
-    required GetPaymentSummaryUseCase getSummaryUseCase,
-    required PayBookingRequestUseCase payUseCase,
-  }) : _repo = repo,
-       _getSummaryUseCase = getSummaryUseCase,
-       _payUseCase = payUseCase,
-       super(PaymentState.initial()) {
+    required GetPaymentDetailsUseCase getPaymentDetailsUseCase,
+    required SubmitPaymentUseCase submitPaymentUseCase,
+    required VerifyPaymentUseCase verifyPaymentUseCase,
+    required UploadPaymentReceiptUseCase uploadPaymentReceiptUseCase,
+  })  : _getPaymentDetailsUseCase = getPaymentDetailsUseCase,
+        _submitPaymentUseCase = submitPaymentUseCase,
+        _verifyPaymentUseCase = verifyPaymentUseCase,
+        _uploadPaymentReceiptUseCase = uploadPaymentReceiptUseCase,
+        super(PaymentState.initial()) {
     on<PaymentStarted>(_onStarted);
     on<PaymentMethodSelected>(_onMethodSelected);
     on<PaymentReceiptPicked>(_onReceiptPicked);
@@ -32,15 +37,14 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   ) async {
     emit(state.copyWith(uiStatus: PaymentUiStatus.loading, clearError: true));
     try {
-      final methods = await _repo.getMethods(bookingId: event.bookingId);
-      final summary = await _getSummaryUseCase.call(event.bookingId);
+      final details = await _getPaymentDetailsUseCase.call(event.bookingId);
 
       emit(
         state.copyWith(
           uiStatus: PaymentUiStatus.ready,
-          methods: methods,
-          summary: summary,
-          selectedMethod: methods.isNotEmpty ? methods.first.type : null,
+          methods: details.methods,
+          summary: details.summary,
+          selectedMethod: details.methods.isNotEmpty ? details.methods.first.type : null,
           clearError: true,
         ),
       );
@@ -65,36 +69,42 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     PaymentReceiptPicked event,
     Emitter<PaymentState> emit,
   ) {
-    emit(state.copyWith(
-      receiptBytes: event.bytes,
-      receiptFileName: event.fileName,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        receiptBytes: event.bytes,
+        receiptFileName: event.fileName,
+        clearError: true,
+      ),
+    );
   }
 
   void _onCardFieldChanged(
     PaymentCardFieldChanged event,
     Emitter<PaymentState> emit,
   ) {
-    emit(state.copyWith(
-      cardNumber: event.cardNumber,
-      cardExpiry: event.cardExpiry,
-      cardCvv: event.cardCvv,
-      cardHolder: event.cardHolder,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        cardNumber: event.cardNumber,
+        cardExpiry: event.cardExpiry,
+        cardCvv: event.cardCvv,
+        cardHolder: event.cardHolder,
+        clearError: true,
+      ),
+    );
   }
 
   void _onTransferDetailsChanged(
     PaymentTransferDetailsChanged event,
     Emitter<PaymentState> emit,
   ) {
-    emit(state.copyWith(
-      transferAccountHolder: event.accountHolder,
-      transferTime: event.transferTime,
-      transferReference: event.referenceNumber,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        transferAccountHolder: event.accountHolder,
+        transferTime: event.transferTime,
+        transferReference: event.referenceNumber,
+        clearError: true,
+      ),
+    );
   }
 
   Future<void> _onPayNow(
@@ -102,7 +112,12 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     Emitter<PaymentState> emit,
   ) async {
     if (state.selectedMethod == null) {
-      emit(state.copyWith(uiStatus: PaymentUiStatus.failure, errorMessage: 'Please select a payment method'));
+      emit(
+        state.copyWith(
+          uiStatus: PaymentUiStatus.failure,
+          errorMessage: 'paymentSelectMethodRequired',
+        ),
+      );
       return;
     }
 
@@ -112,21 +127,32 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         (state.transferAccountHolder.trim().isEmpty ||
             state.transferTime.trim().isEmpty ||
             state.transferReference.trim().isEmpty)) {
-      emit(state.copyWith(uiStatus: PaymentUiStatus.failure, errorMessage: 'paymentReceiptRequired'));
+      emit(
+        state.copyWith(
+          uiStatus: PaymentUiStatus.failure,
+          errorMessage: 'paymentReceiptRequired',
+        ),
+      );
       return;
     }
 
     emit(state.copyWith(uiStatus: PaymentUiStatus.paying, clearError: true));
     try {
-
+      String? receiptUrl = state.receiptUploadedUrl;
+      if (!isCard && state.receiptBytes != null && state.receiptFileName != null) {
+        receiptUrl = await _uploadPaymentReceiptUseCase.call(
+          bookingId: event.bookingId,
+          bytes: state.receiptBytes!,
+          fileName: state.receiptFileName!,
+        );
+      }
 
       final selectedEntity = state.selectedMethodEntity;
-      final receipt = await _payUseCase.call(
+      final receipt = await _submitPaymentUseCase.call(
         bookingId: event.bookingId,
         method: state.selectedMethod!,
         methodName: selectedEntity?.title ?? state.selectedMethod!,
-        receiptBytes: state.receiptBytes,
-        receiptFileName: state.receiptFileName,
+        receiptUrl: receiptUrl,
         cardNumber: isCard ? state.cardNumber : null,
         cardExpiry: isCard ? state.cardExpiry : null,
         cardCvv: isCard ? state.cardCvv : null,
@@ -135,10 +161,14 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         transferTime: isCard ? null : state.transferTime,
         transferReference: isCard ? null : state.transferReference,
       );
+
+      await _verifyPaymentUseCase.call(event.bookingId);
+
       emit(
         state.copyWith(
           uiStatus: PaymentUiStatus.success,
           receipt: receipt,
+          receiptUploadedUrl: receiptUrl,
           clearError: true,
         ),
       );
@@ -152,4 +182,3 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     }
   }
 }
-

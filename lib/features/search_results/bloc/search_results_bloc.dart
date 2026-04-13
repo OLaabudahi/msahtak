@@ -18,6 +18,7 @@ class SearchResultsBloc extends Bloc<SearchResultsEvent, SearchResultsState> {
     on<SearchRemovePreferredChip>(_onRemoveChip);
     on<SearchRefresh>(_onRefresh);
     on<SearchSuggestionSelected>(_onSuggestionSelected);
+    on<SearchResetFilters>(_onResetFilters);
   }
 
   Future<void> _onStarted(
@@ -132,6 +133,22 @@ class SearchResultsBloc extends Bloc<SearchResultsEvent, SearchResultsState> {
 
     emit(state.copyWith(isLoading: false, results: results, errorMessage: null));
   }
+
+  Future<void> _onResetFilters(
+    SearchResetFilters event,
+    Emitter<SearchResultsState> emit,
+  ) async {
+    emit(state.copyWith(
+      selectedFilters: const {},
+      hasAppliedFilters: false,
+      preferredChips: const [],
+      isLoading: true,
+    ));
+    final results = await searchSpacesUseCase(
+      query: state.query,
+      selectedFilters: const {},
+      originKey: state.originKey,
+    );
+    emit(state.copyWith(isLoading: false, results: results));
+  }
 }
-
-

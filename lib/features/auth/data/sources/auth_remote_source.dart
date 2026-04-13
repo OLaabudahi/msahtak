@@ -7,20 +7,33 @@ class AuthRemoteSource {
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
-  }) {
-    return _service.signIn(email: email, password: password);
+  }) async {
+    final result = await _service.signIn(email: email, password: password);
+    final user = result['user'];
+    return {
+      ...result,
+      'uid': user?.uid,
+      'email': user?.email,
+      'displayName': user?.displayName,
+    };
   }
 
   Future<Map<String, dynamic>> signUp({
     required String email,
     required String password,
     required String fullName,
-  }) {
-    return _service.signUp(
+  }) async {
+    final result = await _service.signUp(
       email: email,
       password: password,
       fullName: fullName,
     );
+    final user = result['user'];
+    return {
+      ...result,
+      'uid': user?.uid,
+      'email': user?.email,
+    };
   }
 
   Future<AuthUserModel> loginWithGoogle() {
@@ -34,5 +47,9 @@ class AuthRemoteSource {
   Future<void> logout() {
 
     return _service.signOut();
+  }
+
+  Future<Map<String, dynamic>?> getUserProfile({required String uid}) {
+    return _service.getUserProfile(uid: uid);
   }
 }

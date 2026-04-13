@@ -33,12 +33,12 @@ class TwoButtonsBar extends StatelessWidget {
             child: InkWell(
               onTap: onLeft,
               child: Container(
-                color: leftFilled ? _blue : Colors.white,
+                color: leftFilled ? _blue : AppColors.background,
                 alignment: Alignment.center,
                 child: Text(
                   leftText,
                   style: TextStyle(
-                    color: leftFilled ? Colors.white : Colors.black87,
+                    color: leftFilled ? AppColors.btnSecondaryText : AppColors.text,
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
                   ),
@@ -51,12 +51,12 @@ class TwoButtonsBar extends StatelessWidget {
             child: InkWell(
               onTap: onRight,
               child: Container(
-                color: rightFilled ? _blue : Colors.white,
+                color: rightFilled ? _blue : AppColors.background,
                 alignment: Alignment.center,
                 child: Text(
                   rightText,
                   style: TextStyle(
-                    color: rightFilled ? Colors.white : Colors.black87,
+                    color: rightFilled ? AppColors.btnSecondaryText : AppColors.text,
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
                   ),
@@ -69,5 +69,3 @@ class TwoButtonsBar extends StatelessWidget {
     );
   }
 }
-
-

@@ -1,9 +1,15 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'dart:async';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/entities/notification_item.dart';
 import '../domain/usecases/get_notifications_usecase.dart';
 import '../domain/usecases/get_notification_settings_usecase.dart';
+import '../domain/usecases/get_fcm_token_usecase.dart';
+import '../domain/usecases/listen_notifications_usecase.dart';
+import '../domain/usecases/mark_all_notifications_read_usecase.dart';
 import '../domain/usecases/save_notification_settings_usecase.dart';
+import '../domain/usecases/save_fcm_token_usecase.dart';
 import 'notifications_event.dart';
 import 'notifications_state.dart';
 
@@ -12,17 +18,31 @@ class NotificationsBloc
   final GetNotificationsUseCase getNotificationsUseCase;
   final GetNotificationSettingsUseCase getNotificationSettingsUseCase;
   final SaveNotificationSettingsUseCase saveNotificationSettingsUseCase;
+  final GetFcmTokenUseCase getFcmTokenUseCase;
+  final SaveFcmTokenUseCase saveFcmTokenUseCase;
+  final ListenNotificationsUseCase listenNotificationsUseCase;
+  final MarkAllNotificationsReadUseCase markAllNotificationsReadUseCase;
+
+  StreamSubscription<Map<String, dynamic>>? _notificationsSubscription;
 
   NotificationsBloc({
     required this.getNotificationsUseCase,
     required this.getNotificationSettingsUseCase,
     required this.saveNotificationSettingsUseCase,
+    required this.getFcmTokenUseCase,
+    required this.saveFcmTokenUseCase,
+    required this.listenNotificationsUseCase,
+    required this.markAllNotificationsReadUseCase,
   }) : super(const NotificationsState()) {
     on<NotificationsStarted>(_onStarted);
     on<NotificationSettingsStarted>(_onSettingsStarted);
     on<NotificationSettingToggled>(_onSettingToggled);
     on<NotificationReminderTimingChanged>(_onReminderTimingChanged);
     on<NotificationSettingsSaved>(_onSettingsSaved);
+
+    _notificationsSubscription = listenNotificationsUseCase().listen((_) {
+      add(const NotificationsStarted());
+    });
   }
 
   /// تحميل الإعدادات أولاً ثم الإشعارات مع تصفية حسب الإعدادات
@@ -30,6 +50,11 @@ class NotificationsBloc
       NotificationsStarted event, Emitter<NotificationsState> emit) async {
     emit(state.copyWith(isLoadingList: true));
     try {
+      final token = await getFcmTokenUseCase();
+      if (token != null && token.isNotEmpty) {
+        await saveFcmTokenUseCase(token);
+      }
+
       final settings = await getNotificationSettingsUseCase();
       final all = await getNotificationsUseCase();
 
@@ -48,8 +73,10 @@ class NotificationsBloc
         }
       }).toList();
 
-      final today = filtered.where((n) => !n.isRead).toList();
-      final earlier = filtered.where((n) => n.isRead).toList();
+      await markAllNotificationsReadUseCase();
+      final markedRead = filtered.map((n) => NotificationItem(id: n.id, title: n.title, subtitle: n.subtitle, time: n.time, type: n.type, isRead: true, bookingId: n.bookingId)).toList();
+      final today = markedRead.where((n) => !n.isRead).toList();
+      final earlier = markedRead.where((n) => n.isRead).toList();
       emit(state.copyWith(
           settings: settings,
           todayItems: today,
@@ -103,5 +130,11 @@ class NotificationsBloc
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _notificationsSubscription?.cancel();
+    return super.close();
   }
 }

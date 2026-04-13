@@ -1,4 +1,5 @@
 ﻿import 'dart:typed_data';
+import '../../domain/entities/payment_details_entity.dart';
 import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 import '../../domain/entities/payment_summary_entity.dart';
@@ -43,6 +44,32 @@ class PaymentRepoFirebase implements PaymentRepo {
         details: _buildDetails(m),
       );
     }).toList();
+  }
+
+
+
+  @override
+  Future<PaymentDetailsEntity> getPaymentDetails({required String bookingId}) async {
+    final methods = await getMethods(bookingId: bookingId);
+    final summary = await getSummary(bookingId: bookingId);
+    return PaymentDetailsEntity(methods: methods, summary: summary);
+  }
+
+  @override
+  Future<String?> uploadPaymentReceipt({
+    required String bookingId,
+    required Uint8List bytes,
+    required String fileName,
+  }) {
+    return source.uploadReceipt(bookingId: bookingId, bytes: bytes, fileName: fileName);
+  }
+
+  @override
+  Future<bool> verifyPayment({required String bookingId}) async {
+    final booking = await source.getBooking(bookingId);
+    if (booking == null) return false;
+    final status = (booking['status'] ?? '').toString().toLowerCase();
+    return status == 'payment_under_review' || status == 'confirmed' || status == 'paid';
   }
 
   String _buildDetails(Map<String, dynamic> m) {
@@ -243,6 +270,7 @@ class PaymentRepoFirebase implements PaymentRepo {
 
 /*
 import 'dart:typed_data';
+import '../../domain/entities/payment_details_entity.dart';
 import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 import '../../domain/entities/payment_summary_entity.dart';
@@ -291,6 +319,32 @@ class PaymentRepoFirebase implements PaymentRepo {
   }
 
   /// بناء تفاصيل الدفع
+
+
+  @override
+  Future<PaymentDetailsEntity> getPaymentDetails({required String bookingId}) async {
+    final methods = await getMethods(bookingId: bookingId);
+    final summary = await getSummary(bookingId: bookingId);
+    return PaymentDetailsEntity(methods: methods, summary: summary);
+  }
+
+  @override
+  Future<String?> uploadPaymentReceipt({
+    required String bookingId,
+    required Uint8List bytes,
+    required String fileName,
+  }) {
+    return source.uploadReceipt(bookingId: bookingId, bytes: bytes, fileName: fileName);
+  }
+
+  @override
+  Future<bool> verifyPayment({required String bookingId}) async {
+    final booking = await source.getBooking(bookingId);
+    if (booking == null) return false;
+    final status = (booking['status'] ?? '').toString().toLowerCase();
+    return status == 'payment_under_review' || status == 'confirmed' || status == 'paid';
+  }
+
   String _buildDetails(Map<String, dynamic> m) {
     final parts = <String>[];
 

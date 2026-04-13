@@ -1,9 +1,9 @@
-﻿import 'dart:async';
-import 'dart:math';
+import 'dart:async';
 import 'dart:typed_data';
 
 import '../../../booking_request/data/sources/booking_in_memory_store.dart';
 import '../../../booking_request/domain/entities/booking_request_entity.dart';
+import '../../domain/entities/payment_details_entity.dart';
 import '../../domain/entities/payment_method_entity.dart';
 import '../../domain/entities/payment_receipt_entity.dart';
 import '../../domain/entities/payment_summary_entity.dart';
@@ -13,11 +13,8 @@ import '../models/payment_summary_model.dart';
 
 class PaymentRepoDummy implements PaymentRepo {
   final BookingInMemoryStore _store;
-  final Random _random;
 
-  PaymentRepoDummy({BookingInMemoryStore? store, Random? random})
-    : _store = store ?? BookingInMemoryStore.instance,
-      _random = random ?? Random();
+  PaymentRepoDummy({BookingInMemoryStore? store}) : _store = store ?? BookingInMemoryStore.instance;
 
   @override
   Future<List<PaymentMethodEntity>> getMethods({required String bookingId}) async {
@@ -43,6 +40,28 @@ class PaymentRepoDummy implements PaymentRepo {
     ];
     final total = items.fold<int>(0, (s, e) => s + e.amount);
     return PaymentSummaryModel(items: items, total: total, currency: req.currency);
+  }
+
+  @override
+  Future<PaymentDetailsEntity> getPaymentDetails({required String bookingId}) async {
+    final methods = await getMethods(bookingId: bookingId);
+    final summary = await getSummary(bookingId: bookingId);
+    return PaymentDetailsEntity(methods: methods, summary: summary);
+  }
+
+  @override
+  Future<String?> uploadPaymentReceipt({
+    required String bookingId,
+    required Uint8List bytes,
+    required String fileName,
+  }) async {
+    return 'dummy://$bookingId/$fileName';
+  }
+
+  @override
+  Future<bool> verifyPayment({required String bookingId}) async {
+    final req = _store.get(bookingId);
+    return req?.status == BookingRequestStatus.paid;
   }
 
   @override
@@ -91,15 +110,8 @@ class PaymentRepoDummy implements PaymentRepo {
       statusHint: 'Payment successful',
       totalAmount: req.totalAmount,
       currency: req.currency,
-
     );
     _store.put(updated);
     return receipt;
   }
-
-  String _generateId({required String prefix}) {
-    final n = 1000 + _random.nextInt(9000);
-    return '$prefix-$n';
-  }
 }
-

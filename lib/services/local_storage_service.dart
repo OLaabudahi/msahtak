@@ -1,15 +1,42 @@
-﻿import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class AdminSessionData {
+  const AdminSessionData({
+    required this.userId,
+    required this.userName,
+    required this.role,
+    required this.assignedSpaceIds,
+  });
+
+  final String userId;
+  final String userName;
+  final String role;
+  final List<String> assignedSpaceIds;
+
+  static const empty = AdminSessionData(
+    userId: '',
+    userName: '',
+    role: '',
+    assignedSpaceIds: <String>[],
+  );
+}
 
 class LocalStorageService {
+  factory LocalStorageService() => _instance;
+  LocalStorageService._internal();
+  static final LocalStorageService _instance = LocalStorageService._internal();
 
   static const _kIsLoggedIn = 'is_logged_in';
   static const _kHasCompletedOnboarding = 'has_completed_onboarding';
   static const _kLocaleCode = 'locale_code';
-
   static const _kUserId = 'user_id';
   static const _kUserName = 'user_name';
   static const _kUserRole = 'user_role';
   static const _kAssignedSpaceIds = 'assigned_space_ids';
+
+  AdminSessionData _cachedAdminSession = AdminSessionData.empty;
+
+  AdminSessionData get cachedAdminSession => _cachedAdminSession;
 
   Future<bool> getIsLoggedIn() async {
     final sp = await SharedPreferences.getInstance();
@@ -41,7 +68,6 @@ class LocalStorageService {
     await sp.setString(_kLocaleCode, code);
   }
 
-  /// USER ID
   Future<String?> getUserId() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getString(_kUserId);
@@ -52,7 +78,6 @@ class LocalStorageService {
     await sp.setString(_kUserId, id);
   }
 
-  /// USER NAME
   Future<String?> getUserName() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getString(_kUserName);
@@ -63,7 +88,6 @@ class LocalStorageService {
     await sp.setString(_kUserName, name);
   }
 
-  /// USER ROLE
   Future<String?> getUserRole() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getString(_kUserRole);
@@ -74,7 +98,6 @@ class LocalStorageService {
     await sp.setString(_kUserRole, role);
   }
 
-  /// SPACES
   Future<List<String>> getAssignedSpaceIds() async {
     final sp = await SharedPreferences.getInstance();
     return sp.getStringList(_kAssignedSpaceIds) ?? [];
@@ -85,6 +108,20 @@ class LocalStorageService {
     await sp.setStringList(_kAssignedSpaceIds, ids);
   }
 
+  Future<AdminSessionData> loadAdminSession() async {
+    _cachedAdminSession = AdminSessionData(
+      userId: await getUserId() ?? '',
+      userName: await getUserName() ?? '',
+      role: await getUserRole() ?? '',
+      assignedSpaceIds: await getAssignedSpaceIds(),
+    );
+    return _cachedAdminSession;
+  }
+
+  void clearAdminSessionCache() {
+    _cachedAdminSession = AdminSessionData.empty;
+  }
+
   Future<void> clearAuth() async {
     final sp = await SharedPreferences.getInstance();
     await sp.remove(_kIsLoggedIn);
@@ -93,6 +130,6 @@ class LocalStorageService {
     await sp.remove(_kUserName);
     await sp.remove(_kAssignedSpaceIds);
     await sp.remove(_kHasCompletedOnboarding);
+    clearAdminSessionCache();
   }
 }
-

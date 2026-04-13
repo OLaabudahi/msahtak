@@ -1,18 +1,28 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../domain/entities/home_featured_space_entity.dart';
+import '../../notifications/domain/usecases/get_notifications_usecase.dart';
 import '../domain/entities/insight_item.dart';
-import '../domain/repos/home_repo.dart';
+import '../domain/usecases/get_featured_spaces_usecase.dart';
+import '../domain/usecases/get_home_data_usecase.dart';
+import '../domain/usecases/get_nearby_spaces_usecase.dart';
+import '../domain/usecases/get_recommended_spaces_usecase.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final HomeRepo repo;
+  final GetHomeDataUseCase getHomeDataUseCase;
+  final GetRecommendedSpacesUseCase getRecommendedSpacesUseCase;
+  final GetNearbySpacesUseCase getNearbySpacesUseCase;
+  final GetFeaturedSpacesUseCase getFeaturedSpacesUseCase;
+  final GetNotificationsUseCase getNotificationsUseCase;
 
-  // نخزن الأصل عشان البحث ما يضيع الداتا
-  List<HomeFeaturedSpaceEntity> _allFeatured = const [];
-
-  HomeBloc({required this.repo}) : super(HomeState.initial()) {
+  HomeBloc({
+    required this.getHomeDataUseCase,
+    required this.getRecommendedSpacesUseCase,
+    required this.getNearbySpacesUseCase,
+    required this.getFeaturedSpacesUseCase,
+    required this.getNotificationsUseCase,
+  }) : super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
     on<HomeBottomTabChanged>(_onBottomTabChanged);
     on<HomeCategorySelected>(_onCategorySelected);
@@ -24,67 +34,40 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _onStarted(HomeStarted event, Emitter<HomeState> emit) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      final featured = await repo.fetchForYou();
-      _allFeatured = featured;
+      final featured = await getHomeDataUseCase();
+      await getRecommendedSpacesUseCase();
+      await getNearbySpacesUseCase();
+      await getFeaturedSpacesUseCase();
+      final notifications = await getNotificationsUseCase();
+      final unreadCount = notifications.where((n) => !n.isRead).length;
 
       emit(state.copyWith(
         isLoading: false,
         featuredSpaces: featured,
         featuredIndex: 0,
         insights: _buildDummyInsights(),
-        unreadNotifications: state.unreadNotifications,
+        unreadNotifications: unreadCount,
       ));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }
 
-  void _onBottomTabChanged(
-      HomeBottomTabChanged event, Emitter<HomeState> emit) {
+  void _onBottomTabChanged(HomeBottomTabChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(bottomTabIndex: event.index));
   }
 
-  void _onCategorySelected(
-      HomeCategorySelected event, Emitter<HomeState> emit) {
+  void _onCategorySelected(HomeCategorySelected event, Emitter<HomeState> emit) {
     emit(state.copyWith(selectedCategoryIndex: event.index));
   }
 
-  void _onNotificationPressed(
-      HomeNotificationPressed event, Emitter<HomeState> emit) {
+  void _onNotificationPressed(HomeNotificationPressed event, Emitter<HomeState> emit) {
     emit(state.copyWith(unreadNotifications: 0));
   }
 
-  void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {
-    final q = event.query.trim().toLowerCase();
-    if (q.isEmpty) {
-      emit(state.copyWith(featuredSpaces: _allFeatured, featuredIndex: 0));
-      return;
-    }
+  void _onSearchChanged(HomeSearchChanged event, Emitter<HomeState> emit) {}
 
-    // البحث يعرض المساحات التي تحتوي على WiFi وضمن 100 متر وتطابق النص
-    final filtered = _allFeatured.where((s) {
-      final hasWifi = s.tags.any((t) => t.contains('wifi'));
-      final withinRange = (s.distanceKm ?? 999) <= 0.1;
-      final textMatch = s.name.toLowerCase().contains(q) ||
-          s.subtitleLine.toLowerCase().contains(q);
-      return hasWifi && withinRange && textMatch;
-    }).toList();
-
-    // إذا ما في نتيجة بالفلتر الكامل، نرجع بحث بالنص فقط (fallback)
-    if (filtered.isEmpty) {
-      final textOnly = _allFeatured.where((s) {
-        return s.name.toLowerCase().contains(q) ||
-            s.subtitleLine.toLowerCase().contains(q);
-      }).toList();
-      emit(state.copyWith(featuredSpaces: textOnly, featuredIndex: 0));
-      return;
-    }
-
-    emit(state.copyWith(featuredSpaces: filtered, featuredIndex: 0));
-  }
-
-  void _onFeaturedPageChanged(
-      HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
+  void _onFeaturedPageChanged(HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(featuredIndex: event.index));
   }
 

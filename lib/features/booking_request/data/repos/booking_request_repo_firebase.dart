@@ -1,4 +1,7 @@
 ﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../notifications/data/repos/notifications_repo_impl.dart';
+import '../../../notifications/data/sources/notifications_firebase_source.dart';
+import '../../../notifications/domain/usecases/send_notification_usecase.dart';
 
 import '../../domain/entities/booking_price_quote_entity.dart';
 import '../../domain/entities/booking_request_entity.dart';
@@ -11,6 +14,10 @@ import '../sources/booking_request_firebase_source.dart';
 class BookingRequestRepoFirebase implements BookingRequestRepo {
   final BookingRequestFirebaseSource source;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final SendNotificationUseCase _sendNotificationUseCase =
+      SendNotificationUseCase(
+        NotificationsRepoImpl(NotificationsFirebaseSource()),
+      );
 
   BookingRequestRepoFirebase({required this.source});
 
@@ -349,6 +356,17 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
     }
     if (recipients.isNotEmpty) {
       await batch.commit();
+    }
+
+    if (ownerAdminId != null && ownerAdminId.isNotEmpty) {
+      try {
+        await _sendNotificationUseCase(
+          userId: ownerAdminId,
+          bookingId: bookingId,
+          title: 'New Booking Request',
+          body: '$requesterName requested booking at $spaceName',
+        );
+      } catch (_) {}
     }
   }
 

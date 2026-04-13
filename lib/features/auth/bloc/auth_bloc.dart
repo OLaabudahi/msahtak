@@ -1,9 +1,9 @@
 ﻿import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../domain/usecases/forgot_usecase.dart';
 import '../domain/usecases/login_usecase.dart';
 import '../domain/usecases/login_with_google_usecase.dart';
-import '../domain/usecases/logout_auth_usecase.dart';
+import '../domain/usecases/logout_usecase.dart';
+import '../domain/usecases/reset_password_usecase.dart';
 import '../domain/usecases/signup_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -11,14 +11,14 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final SignUpUseCase signUpUseCase;
-  final ForgotPasswordUseCase forgotUseCase;
-  final LogoutAuthUseCase logoutUseCase;
+  final ResetPasswordUseCase resetPasswordUseCase;
+  final LogoutUseCase logoutUseCase;
   final LoginWithGoogleUseCase googleUseCase;
 
 
   AuthBloc({required this.loginUseCase,
     required this.signUpUseCase,
-    required this.forgotUseCase,
+    required this.resetPasswordUseCase,
     required this.logoutUseCase,
     required this.googleUseCase})
       : super(const AuthState(status: AuthStatus.idle)) {
@@ -86,7 +86,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       Emitter<AuthState> emit,) async {
     try {
       emit(state.copyWith(status: AuthStatus.loading, errorMessage: null));
-      await forgotUseCase(event.email);
+      await resetPasswordUseCase(event.email);
       emit(state.copyWith(status: AuthStatus.forgotSent, errorMessage: null));
       emit(state.copyWith(status: AuthStatus.idle));
     } catch (e) {
@@ -276,4 +276,3 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 }*/
-

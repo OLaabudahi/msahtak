@@ -1,6 +1,4 @@
 import 'package:Msahtak/features/auth/data/models/auth_user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/utils/role_mapper.dart';
@@ -29,23 +27,25 @@ class AuthRepoFirebase implements AuthRepo {
       throw Exception(result['error'] ?? 'Login failed');
     }
 
-    final user = result['user'] as User;
+    final uid = result['uid']?.toString() ?? '';
+    final userEmail = result['email']?.toString();
+    final userDisplayName = result['displayName']?.toString();
     final rawIds = result['assignedSpaceIds'];
     final assignedSpaceIds = rawIds is List
         ? rawIds.map((e) => e.toString()).toList()
         : <String>[];
 
     final profile = await _syncSessionFromProfile(
-      uid: user.uid,
-      fallbackName: user.displayName,
+      uid: uid,
+      fallbackName: userDisplayName,
       fallbackRole: result['role']?.toString() ?? 'user',
       fallbackAssignedSpaceIds: assignedSpaceIds,
     );
 
     return AuthUserModel(
-      id: user.uid,
+      id: uid,
       fullName: profile.fullName,
-      email: user.email ?? email,
+      email: userEmail ?? email,
       role: profile.role,
       assignedSpaceIds: profile.assignedSpaceIds,
     );
@@ -91,16 +91,16 @@ class AuthRepoFirebase implements AuthRepo {
       throw Exception(result['error'] ?? 'Sign up failed');
     }
 
-    final user = result['user'] as User;
+    final uid = result['uid']?.toString() ?? '';
     await _storage.setIsLoggedIn(true);
-    await _storage.setUserId(user.uid);
+    await _storage.setUserId(uid);
     await _storage.setUserName(fullName);
     await _storage.setUserRole('user');
     await _storage.setAssignedSpaceIds(const <String>[]);
     await _storage.setHasCompletedOnboarding(false);
 
     return AuthUserModel(
-      id: user.uid,
+      id: uid,
       fullName: fullName,
       email: email,
       role: 'user',
@@ -128,8 +128,7 @@ class AuthRepoFirebase implements AuthRepo {
     required String? fallbackRole,
     required List<String> fallbackAssignedSpaceIds,
   }) async {
-    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    final data = doc.data() ?? <String, dynamic>{};
+    final data = await source.getUserProfile(uid: uid) ?? <String, dynamic>{};
 
     final mappedRole = RoleMapper.map(data['role']?.toString() ?? fallbackRole);
     final rawAssigned = data['assignedSpaceIds'];

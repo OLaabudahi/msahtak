@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/di/app_injector.dart';
 import '../../../_shared/admin_ui.dart';
 import '../../../../../core/i18n/app_i18n.dart';
+import '../../../../../core/widgets/app_tabs.dart';
 import '../bloc/booking_requests_bloc.dart';
 import '../bloc/booking_requests_event.dart';
 import '../bloc/booking_requests_state.dart';
-import '../data/repos/admin_bookings_repo_impl.dart';
-import '../data/sources/admin_bookings_firebase_source.dart';
 import '../domain/entities/booking_status.dart';
-import '../domain/usecases/accept_booking_usecase.dart';
-import '../domain/usecases/get_bookings_usecase.dart';
-import '../domain/usecases/reject_booking_usecase.dart';
 import '../widgets/booking_request_card.dart';
-import '../widgets/booking_tab_button.dart';
 
 import '../../booking_details/view/booking_details_page.dart';
 
 class BookingRequestsPage extends StatelessWidget {
   const BookingRequestsPage({super.key});
 
+  static const _tabs = [
+    BookingStatus.pending,
+    BookingStatus.awaitingPayment,
+    BookingStatus.awaitingConfirmation,
+    BookingStatus.booked,
+    BookingStatus.canceled,
+  ];
+
   static Widget withBloc() {
-    final source = AdminBookingsFirebaseSource();
-    final repo = AdminBookingsRepoImpl(source);
     return BlocProvider(
-      create: (_) => BookingRequestsBloc(
-        getBookings: GetBookingsUseCase(repo),
-        acceptBooking: AcceptBookingUseCase(repo),
-        rejectBooking: RejectBookingUseCase(repo),
-      )..add(const BookingRequestsStarted()),
+      create: (_) =>
+          AppInjector.createAdminBookingRequestsBloc()
+            ..add(const BookingRequestsStarted()),
       child: const BookingRequestsPage(),
     );
   }
@@ -49,51 +49,20 @@ class BookingRequestsPage extends StatelessWidget {
               child: BlocBuilder<BookingRequestsBloc, BookingRequestsState>(
                 buildWhen: (p, n) => p.activeTab != n.activeTab,
                 builder: (context, state) {
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                      BookingTabButton(
-                        label: context.t('adminTabPending'),
-                        icon: AdminIconMapper.clock(),
-                        activeIconColor: AdminColors.primaryAmber,
-                        active: state.activeTab == BookingStatus.pending,
-                        onTap: () => context.read<BookingRequestsBloc>().add(const BookingRequestsTabChanged(BookingStatus.pending)),
-                      ),
-                      const SizedBox(width: AdminSpace.s8),
-                      BookingTabButton(
-                        label: context.t('adminTabAwaitingPayment'),
-                        icon: AdminIconMapper.checkCircle(),
-                        activeIconColor: AdminColors.primaryAmber,
-                        active: state.activeTab == BookingStatus.awaitingPayment,
-                        onTap: () => context.read<BookingRequestsBloc>().add(const BookingRequestsTabChanged(BookingStatus.awaitingPayment)),
-                      ),
-                      const SizedBox(width: AdminSpace.s8),
-                      BookingTabButton(
-                        label: context.t('adminTabAwaitingConfirmation'),
-                        icon: Icons.receipt_long_outlined,
-                        activeIconColor: AdminColors.primaryAmber,
-                        active: state.activeTab == BookingStatus.awaitingConfirmation,
-                        onTap: () => context.read<BookingRequestsBloc>().add(const BookingRequestsTabChanged(BookingStatus.awaitingConfirmation)),
-                      ),
-                      const SizedBox(width: AdminSpace.s8),
-                      BookingTabButton(
-                        label: context.t('adminTabBooked'),
-                        icon: Icons.event_available_outlined,
-                        activeIconColor: AdminColors.primaryAmber,
-                        active: state.activeTab == BookingStatus.booked,
-                        onTap: () => context.read<BookingRequestsBloc>().add(const BookingRequestsTabChanged(BookingStatus.booked)),
-                      ),
-                      const SizedBox(width: AdminSpace.s8),
-                      BookingTabButton(
-                        label: context.t('adminTabCanceled'),
-                        icon: AdminIconMapper.xCircle(),
-                        activeIconColor: AdminColors.primaryAmber,
-                        active: state.activeTab == BookingStatus.canceled,
-                        onTap: () => context.read<BookingRequestsBloc>().add(const BookingRequestsTabChanged(BookingStatus.canceled)),
-                      ),
-                    ],
-                    ),
+                  final labels = [
+                    context.t('adminTabPending'),
+                    context.t('adminTabAwaitingPayment'),
+                    context.t('adminTabAwaitingConfirmation'),
+                    context.t('adminTabBooked'),
+                    context.t('adminTabCanceled'),
+                  ];
+                  final selectedIndex = _tabs.indexOf(state.activeTab);
+                  return AppTabs(
+                    labels: labels,
+                    selectedIndex: selectedIndex < 0 ? 0 : selectedIndex,
+                    onChanged: (i) => context
+                        .read<BookingRequestsBloc>()
+                        .add(BookingRequestsTabChanged(_tabs[i])),
                   );
                 },
               ),

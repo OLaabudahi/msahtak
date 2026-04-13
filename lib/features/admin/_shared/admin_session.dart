@@ -1,33 +1,24 @@
-﻿import '../../../services/local_storage_service.dart';
-
+import '../../../services/local_storage_service.dart';
 
 class AdminSession {
   AdminSession._();
 
-  static String userId = '';
-  static String userName = '';
-  static String role = '';
-  static List<String> assignedSpaceIds = [];
+  static final LocalStorageService _storage = LocalStorageService();
+
+  static String get userId => _storage.cachedAdminSession.userId;
+  static String get userName => _storage.cachedAdminSession.userName;
+  static String get role => _storage.cachedAdminSession.role;
+  static List<String> get assignedSpaceIds =>
+      _storage.cachedAdminSession.assignedSpaceIds;
 
   static bool get isSuperAdmin => role == 'admin' || role == 'super_admin';
   static bool get isSubAdmin => role == 'sub_admin' || role == 'sup_admin';
 
-
   static Future<void> load() async {
-    final storage = LocalStorageService();
-    userId = await storage.getUserId() ?? '';
-    userName = await storage.getUserName() ?? '';
-    print("USER ID: $userId");
-    print("USER NAME: $userName");
-
-    role = await storage.getUserRole() ?? '';
-    assignedSpaceIds = await storage.getAssignedSpaceIds();
+    await _storage.loadAdminSession();
   }
 
   static void clear() {
-    userId = '';
-    userName = '';
-    role = '';
-    assignedSpaceIds = [];
+    _storage.clearAdminSessionCache();
   }
 }

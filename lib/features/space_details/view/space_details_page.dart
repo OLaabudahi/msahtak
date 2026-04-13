@@ -3,11 +3,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_spacing.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../booking_request/domain/entities/booking_request_entity.dart';
 import '../../booking_request/view/booking_request_routes.dart';
 import '../../../../core/di/app_injector.dart';
@@ -22,7 +27,6 @@ import '../widgets/reason_chip.dart';
 import '../widgets/review_card.dart';
 import '../widgets/segmented_tabs.dart';
 import '../widgets/usage_bars.dart';
-import 'package:Msahtak/features/admin/my_spaces/add_edit_space/view/location_picker_page.dart';
 import 'sheets/policies_sheet.dart';
 import 'sheets/review_summary_sheet.dart';
 
@@ -212,12 +216,44 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
     );
   }
 
+  Future<void> _openInMaps(SpaceDetailsState state) async {
+    final d = state.details;
+    if (d == null || d.lat == null || d.lng == null) return;
+    final uri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}',
+    );
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
+  Future<void> _copyLocation(SpaceDetailsState state) async {
+    final d = state.details;
+    if (d == null) return;
+    final text = (d.lat != null && d.lng != null)
+        ? '${d.lat},${d.lng}'
+        : d.locationAddress;
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.t('copyLocation'))),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<SpaceDetailsBloc, SpaceDetailsState>(
-      listenWhen: (p, c) => p.tabIndex != c.tabIndex,
+      listenWhen: (p, c) =>
+          p.tabIndex != c.tabIndex ||
+          p.favoriteNoticeKey != c.favoriteNoticeKey,
       listener: (context, state) {
-        // ✅ لما الـ bloc يغير tabIndex (من tap أو swipe) خلّي الـ PageView يروح لنفس المكان
+        if (state.favoriteNoticeKey != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.t(state.favoriteNoticeKey!))),
+          );
+          context
+              .read<SpaceDetailsBloc>()
+              .add(const SpaceDetailsFavoriteNoticeConsumed());
+          return;
+        }
         _animateToTab(state.tabIndex);
       },
       child: BlocBuilder<SpaceDetailsBloc, SpaceDetailsState>(
@@ -283,6 +319,21 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                               fontWeight: FontWeight.w900,
                               fontSize: 16,
                             ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: state.favoriteUpdating
+                              ? null
+                              : () => bloc.add(
+                                    const SpaceDetailsToggleFavoritePressed(),
+                                  ),
+                          icon: Icon(
+                            state.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: state.isFavorite
+                                ? AppColors.amber
+                                : AppColors.textPrimary,
                           ),
                         ),
                       ],
@@ -438,7 +489,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                       children: [
                         // -------- Overview --------
                         SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -507,25 +558,75 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              InkWell(
-                                onTap: () {
-                                  if (d.lat != null && d.lng != null) {
-                                    LocationPickerPage.show(
-                                      context,
-                                      lat: d.lat,
-                                      lng: d.lng,
-                                    );
-                                  }
-                                },
-                                child: const Text(
-                                  '📍 View location',
-                                  style: TextStyle(
-                                    color: AppColors.amber,
-                                    fontWeight: FontWeight.w900,
+                              if (d.lat != null && d.lng != null) ...[
+                                const SizedBox(height: 8),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: SizedBox(
+                                    height: 160,
+                                    child: FlutterMap(
+                                      options: MapOptions(
+                                        initialCenter: LatLng(d.lat!, d.lng!),
+                                        initialZoom: 14,
+                                        interactionOptions:
+                                            const InteractionOptions(
+                                          flags: InteractiveFlag.none,
+                                        ),
+                                      ),
+                                      children: [
+                                        TileLayer(
+                                          urlTemplate:
+                                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                          userAgentPackageName:
+                                              'com.example.masahtak_app',
+                                        ),
+                                        MarkerLayer(
+                                          markers: [
+                                            Marker(
+                                              point: LatLng(d.lat!, d.lng!),
+                                              width: 42,
+                                              height: 42,
+                                              child: const Icon(
+                                                Icons.location_on,
+                                                color: AppColors.amber,
+                                                size: 38,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  d.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppButton(
+                                        label: context.t('openInMaps'),
+                                        onPressed: () => _openInMaps(state),
+                                        height: 44,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: AppButton(
+                                        label: context.t('copyLocation'),
+                                        type: AppButtonType.secondary,
+                                        onPressed: () => _copyLocation(state),
+                                        height: 44,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
 
                               const SizedBox(height: 18),
 
@@ -590,7 +691,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                         // -------- Reviews --------
                         SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -680,7 +781,7 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
 
                         // -------- Offers --------
                         SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

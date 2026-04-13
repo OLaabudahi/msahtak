@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../theme/app_colors.dart';
 import '../../../../../core/i18n/app_i18n.dart';
+import '../../../../../core/widgets/app_button.dart';
 import '../../../../../features/language/bloc/language_bloc.dart';
 import '../../../../services/language_service.dart';
 import '../../bloc/payment_bloc.dart';
@@ -39,9 +40,11 @@ class PaymentPage extends StatelessWidget {
             if (state.uiStatus == PaymentUiStatus.failure && state.errorMessage != null) {
               // استخدم context.read بدلاً من context.t لأن الـ listener خارج build
               final langCode = context.read<LanguageBloc>().state.code;
-              final msg = state.errorMessage == 'paymentReceiptRequired'
-                  ? LanguageService.tr(langCode, 'paymentReceiptRequired')
-                  : state.errorMessage!;
+              final msg = switch (state.errorMessage) {
+                  'paymentReceiptRequired' => LanguageService.tr(langCode, 'paymentReceiptRequired'),
+                  'paymentSelectMethodRequired' => LanguageService.tr(langCode, 'paymentSelectMethodRequired'),
+                  _ => state.errorMessage!,
+                };
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
             }
             if (state.uiStatus == PaymentUiStatus.success && state.receipt != null) {
@@ -131,26 +134,14 @@ class PaymentPage extends StatelessWidget {
                   const SizedBox(height: 14),
 
                   // ── زر إتمام الدفع ──
-                  SizedBox(
-                    width: double.infinity,
+                  AppButton(
+                    label: context.t('paymentCompleteBtn'),
+                    onPressed: state.canPay
+                        ? () => context.read<PaymentBloc>().add(PayNowPressed(bookingId))
+                        : null,
+                    loading: state.uiStatus == PaymentUiStatus.paying,
                     height: 52,
-                    child: ElevatedButton(
-                      onPressed: state.canPay
-                          ? () => context.read<PaymentBloc>().add(PayNowPressed(bookingId))
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.amber,
-                        disabledBackgroundColor: AppColors.amber.withOpacity(0.4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                      ),
-                      child: state.uiStatus == PaymentUiStatus.paying
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : Text(context.t('paymentCompleteBtn'),
-                              style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white)),
-                    ),
+                    borderRadius: 26,
                   ),
                   const SizedBox(height: 10),
                 ],

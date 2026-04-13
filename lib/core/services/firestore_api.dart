@@ -88,6 +88,36 @@ class FirestoreApi {
     });
   }
 
+
+
+  Stream<List<Map<String, dynamic>>> streamWhereEqual({
+    required String collection,
+    required String field,
+    required dynamic value,
+    int limit = 300,
+  }) {
+    return _db
+        .collection(collection)
+        .where(field, isEqualTo: value)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return {
+          ...doc.data(),
+          "id": doc.id,
+        };
+      }).toList(growable: false);
+    });
+  }
+
+  Future<Map<String, dynamic>?> getDocInCollection({
+    required String collection,
+    required String docId,
+  }) {
+    return getDoc(collection: collection, docId: docId);
+  }
+
   Future<List<Map<String, dynamic>>> queryWhereEqual({
     required String collection,
     required String field,

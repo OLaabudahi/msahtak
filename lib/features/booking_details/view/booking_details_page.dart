@@ -1,15 +1,16 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
+import '../../../core/di/app_injector.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../bloc/booking_details_bloc.dart';
 import '../bloc/booking_details_event.dart';
 import '../bloc/booking_details_state.dart';
-import '../data/repos/booking_details_repo_firebase.dart';
 import '../widgets/booking_chip.dart';
 import '../widgets/booking_section_title.dart';
 
@@ -18,23 +19,18 @@ class BookingDetailsPage extends StatelessWidget {
 
   const BookingDetailsPage({super.key, required this.bookingId});
 
-  /// ✅ دالة: فتح الصفحة مع Bloc جاهز (Dummy repo حالياً)
   static Widget withBloc({required String bookingId}) {
     return BlocProvider(
-      create: (_) =>
-          BookingDetailsBloc(repo: BookingDetailsRepoFirebase())
-            ..add(BookingDetailsStarted(bookingId)),
+      create: (_) => getIt<BookingDetailsBloc>()..add(BookingDetailsStarted(bookingId)),
       child: BookingDetailsPage(bookingId: bookingId),
     );
   }
 
-  /// ✅ دالة: تنسيق السعر
   String _money(String currency, num v) => '$currency ${v.toStringAsFixed(1)}';
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
-      /// ✅ دالة: بناء UI حسب حالة التحميل/البيانات
       builder: (context, state) {
         if (state.loading) {
           return const Scaffold(
@@ -51,13 +47,16 @@ class BookingDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('صار خطأ: ${state.error}', style: AppTextStyles.body),
+                    Text(
+                      '${context.t('bookingDetailsErrorPrefix')} ${state.error}',
+                      style: AppTextStyles.body,
+                    ),
                     AppSpacing.vMd,
-                    FilledButton(
+                    AppButton(
+                      label: context.t('retry'),
                       onPressed: () => context.read<BookingDetailsBloc>().add(
-                        BookingDetailsStarted(bookingId),
-                      ),
-                      child: const Text('إعادة المحاولة'),
+                            BookingDetailsStarted(bookingId),
+                          ),
                     ),
                   ],
                 ),
@@ -82,7 +81,6 @@ class BookingDetailsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // صورة المساحة
                         ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: ConstrainedBox(
@@ -100,10 +98,7 @@ class BookingDetailsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         AppSpacing.vMd,
-
-                        // اسم المساحة + تقييم
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -132,20 +127,13 @@ class BookingDetailsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         Text(d.locationText, style: AppTextStyles.caption),
-
                         AppSpacing.vMd,
-
-                        // Tags
                         Wrap(
                           spacing: 10,
                           runSpacing: 10,
-                          children: d.tags
-                              .map((t) => BookingChip(text: t))
-                              .toList(),
+                          children: d.tags.map((t) => BookingChip(text: t)).toList(),
                         ),
-
                         AppSpacing.vLg,
-
                         BookingSectionTitle(text: context.t('bookingInfoLabel')),
                         AppSpacing.vSm,
                         Container(
@@ -171,15 +159,11 @@ class BookingDetailsPage extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         AppSpacing.vLg,
-
                         BookingSectionTitle(text: context.t('bookingNotesLabel')),
                         AppSpacing.vSm,
                         Text(d.notes, style: AppTextStyles.body),
-
                         AppSpacing.vLg,
-
                         BookingSectionTitle(text: context.t('bookingTotalLabel')),
                         AppSpacing.vSm,
                         Container(
@@ -198,29 +182,22 @@ class BookingDetailsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         AppSpacing.vXl,
                       ],
                     ),
                   ),
                 ),
-
-                // زر ثابت تحت
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
                   child: SizedBox(
                     width: double.infinity,
-                    child: FilledButton(
+                    child: AppButton(
+                      label: context.t('manageBooking'),
                       onPressed: () {
-                        // ✅ لاحقاً: Cancel / Modify / Pay حسب التصميم اللي رح تبعتيه
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Action (placeholder)')),
+                          SnackBar(content: Text(context.t('bookingDetailsActionPlaceholder'))),
                         );
-
-                        // ✅ API READY (كومنت)
-                        // await bookingRepo.cancelBooking(bookingId);
                       },
-                      child: Text(context.t('manageBooking')),
                     ),
                   ),
                 ),

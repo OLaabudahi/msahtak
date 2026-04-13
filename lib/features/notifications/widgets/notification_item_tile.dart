@@ -54,7 +54,7 @@ class NotificationItemTile extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
         children: [
-          _buildIcon(showAI, hasInnerCircle),
+          _buildIcon(context, showAI, hasInnerCircle),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -80,7 +80,7 @@ class NotificationItemTile extends StatelessWidget {
             style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFFF5A623)),
+                color: AppColors.amber),
           ),
         ],
       ),
@@ -88,7 +88,7 @@ class NotificationItemTile extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon(bool showAI, bool hasInnerCircle) {
+  Widget _buildIcon(BuildContext context, bool showAI, bool hasInnerCircle) {
     return Container(
       width: 50,
       height: 50,
@@ -99,11 +99,14 @@ class NotificationItemTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(_iconData, color: _iconColor, size: 18),
-                const Text('AI',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  context.t('ai'),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             )
           : hasInnerCircle
@@ -184,5 +187,3 @@ class NotificationItemTile extends StatelessWidget {
     }
   }
 }
-
-

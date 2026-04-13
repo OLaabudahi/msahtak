@@ -56,3 +56,7 @@ class SearchRefresh extends SearchResultsEvent {
 }
 
 
+
+class SearchResetFilters extends SearchResultsEvent {
+  const SearchResetFilters();
+}

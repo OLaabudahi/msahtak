@@ -1,28 +1,26 @@
-﻿import 'dart:async';
+import 'dart:async';
 
-import 'package:Msahtak/core/services/firestore_api.dart';
+import 'package:Msahtak/features/ai_concierge/view/ai_concierge_page.dart';
+import 'package:Msahtak/features/map/view/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:Msahtak/features/ai_concierge/view/ai_concierge_page.dart';
-import 'package:Msahtak/features/home/data/repos/home_repo_firebase.dart';
-import 'package:Msahtak/features/map/view/map_page.dart';
 
 import '../../../constants/app_spacing.dart';
+import '../../../core/di/app_injector.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/ui/widgets/app_search_bar.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
-
 import '../../best_for_you/view/best_for_you_page.dart';
+import '../../bookings/view/active_bookings_page.dart';
+import '../../bookings/view/bookings_tab_page.dart';
 import '../../notifications/view/notifications_list_page.dart';
 import '../../offers/view/offers_page.dart';
+import '../../profile/view/profile_tab_page.dart';
 import '../../search_results/view/search_results_page.dart';
+import '../../settings/view/settings_tab_page.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../../weekly_plan/view/weekly_plan_page.dart';
-import '../../bookings/view/bookings_tab_page.dart';
-import '../../bookings/view/active_bookings_page.dart';
-import '../../profile/view/profile_tab_page.dart';
-import '../../settings/view/settings_tab_page.dart';
-
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
@@ -30,14 +28,13 @@ import '../domain/entities/insight_item.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/featured_space_card.dart';
 import '../widgets/insight_tile.dart';
-import '../widgets/custom_search_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static Widget withBloc() {
     return BlocProvider(
-      create: (_) => HomeBloc(repo: HomeRepoFirebase(FirestoreApi()))..add(const HomeStarted()),
+      create: (_) => getIt<HomeBloc>()..add(const HomeStarted()),
       child: const HomePage(),
     );
   }
@@ -97,74 +94,6 @@ class _HomeTab extends StatefulWidget {
 
   @override
   State<_HomeTab> createState() => _HomeTabState();
-}
-
-class MySearchBar extends StatefulWidget {
-  const MySearchBar({
-    super.key,
-    required this.hintText,
-    required this.aiButtonLabel,
-  });
-
-  final String hintText;
-  final String aiButtonLabel;
-
-  @override
-  State<MySearchBar> createState() => _MySearchBarState();
-}
-
-class _MySearchBarState extends State<MySearchBar> {
-  final _searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _openAiConcierge() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomSearchBar(
-      controller: _searchController,
-      onAiTap: _openAiConcierge,
-      hintText: widget.hintText,
-      aiButtonLabel: widget.aiButtonLabel,
-      onSearchChanged: (q) {
-        context.read<HomeBloc>().add(HomeSearchChanged(q));
-      },
-      onSearchSubmitted: (q) {
-        context.read<HomeBloc>().add(HomeSearchChanged(q));
-        if (q.trim().isNotEmpty) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => SearchResultsPage.withBloc(
-                originKey: q,
-                originTitle: q,
-              ),
-            ),
-          );
-        }
-      },
-      onSearchTap: () {
-        final q = _searchController.text.trim();
-        if (q.isEmpty) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => SearchResultsPage.withBloc(
-              originKey: q,
-              originTitle: q,
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class _HomeTabState extends State<_HomeTab> {
@@ -263,16 +192,43 @@ class _HomeTabState extends State<_HomeTab> {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
   }
 
+  void _openSearch(BuildContext context, {required String originTitle}) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SearchResultsPage.withBloc(
+          originKey: '',
+          originTitle: originTitle,
+        ),
+      ),
+    );
+  }
+
+  void _openAiConcierge(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => AiConciergePage.withBloc()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         final bloc = context.read<HomeBloc>();
 
-        final categories = [context.t('catNearly'), context.t('catNewSuggestion'), context.t('catPrivateOffice')];
+        final categories = [
+          context.t('catNearly'),
+          context.t('catNewSuggestion'),
+          context.t('catPrivateOffice'),
+        ];
+        final searchHint = context.t('searchHint');
+        final searchResultsTitle =
+            context.isArabic ? 'نتائج البحث' : 'Search Results';
 
         final featuredCount = state.featuredSpaces.length;
         final insightsCount = state.insights.length;
+        final badgeText = state.unreadNotifications > 99
+            ? '99+'
+            : state.unreadNotifications.toString();
 
         return SingleChildScrollView(
           padding: AppSpacing.screen.copyWith(top: 10),
@@ -305,14 +261,21 @@ class _HomeTabState extends State<_HomeTab> {
                         ),
                         if (state.unreadNotifications > 0)
                           Positioned(
-                            right: 8,
-                            top: 8,
+                            right: 4,
+                            top: 2,
                             child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: AppColors.danger,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                badgeText,
+                                style: const TextStyle(
+                                  color: AppColors.btnSecondaryText,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ),
@@ -321,15 +284,18 @@ class _HomeTabState extends State<_HomeTab> {
                   ),
                 ],
               ),
-
               AppSpacing.vMd,
-
-              MySearchBar(
-                hintText: context.t('searchHint'),
-                aiButtonLabel: context.t('aiConcierge'),
+              AppSearchBar(
+                hintText: searchHint,
+                readOnly: true,
+                onTap: () => _openSearch(
+                  context,
+                  originTitle: searchResultsTitle,
+                ),
+                trailingLabel: context.t('aiConcierge'),
+                onTrailingTap: () => _openAiConcierge(context),
               ),
               AppSpacing.vMd,
-
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -340,6 +306,7 @@ class _HomeTabState extends State<_HomeTab> {
                       ),
                       child: CategoryChip(
                         text: categories[i],
+                        icon: i == 0 ? Icons.map_outlined : null,
                         selected: state.selectedCategoryIndex == i,
                         onTap: () {
                           bloc.add(HomeCategorySelected(i));
@@ -365,51 +332,44 @@ class _HomeTabState extends State<_HomeTab> {
                   }),
                 ),
               ),
-
               AppSpacing.vLg,
-
               Text(context.t('forYou'), style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
-
               SizedBox(
                 height: 260,
                 child: featuredCount == 0
                     ? Center(child: Text(context.t('noSpacesYet')))
                     : Listener(
-                  onPointerDown: (_) {
-                    _resumeTimer?.cancel();
-                    _stopAutoSlide();
-                  },
-                  onPointerUp: (_) {
-                    _scheduleResumeAutoSlide();
-                  },
-                  onPointerCancel: (_) {
-                    _scheduleResumeAutoSlide();
-                  },
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: featuredCount,
-                    onPageChanged: (i) =>
-                        bloc.add(HomeFeaturedPageChanged(i)),
-                    itemBuilder: (context, index) {
-                      final space = state.featuredSpaces[index];
+                        onPointerDown: (_) {
+                          _resumeTimer?.cancel();
+                          _stopAutoSlide();
+                        },
+                        onPointerUp: (_) {
+                          _scheduleResumeAutoSlide();
+                        },
+                        onPointerCancel: (_) {
+                          _scheduleResumeAutoSlide();
+                        },
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: featuredCount,
+                          onPageChanged: (i) => bloc.add(HomeFeaturedPageChanged(i)),
+                          itemBuilder: (context, index) {
+                            final space = state.featuredSpaces[index];
 
-                      return FeaturedSpaceCard(
-                        imageAsset: space.imageAsset,
-                        imageUrl: space.imageUrl,
-                        title: space.name,
-                        ratingText: space.ratingText,
-                        subtitle: space.subtitleLine,
-                        onViewTap: () =>
-                            _openSpaceDetails(context, space.id),
-                      );
-                    },
-                  ),
-                ),
+                            return FeaturedSpaceCard(
+                              imageAsset: space.imageAsset,
+                              imageUrl: space.imageUrl,
+                              title: space.name,
+                              ratingText: space.ratingText,
+                              subtitle: space.subtitleLine,
+                              onViewTap: () => _openSpaceDetails(context, space.id),
+                            );
+                          },
+                        ),
+                      ),
               ),
-
               AppSpacing.vSm,
-
               if (featuredCount > 1)
                 Center(
                   child: Row(
@@ -422,21 +382,16 @@ class _HomeTabState extends State<_HomeTab> {
                         width: active ? 10 : 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: active
-                              ? AppColors.dotInactive
-                              : AppColors.border,
+                          color: active ? AppColors.dotInactive : AppColors.border,
                           borderRadius: BorderRadius.circular(99),
                         ),
                       );
                     }),
                   ),
                 ),
-
               AppSpacing.vLg,
-
               Text(context.t('insightsSection'), style: AppTextStyles.sectionTitle),
               AppSpacing.vMd,
-
               if (insightsCount == 0)
                 Center(child: Text(context.t('noInsightsYet')))
               else
@@ -455,18 +410,13 @@ class _HomeTabState extends State<_HomeTab> {
                     return Builder(
                       builder: (ctx) => InsightTile(
                         imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
-                        title: item.titleKey != null
-                            ? ctx.t(item.titleKey!)
-                            : item.title,
-                        subtitle: item.subtitleKey != null
-                            ? ctx.t(item.subtitleKey!)
-                            : item.subtitle,
+                        title: item.titleKey != null ? ctx.t(item.titleKey!) : item.title,
+                        subtitle: item.subtitleKey != null ? ctx.t(item.subtitleKey!) : item.subtitle,
                         onTap: () => _openInsightDetails(context, item),
                       ),
                     );
                   },
                 ),
-
               AppSpacing.vLg,
             ],
           ),

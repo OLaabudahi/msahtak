@@ -10,7 +10,7 @@ class HomeRepoDummy implements HomeRepo {
   static const double _meLng = 34.45187681199389;
 
   @override
-  Future<List<HomeFeaturedSpaceEntity>> fetchForYou() async {
+  Future<List<HomeFeaturedSpaceEntity>> getHomeData() async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
 
     // ✅ أماكن حولك + أماكن إضافية
@@ -110,6 +110,16 @@ class HomeRepoDummy implements HomeRepo {
     // final res = await dio.get('/home/for-you');
     // return (res.data as List).map((e) => HomeFeaturedSpaceModel.fromJson(e).toEntity()).toList();
   }
+
+
+  @override
+  Future<List<HomeFeaturedSpaceEntity>> getRecommendedSpaces() => getHomeData();
+
+  @override
+  Future<List<HomeFeaturedSpaceEntity>> getNearbySpaces() => getHomeData();
+
+  @override
+  Future<List<HomeFeaturedSpaceEntity>> getFeaturedSpaces() => getHomeData();
 
   // ✅ Haversine distance
   double _distanceKm(double lat1, double lon1, double lat2, double lon2) {

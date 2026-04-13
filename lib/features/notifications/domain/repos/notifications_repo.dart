@@ -10,4 +10,16 @@ abstract class NotificationsRepo {
 
   /// حفظ إعدادات الإشعارات
   Future<void> saveNotificationSettings(NotificationSettings settings);
+  Future<void> sendNotification({
+    required String userId,
+    required String bookingId,
+    required String title,
+    required String body,
+  });
+
+  Future<String?> getFcmToken();
+  Future<void> saveFcmToken(String token);
+  Stream<Map<String, dynamic>> listenNotifications();
+
+  Future<void> markAllAsRead();
 }

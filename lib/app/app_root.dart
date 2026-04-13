@@ -1,24 +1,20 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../core/di/app_injector.dart';
 import '../features/app_start/view/splash_page.dart';
 import '../features/admin/navigation/admin_root/view/admin_root_page.dart';
 import '../features/app_start/bloc/app_start_bloc.dart';
 import '../features/app_start/bloc/app_start_event.dart';
 import '../features/app_start/bloc/app_start_state.dart';
-import '../features/app_start/domain/repos/app_start_repo.dart';
-import '../features/app_start/data/repos/app_start_repo_firebase.dart';
 import '../features/auth/view/login_page.dart';
 import '../features/home/view/home_page.dart';
 import '../features/onboarding/view/onboarding_page.dart';
-import '../services/local_storage_service.dart';
 
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
   static Widget withBloc() {
-    final storage = LocalStorageService();
     return BlocProvider(
-      create: (_) => AppStartBloc(AppStartRepoFirebase(storage))
-            ..add(const AppStartStarted()),
+      create: (_) => getIt<AppStartBloc>()..add(const AppStartStarted()),
       child: const AppRoot(),
     );
   }

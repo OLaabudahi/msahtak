@@ -1,16 +1,25 @@
-﻿import 'dart:typed_data';
+import 'dart:typed_data';
 
+import '../entities/payment_details_entity.dart';
 import '../entities/payment_method_entity.dart';
 import '../entities/payment_receipt_entity.dart';
 import '../entities/payment_summary_entity.dart';
 
 abstract class PaymentRepo {
-  /// جلب طرق الدفع من مساحة الحجز
   Future<List<PaymentMethodEntity>> getMethods({required String bookingId});
 
   Future<PaymentSummaryEntity> getSummary({required String bookingId});
 
-  /// تأكيد الدفع مع رفع إشعار الدفع أو تفاصيل البطاقة
+  Future<PaymentDetailsEntity> getPaymentDetails({required String bookingId});
+
+  Future<String?> uploadPaymentReceipt({
+    required String bookingId,
+    required Uint8List bytes,
+    required String fileName,
+  });
+
+  Future<bool> verifyPayment({required String bookingId});
+
   Future<PaymentReceiptEntity> pay({
     required String bookingId,
     required PaymentMethodType method,

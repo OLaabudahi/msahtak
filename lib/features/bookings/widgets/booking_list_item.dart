@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../../theme/app_colors.dart';
 
 import '../domain/entities/booking_entity.dart';
@@ -18,8 +19,6 @@ class BookingListItem extends StatelessWidget {
   final VoidCallback onView;
   final VoidCallback? onCancel;
   final VoidCallback? onRebook;
-
-  static const _blue = AppColors.btnSecondary;
 
   bool get _isUpcoming =>
       booking.status.toLowerCase() == 'upcoming' ||
@@ -49,14 +48,14 @@ class BookingListItem extends StatelessWidget {
         padding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFEAF3FF),
+          color: AppColors.reviewStatusBg,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFF5D8BF4), width: 1.0),
+          border: Border.all(color: AppColors.secondary, width: 1.0),
         ),
         child: Text(
           context.t('bookingStatusAwaitingConfirmation'),
           style: const TextStyle(
-            color: Color(0xFF2F5CC4),
+            color: AppColors.reviewStatusText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -69,15 +68,15 @@ class BookingListItem extends StatelessWidget {
         padding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFE8FFF0),
+          color: AppColors.approvedBg,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-              color: const Color(0xFF22C55E), width: 1.2),
+              color: AppColors.approvedBorder, width: 1.2),
         ),
         child: Text(
           context.t('bookingStatusConfirmed'),
           style: TextStyle(
-            color: Color(0xFF16A34A),
+            color: AppColors.approvedText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -90,15 +89,15 @@ class BookingListItem extends StatelessWidget {
         padding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFFEF3C7),
+          color: AppColors.warningBg,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-              color: const Color(0xFFF59E0B), width: 1.2),
+              color: AppColors.amber, width: 1.2),
         ),
         child: Text(
           context.t('bookingStatusUpcoming'),
           style: const TextStyle(
-            color: Color(0xFF92400E),
+            color: AppColors.warningText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -111,15 +110,15 @@ class BookingListItem extends StatelessWidget {
         padding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFDFF7F2),
+          color: AppColors.approvedBg,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-              color: const Color(0xFF2AAE9B), width: 1.0),
+              color: AppColors.approvedBorder, width: 1.0),
         ),
         child: Text(
           context.t('bookingStatusCompleted'),
           style: const TextStyle(
-            color: Color(0xFF138A7B),
+            color: AppColors.approvedText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -131,7 +130,7 @@ class BookingListItem extends StatelessWidget {
       padding:
       const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFE3E3),
+        color: AppColors.rejectedBg,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Text(
@@ -147,27 +146,11 @@ class BookingListItem extends StatelessWidget {
 
   Widget _bottomButtons(BuildContext context) {
     if (_isCancelled) {
-      return SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: onView,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _blue,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-          ),
-          child: Text(
-            context.t('view'),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-        ),
+      return AppButton(
+        label: context.t('view'),
+        onPressed: onView,
+        type: AppButtonType.secondary,
+        borderRadius: 0,
       );
     }
 
@@ -208,11 +191,11 @@ class BookingListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.btnSecondaryText,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: AppColors.shadowMedium,
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -319,6 +302,7 @@ class BookingListItem extends StatelessWidget {
 /*
 import 'package:flutter/material.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../../theme/app_colors.dart';
 
 import '../data/models/booking_model.dart';
@@ -341,8 +325,6 @@ class BookingListItem extends StatelessWidget {
   /// Completed-only helper.
   final VoidCallback? onRebook;
 
-  static const _blue = AppColors.btnSecondary;
-
   bool get _isUpcoming => booking.status.toLowerCase() == 'upcoming' || booking.status.toLowerCase() == 'confirmed';
   bool get _isCompleted => booking.status.toLowerCase() == 'completed';
   bool get _isCancelled => booking.status.toLowerCase() == 'cancelled';
@@ -361,14 +343,14 @@ class BookingListItem extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFE8FFF0),
+          color: AppColors.approvedBg,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFF22C55E), width: 1.2),
+          border: Border.all(color: AppColors.approvedBorder, width: 1.2),
         ),
         child: const Text(
           'Confirmed',
           style: TextStyle(
-            color: Color(0xFF16A34A),
+            color: AppColors.approvedText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -379,14 +361,14 @@ class BookingListItem extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFFEF3C7),
+          color: AppColors.warningBg,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFF59E0B), width: 1.2),
+          border: Border.all(color: AppColors.amber, width: 1.2),
         ),
         child: Text(
           context.t('bookingStatusUpcoming'),
           style: const TextStyle(
-            color: Color(0xFF92400E),
+            color: AppColors.warningText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -405,7 +387,7 @@ class BookingListItem extends StatelessWidget {
         child: Text(
           context.t('bookingStatusCompleted'),
           style: const TextStyle(
-            color: Color(0xFF138A7B),
+            color: AppColors.approvedText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -432,27 +414,11 @@ class BookingListItem extends StatelessWidget {
 
   Widget _bottomButtons(BuildContext context) {
     if (_isCancelled) {
-      return SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: onView,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _blue,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-          ),
-          child: Text(
-            context.t('view'),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 16,
-            ),
-          ),
-        ),
+      return AppButton(
+        label: context.t('view'),
+        onPressed: onView,
+        type: AppButtonType.secondary,
+        borderRadius: 0,
       );
     }
 
@@ -493,11 +459,11 @@ class BookingListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.btnSecondaryText,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: AppColors.shadowMedium,
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),

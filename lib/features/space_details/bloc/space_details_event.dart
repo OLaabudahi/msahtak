@@ -27,4 +27,11 @@ class SpaceDetailsCarouselChanged extends SpaceDetailsEvent {
   List<Object?> get props => [index];
 }
 
+class SpaceDetailsToggleFavoritePressed extends SpaceDetailsEvent {
+  const SpaceDetailsToggleFavoritePressed();
+}
+
+class SpaceDetailsFavoriteNoticeConsumed extends SpaceDetailsEvent {
+  const SpaceDetailsFavoriteNoticeConsumed();
+}
 

@@ -1,9 +1,8 @@
 import '../../../../constants/app_assets.dart';
-import '../models/booking_model.dart';
 import '../../domain/repos/bookings_repo.dart';
+import '../models/booking_model.dart';
 
 class BookingsRepoDummy implements BookingsRepo {
-  /// ✅ دالة: داتا وهمية للحجوزات (جاهزة للتشغيل)
   @override
   Future<List<BookingModel>> fetchBookings() async {
     await Future.delayed(const Duration(milliseconds: 450));
@@ -27,7 +26,8 @@ class BookingsRepoDummy implements BookingsRepo {
         spaceName: 'City Loft',
         dateText: 'Wed, 14 Aug',
         timeText: '03:00 - 06:00',
-        status: 'upcoming', rawStatus: 'upcoming',
+        status: 'upcoming',
+        rawStatus: 'upcoming',
         totalPrice: 25.0,
         currency: '₪',
         imageUrl: AppAssets.home,
@@ -38,7 +38,8 @@ class BookingsRepoDummy implements BookingsRepo {
         spaceName: 'Private Desk',
         dateText: 'Sun, 04 Aug',
         timeText: '10:00 - 01:00',
-        status: 'completed',rawStatus: 'completed',
+        status: 'completed',
+        rawStatus: 'completed',
         totalPrice: 35.0,
         currency: '₪',
         imageUrl: AppAssets.home,
@@ -49,18 +50,29 @@ class BookingsRepoDummy implements BookingsRepo {
         spaceName: 'Quiet Corner',
         dateText: 'Fri, 02 Aug',
         timeText: '08:00 - 09:00',
-        status: 'cancelled', rawStatus: 'cancelled',
+        status: 'cancelled',
+        rawStatus: 'cancelled',
         totalPrice: 0.0,
         currency: '₪',
         imageUrl: AppAssets.home,
       ),
     ];
+  }
 
-    // ✅ API READY (كومنت)
-    // final res = await dio.get('/bookings');
-    // return (res.data as List).map((e) => Booking.fromJson(e)).toList();
+  @override
+  Future<BookingModel?> getBookingById(String bookingId) async {
+    final items = await fetchBookings();
+    for (final item in items) {
+      if (item.bookingId == bookingId) return item;
+    }
+    return null;
   }
 
   @override
   Future<void> cancelBooking(String bookingId) async {}
+
+  @override
+  Stream<List<BookingModel>> listenBookingsUpdates() async* {
+    yield await fetchBookings();
+  }
 }

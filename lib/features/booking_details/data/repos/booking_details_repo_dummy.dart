@@ -20,7 +20,7 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
 
     // ✅ نجيب نفس قائمة الحجوزات الوهمية ونطلع منها الحجز المطلوب
     final all = await _bookingsRepo.fetchBookings();
-    final matches = all.where((b) => b?.bookingId == bookingId).toList();
+    final matches = all.where((b) => b.bookingId == bookingId).toList();
 
     if (matches.isEmpty) {
       return BookingDetails(
@@ -97,4 +97,11 @@ class BookingDetailsRepoDummy implements BookingDetailsRepo {
       // imageUrl: b.imageUrl,
     );
   }
+
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {}
+
+  @override
+  Future<void> updateBookingStatus({required String bookingId, required String status}) async {}
 }

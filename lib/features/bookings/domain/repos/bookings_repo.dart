@@ -1,10 +1,11 @@
 import '../../data/models/booking_model.dart';
 
-/// ✅ واجهة Repo - عشان وقت API تبدلي implementation بسهولة
 abstract class BookingsRepo {
-  /// ✅ دالة: تجيب كل الحجوزات (حسب المستخدم)
   Future<List<BookingModel>> fetchBookings();
 
-  /// إلغاء حجز
+  Future<BookingModel?> getBookingById(String bookingId);
+
   Future<void> cancelBooking(String bookingId);
+
+  Stream<List<BookingModel>> listenBookingsUpdates();
 }
