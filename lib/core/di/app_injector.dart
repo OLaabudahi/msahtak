@@ -68,6 +68,16 @@ import '../../features/payment/domain/usecases/upload_payment_receipt_usecase.da
 import '../../features/payment/domain/usecases/submit_payment_usecase.dart';
 import '../../features/payment/domain/usecases/get_payment_details_usecase.dart';
 import '../../features/payment/domain/usecases/pay_booking_request_usecase.dart';
+import '../../features/payments_receipts/bloc/payments_receipts_bloc.dart';
+import '../../features/payments_receipts/bloc/invoice/invoice_bloc.dart';
+import '../../features/payments_receipts/data/repos/payments_receipts_repo_firebase.dart';
+import '../../features/payments_receipts/data/sources/payments_receipts_firebase_source.dart';
+import '../../features/payments_receipts/domain/repos/payments_receipts_repo.dart';
+import '../../features/payments_receipts/domain/usecases/download_invoice_usecase.dart';
+import '../../features/payments_receipts/domain/usecases/generate_invoice_pdf_usecase.dart';
+import '../../features/payments_receipts/domain/usecases/get_monthly_payments_usecase.dart';
+import '../../features/payments_receipts/domain/usecases/get_user_receipts_usecase.dart';
+import '../../features/payments_receipts/domain/usecases/share_invoice_usecase.dart';
 import '../../features/internet/bloc/internet_bloc.dart';
 import '../../features/internet/data/repos/internet_repo_impl.dart';
 import '../../features/internet/data/sources/internet_source.dart';
@@ -214,6 +224,43 @@ void setupInjector() {
         verifyPaymentUseCase: getIt<VerifyPaymentUseCase>(),
         uploadPaymentReceiptUseCase: getIt<UploadPaymentReceiptUseCase>(),
       ));
+
+  // payments & receipts
+  getIt.registerFactory<PaymentsReceiptsFirebaseSource>(() => PaymentsReceiptsFirebaseSource(
+        api: getIt<FirestoreApi>(),
+        authService: getIt<AuthService>(),
+      ));
+  getIt.registerFactory<PaymentsReceiptsRepo>(
+    () => PaymentsReceiptsRepoFirebase(getIt<PaymentsReceiptsFirebaseSource>()),
+  );
+  getIt.registerFactory<GetUserReceiptsUseCase>(
+    () => GetUserReceiptsUseCase(getIt<PaymentsReceiptsRepo>()),
+  );
+  getIt.registerFactory<GetMonthlyPaymentsUseCase>(
+    () => GetMonthlyPaymentsUseCase(getIt<PaymentsReceiptsRepo>()),
+  );
+  getIt.registerFactory<GenerateInvoicePdfUseCase>(
+    () => GenerateInvoicePdfUseCase(getIt<PaymentsReceiptsRepo>()),
+  );
+  getIt.registerFactory<DownloadInvoiceUseCase>(
+    () => DownloadInvoiceUseCase(getIt<PaymentsReceiptsRepo>()),
+  );
+  getIt.registerFactory<ShareInvoiceUseCase>(
+    () => ShareInvoiceUseCase(getIt<PaymentsReceiptsRepo>()),
+  );
+  getIt.registerFactory<PaymentsReceiptsBloc>(
+    () => PaymentsReceiptsBloc(
+      getUserReceiptsUseCase: getIt<GetUserReceiptsUseCase>(),
+      getMonthlyPaymentsUseCase: getIt<GetMonthlyPaymentsUseCase>(),
+    ),
+  );
+  getIt.registerFactory<InvoiceBloc>(
+    () => InvoiceBloc(
+      generateInvoicePdfUseCase: getIt<GenerateInvoicePdfUseCase>(),
+      downloadInvoiceUseCase: getIt<DownloadInvoiceUseCase>(),
+      shareInvoiceUseCase: getIt<ShareInvoiceUseCase>(),
+    ),
+  );
 
   // admin booking requests
   getIt.registerFactory<AdminBookingsFirebaseSource>(() => AdminBookingsFirebaseSource());

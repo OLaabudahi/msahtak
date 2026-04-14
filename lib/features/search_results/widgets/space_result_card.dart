@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../../core/i18n/app_i18n.dart';
 import '../domain/entities/space_entity.dart';
 
 class SpaceResultCard extends StatelessWidget {
@@ -109,7 +110,7 @@ class SpaceResultCard extends StatelessWidget {
                   foregroundColor: AppColors.btnSecondaryText,
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
-                child: const Text('View', style: TextStyle(fontWeight: FontWeight.w700)),
+                child: Text(context.t('view'), style: const TextStyle(fontWeight: FontWeight.w700)),
               ),
             ),
           ],
@@ -118,5 +119,4 @@ class SpaceResultCard extends StatelessWidget {
     );
   }
 }
-
 

@@ -56,35 +56,14 @@ class ProfileTabPage extends StatefulWidget {
 }
 
 class _ProfileTabPageState extends State<ProfileTabPage> {
-  bool _paymentExpanded = false;
-
-  Widget _buildPaymentRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 13, color: AppColors.textDark),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 13, color: AppColors.text),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildMenuSection(
     BuildContext context, {
     required VoidCallback onPersonalInfo,
     required VoidCallback onUsage,
     required VoidCallback onPaymentsReceipts,
-    required VoidCallback onPaymentDetails,
     required VoidCallback onReviews,
     required VoidCallback onSaved,
+    required VoidCallback onLogout,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -111,34 +90,6 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             leadingText: r'$',
             onTap: onPaymentsReceipts,
           ),
-
-          Column(
-            children: [
-              ProfileMenuTile(
-                title: context.t('paymentDetails'),
-                icon: Icons.circle,
-                leadingText: r'$D',
-                showChevronDown: _paymentExpanded,
-                onTap: onPaymentDetails,
-                onChevronTap: onPaymentDetails,
-              ),
-              if (_paymentExpanded)
-                Container(
-                  color: AppColors.cardBackground,
-                  child: Column(
-                    children: [
-                      _buildPaymentRow(context.t('paymentCardVisa'), '*** 123'),
-                      Divider(height: 1, color: AppColors.borderLight),
-                      _buildPaymentRow(
-                        context.t('paymentCardExpiresDate'),
-                        '08/25',
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-
           ProfileMenuTile(
             title: context.t('reviewsRatings'),
             icon: Icons.star,
@@ -149,17 +100,22 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             title: context.t('savedSpaces'),
             icon: Icons.favorite,
             leadingIcon: Icons.favorite,
-            isLast: true,
+            isLast: false,
             onTap: onSaved,
+          ),
+          Divider(height: 1, color: AppColors.borderLight),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: _buildLogoutRow(context, onLogout: onLogout),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLogoutRow(BuildContext context) {
+  Widget _buildLogoutRow(BuildContext context, {required VoidCallback onLogout}) {
     return GestureDetector(
-      onTap: () => {context.read<AuthBloc>().add(const AuthLogoutRequested())},
+      onTap: onLogout,
       child: Row(
         children: [
           Container(
@@ -216,85 +172,73 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             child: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : state.error != null
-                ? Center(child: Text('Error: ${state.error}'))
-                : RefreshIndicator(
-                    onRefresh: () async =>
-                        bloc.add(const ProfileRefreshRequested()),
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8),
-                          Text(
-                            context.t('profileTitle'),
-                            style: AppTextStyles.sectionBarTitle,
+                    ? Center(child: Text('${context.t('error')}: ${state.error}'))
+                    : RefreshIndicator(
+                        onRefresh: () async =>
+                            bloc.add(const ProfileRefreshRequested()),
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          const SizedBox(height: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8),
+                              Text(
+                                context.t('profileTitle'),
+                                style: AppTextStyles.sectionBarTitle,
+                              ),
+                              const SizedBox(height: 16),
 
-                          ProfileHeaderCard(user: state.user!),
+                              ProfileHeaderCard(user: state.user!),
 
-                          const SizedBox(height: 20),
+                              const SizedBox(height: 20),
 
-                          _buildMenuSection(
-                            context,
-                            onPersonalInfo: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<ProfileBloc>(),
-                                  child: const PersonalInfoPage(),
+                              _buildMenuSection(
+                                context,
+                                onPersonalInfo: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                      value: context.read<ProfileBloc>(),
+                                      child: const PersonalInfoPage(),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ) /*  Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const PersonalInfoPage(),
-                              ),
-                            )*/,
-                            onUsage: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ProfileUsagePage.withBloc(),
-                              ),
-                            ),
-                            onPaymentsReceipts: () =>
-                                Navigator.of(context).push(
+                                onUsage: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ProfileUsagePage.withBloc(),
+                                  ),
+                                ),
+                                onPaymentsReceipts: () =>
+                                    Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) =>
                                         const PaymentsReceiptsPage(),
                                   ),
                                 ),
-                            onPaymentDetails: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(context.t('comingSoon')),
+                                onReviews: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ReviewsPage.withBloc(),
+                                  ),
                                 ),
-                              );
-                            },
-                            onReviews: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ReviewsPage.withBloc(),
+                                onSaved: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => SavedSpacesPage.withBloc(),
+                                  ),
+                                ),
+                                onLogout: () => context
+                                    .read<AuthBloc>()
+                                    .add(const AuthLogoutRequested()),
                               ),
-                            ),
-                            onSaved: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const SavedSpacesPage(),
-                              ),
-                            ),
+
+                              AppSpacing.vLg,
+                            ],
                           ),
-
-                          const SizedBox(height: 20),
-
-                          _buildLogoutRow(context),
-
-                          AppSpacing.vLg,
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
           );
         },
       ),

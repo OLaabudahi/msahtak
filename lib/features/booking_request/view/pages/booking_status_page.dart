@@ -4,6 +4,9 @@ import '../../../../../theme/app_colors.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/app_injector.dart';
+import '../../../../../services/auth_service.dart';
+import '../../../../payments_receipts/domain/entities/user_receipt_entity.dart';
+import '../../../../payments_receipts/view/invoice_page.dart';
 import '../../../payment/view/payment_routes.dart';
 import '../../bloc/booking_request_bloc.dart';
 import '../../bloc/booking_request_event.dart';
@@ -29,11 +32,29 @@ class BookingStatusPage extends StatefulWidget {
 
 class _BookingStatusPageState extends State<BookingStatusPage> {
   bool _cancelDialogOpened = false;
+  late final AuthService _authService;
 
   static const _pagePadding = EdgeInsets.symmetric(
     horizontal: 16,
     vertical: 12,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = getIt<AuthService>();
+  }
+
+  DateTime _resolveEndDate(BookingRequestEntity req) {
+    switch (req.durationUnit) {
+      case DurationUnit.days:
+        return req.startDate.add(Duration(days: req.durationValue));
+      case DurationUnit.weeks:
+        return req.startDate.add(Duration(days: req.durationValue * 7));
+      case DurationUnit.months:
+        return req.startDate.add(Duration(days: req.durationValue * 30));
+    }
+  }
 
   bool _isOwnerCancellationAfterPayment(BookingRequestEntity? request) {
     if (request == null) return false;
@@ -320,20 +341,28 @@ class _BookingStatusPageState extends State<BookingStatusPage> {
                       width: double.infinity,
                       height: 52,
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          final url = (req.paymentReceiptUrl ?? '').trim();
-                          if (url.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(context.t('receiptUnavailable'))),
-                            );
-                            return;
-                          }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('${context.t('downloadReceipt')}: $url')),
+                        onPressed: () async {
+                          final invoice = UserReceiptEntity(
+                            bookingId: req.bookingId,
+                            spaceName: req.space.name,
+                            userName: (_authService.currentUser?.displayName ?? '').trim(),
+                            userEmail: (_authService.currentUser?.email ?? '').trim(),
+                            startDate: req.startDate,
+                            endDate: _resolveEndDate(req),
+                            paymentMethod: 'unknown',
+                            totalPrice: req.totalAmount.toDouble(),
+                            currency: req.currency,
+                            status: req.status.name,
+                            createdAt: req.createdAt ?? DateTime.now(),
+                          );
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => InvoicePage.withBloc(invoice),
+                            ),
                           );
                         },
-                        icon: const Icon(Icons.download_outlined),
-                        label: Text(context.t('downloadReceipt')),
+                        icon: const Icon(Icons.receipt_long_outlined),
+                        label: Text(context.t('invoice')),
                       ),
                     ),
                     const SizedBox(height: 12),
