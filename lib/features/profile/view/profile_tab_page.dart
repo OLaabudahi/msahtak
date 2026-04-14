@@ -14,10 +14,11 @@ import '../../auth/bloc/auth_state.dart';
 import '../../../constants/app_spacing.dart';
 import '../../auth/view/login_page.dart';
 import '../../reviews/view/reviews_page.dart';
-import '../../usage/view/usage_page.dart';
+import '../usage/view/profile_usage_page.dart';
 import '../data/sources/profile_firebase_source.dart';
 import '../domain/usecases/change_password_usecase.dart';
 import '../domain/usecases/get_profile_usecase.dart';
+import '../domain/usecases/upload_profile_image_usecase.dart';
 import '../domain/usecases/update_profile_usecase.dart';
 import '../domain/usecases/verify_email_usecase.dart';
 import 'payments_receipts_page.dart';
@@ -43,7 +44,8 @@ class ProfileTabPage extends StatefulWidget {
         updateProfile: UpdateProfileUseCase(repo),
         changePassword: ChangePasswordUseCase(repo),
         verifyEmail: VerifyEmailUseCase(repo),
-        source: source, syncEmailVerification: SyncEmailVerificationUseCase(repo),
+        syncEmailVerification: SyncEmailVerificationUseCase(repo),
+        uploadProfileImage: UploadProfileImageUseCase(repo),
       )..add(const ProfileStarted()),
       child: const ProfileTabPage(),
     );
@@ -68,7 +70,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
           ),
           Text(
             value,
-            style: const TextStyle(fontSize: 13, color: Colors.black),
+            style: const TextStyle(fontSize: 13, color: AppColors.text),
           ),
         ],
       ),
@@ -117,21 +119,20 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 icon: Icons.circle,
                 leadingText: r'$D',
                 showChevronDown: _paymentExpanded,
-                onTap: () {
-                  setState(() => _paymentExpanded = !_paymentExpanded);
-                  onPaymentDetails();
-                },
-                onChevronTap: () =>
-                    setState(() => _paymentExpanded = !_paymentExpanded),
+                onTap: onPaymentDetails,
+                onChevronTap: onPaymentDetails,
               ),
               if (_paymentExpanded)
                 Container(
-                  color: Colors.white,
+                  color: AppColors.background,
                   child: Column(
                     children: [
-                      _buildPaymentRow('Visa', '*** 123'),
+                      _buildPaymentRow(context.t('paymentCardVisa'), '*** 123'),
                       Divider(height: 1, color: AppColors.borderLight),
-                      _buildPaymentRow('Expires date', '08/25'),
+                      _buildPaymentRow(
+                        context.t('paymentCardExpiresDate'),
+                        '08/25',
+                      ),
                     ],
                   ),
                 ),
@@ -170,7 +171,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             ),
             child: Transform.scale(
               scaleX: -1,
-              child: const Icon(Icons.login, color: Colors.black, size: 20),
+              child: const Icon(Icons.login, color: AppColors.text, size: 20),
             ),
           ),
           const SizedBox(width: 14),
@@ -256,7 +257,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                             )*/,
                             onUsage: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => UsagePage.withBloc(),
+                                builder: (_) => ProfileUsagePage.withBloc(),
                               ),
                             ),
                             onPaymentsReceipts: () =>
@@ -266,7 +267,13 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                                         const PaymentsReceiptsPage(),
                                   ),
                                 ),
-                            onPaymentDetails: () {},
+                            onPaymentDetails: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(context.t('comingSoon')),
+                                ),
+                              );
+                            },
                             onReviews: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => ReviewsPage.withBloc(),

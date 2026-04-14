@@ -1,4 +1,5 @@
 ﻿import '../../../../constants/app_assets.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
 import '../../domain/repos/profile_repo.dart';
 
@@ -31,7 +32,12 @@ class ProfileRepoDummy implements ProfileRepo {
   }
 
   @override
-  Future<void> updateProfile({required String name, required String email, required String phone}) {
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+    String? avatarUrl,
+  }) {
     // TODO: implement updateProfile
     throw UnimplementedError();
   }
@@ -45,6 +51,12 @@ class ProfileRepoDummy implements ProfileRepo {
   @override
   Future<void> syncEmailVerification() {
     // TODO: implement syncEmailVerification
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> uploadProfileImage(XFile file) {
+    // TODO: implement uploadProfileImage
     throw UnimplementedError();
   }
 }

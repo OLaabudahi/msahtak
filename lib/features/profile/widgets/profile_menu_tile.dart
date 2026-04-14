@@ -35,7 +35,7 @@ class ProfileMenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = isDestructive ? AppColors.danger : Colors.black;
+    final titleColor = isDestructive ? AppColors.danger : AppColors.text;
     final circleColor = isDestructive
         ? AppColors.danger
         : AppColors.amber;
@@ -61,12 +61,12 @@ class ProfileMenuTile extends StatelessWidget {
                   ),
                   child: Center(
                     child: leadingIcon != null
-                        ? Icon(leadingIcon!, color: Colors.black, size: 18)
+                        ? Icon(leadingIcon!, color: AppColors.text, size: 18)
                         : Text(
                             (leadingText ?? title.characters.first)
                                 .toUpperCase(),
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: AppColors.text,
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),

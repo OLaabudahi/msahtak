@@ -67,25 +67,25 @@ class SpaceDetailsBloc extends Bloc<SpaceDetailsEvent, SpaceDetailsState> {
     final details = state.details;
     if (details == null || state.favoriteUpdating) return;
 
-    emit(state.copyWith(favoriteUpdating: true));
+    final wasFavorite = state.isFavorite;
+    final nextFavorite = !wasFavorite;
+    emit(state.copyWith(isFavorite: nextFavorite, favoriteUpdating: true));
     try {
-      if (state.isFavorite) {
+      if (wasFavorite) {
         await removeFromFavoritesUseCase(details.id);
         emit(state.copyWith(
-          isFavorite: false,
           favoriteUpdating: false,
           favoriteNoticeKey: 'removedFromFavorites',
         ));
       } else {
         await addToFavoritesUseCase(spaceId: details.id, details: details);
         emit(state.copyWith(
-          isFavorite: true,
           favoriteUpdating: false,
           favoriteNoticeKey: 'savedToFavorites',
         ));
       }
     } catch (_) {
-      emit(state.copyWith(favoriteUpdating: false));
+      emit(state.copyWith(isFavorite: wasFavorite, favoriteUpdating: false));
     }
   }
 

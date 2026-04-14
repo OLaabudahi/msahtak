@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import '../../../../../core/services/supabase_image_upload_service.dart';
 import '../../../_shared/admin_ui.dart';
 
 /// محرر قائمة صور المساحة — رفع من الجهاز أو إدخال URL
@@ -24,10 +24,8 @@ class _ImagesEditorState extends State<ImagesEditor> {
   final _ctrl = TextEditingController();
   bool _uploading = false;
 
-  static const _supabaseUrl = 'https://fbepuxcsyrerfhzpqvmy.supabase.co';
-  static const _supabaseKey =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiZXB1eGNzeXJlcmZoenBxdm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMzg0MjcsImV4cCI6MjA4ODcxNDQyN30.mNJOsm7RGIaX9OMw1c5R-3O9QV9bixoGc0rZKKecOLk';
   static const _bucket = 'image_masahtak';
+  final _imageUploadService = SupabaseImageUploadService();
 
   @override
   void dispose() {
@@ -59,29 +57,11 @@ class _ImagesEditorState extends State<ImagesEditor> {
 
     try {
       for (int i = 0; i < files.length; i++) {
-        final bytes = await files[i].readAsBytes();
-        final ext = files[i].name.contains('.')
-            ? files[i].name.split('.').last.toLowerCase()
-            : 'jpg';
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}.$ext';
-        final uploadUrl = '$_supabaseUrl/storage/v1/object/$_bucket/$fileName';
-
-        final response = await http.post(
-          Uri.parse(uploadUrl),
-          headers: {
-            'Authorization': 'Bearer $_supabaseKey',
-            'Content-Type': 'image/$ext',
-          },
-          body: bytes,
+        final publicUrl = await _imageUploadService.uploadImage(
+          file: files[i],
+          bucket: _bucket,
         );
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          final publicUrl =
-              '$_supabaseUrl/storage/v1/object/public/$_bucket/$fileName';
-          widget.onAdd(publicUrl);
-        } else {
-          throw Exception('${response.statusCode}: ${response.body}');
-        }
+        widget.onAdd(publicUrl);
       }
     } catch (e) {
       if (mounted) {

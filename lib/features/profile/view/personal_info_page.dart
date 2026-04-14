@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/app_assets.dart';
+import '../../../core/i18n/app_i18n.dart';
+import '../../../theme/app_colors.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -18,15 +20,21 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   final _formKey = GlobalKey<FormState>();
   bool emailSent = false;
   final _controller = TextEditingController();
+  final _picker = ImagePicker();
+
+  Future<void> _pickAndUploadProfileImage() async {
+    final file = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    if (file == null || !mounted) return;
+    context.read<ProfileBloc>().add(ProfileAvatarUploadRequested(file));
+  }
 
   @override
   Widget build(BuildContext context) {
     context.read<ProfileBloc>().add(CheckEmailVerifiedRequested());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6F8),
-      appBar: AppBar(title: const Text('Personal Info')),
-
+      backgroundColor: AppColors.surface,
+      appBar: AppBar(title: Text(context.t('personalInfo'))),
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           if (state.loading) {
@@ -34,7 +42,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
           }
 
           final user = state.user!;
-          final ifValid = user.isEmailVerified ;
+          final ifValid = user.isEmailVerified;
           final ifSend = emailSent && !user.isEmailVerified;
 
           return RefreshIndicator(
@@ -44,20 +52,19 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                /// 🔥 HEADER
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: user.avatarUrl != null
-                          ? NetworkImage(user.avatarUrl!)
-                          : null,
-                      child: user.avatarUrl == null
-                          ? Image.asset(AppAssets.logo, width: 25)
-                          : null,
+                    GestureDetector(
+                      onTap: _pickAndUploadProfileImage,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage:
+                            user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+                        child:
+                            user.avatarUrl == null ? Image.asset(AppAssets.logo, width: 25) : null,
+                      ),
                     ),
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,19 +73,18 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                             user.fullName,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-
                           Row(
                             children: [
                               Expanded(child: Text(user.email)),
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: ifValid ? Colors.green : Colors.grey,
+                                  color: ifValid ? AppColors.success : AppColors.textMuted,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  ifValid ?  Icons.check :Icons.close,
-                                  color: Colors.white,
+                                  ifValid ? Icons.check : Icons.close,
+                                  color: AppColors.background,
                                   size: 14,
                                 ),
                               ),
@@ -89,109 +95,91 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
-                /// 🔥 NAME
                 _tile(
                   icon: Icons.person,
-                  title: "Full Name",
+                  title: context.t('fullName'),
                   value: user.fullName,
                   onTap: () => _editDialog(
                     context,
-                    title: "Edit Name",
+                    title: context.t('profileEditNameTitle'),
                     initial: user.fullName,
                     validator: _validateName,
                     onSave: (value) {
                       context.read<ProfileBloc>().add(
-                        UpdateProfileRequested(
-                          name: value,
-                          email: user.email,
-                          phone: user.phoneNumber ?? '',
-                        ),
-                      );
+                            UpdateProfileRequested(
+                              name: value,
+                              email: user.email,
+                              phone: user.phoneNumber ?? '',
+                            ),
+                          );
                     },
                   ),
                 ),
-
-                /// 🔥 EMAIL
                 _tile(
                   icon: Icons.email,
-                  title: "Email",
+                  title: context.t('email'),
                   value: user.email,
                   onTap: () => _editDialog(
                     context,
-                    title: "Edit Email",
+                    title: context.t('profileEditEmailTitle'),
                     initial: user.email,
                     validator: _validateEmail,
                     onSave: (value) {
                       context.read<ProfileBloc>().add(
-                        UpdateProfileRequested(
-                          name: user.fullName,
-                          email: value,
-                          phone: user.phoneNumber ?? '',
-                        ),
-                      );
+                            UpdateProfileRequested(
+                              name: user.fullName,
+                              email: value,
+                              phone: user.phoneNumber ?? '',
+                            ),
+                          );
                     },
                   ),
                 ),
-                if (ifSend&&!ifValid)
-                  const Text(
-                    "تم إرسال رسالة تحقق إلى بريدك الإلكتروني.\nيرجى التحقق منها (وتفقد البريد العشوائي).",
-                    style: TextStyle(color: Colors.orange),
+                if (ifSend && !ifValid)
+                  Text(
+                    context.t('profileVerificationSentHint'),
+                    style: const TextStyle(color: AppColors.warningText),
                   ),
-                if (!ifSend&&!ifValid)
+                if (!ifSend && !ifValid)
                   TextButton(
                     onPressed: () {
-                      context.read<ProfileBloc>().add(
-                        const VerifyEmailRequested(),
-                      );
+                      context.read<ProfileBloc>().add(const VerifyEmailRequested());
                       setState(() => emailSent = true);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Verification email sent"),
-                        ),
+                        SnackBar(content: Text(context.t('profileVerificationEmailSent'))),
                       );
                     },
-                    child: const Text("Verify Email"),
+                    child: Text(context.t('profileVerifyEmailButton')),
                   ),
-
-                /// 🔥 PHONE
                 _tile(
                   icon: Icons.phone,
-                  title: "Phone",
-                  value: user.phoneNumber ?? "Add phone",
+                  title: context.t('phoneNumber'),
+                  value: user.phoneNumber ?? context.t('profileAddPhone'),
                   onTap: () => _editDialog(
                     context,
-                    title: "Edit Phone",
+                    title: context.t('profileEditPhoneTitle'),
                     initial: user.phoneNumber ?? '',
                     validator: _validatePhone,
                     onSave: (value) {
                       context.read<ProfileBloc>().add(
-                        UpdateProfileRequested(
-                          name: user.fullName,
-                          email: user.email,
-                          phone: value,
-                        ),
-                      );
+                            UpdateProfileRequested(
+                              name: user.fullName,
+                              email: user.email,
+                              phone: value,
+                            ),
+                          );
                     },
                   ),
                 ),
-
-                /// 🔐 PASSWORD
                 _tile(
                   icon: Icons.lock,
-                  title: "Password",
-                  value: "••••••••",
+                  title: context.t('password'),
+                  value: '••••••••',
                   onTap: () {
-                    context.read<ProfileBloc>().add(
-                      const ChangePasswordRequested(),
-                    );
-
+                    context.read<ProfileBloc>().add(const ChangePasswordRequested());
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Check your email to reset password"),
-                      ),
+                      SnackBar(content: Text(context.t('profileResetPasswordHint'))),
                     );
                   },
                 ),
@@ -203,7 +191,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     );
   }
 
-  /// 🔥 TILE
   Widget _tile({
     required IconData icon,
     required String title,
@@ -222,7 +209,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     );
   }
 
-  /// 🔥 DIALOG + VALIDATION
   void _editDialog(
     BuildContext context, {
     required String title,
@@ -246,7 +232,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: Text(context.t('cancel')),
           ),
           ElevatedButton(
             onPressed: () {
@@ -255,31 +241,30 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 Navigator.pop(context);
               }
             },
-            child: const Text("Save"),
+            child: Text(context.t('saveChanges')),
           ),
         ],
       ),
     );
   }
 
-  /// 🔥 VALIDATION
   String? _validateName(String v) {
-    if (v.isEmpty) return "Required";
-    if (v.length < 3) return "Too short";
+    if (v.isEmpty) return context.t('fieldRequired');
+    if (v.length < 3) return context.t('fieldTooShort');
     return null;
   }
 
   String? _validateEmail(String v) {
-    if (v.isEmpty) return "Required";
+    if (v.isEmpty) return context.t('fieldRequired');
     if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(v)) {
-      return "Invalid email";
+      return context.t('invalidEmail');
     }
     return null;
   }
 
   String? _validatePhone(String v) {
-    if (v.isEmpty) return "Required";
-    if (v.length < 8) return "Invalid phone";
+    if (v.isEmpty) return context.t('fieldRequired');
+    if (v.length < 8) return context.t('invalidPhone');
     return null;
   }
 }

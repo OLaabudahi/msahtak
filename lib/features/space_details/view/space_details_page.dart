@@ -332,8 +332,8 @@ class _SpaceDetailsPageState extends State<SpaceDetailsPage> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: state.isFavorite
-                                ? AppColors.amber
-                                : AppColors.planCardBg,
+                                ? AppColors.danger
+                                : AppColors.textDark,
                           ),
                         ),
                       ],

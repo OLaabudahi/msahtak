@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 class SavedSpacesPage extends StatelessWidget {
@@ -13,13 +14,13 @@ class SavedSpacesPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black, size: 24),
+          icon: const Icon(Icons.arrow_back, color: AppColors.text, size: 24),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Saved Spaces',
+        title: Text(
+          context.t('savedSpaces'),
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.text,
             fontSize: 19,
             fontWeight: FontWeight.bold,
           ),
@@ -32,17 +33,17 @@ class SavedSpacesPage extends StatelessWidget {
             Icon(Icons.favorite_outline,
                 size: 64, color: AppColors.secondary),
             const SizedBox(height: 16),
-            const Text(
-              'Saved Spaces',
+            Text(
+              context.t('savedSpaces'),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: AppColors.text,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Coming soon',
+              context.t('comingSoon'),
               style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
             ),
           ],
@@ -51,5 +52,4 @@ class SavedSpacesPage extends StatelessWidget {
     );
   }
 }
-
 

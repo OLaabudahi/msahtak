@@ -1,6 +1,5 @@
-﻿import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../domain/repos/profile_repo.dart';
+﻿import '../../domain/repos/profile_repo.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
 import '../sources/profile_firebase_source.dart';
 
@@ -22,10 +21,7 @@ class ProfileRepoFirebase implements ProfileRepo {
       totalBookings: (d['totalBookings'] ?? 0),
       completedBookings: (d['completedBookings'] ?? 0),
       savedSpaces: (d['savedSpaces'] ?? 0),
-      isEmailVerified:
-          FirebaseAuth.instance.currentUser?.emailVerified ??
-          d['isEmailVerified'] ??
-          false,
+      isEmailVerified: d['isEmailVerified'] ?? false,
     );
   }
 
@@ -34,8 +30,14 @@ class ProfileRepoFirebase implements ProfileRepo {
     required String name,
     required String email,
     required String phone,
+    String? avatarUrl,
   }) {
-    return source.updateProfile(name: name, email: email, phone: phone);
+    return source.updateProfile(
+      name: name,
+      email: email,
+      phone: phone,
+      avatarUrl: avatarUrl,
+    );
   }
 
   @override
@@ -49,7 +51,12 @@ class ProfileRepoFirebase implements ProfileRepo {
   }
 
   @override
+  Future<String> uploadProfileImage(XFile file) {
+    return source.uploadProfileImage(file);
+  }
+
+  @override
   Future<void> syncEmailVerification() {
-    throw source.syncEmailVerification();
+    return source.syncEmailVerification();
   }
 }

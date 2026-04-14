@@ -1,10 +1,9 @@
 ﻿import 'package:Msahtak/features/profile/domain/usecases/sync_email_verification_usecase.dart';
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import '../data/sources/profile_firebase_source.dart';
 import '../domain/usecases/change_password_usecase.dart';
 import '../domain/usecases/get_profile_usecase.dart';
+import '../domain/usecases/upload_profile_image_usecase.dart';
 import '../domain/usecases/update_profile_usecase.dart';
 import '../domain/usecases/verify_email_usecase.dart';
 
@@ -17,7 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ChangePasswordUseCase changePassword;
   final VerifyEmailUseCase verifyEmail;
   final SyncEmailVerificationUseCase syncEmailVerification;
-  final ProfileFirebaseSource source;
+  final UploadProfileImageUseCase uploadProfileImage;
 
   /// ✅ تحميل البيانات
 
@@ -27,7 +26,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.changePassword,
     required this.verifyEmail,
     required this.syncEmailVerification,
-    required this.source,
+    required this.uploadProfileImage,
  }) : super(ProfileState.initial()) {
     on<ProfileStarted>(_onStarted);
     on<ProfileRefreshRequested>(_onRefresh);
@@ -35,6 +34,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ChangePasswordRequested>(_onChangePassword);
     on<VerifyEmailRequested>(_onVerifyEmail);
     on<CheckEmailVerifiedRequested>(_onCheckEmailVerified);
+    on<ProfileAvatarUploadRequested>(_onAvatarUpload);
   }
   Future<void> _onStarted(
     ProfileStarted event,
@@ -76,6 +76,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         name: event.name,
         email: event.email,
         phone: event.phone,
+        avatarUrl: event.avatarUrl,
       );
 
       final user = await getProfile(); // 🔄 reload
@@ -105,7 +106,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       await verifyEmail(); // ✅ UseCase
       await Future.delayed(const Duration(seconds: 2));
-      await source.refreshUser();
+      await syncEmailVerification();
       final user = await getProfile(); // 🔄 reload
       emit(state.copyWith(user: user));
     } catch (e) {
@@ -115,13 +116,34 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future<void> _onCheckEmailVerified(event, emit) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      await source.syncEmailVerification();
-      await user?.reload();
+      await syncEmailVerification();
       final updatedUser = await getProfile();
       emit(state.copyWith(user: updatedUser));
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  Future<void> _onAvatarUpload(
+    ProfileAvatarUploadRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    final current = state.user;
+    if (current == null) return;
+
+    emit(state.copyWith(loading: true));
+    try {
+      final avatarUrl = await uploadProfileImage(event.file);
+      await updateProfile(
+        name: current.fullName,
+        email: current.email,
+        phone: current.phoneNumber ?? '',
+        avatarUrl: avatarUrl,
+      );
+      final user = await getProfile();
+      emit(state.copyWith(loading: false, user: user, error: null));
+    } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
 }

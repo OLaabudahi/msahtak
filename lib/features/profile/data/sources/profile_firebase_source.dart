@@ -1,16 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../../../core/services/supabase_image_upload_service.dart';
 import '../../../../core/services/firestore_api.dart';
+import '../services/profile_stats_firebase_service.dart';
 
 class ProfileFirebaseSource {
   final FirestoreApi firestoreApi;
+  final ProfileStatsFirebaseService profileStatsService;
+  final SupabaseImageUploadService imageUploadService;
 
-  ProfileFirebaseSource(this.firestoreApi);
+  ProfileFirebaseSource(
+    this.firestoreApi, {
+    ProfileStatsFirebaseService? profileStatsService,
+    SupabaseImageUploadService? imageUploadService,
+  }) : profileStatsService =
+           profileStatsService ?? ProfileStatsFirebaseService(),
+       imageUploadService = imageUploadService ?? SupabaseImageUploadService();
 
   /// 🔥 fetch profile
   Future<Map<String, dynamic>> fetchProfile() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception('Not logged in');
+
+    final stats = await profileStatsService.fetchProfileStats(user.uid);
 
     final data = await firestoreApi.getDoc(
       collection: 'users',
@@ -23,6 +36,7 @@ class ProfileFirebaseSource {
       'email': user.email,
       'displayName': user.displayName,
       'isEmailVerified': user.emailVerified,
+      ...stats,
     };
   }
 
@@ -31,6 +45,7 @@ class ProfileFirebaseSource {
     required String name,
     required String email,
     required String phone,
+    String? avatarUrl,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception('Not logged in');
@@ -48,7 +63,15 @@ class ProfileFirebaseSource {
         'fullName': name,
         'email': email,
         'phoneNumber': phone,
+        if (avatarUrl != null) 'avatarUrl': avatarUrl,
       },
+    );
+  }
+
+  Future<String> uploadProfileImage(XFile file) {
+    return imageUploadService.uploadImage(
+      file: file,
+      bucket: 'image_masahtak',
     );
   }
 

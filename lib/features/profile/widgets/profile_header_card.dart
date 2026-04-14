@@ -1,7 +1,8 @@
-﻿import 'package:Msahtak/features/profile/domain/entities/user_entity.dart';
+import 'package:Msahtak/features/profile/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
 
+import '../../../core/i18n/app_i18n.dart';
+import '../../../theme/app_colors.dart';
 import 'profile_stat_item.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
@@ -25,7 +26,6 @@ class ProfileHeaderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              
               Stack(
                 children: [
                   Container(
@@ -47,7 +47,7 @@ class ProfileHeaderCard extends StatelessWidget {
                               errorBuilder: (_, __, ___) => const Icon(
                                 Icons.person,
                                 size: 48,
-                                color: Colors.grey,
+                                color: AppColors.textMuted,
                               ),
                             )
                           : avatarAsset != null
@@ -55,7 +55,7 @@ class ProfileHeaderCard extends StatelessWidget {
                               : const Icon(
                                   Icons.person,
                                   size: 48,
-                                  color: Colors.grey,
+                                  color: AppColors.textMuted,
                                 ),
                     ),
                   ),
@@ -71,31 +71,28 @@ class ProfileHeaderCard extends StatelessWidget {
                       ),
                       child: const Icon(
                         Icons.edit,
-                        color: Colors.white,
+                        color: AppColors.background,
                         size: 12,
                       ),
                     ),
                   ),
                 ],
               ),
-
               const SizedBox(width: 20),
-
-              
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ProfileStatItem(
-                      title: 'Bookings',
+                      title: context.t('bookingsCount'),
                       value: user.totalBookings.toString(),
                     ),
                     ProfileStatItem(
-                      title: 'Reviews',
+                      title: context.t('reviewsCount'),
                       value: user.completedBookings.toString(),
                     ),
                     ProfileStatItem(
-                      title: 'Saved',
+                      title: context.t('savedSpacesCount'),
                       value: user.savedSpaces.toString(),
                     ),
                   ],
@@ -103,26 +100,21 @@ class ProfileHeaderCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
           Text(
             user.fullName,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.text,
             ),
           ),
           const SizedBox(height: 2),
-
           Text(
             user.email,
             style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
-
           const SizedBox(height: 1),
-
           if (user.phoneNumber != null) ...[
             const SizedBox(height: 1),
             Text(
@@ -135,5 +127,3 @@ class ProfileHeaderCard extends StatelessWidget {
     );
   }
 }
-
-
