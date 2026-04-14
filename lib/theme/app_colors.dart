@@ -19,6 +19,7 @@ class AppColors {
 
   /// Very light grey used for usage/insight cards (grey[50])
   static const Color cardSurface = Color(0xFFFAFAFA);
+  static const Color cardBackground = Color(0xFFE5EBF2);
 
   /// Soft blue used for settings card backgrounds
   static const Color settingCardBg = Color(0xFFEAF0F6);

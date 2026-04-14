@@ -88,7 +88,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.borderLight,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -124,7 +124,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
               ),
               if (_paymentExpanded)
                 Container(
-                  color: AppColors.background,
+                  color: AppColors.cardBackground,
                   child: Column(
                     children: [
                       _buildPaymentRow(context.t('paymentCardVisa'), '*** 123'),

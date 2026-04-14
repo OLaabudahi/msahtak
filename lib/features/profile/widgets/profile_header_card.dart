@@ -1,6 +1,7 @@
 import 'package:Msahtak/features/profile/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/app_assets.dart';
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import 'profile_stat_item.dart';
@@ -12,13 +13,11 @@ class ProfileHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatarAsset = user.avatarUrl;
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.secondary.withOpacity(0.1),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -26,57 +25,14 @@ class ProfileHeaderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Stack(
-                children: [
-                  Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.amber,
-                        width: 3,
-                      ),
-                      color: AppColors.borderMedium,
-                    ),
-                    child: ClipOval(
-                      child: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
-                          ? Image.network(
-                              user.avatarUrl!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                Icons.person,
-                                size: 48,
-                                color: AppColors.textMuted,
-                              ),
-                            )
-                          : avatarAsset != null
-                              ? Image.asset(avatarAsset, fit: BoxFit.cover)
-                              : const Icon(
-                                  Icons.person,
-                                  size: 48,
-                                  color: AppColors.textMuted,
-                                ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 22,
-                      height: 22,
-                      decoration: const BoxDecoration(
-                        color: AppColors.amber,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: AppColors.background,
-                        size: 12,
-                      ),
-                    ),
-                  ),
-                ],
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
+                    ? NetworkImage(user.avatarUrl!)
+                    : null,
+                child: user.avatarUrl == null
+                    ? Image.asset(AppAssets.logo, width: 25)
+                    : null,
               ),
               const SizedBox(width: 20),
               Expanded(

@@ -56,12 +56,51 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   children: [
                     GestureDetector(
                       onTap: _pickAndUploadProfileImage,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage:
-                            user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
-                        child:
-                            user.avatarUrl == null ? Image.asset(AppAssets.logo, width: 25) : null,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.amber,
+                                width: 3,
+                              ),
+                              color: AppColors.borderMedium,
+                            ),
+                            child: ClipOval(
+                              child: user.avatarUrl != null && user.avatarUrl!.isNotEmpty
+                                  ? Image.network(
+                                      user.avatarUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.person,
+                                        size: 48,
+                                        color: AppColors.textMuted,
+                                      ),
+                                    )
+                                  : Image.asset(AppAssets.logo, width: 25),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: 22,
+                              height: 22,
+                              decoration: const BoxDecoration(
+                                color: AppColors.amber,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: AppColors.background,
+                                size: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -198,6 +237,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     required VoidCallback onTap,
   }) {
     return Card(
+      color: AppColors.cardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: ListTile(
         leading: Icon(icon, size: 26),

@@ -6,14 +6,22 @@ import '../../services/language_service.dart';
 
 extension AppI18n on BuildContext {
   String t(String key) {
-    final code = select((LanguageBloc b) => b.state.code);
-    return LanguageService.tr(code, key);
+    try {
+      final languageBloc = read<LanguageBloc>();
+      final code = languageBloc.state.code;
+      return LanguageService.tr(code, key);
+    } catch (_) {
+      final code = LanguageService.supported.first.code;
+      return LanguageService.tr(code, key);
+    }
   }
 
   bool get isArabic {
-    final code = select((LanguageBloc b) => b.state.code);
-    return code == 'ar';
+    try {
+      final languageBloc = read<LanguageBloc>();
+      return languageBloc.state.code == 'ar';
+    } catch (_) {
+      return LanguageService.supported.first.code == 'ar';
+    }
   }
 }
-
-
