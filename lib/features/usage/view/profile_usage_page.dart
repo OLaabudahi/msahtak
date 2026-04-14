@@ -52,7 +52,7 @@ class ProfileUsagePage extends StatelessWidget {
         title: Text(
           context.t('usagePageTitle'),
           style: const TextStyle(
-            fontSize: 33,
+            fontSize: 16,
             fontWeight: FontWeight.w800,
             color: AppColors.text,
           ),
@@ -85,7 +85,7 @@ class ProfileUsagePage extends StatelessWidget {
               Text(
                 context.t('usageBasedOn'),
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: AppColors.subtext,
                 ),
@@ -132,7 +132,7 @@ class ProfileUsagePage extends StatelessWidget {
               Text(
                 context.t('usagePlanOptimizer'),
                 style: const TextStyle(
-                  fontSize: 38,
+                  fontSize: 18,
                   fontWeight: FontWeight.w800,
                   color: AppColors.text,
                 ),
@@ -141,7 +141,7 @@ class ProfileUsagePage extends StatelessWidget {
               Text(
                 context.t('usageComparePlans'),
                 style: const TextStyle(
-                  fontSize: 30,
+                  fontSize: 16,
                   fontWeight: FontWeight.w800,
                   color: AppColors.text,
                 ),
@@ -179,13 +179,13 @@ class ProfileUsagePage extends StatelessWidget {
   }
 
   static const TextStyle _cardTitleStyle = TextStyle(
-    fontSize: 26,
+    fontSize: 13,
     fontWeight: FontWeight.w700,
     color: AppColors.text,
   );
 
   static const TextStyle _bodyStyle = TextStyle(
-    fontSize: 24,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     color: AppColors.subtext,
     height: 1.25,
@@ -317,12 +317,12 @@ class ProfileUsagePage extends StatelessWidget {
           Expanded(
             child: Text(
               plan.label,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: AppColors.text),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.text),
             ),
           ),
           Text(
             '${plan.amount}₪${plan.unit}',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: AppColors.subtext),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.subtext),
           ),
           if (isBest) ...[
             const SizedBox(width: 10),
@@ -334,7 +334,7 @@ class ProfileUsagePage extends StatelessWidget {
               ),
               child: Text(
                 context.t('usageBestBadge'),
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.text),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
               ),
             ),
           ],
@@ -360,7 +360,7 @@ class ProfileUsagePage extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
       ),
     );
