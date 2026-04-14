@@ -14,7 +14,7 @@ import '../../auth/bloc/auth_state.dart';
 import '../../../constants/app_spacing.dart';
 import '../../auth/view/login_page.dart';
 import '../../reviews/view/reviews_page.dart';
-import '../usage/view/profile_usage_page.dart';
+import '../../usage/view/profile_usage_page.dart';
 import '../data/sources/profile_firebase_source.dart';
 import '../domain/usecases/change_password_usecase.dart';
 import '../domain/usecases/get_profile_usecase.dart';

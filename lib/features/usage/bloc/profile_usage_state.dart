@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/usage_insight_entity.dart';
+import '../domain/entities/usage_insight_entity.dart';
+
 
 class ProfileUsageState extends Equatable {
   final bool loading;
