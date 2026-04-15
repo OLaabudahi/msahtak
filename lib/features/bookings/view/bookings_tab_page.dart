@@ -10,6 +10,7 @@ import '../../../theme/app_text_styles.dart';
 import '../../booking_request/bloc/booking_request_event.dart';
 import '../../booking_request/domain/entities/booking_request_entity.dart';
 import '../../booking_request/view/booking_request_routes.dart';
+import '../../ai_concierge/view/ai_concierge_page.dart';
 import '../bloc/bookings_bloc.dart';
 import '../bloc/bookings_event.dart';
 import '../bloc/bookings_state.dart';
@@ -112,7 +113,7 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
       hintText: hintText,
       onChanged: (_) => setState(() {}),
       trailingLabel: aiLabel,
-      onTrailingTap: () {},
+      onTrailingTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AiConciergePage.withBloc())),
     );
   }
 

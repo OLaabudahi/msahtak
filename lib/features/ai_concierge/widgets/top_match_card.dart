@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 import '../domain/entities/concierge_top_match.dart';
 
@@ -62,7 +63,7 @@ class TopMatchCard extends StatelessWidget {
                   backgroundColor: AppColors.amber,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                 ),
-                child: const Text('Continue to Booking', style: TextStyle(fontWeight: FontWeight.w900)),
+                child: Text(context.t('continueBooking'), style: const TextStyle(fontWeight: FontWeight.w900)),
               ),
             ),
           ],

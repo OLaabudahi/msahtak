@@ -1,31 +1,31 @@
-﻿import 'package:equatable/equatable.dart';
+import 'package:equatable/equatable.dart';
 
 sealed class AiConciergeEvent extends Equatable {
   const AiConciergeEvent();
+
   @override
   List<Object?> get props => [];
 }
 
 class AiConciergeStarted extends AiConciergeEvent {
-  const AiConciergeStarted();
-}
+  const AiConciergeStarted({required this.lang});
 
-class AiConciergeUserTextSent extends AiConciergeEvent {
-  final String text;
-  const AiConciergeUserTextSent(this.text);
+  final String lang;
 
   @override
-  List<Object?> get props => [text];
+  List<Object?> get props => [lang];
 }
 
-class AiConciergeQuickReplySelected extends AiConciergeEvent {
-  final String reply;
-  const AiConciergeQuickReplySelected(this.reply);
+class SendMessage extends AiConciergeEvent {
+  const SendMessage({required this.message, required this.lang});
+
+  final String message;
+  final String lang;
 
   @override
-  List<Object?> get props => [reply];
+  List<Object?> get props => [message, lang];
 }
 
-class AiConciergeResetRequested extends AiConciergeEvent {
-  const AiConciergeResetRequested();
+class ReceiveResponse extends AiConciergeEvent {
+  const ReceiveResponse();
 }

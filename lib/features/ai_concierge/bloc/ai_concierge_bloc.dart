@@ -1,6 +1,6 @@
-﻿import 'package:bloc/bloc.dart';
+import 'package:bloc/bloc.dart';
 
-import '../domain/usecases/select_quick_reply_usecase.dart';
+import '../domain/entities/concierge_message.dart';
 import '../domain/usecases/start_concierge_usecase.dart';
 import '../domain/usecases/submit_answer_usecase.dart';
 import 'ai_concierge_event.dart';
@@ -9,96 +9,51 @@ import 'ai_concierge_state.dart';
 class AiConciergeBloc extends Bloc<AiConciergeEvent, AiConciergeState> {
   final StartConciergeUseCase startUseCase;
   final SubmitAnswerUseCase submitAnswerUseCase;
-  final SelectQuickReplyUseCase selectQuickReplyUseCase;
 
   AiConciergeBloc({
     required this.startUseCase,
     required this.submitAnswerUseCase,
-    required this.selectQuickReplyUseCase,
   }) : super(AiConciergeState.initial()) {
     on<AiConciergeStarted>(_onStarted);
-    on<AiConciergeUserTextSent>(_onUserText);
-    on<AiConciergeQuickReplySelected>(_onQuickReply);
-    on<AiConciergeResetRequested>(_onReset);
+    on<SendMessage>(_onSendMessage);
+    on<ReceiveResponse>((event, emit) {});
   }
 
-  Future<void> _onStarted(AiConciergeStarted event, Emitter<AiConciergeState> emit) async {
-    emit(state.copyWith(status: AiConciergeStatus.loading, clearError: true));
+  Future<void> _onStarted(
+    AiConciergeStarted event,
+    Emitter<AiConciergeState> emit,
+  ) async {
+    emit(state.copyWith(loading: true, clearError: true));
     try {
-      final payload = await startUseCase.call();
-      emit(
-        state.copyWith(
-          status: AiConciergeStatus.ready,
-          stepIndex: payload.stepIndex,
-          totalSteps: payload.totalSteps,
-          stepMeta: payload.stepMeta,
-          messages: payload.newMessages,
-          quickReplies: payload.quickReplies,
-          topMatch: payload.topMatch,
-          showContinueButton: payload.showContinueButton,
-          clearError: true,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(status: AiConciergeStatus.failure, errorMessage: e.toString()));
+      final greeting = await startUseCase.call(lang: event.lang);
+      emit(state.copyWith(messages: [greeting], loading: false, clearError: true));
+    } catch (_) {
+      emit(state.copyWith(loading: false, error: 'start_failed'));
     }
   }
 
-  Future<void> _onQuickReply(AiConciergeQuickReplySelected event, Emitter<AiConciergeState> emit) async {
-    emit(state.copyWith(status: AiConciergeStatus.loading, clearError: true));
-    try {
-      final payload = await selectQuickReplyUseCase.call(reply: event.reply);
-      emit(
-        state.copyWith(
-          status: AiConciergeStatus.ready,
-          stepIndex: payload.stepIndex,
-          totalSteps: payload.totalSteps,
-          stepMeta: payload.stepMeta,
-          messages: [...state.messages, ...payload.newMessages],
-          quickReplies: payload.quickReplies,
-          topMatch: payload.topMatch,
-          showContinueButton: payload.showContinueButton,
-          clearError: true,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(status: AiConciergeStatus.failure, errorMessage: e.toString()));
-    }
-  }
-
-  Future<void> _onUserText(AiConciergeUserTextSent event, Emitter<AiConciergeState> emit) async {
-    final text = event.text.trim();
+  Future<void> _onSendMessage(
+    SendMessage event,
+    Emitter<AiConciergeState> emit,
+  ) async {
+    final text = event.message.trim();
     if (text.isEmpty) return;
 
-    final matched = state.quickReplies.firstWhere(
-          (r) => r.toLowerCase() == text.toLowerCase(),
-      orElse: () => '',
+    final userMessage = ConciergeMessage(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      sender: ConciergeSender.user,
+      text: text,
     );
 
-    final answer = matched.isNotEmpty ? matched : text;
+    final nextMessages = [...state.messages, userMessage];
+    emit(state.copyWith(messages: nextMessages, loading: true, clearError: true));
 
-    emit(state.copyWith(status: AiConciergeStatus.loading, clearError: true));
     try {
-      final payload = await submitAnswerUseCase.call(answer: answer);
-      emit(
-        state.copyWith(
-          status: AiConciergeStatus.ready,
-          stepIndex: payload.stepIndex,
-          totalSteps: payload.totalSteps,
-          stepMeta: payload.stepMeta,
-          messages: [...state.messages, ...payload.newMessages],
-          quickReplies: payload.quickReplies,
-          topMatch: payload.topMatch,
-          showContinueButton: payload.showContinueButton,
-          clearError: true,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(status: AiConciergeStatus.failure, errorMessage: e.toString()));
+      final botReply = await submitAnswerUseCase.call(message: text, lang: event.lang);
+      emit(state.copyWith(messages: [...nextMessages, botReply], loading: false, clearError: true));
+      add(const ReceiveResponse());
+    } catch (_) {
+      emit(state.copyWith(loading: false, error: 'reply_failed'));
     }
-  }
-
-  Future<void> _onReset(AiConciergeResetRequested event, Emitter<AiConciergeState> emit) async {
-    add(const AiConciergeStarted());
   }
 }

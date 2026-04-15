@@ -1,13 +1,10 @@
-﻿import '../entities/concierge_step_payload.dart';
+import '../entities/concierge_message.dart';
 
 abstract class AiConciergeRepo {
-  Future<ConciergeStepPayload> start();
+  Future<ConciergeMessage> createGreeting({required String lang});
 
-  Future<ConciergeStepPayload> submitUserAnswer({
-    required String answer,
-  });
-
-  Future<ConciergeStepPayload> selectQuickReply({
-    required String reply,
+  Future<ConciergeMessage> sendMessage({
+    required String message,
+    required String lang,
   });
 }

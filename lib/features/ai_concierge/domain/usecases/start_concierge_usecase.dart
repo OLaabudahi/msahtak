@@ -1,4 +1,4 @@
-﻿import '../entities/concierge_step_payload.dart';
+import '../entities/concierge_message.dart';
 import '../repos/ai_concierge_repo.dart';
 
 class StartConciergeUseCase {
@@ -6,7 +6,7 @@ class StartConciergeUseCase {
 
   const StartConciergeUseCase(this.repo);
 
-  Future<ConciergeStepPayload> call() {
-    return repo.start();
+  Future<ConciergeMessage> call({required String lang}) {
+    return repo.createGreeting(lang: lang);
   }
 }

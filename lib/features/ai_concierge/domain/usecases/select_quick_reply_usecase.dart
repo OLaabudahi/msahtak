@@ -1,4 +1,4 @@
-﻿import '../entities/concierge_step_payload.dart';
+import '../entities/concierge_message.dart';
 import '../repos/ai_concierge_repo.dart';
 
 class SelectQuickReplyUseCase {
@@ -6,7 +6,10 @@ class SelectQuickReplyUseCase {
 
   const SelectQuickReplyUseCase(this.repo);
 
-  Future<ConciergeStepPayload> call({required String reply}) {
-    return repo.selectQuickReply(reply: reply);
+  Future<ConciergeMessage> call({
+    required String message,
+    required String lang,
+  }) {
+    return repo.sendMessage(message: message, lang: lang);
   }
 }

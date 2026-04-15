@@ -1,10 +1,15 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
 
 class ChatInputBar extends StatefulWidget {
-  final ValueChanged<String> onSend;
+  const ChatInputBar({
+    super.key,
+    required this.onSend,
+  });
 
-  const ChatInputBar({super.key, required this.onSend});
+  final ValueChanged<String> onSend;
 
   @override
   State<ChatInputBar> createState() => _ChatInputBarState();
@@ -31,35 +36,39 @@ class _ChatInputBarState extends State<ChatInputBar> {
     return SafeArea(
       top: false,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
         decoration: const BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: AppColors.inputBorder)),
         ),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
         child: Row(
           children: [
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  textInputAction: TextInputAction.send,
-                  onSubmitted: (_) => _send(),
-                  decoration: const InputDecoration(
-                    hintText: 'Type a message...',
-                    border: InputBorder.none,
+              child: TextField(
+                controller: _controller,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => _send(),
+                decoration: InputDecoration(
+                  hintText: context.t('askAnything'),
+                  filled: true,
+                  fillColor: AppColors.surface,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            TextButton(
+            const SizedBox(width: 8),
+            IconButton.filled(
               onPressed: _send,
-              child: const Text('Send', style: TextStyle(fontWeight: FontWeight.w800)),
+              tooltip: context.t('send'),
+              icon: const Icon(Icons.send_rounded),
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.amber,
+                foregroundColor: Colors.black,
+              ),
             ),
           ],
         ),
