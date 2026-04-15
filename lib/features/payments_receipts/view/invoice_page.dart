@@ -45,8 +45,7 @@ class InvoicePage extends StatelessWidget {
             SnackBar(content: Text(context.t(state.successKey!))),
           );
         }
-      },
-      child: Scaffold(
+      },builder: (BuildContext context, InvoiceState state) => Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: Text(context.t('invoice')),

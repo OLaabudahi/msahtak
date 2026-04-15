@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../search_results/domain/entities/space_entity.dart';
+import '../../search_results/domain/entities/space_entity.dart';
 
 class SavedSpacesState extends Equatable {
   final bool loading;
