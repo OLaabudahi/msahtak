@@ -1,3 +1,4 @@
+import 'package:Msahtak/test_gemini_directly.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ import 'features/internet/view/no_internet_screen.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupInjector();
+  testGeminiDirectly();
   FlutterError.onError = (details) {
     debugPrint('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
   };
