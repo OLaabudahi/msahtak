@@ -35,16 +35,31 @@ class AiConciergeRepoFirebase implements AiConciergeRepo {
 
   _ParsedReply _parseReply(String text) {
     final match = _actionRegex.firstMatch(text);
-    if (match == null) {
-      return _ParsedReply(cleanedText: text.trim(), spaceId: null);
+
+    String cleanedText = text;
+
+    // إزالة ACTION
+    if (match != null) {
+      cleanedText = cleanedText.replaceAll(match.group(0)!, '');
     }
 
-    final spaceId = (match.group(1) ?? '').trim();
-    final cleanedText = text.replaceAll(match.group(0)!, '').trim();
+    // 🔥 تنظيف النص
+    cleanedText = cleanedText
+        .replaceAll('**', '')
+        .replaceAll('-', '')
+        .replaceAll(RegExp(r'\n{2,}'), '\n')
+        .trim();
+
+    // 🔥 ترتيب الأسطر
+    final lines = cleanedText.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+
+    cleanedText = lines.join('\n');
+
+    final spaceId = match != null ? (match.group(1) ?? '').trim() : null;
 
     return _ParsedReply(
       cleanedText: cleanedText,
-      spaceId: spaceId.isEmpty ? null : spaceId,
+      spaceId: spaceId == null || spaceId.isEmpty ? null : spaceId,
     );
   }
 }

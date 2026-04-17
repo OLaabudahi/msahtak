@@ -95,10 +95,16 @@ class _AiConciergePageState extends State<AiConciergePage> {
                     ...state.messages.map(
                       (message) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: ChatBubble(
+                        child:ChatBubble(
+                          message: message,
+                          onActionTap: (spaceId) {
+                            _openSpaceDetails(context, spaceId);
+                          },
+                        ),
+                        /* ChatBubble(
                           message: message,
                           onActionTap: (spaceId) => _openSpaceDetails(context, spaceId),
-                        ),
+                        ),*/
                       ),
                     ),
                     if (state.loading)

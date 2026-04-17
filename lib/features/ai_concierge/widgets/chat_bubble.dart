@@ -34,7 +34,9 @@ class ChatBubble extends StatelessWidget {
                 offset: const Offset(0, 4),
               ),
             ],
-            border: Border.all(color: isUser ? AppColors.amber : AppColors.inputBorder),
+            border: Border.all(
+              color: isUser ? AppColors.amber : AppColors.inputBorder,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,9 +58,14 @@ class ChatBubble extends StatelessWidget {
                     backgroundColor: AppColors.amber,
                     foregroundColor: Colors.black,
                     visualDensity: VisualDensity.compact,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Text(context.t('bookNow')),
+
+                  child: Text(
+                    ' ${[message.text.split('\n').isNotEmpty ? message.text.split('\n').first : '']} ${context.t('bookNow')}',
+                  ),
                 ),
               ],
             ],
