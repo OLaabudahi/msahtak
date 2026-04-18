@@ -64,7 +64,7 @@ class ChatBubble extends StatelessWidget {
                   ),
 
                   child: Text(
-                    ' ${[message.text.split('\n').isNotEmpty ? message.text.split('\n').first : '']} ${context.t('bookNow')}',
+                    context.t('bookNow'),
                   ),
                 ),
               ],
