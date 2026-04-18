@@ -21,9 +21,7 @@ import 'features/internet/view/no_internet_screen.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupInjector();
-  FlutterError.onError = (details) {
-    debugPrint('FlutterError: ${details.exceptionAsString()}\n${details.stack}');
-  };
+  FlutterError.onError = FlutterError.presentError;
 
   runApp(
     MultiBlocProvider(

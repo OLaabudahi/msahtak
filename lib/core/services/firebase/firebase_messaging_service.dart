@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/di/app_injector.dart';
@@ -35,12 +34,10 @@ class FirebaseMessagingService {
     );
 
     FirebaseMessaging.onMessage.listen((message) {
-      debugPrint('[FCM] Foreground: ${message.notification?.title}');
       _showForegroundAlert(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      debugPrint('[FCM] Opened from notification: ${message.messageId}');
       _handleNotificationOpen(message);
     });
 
@@ -82,7 +79,6 @@ class FirebaseMessagingService {
   Future<void> saveTokenForCurrentUser(String token) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      debugPrint('[FCM] skip token save: no signed-in user.');
       return;
     }
 
@@ -122,7 +118,6 @@ class FirebaseMessagingService {
       currentDocId: deviceDocId,
     );
 
-    debugPrint('[FCM] token synced for uid=$uid on $platform');
   }
 
   void _handleNotificationOpen(RemoteMessage message) {
@@ -233,7 +228,6 @@ class FirebaseMessagingService {
 
     if (hasChanges) {
       await batch.commit();
-      debugPrint('[FCM] cleaned duplicated device docs for uid=$uid on $platform');
     }
   }
 

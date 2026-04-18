@@ -1,5 +1,4 @@
 import 'package:Msahtak/features/auth/data/models/auth_user_model.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../../core/utils/role_mapper.dart';
 import '../../../../services/local_storage_service.dart';
@@ -17,11 +16,7 @@ class AuthRepoFirebase implements AuthRepo {
     required String email,
     required String password,
   }) async {
-    debugPrint('[Auth] login attempt: $email');
     final result = await source.login(email: email, password: password);
-    debugPrint(
-      '[Auth] signIn result: success=${result['success']}, role=${result['role']}, error=${result['error']}',
-    );
 
     if (result['success'] != true) {
       throw Exception(result['error'] ?? 'Login failed');

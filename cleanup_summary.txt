@@ -1,0 +1,29 @@
+ملخص تنظيف وتحسين الكود (بدون تغيير السلوك)
+
+✅ Checklist التعديلات المنفذة:
+- حذف جميع debug logs و print logs من الملفات المعدلة.
+- حذف كومنتات مؤقتة/تطويرية غير مهمة.
+- حذف كود معلق (commented-out block) غير مستخدم.
+- تنظيف imports بإزالة الاستيرادات غير المستخدمة المرتبطة بالـ logs.
+- الحفاظ على نفس الواجهات، نفس الـ navigation، ونفس الـ business logic.
+- الحفاظ على نفس Firebase/API behavior وعدم تغيير أي مسارات تنفيذ أساسية.
+
+📁 الملفات التي تم تعديلها:
+1) lib/main.dart
+2) lib/core/services/firebase/firebase_messaging_service.dart
+3) lib/features/ai_concierge/data/sources/ai_concierge_remote_source.dart
+4) lib/features/auth/data/repos/auth_repo_firebase.dart
+5) lib/features/app_start/data/repos/app_start_repo_firebase.dart
+6) lib/features/admin/my_spaces/add_edit_space/bloc/add_edit_space_bloc.dart
+
+🛡️ تأكيد الاستقرار:
+- التعديلات كانت تنظيفية فقط (Logs/Comments/Imports) بدون تغيير سلوك التطبيق أو المنطق.
+- لم يتم تعديل أسماء الدوال أو التواقيع.
+- لم تتم إضافة أي dependencies جديدة.
+
+⚠️ ملاحظة بيئة:
+- لم أتمكن من تشغيل flutter/dart checks لأن Flutter SDK غير متوفر في بيئة التنفيذ الحالية.
+
+💡 تحسينات مستقبلية (اختياري):
+- تشغيل flutter analyze و flutter test محلياً/على CI بعد توفر Flutter SDK للتأكيد النهائي الآلي.
+- تفعيل lint rules إضافية (إن كانت معتمدة بالمشروع) لمنع رجوع debug logs مستقبلاً.

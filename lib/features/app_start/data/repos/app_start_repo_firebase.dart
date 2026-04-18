@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../../core/utils/role_mapper.dart';
 import '../../../../services/local_storage_service.dart';
@@ -19,7 +18,6 @@ class AppStartRepoFirebase implements AppStartRepo {
         await FirebaseAuth.instance.authStateChanges().first;
 
     if (user == null) {
-      debugPrint('[AppStart] decide: no firebase user -> goLogin');
       return AppStartDecision.goLogin;
     }
 
@@ -58,16 +56,13 @@ class AppStartRepoFirebase implements AppStartRepo {
     await _storage.setHasCompletedOnboarding(completed);
 
     if (!RoleMapper.isUser(mappedRole)) {
-      debugPrint('[AppStart] decide: role=$mappedRole -> goAdmin');
       return AppStartDecision.goAdmin;
     }
 
     if (!completed) {
-      debugPrint('[AppStart] decide: user onboarding not completed -> goOnboarding');
       return AppStartDecision.goOnboarding;
     }
 
-    debugPrint('[AppStart] decide: role=user + onboarding completed -> goHome');
     return AppStartDecision.goHome;
   }
 }

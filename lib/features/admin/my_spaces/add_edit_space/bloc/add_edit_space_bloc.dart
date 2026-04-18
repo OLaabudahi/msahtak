@@ -681,7 +681,6 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
 
     final errors = _validate(f0);
     if (errors.isNotEmpty) {
-      print("SAVE ERROR TRIGGERED$errors");
       emit(
         state.copyWith(
           nameError: errors['name'],
@@ -695,7 +694,6 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
     }
     emit(state.copyWith(status: AddEditSpaceStatus.saving, error: null));
     try {
-
       final updatedForm = _copyForm(
         f0,
         adminId: AdminSession.userId,
@@ -705,12 +703,10 @@ class AddEditSpaceBloc extends Bloc<AddEditSpaceEvent, AddEditSpaceState> {
       await save(form: _deriveCompat(updatedForm));
 
       emit(state.copyWith(status: AddEditSpaceStatus.saved));
-      print("SAVE 12 TRIGGERED");
     } catch (e) {
       emit(
         state.copyWith(status: AddEditSpaceStatus.failure, error: e.toString()),
       );
-      print("SAVE E TRIGGERED $e");
     }
   }
 
