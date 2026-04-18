@@ -9,7 +9,7 @@ class NotificationApiService {
   })  : _client = client ?? http.Client(),
         _baseUrl = (baseUrl ?? _defaultBaseUrl).replaceAll(RegExp(r'/$'), '');
 
-  static const String _defaultBaseUrl = 'http://localhost:3000';
+  static const String _defaultBaseUrl = 'https://masahatak-admin.vercel.app';
 
   final http.Client _client;
   final String _baseUrl;

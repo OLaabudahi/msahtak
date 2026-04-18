@@ -2,12 +2,11 @@
 
 class ConciergeTopMatchModel extends Equatable {
   final String spaceId;
-  final String title; // "Top Match: Space A"
-  final String whyLine; // "Why: very quiet..."
-  final String planLine; // "Plan suggestion: ..."
-  final String priceLine; // "Daily ... • Weekly ..."
+  final String title;
+  final String whyLine;
+  final String planLine;
+  final String priceLine;
 
-  /// asset الآن - API ready
   final String imageAsset;
 
   const ConciergeTopMatchModel({

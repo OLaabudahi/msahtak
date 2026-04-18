@@ -1,5 +1,4 @@
 class RoleMapper {
-  /// Keeps Firebase role values stable so web + mobile stay compatible.
   static String map(String? role) {
     switch (role?.trim().toLowerCase()) {
       case 'admin':

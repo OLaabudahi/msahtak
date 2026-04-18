@@ -5,9 +5,9 @@ class PriceCalcResult {
   final double base;
   final double finalPrice;
   final PriceUnit unit;
-  final String label; // e.g. "₪25/day"
-  final String? strikeLabel; // old price label if discounted
-  final String? note; // bonus or package note
+  final String label;
+  final String? strikeLabel;
+  final String? note;
 
   const PriceCalcResult({
     required this.base,
@@ -61,9 +61,6 @@ class PriceCalculator {
         break;
 
       case OfferType.packageMonths:
-        // For user display: we show package note + computed monthly price if possible.
-        // If fixedMonthlyPrice provided -> show that as "x/month" (unit=month).
-        // Else if packageDiscountPercent -> apply discount on base monthly if baseUnit=month.
         final months = offer.packageMonths ?? 0;
         note = (months > 0) ? 'Package: $months months' : 'Package';
         if (offer.fixedMonthlyPrice != null && offer.fixedMonthlyPrice! > 0) {
@@ -77,14 +74,12 @@ class PriceCalculator {
             finalP = basePrice * (1 - (disc / 100.0));
             unit = PriceUnit.month;
           } else {
-            // If base is not monthly, we still show note only (no conversion).
             note = '$note • ${disc.toStringAsFixed(0)}% off';
           }
         }
         break;
 
       case OfferType.bonus:
-        // Price doesn't change, only note
         note = offer.bonusText;
         break;
     }
