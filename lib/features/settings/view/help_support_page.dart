@@ -166,7 +166,8 @@ class _FaqTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      child: ExpansionTile(
+      child:  ExpansionTile(
+        backgroundColor: AppColors.switchThumb,
         title: Text(question),
         children: [
           Padding(

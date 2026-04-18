@@ -137,7 +137,7 @@ class HomeFirebaseSource implements HomeSource {
       final id = row['id']!;
       await api.create(
         collection: 'insights',
-        docId: id,
+        docId: id.toString(),
         data: row,
       );
     }

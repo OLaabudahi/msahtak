@@ -15,6 +15,8 @@ class BookingModel extends BookingEntity {
     required super.currency,
     super.imageUrl,
     super.cancelledBy,
+    super.startAt,
+    super.endAt,
     super.cancelReason,
     super.cancellationStage,
   });

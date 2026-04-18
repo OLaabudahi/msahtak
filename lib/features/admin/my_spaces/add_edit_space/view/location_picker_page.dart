@@ -4,6 +4,8 @@ import 'package:latlong2/latlong.dart';
 
 import 'package:Msahtak/features/map/data/sources/location_service.dart';
 
+import '../../../../../theme/app_colors.dart';
+
 /// صفحة اختيار الموقع من الخريطة – تُعيد (lat, lng) عند التأكيد
 class LocationPickerPage extends StatefulWidget {
   final double? initialLat;
@@ -65,7 +67,8 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pick Location'),
+        backgroundColor: AppColors.switchThumb,
+        title:  const Text('Pick Location'),
         actions: [
           if (_picked != null)
             TextButton(

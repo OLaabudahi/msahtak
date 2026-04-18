@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/i18n/app_i18n.dart';
 import '../../../services/language_service.dart';
+import '../../../theme/app_colors.dart';
 import '../../space_details/view/space_details_page.dart';
 import '../bloc/ai_concierge_bloc.dart';
 import '../bloc/ai_concierge_event.dart';
@@ -66,7 +67,8 @@ class _AiConciergePageState extends State<AiConciergePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.t('aiAssistantName')),
+        backgroundColor: AppColors.switchThumb,
+        title:  Text(context.t('aiAssistantName')),
       ),
       body: BlocConsumer<AiConciergeBloc, AiConciergeState>(
         listenWhen: (prev, next) =>

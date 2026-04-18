@@ -88,7 +88,8 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.originTitle),
+        backgroundColor: AppColors.switchThumb,
+        title:  Text(widget.originTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),

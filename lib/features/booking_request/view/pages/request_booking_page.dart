@@ -24,7 +24,8 @@ class RequestBookingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.t('requestBookingTitle')),
+        backgroundColor: AppColors.switchThumb,
+        title:  Text(context.t('requestBookingTitle')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).maybePop(),
