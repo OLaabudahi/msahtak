@@ -46,6 +46,8 @@ class BookingModel extends BookingEntity {
       map['spaceName'] ?? map['workspaceName'] ?? 'Space',
       dateText: dateText,
       timeText: timeText,
+      startAt: startTs?.toDate(),
+      endAt: endTs?.toDate(),
       status: _normalizeStatus(map['status']),
       rawStatus: (map['status'] ?? '').toString().toLowerCase(),
       totalPrice:

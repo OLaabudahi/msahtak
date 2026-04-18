@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import '../../domain/entities/home_featured_space_entity.dart';
+import '../../domain/entities/insight_item.dart';
 import '../../domain/repos/home_repo.dart';
 
 class HomeRepoDummy implements HomeRepo {
@@ -120,6 +121,18 @@ class HomeRepoDummy implements HomeRepo {
 
   @override
   Future<List<HomeFeaturedSpaceEntity>> getFeaturedSpaces() => getHomeData();
+
+  @override
+  Future<List<InsightItem>> getInsights({required String langCode}) async {
+    return const [
+      InsightItem(
+        id: "ins_best_for_you",
+        title: "Best For You",
+        subtitle: "Find the space that matches your goal.",
+        imageAsset: "assets/images/home.png",
+      ),
+    ];
+  }
 
   // ✅ Haversine distance
   double _distanceKm(double lat1, double lon1, double lat2, double lon2) {

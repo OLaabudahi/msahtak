@@ -13,13 +13,10 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
 
     // إذا كان المستخدم مسجل دخول، نجيب مساحاته من آخر أسبوع
     if (uid != null) {
-      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
       var bookingsSnap = await FirebaseFirestore.instance
           .collection('bookings')
           .where('userId', isEqualTo: uid)
-          .where('startDate',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(weekAgo))
-          .limit(20)
+          .limit(200)
           .get();
 
       // محاولة بديلة مع user_id إذا ما في نتائج
@@ -27,9 +24,7 @@ class WeeklyPlanFirebaseSource implements WeeklyPlanRemoteSource {
         bookingsSnap = await FirebaseFirestore.instance
             .collection('bookings')
             .where('user_id', isEqualTo: uid)
-            .where('startDate',
-                isGreaterThanOrEqualTo: Timestamp.fromDate(weekAgo))
-            .limit(20)
+            .limit(200)
             .get();
       }
 

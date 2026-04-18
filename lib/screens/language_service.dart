@@ -143,14 +143,6 @@ class LanguageService {
       'noInsightsYet': 'No insights yet',
       'view': 'View',
       // ── Home Insights ──
-      'insBestForYou': 'Best For You',
-      'insBestForYouSub': 'Find the space that matches your goal.',
-      'insExclusiveDeals': 'Exclusive Deals',
-      'insExclusiveDealsSub': 'Exclusive deals on top spaces.',
-      'insWeeklyPlan': 'Weekly Plan',
-      'insWeeklyPlanSub': 'Unlock your productivity hub.',
-      'insMeetingChecklist': 'Meeting-ready checklist',
-      'insMeetingChecklistSub': "Don't miss the essentials.",
       // ── Offers Page ──
       'offersPageTitle': 'Offers',
       'offersTopDeals': 'Top Deals',
@@ -301,7 +293,7 @@ class LanguageService {
       'weeklyPlanTitle': 'Weekly Plan',
       'weeklyPlanSaveMore': 'Save more with weekly access',
       'weeklyPlanSubtitle': 'Best option for frequent visits and focused work',
-      'weeklyPlanWhatYouGet': 'What you get',
+      'weeklyPlanWhatYouGet': 'Your upcoming setup',
       'weeklyPlanActivate': 'Activate plan',
       'weeklyPlanActivated': 'Plan activated successfully!',
       // ── Booking Status Page ──
@@ -746,14 +738,6 @@ class LanguageService {
       'noInsightsYet': 'لا توجد رؤى بعد',
       'view': 'عرض',
       // ── Home Insights ──
-      'insBestForYou': 'الأنسب لك',
-      'insBestForYouSub': 'ابحث عن المساحة التي تناسب هدفك.',
-      'insExclusiveDeals': 'عروض حصرية',
-      'insExclusiveDealsSub': 'عروض حصرية على أفضل المساحات.',
-      'insWeeklyPlan': 'الخطة الأسبوعية',
-      'insWeeklyPlanSub': 'اكتشف مركز إنتاجيتك.',
-      'insMeetingChecklist': 'قائمة تحضير الاجتماع',
-      'insMeetingChecklistSub': 'لا تفوتك الأساسيات.',
       // ── Offers Page ──
       'offersPageTitle': 'العروض',
       'offersTopDeals': 'أفضل الصفقات',
@@ -902,7 +886,7 @@ class LanguageService {
       'weeklyPlanTitle': 'الخطة الأسبوعية',
       'weeklyPlanSaveMore': 'وفّر أكثر مع الوصول الأسبوعي',
       'weeklyPlanSubtitle': 'الخيار الأفضل للزيارات المتكررة والعمل المركّز',
-      'weeklyPlanWhatYouGet': 'ما الذي ستحصل عليه',
+      'weeklyPlanWhatYouGet': 'تجهيزاتك القادمة',
       'weeklyPlanActivate': 'تفعيل الخطة',
       'weeklyPlanActivated': 'تم تفعيل الخطة بنجاح!',
       // ── Booking Status Page ──

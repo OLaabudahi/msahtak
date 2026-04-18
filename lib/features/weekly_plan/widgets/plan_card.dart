@@ -12,7 +12,7 @@ class PlanCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: AppColors.planCardBg,
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -21,7 +21,7 @@ class PlanCard extends StatelessWidget {
           const Text(
             'Recommended for you',
             style: TextStyle(
-                color: Colors.white70,
+                color: Colors.black54,
                 fontSize: 11,
                 fontWeight: FontWeight.w500),
           ),
@@ -36,7 +36,7 @@ class PlanCard extends StatelessWidget {
                   Text(
                     'Weekly Plan',
                     style: TextStyle(
-                        color: AppColors.amber,
+                        color: AppColors.secondary,
                         fontSize: 22,
                         fontWeight: FontWeight.bold),
                   ),
@@ -44,7 +44,7 @@ class PlanCard extends StatelessWidget {
                   Text(
                     'Unlimited access for 7 days',
                     style: TextStyle(
-                        color: Colors.white70, fontSize: 12),
+                        color: Colors.black54, fontSize: 12),
                   ),
                 ],
               ),
@@ -54,14 +54,14 @@ class PlanCard extends StatelessWidget {
                   Text(
                     '₪$pricePerWeek',
                     style: const TextStyle(
-                        color: AppColors.amber,
+                        color: AppColors.secondary,
                         fontSize: 26,
                         fontWeight: FontWeight.bold),
                   ),
                   const Text(
                     'per week',
                     style: TextStyle(
-                        color: Colors.white70, fontSize: 11),
+                        color: Colors.black54, fontSize: 11),
                   ),
                 ],
               ),

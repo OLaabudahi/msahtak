@@ -72,7 +72,7 @@ class SettingsTabPage extends StatelessWidget {
                 children: [
                   _header(context),
                   const SizedBox(height: 14),
-                  Text('Error: ${state.error}'),
+                  Text('${context.t('error')}: ${state.error}'),
                   const SizedBox(height: 10),
                   FilledButton(
                     onPressed: () => bloc.add(const SettingsRefreshRequested()),

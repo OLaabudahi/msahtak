@@ -7,6 +7,8 @@ class BookingEntity {
 
   final String dateText;
   final String timeText;
+  final DateTime? startAt;
+  final DateTime? endAt;
 
   final String status;
   final String rawStatus;
@@ -25,6 +27,8 @@ class BookingEntity {
     required this.spaceName,
     required this.dateText,
     required this.timeText,
+    this.startAt,
+    this.endAt,
     required this.status,
     required this.rawStatus,
     required this.totalPrice,

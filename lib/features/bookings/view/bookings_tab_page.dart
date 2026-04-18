@@ -133,37 +133,77 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
 
         final list = state.bookings;
 
-        final upcoming = list.where((b) => b.status.toLowerCase() == 'upcoming').toList();
-        final awaitingConfirmation = list.where((b) => b.status.toLowerCase() == 'awaiting_confirmation').toList();
-        final confirmed = list.where((b) => b.status.toLowerCase() == 'confirmed').toList();
-        final completed = list.where((b) => b.status.toLowerCase() == 'completed').toList();
-        final cancelled = list.where((b) => b.status.toLowerCase() == 'cancelled').toList();
-
         final q = _search.text.trim().toLowerCase();
 
         List<BookingEntity> filter(List<BookingEntity> src) {
           if (q.isEmpty) return src;
-          return src.where((b) => b.spaceName.toLowerCase().contains(q) || b.bookingId.toLowerCase().contains(q)).toList();
+          return src
+              .where((b) =>
+                  b.spaceName.toLowerCase().contains(q) ||
+                  b.bookingId.toLowerCase().contains(q))
+              .toList(growable: false);
         }
 
+        final all = filter(list);
+        final now = DateTime.now();
+        final active = filter(
+          list.where((b) {
+            final start = b.startAt;
+            final end = b.endAt;
+            if (start == null || end == null) return false;
+
+            final raw = b.rawStatus.toLowerCase();
+            final hasAcceptedStatus = raw == 'approved' ||
+                raw == 'approved_waiting_payment' ||
+                raw == 'confirmed' ||
+                raw == 'paid' ||
+                raw == 'active';
+            if (!hasAcceptedStatus) return false;
+
+            return (now.isAtSameMomentAs(start) || now.isAfter(start)) &&
+                now.isBefore(end);
+          }).toList(growable: false),
+        );
+        final confirmed = filter(list
+            .where((b) => b.status.toLowerCase() == 'confirmed')
+            .toList(growable: false));
+        final awaitingPayment = filter(list
+            .where((b) => b.rawStatus.toLowerCase() == 'approved_waiting_payment')
+            .toList(growable: false));
+        final awaitingAcceptance = filter(list
+            .where((b) =>
+                b.rawStatus.toLowerCase() == 'pending' ||
+                b.rawStatus.toLowerCase() == 'under_review' ||
+                b.rawStatus.toLowerCase() == 'payment_under_review')
+            .toList(growable: false));
+        final cancelled = filter(list
+            .where((b) => b.status.toLowerCase() == 'cancelled')
+            .toList(growable: false));
+        final past = filter(list
+            .where((b) => b.status.toLowerCase() == 'completed')
+            .toList(growable: false));
+
         final tabData = [
-          filter(upcoming),
-          filter(awaitingConfirmation),
-          filter(confirmed),
-          filter(completed),
-          filter(cancelled),
+          all,
+          active,
+          confirmed,
+          awaitingPayment,
+          awaitingAcceptance,
+          cancelled,
+          past,
         ];
 
         final tabs = [
-          context.t('upcomingBookings'),
-          context.t('awaitingConfirmationTab'),
-          context.t('confirmedBookingsTab'),
-          context.t('pastBookings'),
+          context.t('bookingsTabAll'),
+          context.t('bookingsTabActive'),
+          context.t('bookingsTabConfirmed'),
+          context.t('bookingsTabAwaitingPayment'),
+          context.t('bookingsTabAwaitingAcceptance'),
           context.t('cancelledBookings'),
+          context.t('pastBookings'),
         ];
 
         final currentList = tabData[_activeTabIndex];
-
         return RefreshIndicator(
           onRefresh: () async => bloc.add(const BookingsRefreshRequested()),
           child: ListView(
@@ -181,22 +221,43 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
               ),
               const SizedBox(height: 8),
               _sectionTitle(tabs[_activeTabIndex]),
-              ...currentList.map(
-                (b) => BookingListItem(
-                  booking: b,
-                  onView: () => _openBookingDetails(context, b),
-                  onCancel: _activeTabIndex <= 2
-                      ? () => Navigator.of(context).push(
-                            BookingRequestRoutes.bookingStatus(
-                              bloc: AppInjector.createBookingBloc(),
-                              bookingId: b.bookingId,
-                              openCancelDialog: true,
-                            ),
-                          )
-                      : null,
-                  onRebook: _activeTabIndex == 3 ? () async => _rebookFromBooking(context, b) : null,
-                ),
-              ),
+              ...currentList.map((b) {
+                final canCancel = _activeTabIndex <= 4;
+                final canRebook = _activeTabIndex == 6;
+                final statusTitle = b.rawStatus.isEmpty ? b.status : b.rawStatus;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_activeTabIndex == 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, bottom: 6),
+                        child: Text(
+                          '${context.t('bookingTypePrefix')}: $statusTitle',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    BookingListItem(
+                      booking: b,
+                      onView: () => _openBookingDetails(context, b),
+                      onCancel: canCancel
+                          ? () => Navigator.of(context).push(
+                                BookingRequestRoutes.bookingStatus(
+                                  bloc: AppInjector.createBookingBloc(),
+                                  bookingId: b.bookingId,
+                                  openCancelDialog: true,
+                                ),
+                              )
+                          : null,
+                      onRebook: canRebook ? () async => _rebookFromBooking(context, b) : null,
+                    ),
+                  ],
+                );
+              }),
               if (currentList.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 50),

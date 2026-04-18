@@ -10,14 +10,35 @@ class PaymentsReceiptsRepoFirebase implements PaymentsReceiptsRepo {
 
   PaymentsReceiptsRepoFirebase(this.source);
 
-  static const _excludedStatuses = {'cancelled', 'canceled'};
+  static const _allowedStatuses = {
+    'confirmed',
+    'paid',
+    'payment_under_review',
+  };
 
   @override
   Future<List<UserReceiptEntity>> getUserReceipts() async {
     final rows = await source.fetchUserBookingsForReceipts();
 
     final receipts = rows
-        .where((row) => !_excludedStatuses.contains((row['status'] ?? '').toString().toLowerCase()))
+        .where((row) {
+          final status = (row['status'] ?? '').toString().toLowerCase();
+          final paymentReceiptUrl =
+              (row['paymentReceiptUrl'] ?? '').toString().trim();
+          final paymentId = (row['paymentId'] ?? '').toString().trim();
+          final paidAt = row['paidAt'];
+          final paymentMethod = (row['paymentMethod'] ?? '').toString().trim();
+          final paymentMethodName =
+              (row['paymentMethodName'] ?? '').toString().trim();
+
+          final hasPaymentSubmission = paymentReceiptUrl.isNotEmpty ||
+              paymentId.isNotEmpty ||
+              paidAt != null ||
+              paymentMethod.isNotEmpty ||
+              paymentMethodName.isNotEmpty;
+
+          return _allowedStatuses.contains(status) && hasPaymentSubmission;
+        })
         .map((row) {
           final withFallbackUser = Map<String, dynamic>.from(row);
           if ((withFallbackUser['userName'] ?? '').toString().trim().isEmpty) {

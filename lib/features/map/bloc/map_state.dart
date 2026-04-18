@@ -25,7 +25,7 @@ class MapState extends Equatable {
     isLoading: true,
     error: null,
     center: GeoPointEntity(lat: 31.511136495468655, lng: 34.45187681199389),
-    radiusKm: 0.1,
+    radiusKm: 0.5,
     spaces: [],
     selectedSpaceId: null,
     showAll: false,

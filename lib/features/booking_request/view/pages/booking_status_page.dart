@@ -310,9 +310,7 @@ class _BookingStatusPageState extends State<BookingStatusPage> {
                     const SizedBox(height: 12),
                   ],
 
-                  if (req != null &&
-                      (req.status == BookingRequestStatus.confirmed ||
-                          req.status == BookingRequestStatus.paid)) ...[
+                  if (req != null && req.status == BookingRequestStatus.confirmed) ...[
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(

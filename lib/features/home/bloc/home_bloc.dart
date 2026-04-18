@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../services/local_storage_service.dart';
 import '../../notifications/domain/usecases/get_notifications_usecase.dart';
-import '../domain/entities/insight_item.dart';
 import '../domain/usecases/get_featured_spaces_usecase.dart';
 import '../domain/usecases/get_home_data_usecase.dart';
+import '../domain/usecases/get_insights_usecase.dart';
 import '../domain/usecases/get_nearby_spaces_usecase.dart';
 import '../domain/usecases/get_recommended_spaces_usecase.dart';
 import 'home_event.dart';
@@ -15,6 +16,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetNearbySpacesUseCase getNearbySpacesUseCase;
   final GetFeaturedSpacesUseCase getFeaturedSpacesUseCase;
   final GetNotificationsUseCase getNotificationsUseCase;
+  final GetInsightsUseCase getInsightsUseCase;
+  final LocalStorageService _storage = LocalStorageService();
 
   HomeBloc({
     required this.getHomeDataUseCase,
@@ -22,6 +25,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required this.getNearbySpacesUseCase,
     required this.getFeaturedSpacesUseCase,
     required this.getNotificationsUseCase,
+    required this.getInsightsUseCase,
   }) : super(HomeState.initial()) {
     on<HomeStarted>(_onStarted);
     on<HomeBottomTabChanged>(_onBottomTabChanged);
@@ -40,12 +44,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await getFeaturedSpacesUseCase();
       final notifications = await getNotificationsUseCase();
       final unreadCount = notifications.where((n) => !n.isRead).length;
+      final langCode = await _storage.getLocaleCode() ?? 'en';
+      final insights = await getInsightsUseCase(langCode: langCode);
 
       emit(state.copyWith(
         isLoading: false,
         featuredSpaces: featured,
         featuredIndex: 0,
-        insights: _buildDummyInsights(),
+        insights: insights,
         unreadNotifications: unreadCount,
       ));
     } catch (e) {
@@ -69,42 +75,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onFeaturedPageChanged(HomeFeaturedPageChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(featuredIndex: event.index));
-  }
-
-  List<InsightItem> _buildDummyInsights() {
-    return const [
-      InsightItem(
-        id: 'ins_best_for_you',
-        titleKey: 'insBestForYou',
-        subtitleKey: 'insBestForYouSub',
-        title: 'Best For You',
-        subtitle: 'Find the space that matches your goal.',
-        imageAsset: 'assets/images/home.png',
-      ),
-      InsightItem(
-        id: 'ins_offers',
-        titleKey: 'insExclusiveDeals',
-        subtitleKey: 'insExclusiveDealsSub',
-        title: "Today's Offers",
-        subtitle: 'Exclusive deals on top spaces.',
-        imageAsset: 'assets/images/home.png',
-      ),
-      InsightItem(
-        id: 'ins_weekly_plan',
-        titleKey: 'insWeeklyPlan',
-        subtitleKey: 'insWeeklyPlanSub',
-        title: 'Weekly Plan',
-        subtitle: 'Unlock your productivity hub.',
-        imageAsset: 'assets/images/home.png',
-      ),
-      InsightItem(
-        id: 'ins_4',
-        titleKey: 'insMeetingChecklist',
-        subtitleKey: 'insMeetingChecklistSub',
-        title: 'Meeting-ready checklist',
-        subtitle: "Don't miss essentials.",
-        imageAsset: 'assets/images/home.png',
-      ),
-    ];
   }
 }

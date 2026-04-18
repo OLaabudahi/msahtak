@@ -103,51 +103,75 @@ class AuthService {
 
 
   Future<AuthUserModel> loginWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
+    UserCredential result;
 
-    if (googleUser == null) {
-      throw Exception('Google sign in cancelled');
+    if (kIsWeb) {
+      result = await _auth.signInWithPopup(GoogleAuthProvider());
+    } else {
+      final googleSignIn = _googleSignIn;
+      if (googleSignIn == null) {
+        throw Exception('Google sign in is not available on this platform');
+      }
+
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Google sign in cancelled');
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      result = await _auth.signInWithCredential(credential);
     }
 
-    final googleAuth = await googleUser.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final result = await _auth.signInWithCredential(credential);
     final user = result.user;
-
     if (user == null) {
       throw Exception('User is null');
     }
 
+    final idToken = await user.getIdToken();
     final docRef = _firestore.collection('users').doc(user.uid);
     final userDoc = await docRef.get();
 
+    final baseData = {
+      'uid': user.uid,
+      'email': user.email ?? '',
+      'fullName': user.displayName ?? 'User',
+      'photoUrl': user.photoURL ?? '',
+      'phoneNumber': user.phoneNumber ?? '',
+      'role': (userDoc.data()?['role'] ?? 'user').toString(),
+      'status': 'active',
+      'googleToken': idToken ?? '',
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+
     if (!userDoc.exists) {
       await docRef.set({
-        'uid': user.uid,
-        'email': user.email ?? '',
-        'fullName': user.displayName ?? '',
-        'phoneNumber': '',
-        'role': 'user',
-        'status': 'active',
+        ...baseData,
         'createdAt': FieldValue.serverTimestamp(),
-      });
+        'assignedSpaceIds': <String>[],
+      }, SetOptions(merge: true));
+    } else {
+      await docRef.set(baseData, SetOptions(merge: true));
     }
 
-    final data = (await docRef.get()).data()!;
+    final data = (await docRef.get()).data() ?? <String, dynamic>{};
+    final assigned = (data['assignedSpaceIds'] as List?)
+            ?.map((e) => e.toString())
+            .toList(growable: false) ??
+        const <String>[];
 
-    // 🔥 رجّعي Model مش Map
     return AuthUserModel(
-      id: data['uid'],
-      email: data['email'] ?? '',
-      fullName: data['fullName'] ?? '',
-      role: data['role'] ?? 'user', assignedSpaceIds: [],
+      id: (data['uid'] ?? user.uid).toString(),
+      email: (data['email'] ?? user.email ?? '').toString(),
+      fullName: (data['fullName'] ?? user.displayName ?? 'User').toString(),
+      role: (data['role'] ?? 'user').toString(),
+      assignedSpaceIds: assigned,
     );
   }
+
   Future<String> getUserRole(String uid) async {
     try {
       DocumentSnapshot userDoc = await _firestore

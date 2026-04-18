@@ -9,6 +9,7 @@ class OfferModel extends Offer {
     required super.discountedPrice,
     required super.discountPercent,
     required super.rating,
+    super.discountLabel,
   });
 
   /// تحويل JSON إلى Model
@@ -21,6 +22,7 @@ class OfferModel extends Offer {
       discountedPrice: json['discountedPrice'] as int,
       discountPercent: json['discountPercent'] as int,
       rating: (json['rating'] as num).toDouble(),
+      discountLabel: json['discountLabel'] as String?,
     );
   }
 
@@ -33,5 +35,6 @@ class OfferModel extends Offer {
         'discountedPrice': discountedPrice,
         'discountPercent': discountPercent,
         'rating': rating,
+        'discountLabel': discountLabel,
       };
 }

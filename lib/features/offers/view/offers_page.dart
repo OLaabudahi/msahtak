@@ -45,6 +45,7 @@ class _OffersView extends StatefulWidget {
 
 class _OffersViewState extends State<_OffersView> {
   final _searchController = TextEditingController();
+  String? _selectedSpaceId;
 
   @override
   void dispose() {
@@ -83,6 +84,15 @@ class _OffersViewState extends State<_OffersView> {
       ),
       body: BlocBuilder<OffersBloc, OffersState>(
         builder: (context, state) {
+          final available = state.filteredOffers;
+          final matchingSpaceOptions = available
+              .map((o) => MapEntry(o.id, o.name))
+              .toSet()
+              .toList(growable: false);
+          final displayOffers = _selectedSpaceId == null
+              ? available
+              : available.where((o) => o.id == _selectedSpaceId).toList(growable: false);
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -107,11 +117,37 @@ class _OffersViewState extends State<_OffersView> {
                       color: Colors.black),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: DropdownButtonFormField<String?>(
+                  value: _selectedSpaceId,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    labelText: context.t('offersEligibleSpacesLabel'),
+                  ),
+                  items: [
+                    DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text(context.t('offersAllEligibleSpaces')),
+                    ),
+                    ...matchingSpaceOptions.map(
+                      (e) => DropdownMenuItem<String?>(
+                        value: e.key,
+                        child: Text(e.value),
+                      ),
+                    ),
+                  ],
+                  onChanged: (v) => setState(() => _selectedSpaceId = v),
+                ),
+              ),
+              const SizedBox(height: 10),
               if (state.isLoading)
                 const Expanded(
                     child: Center(
                         child: CircularProgressIndicator()))
-              else if (state.filteredOffers.isEmpty)
+              else if (displayOffers.isEmpty)
                 Expanded(
                   child: Center(
                     child: Text(
@@ -126,9 +162,9 @@ class _OffersViewState extends State<_OffersView> {
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16),
-                    itemCount: state.filteredOffers.length,
+                    itemCount: displayOffers.length,
                     itemBuilder: (context, index) {
-                      final offer = state.filteredOffers[index];
+                      final offer = displayOffers[index];
                       return DealCard(
                         offer: offer,
                         onDealTap: () {

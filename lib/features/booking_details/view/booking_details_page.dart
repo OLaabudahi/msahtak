@@ -5,6 +5,7 @@ import '../../../constants/app_assets.dart';
 import '../../../constants/app_spacing.dart';
 import '../../../core/di/app_injector.dart';
 import '../../../core/i18n/app_i18n.dart';
+import '../../booking_request/view/booking_request_routes.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
@@ -156,6 +157,16 @@ class BookingDetailsPage extends StatelessWidget {
                                 '${context.t('bookingTimeLabel')}: ${d.timeText}',
                                 style: AppTextStyles.body,
                               ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '${context.t('bookingIdLabel')} ${d.bookingId}',
+                                style: AppTextStyles.body,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Space ID: ${d.spaceId}',
+                                style: AppTextStyles.body,
+                              ),
                             ],
                           ),
                         ),
@@ -194,8 +205,11 @@ class BookingDetailsPage extends StatelessWidget {
                     child: AppButton(
                       label: context.t('manageBooking'),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(context.t('bookingDetailsActionPlaceholder'))),
+                        Navigator.of(context).push(
+                          BookingRequestRoutes.bookingStatus(
+                            bloc: AppInjector.createBookingBloc(),
+                            bookingId: d.bookingId,
+                          ),
                         );
                       },
                     ),

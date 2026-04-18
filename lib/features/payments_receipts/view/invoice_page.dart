@@ -48,6 +48,9 @@ class InvoicePage extends StatelessWidget {
       },builder: (BuildContext context, InvoiceState state) => Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
           title: Text(context.t('invoice')),
         ),
         body: SingleChildScrollView(

@@ -141,6 +141,18 @@ class DealCard extends StatelessWidget {
                     color: AppColors.textSecondary, fontSize: 12)),
           ],
         ),
+        if ((offer.discountLabel ?? '').isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 3),
+            child: Text(
+              offer.discountLabel!,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.secondary,
+              ),
+            ),
+          ),
       ],
     );
   }

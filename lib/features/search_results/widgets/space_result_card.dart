@@ -6,16 +6,19 @@ import '../domain/entities/space_entity.dart';
 class SpaceResultCard extends StatelessWidget {
   final SpaceEntity space;
   final VoidCallback onView;
+  final Color cardColor;
 
   const SpaceResultCard({
     super.key,
     required this.space,
     required this.onView,
+    this.cardColor = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: cardColor,
       elevation: 2,
       borderRadius: BorderRadius.circular(18),
       child: ClipRRect(
@@ -119,4 +122,3 @@ class SpaceResultCard extends StatelessWidget {
     );
   }
 }
-

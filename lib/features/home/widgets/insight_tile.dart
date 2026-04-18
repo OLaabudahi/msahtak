@@ -28,12 +28,14 @@ class InsightTile extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              child: Image.asset(imageAsset, fit: BoxFit.cover),
-
-              // ✅ API لاحقاً:
-              // child: imageUrl != null
-              //     ? Image.network(imageUrl!, fit: BoxFit.cover)
-              //     : Image.asset(imageAsset, fit: BoxFit.cover),
+              child: imageAsset.startsWith('http')
+                  ? Image.network(
+                      imageAsset,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          Image.asset('assets/images/home.png', fit: BoxFit.cover),
+                    )
+                  : Image.asset(imageAsset, fit: BoxFit.cover),
             ),
             Positioned.fill(
               child: Container(

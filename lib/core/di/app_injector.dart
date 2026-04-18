@@ -2,6 +2,7 @@ import '../../features/notifications/domain/usecases/mark_all_notifications_read
 import '../../features/home/domain/usecases/get_recommended_spaces_usecase.dart';
 import '../../features/home/domain/usecases/get_nearby_spaces_usecase.dart';
 import '../../features/home/domain/usecases/get_home_data_usecase.dart';
+import '../../features/home/domain/usecases/get_insights_usecase.dart';
 import '../../features/home/domain/usecases/get_featured_spaces_usecase.dart';
 import '../../features/home/domain/repos/home_repo.dart';
 import '../../features/home/data/sources/home_firebase_source.dart';
@@ -160,12 +161,14 @@ void setupInjector() {
   getIt.registerFactory<GetRecommendedSpacesUseCase>(() => GetRecommendedSpacesUseCase(getIt<HomeRepo>()));
   getIt.registerFactory<GetNearbySpacesUseCase>(() => GetNearbySpacesUseCase(getIt<HomeRepo>()));
   getIt.registerFactory<GetFeaturedSpacesUseCase>(() => GetFeaturedSpacesUseCase(getIt<HomeRepo>()));
+  getIt.registerFactory<GetInsightsUseCase>(() => GetInsightsUseCase(getIt<HomeRepo>()));
   getIt.registerFactory<HomeBloc>(() => HomeBloc(
         getHomeDataUseCase: getIt<GetHomeDataUseCase>(),
         getRecommendedSpacesUseCase: getIt<GetRecommendedSpacesUseCase>(),
         getNearbySpacesUseCase: getIt<GetNearbySpacesUseCase>(),
         getFeaturedSpacesUseCase: getIt<GetFeaturedSpacesUseCase>(),
         getNotificationsUseCase: getIt<GetNotificationsUseCase>(),
+        getInsightsUseCase: getIt<GetInsightsUseCase>(),
       ));
 
   // user bookings

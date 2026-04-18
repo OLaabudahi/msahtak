@@ -410,8 +410,8 @@ class _HomeTabState extends State<_HomeTab> {
                     return Builder(
                       builder: (ctx) => InsightTile(
                         imageAsset: item.imageAsset ?? 'assets/images/home.jpg',
-                        title: item.titleKey != null ? ctx.t(item.titleKey!) : item.title,
-                        subtitle: item.subtitleKey != null ? ctx.t(item.subtitleKey!) : item.subtitle,
+                        title: item.title,
+                        subtitle: item.subtitle,
                         onTap: () => _openInsightDetails(context, item),
                       ),
                     );

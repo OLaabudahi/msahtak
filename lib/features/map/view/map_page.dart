@@ -78,9 +78,9 @@ class _MapPageState extends State<MapPage> {
   }
 
   double _zoomForRadius(double radiusKm) {
-    if (radiusKm <= 0.1) return 17.0;
     if (radiusKm <= 0.5) return 15.0;
-    return 14.2;
+    if (radiusKm <= 1.0) return 14.0;
+    return 13.2;
   }
 
   @override
@@ -396,7 +396,9 @@ class _RadiusChips extends StatelessWidget {
             ),
           ),
           child: Text(
-            '${v.toStringAsFixed(1)} Km',
+            context
+                .t('mapRadiusChipLabel')
+                .replaceFirst('{radius}', v.toStringAsFixed(1)),
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
@@ -411,9 +413,9 @@ class _RadiusChips extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          chip(0.1),
-          const SizedBox(width: 10),
           chip(0.5),
+          const SizedBox(width: 10),
+          chip(1.0),
           const SizedBox(width: 10),
           InkWell(
             borderRadius: BorderRadius.circular(20),

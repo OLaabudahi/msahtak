@@ -96,6 +96,7 @@ class SavedSpacesPage extends StatelessWidget {
               final space = state.spaces[i];
               return SpaceResultCard(
                 space: space,
+                cardColor: Colors.white,
                 onView: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(

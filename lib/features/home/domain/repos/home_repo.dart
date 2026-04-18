@@ -1,3 +1,4 @@
+import '../entities/insight_item.dart';
 import '../entities/home_featured_space_entity.dart';
 
 abstract class HomeRepo {
@@ -8,4 +9,6 @@ abstract class HomeRepo {
   Future<List<HomeFeaturedSpaceEntity>> getNearbySpaces();
 
   Future<List<HomeFeaturedSpaceEntity>> getFeaturedSpaces();
+
+  Future<List<InsightItem>> getInsights({required String langCode});
 }

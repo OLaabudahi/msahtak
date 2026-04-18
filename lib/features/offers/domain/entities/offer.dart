@@ -8,6 +8,7 @@ class Offer extends Equatable {
   final int discountedPrice;
   final int discountPercent;
   final double rating;
+  final String? discountLabel;
 
   const Offer({
     required this.id,
@@ -17,6 +18,7 @@ class Offer extends Equatable {
     required this.discountedPrice,
     required this.discountPercent,
     required this.rating,
+    this.discountLabel,
   });
 
   @override
@@ -28,6 +30,7 @@ class Offer extends Equatable {
         discountedPrice,
         discountPercent,
         rating,
+        discountLabel,
       ];
 }
 
