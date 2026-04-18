@@ -77,30 +77,6 @@ class NotificationSettingsPage extends StatelessWidget {
                           fontSize: 14, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 16),
-                    // AI Badge
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                          color: AppColors.planCardBg,
-                          borderRadius:
-                              BorderRadius.circular(12)),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.auto_awesome,
-                                color: AppColors.amber, size: 16),
-                            Text(context.t('ai'),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 28),
                     // Booking Alerts
                     Text(context.t('bookingAlerts'),
                         style: const TextStyle(
