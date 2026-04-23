@@ -25,6 +25,7 @@ class OfferModel {
   final String? bonusText;
   final String? adminId;
   final String? spaceId;
+  final String? spaceName;
 
   const OfferModel({
     required this.id,
@@ -43,6 +44,7 @@ class OfferModel {
     required this.bonusText,
     this.adminId,
     this.spaceId,
+    this.spaceName,
   });
 
   factory OfferModel.fromJson(Map<String, dynamic> json) => OfferModel(
@@ -62,6 +64,7 @@ class OfferModel {
         bonusText: json['bonusText']?.toString(),
         adminId: json['adminId']?.toString(),
         spaceId: json['spaceId']?.toString(),
+        spaceName: (json['name'] ?? json['spaceName'])?.toString(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,6 +84,7 @@ class OfferModel {
         'bonusText': bonusText,
         'adminId': adminId,
         'spaceId': spaceId,
+        'spaceName': spaceName,
       };
 
   OfferEntity toEntity() => OfferEntity(
@@ -100,6 +104,7 @@ class OfferModel {
         bonusText: bonusText,
         adminId: adminId,
         spaceId: spaceId,
+        spaceName: spaceName,
       );
 
   static OfferModel fromEntity(OfferEntity e) => OfferModel(
@@ -119,6 +124,7 @@ class OfferModel {
         bonusText: e.bonusText,
         adminId: e.adminId,
         spaceId: e.spaceId,
+        spaceName: e.spaceName,
       );
 
   OfferType _parseType(String s) {
@@ -160,4 +166,3 @@ class OfferModel {
     }
   }
 }
-

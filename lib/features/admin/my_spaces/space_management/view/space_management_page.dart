@@ -78,7 +78,21 @@ class SpaceManagementPage extends StatelessWidget {
                               const SizedBox(height: 12),
                               AdminButton.filled(
                                 label: 'Edit Space',
-                                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: spaceId))),
+                                onTap: () async {
+                                  final updated = await Navigator.of(context)
+                                      .push<bool>(
+                                    MaterialPageRoute(
+                                      builder: (_) => AddEditSpacePage.withBloc(
+                                        spaceId: spaceId,
+                                      ),
+                                    ),
+                                  );
+                                  if (updated == true && context.mounted) {
+                                    context.read<SpaceManagementBloc>().add(
+                                          SpaceManagementStarted(spaceId),
+                                        );
+                                  }
+                                },
                                 bg: AdminColors.primaryBlue,
                               ),
                             ],
@@ -97,5 +111,4 @@ class SpaceManagementPage extends StatelessWidget {
     );
   }
 }
-
 

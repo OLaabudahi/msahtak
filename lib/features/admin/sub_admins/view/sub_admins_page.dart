@@ -80,7 +80,7 @@ class _SubAdminsPageState extends State<SubAdminsPage> {
                 'uid': uid,
                 'email': email,
                 'fullName': name,
-                'role': 'sup_admin',
+                'role': 'sub_admin',
                 'assignedSpaceIds': selectedIds.toList(),
               });
 

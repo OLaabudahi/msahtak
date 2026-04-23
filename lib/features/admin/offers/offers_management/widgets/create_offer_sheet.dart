@@ -426,6 +426,7 @@ class _Field extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            key: ValueKey('${label}_$value'),
             initialValue: value,
             maxLines: maxLines,
             readOnly: readOnly,
@@ -476,4 +477,3 @@ String _formatDate(DateTime date) {
   final dd = date.day.toString().padLeft(2, '0');
   return '${date.year}-$mm-$dd';
 }
-

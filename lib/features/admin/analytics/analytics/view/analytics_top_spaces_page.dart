@@ -53,14 +53,27 @@ class AnalyticsTopSpacesPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               children: [
-                                const _TopSpaceTile(rank: 1, name: 'Downtown Hub', rating: '4.9', bookings: '145', revenue: '\$14,500'),
-                                const SizedBox(height: 12),
-                                const _TopSpaceTile(rank: 2, name: 'Creative Studio', rating: '4.8', bookings: '128', revenue: '\$12,800'),
-                                const SizedBox(height: 12),
-                                const _TopSpaceTile(rank: 3, name: 'Tech Center', rating: '4.7', bookings: '98', revenue: '\$9,800'),
-                                const SizedBox(height: 12),
-                                const _TopSpaceTile(rank: 4, name: 'City Office', rating: '4.6', bookings: '87', revenue: '\$8,700'),
-                                const SizedBox(height: 12),
+                                if (state.status == AnalyticsStatus.loading)
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 36),
+                                    child: CircularProgressIndicator(),
+                                  )
+                                else ...[
+                                  ..._parseTopSpaces(state).asMap().entries.map((entry) {
+                                    final i = entry.key;
+                                    final item = entry.value;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: _TopSpaceTile(
+                                        rank: i + 1,
+                                        name: item.name,
+                                        rating: item.rating,
+                                        bookings: item.bookings,
+                                        revenue: '\$${item.revenue}',
+                                      ),
+                                    );
+                                  }),
+                                ],
                                 InkWell(
                                   onTap: () => context.read<AnalyticsBloc>().add(const AnalyticsExportPressed()),
                                   borderRadius: BorderRadius.circular(12),
@@ -198,4 +211,43 @@ class _TopSpaceTile extends StatelessWidget {
   }
 }
 
+List<_TopSpaceItem> _parseTopSpaces(AnalyticsState state) {
+  final raw = state.data?.topSpaces ?? const <String>[];
+  final parsed = raw.map((line) {
+    final parts = line.split('|');
+    if (parts.length < 4) {
+      return _TopSpaceItem(
+        name: line,
+        rating: '0.0',
+        bookings: '0',
+        revenue: '0',
+      );
+    }
+    return _TopSpaceItem(
+      name: parts[0],
+      rating: parts[1],
+      bookings: parts[2],
+      revenue: parts[3],
+    );
+  }).where((e) => e.name.trim().isNotEmpty).toList(growable: false);
+
+  if (parsed.isNotEmpty) return parsed;
+  return const [
+    _TopSpaceItem(name: 'No data', rating: '0.0', bookings: '0', revenue: '0'),
+  ];
+}
+
+class _TopSpaceItem {
+  final String name;
+  final String rating;
+  final String bookings;
+  final String revenue;
+
+  const _TopSpaceItem({
+    required this.name,
+    required this.rating,
+    required this.bookings,
+    required this.revenue,
+  });
+}
 

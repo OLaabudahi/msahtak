@@ -1,5 +1,6 @@
 ﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../_shared/admin_session.dart';
 import 'offers_source.dart';
 import '../models/offer_model.dart';
 
@@ -12,8 +13,20 @@ class OffersFirebaseSource implements OffersSource {
   Future<List<OfferModel>> fetchOffers() async {
     await _runOneTimeOffersMigrationAndBootstrap();
 
-    final snap = await _db.collection('offers').get();
-    return snap.docs.map((doc) {
+    final uid = _auth.currentUser?.uid ?? AdminSession.userId;
+    final adminSpaceIds = await _loadAdminSpaceIds(uid);
+
+    Query<Map<String, dynamic>> query = _db.collection('offers');
+    if (uid.isNotEmpty) {
+      query = query.where('adminId', isEqualTo: uid);
+    }
+
+    final snap = await query.get();
+    return snap.docs.where((doc) {
+      if (adminSpaceIds.isEmpty) return true;
+      final spaceId = (doc.data()['spaceId'] ?? '').toString();
+      return spaceId.isEmpty || adminSpaceIds.contains(spaceId);
+    }).map((doc) {
       final d = doc.data();
       d['id'] = doc.id;
       return OfferModel.fromJson(d);
@@ -30,8 +43,12 @@ class OffersFirebaseSource implements OffersSource {
     final data = offer.toJson();
     data.remove('id');
 
-    final adminId = offer.adminId ?? _auth.currentUser?.uid ?? 'DUMMY_ADMIN_EDIT_ME';
-    final spaceId = offer.spaceId ?? 'DUMMY_SPACE_ID_EDIT_ME';
+    final adminId =
+        offer.adminId ?? _auth.currentUser?.uid ?? 'DUMMY_ADMIN_EDIT_ME';
+    final spaceId =
+        offer.spaceId ??
+        await _resolveAdminDefaultSpaceId(adminId) ??
+        'DUMMY_SPACE_ID_EDIT_ME';
 
     data['adminId'] = adminId;
     data['spaceId'] = spaceId;
@@ -56,6 +73,7 @@ class OffersFirebaseSource implements OffersSource {
             : originalPrice;
 
     data['name'] = spaceName;
+    data['spaceName'] = spaceName;
     data['location'] = location;
     data['originalPrice'] = originalPrice;
     data['discountedPrice'] = discountedPrice;
@@ -63,6 +81,40 @@ class OffersFirebaseSource implements OffersSource {
     data['createdAt'] = FieldValue.serverTimestamp();
 
     await _db.collection('offers').add(data);
+  }
+
+  Future<Set<String>> _loadAdminSpaceIds(String uid) async {
+    if (uid.isEmpty) return <String>{};
+    final fromSession = AdminSession.assignedSpaceIds
+        .where((e) => e.trim().isNotEmpty)
+        .toSet();
+    if (fromSession.isNotEmpty) return fromSession;
+
+    try {
+      final snap = await _db
+          .collection('spaces')
+          .where('adminId', isEqualTo: uid)
+          .get();
+      return snap.docs.map((d) => d.id).toSet();
+    } catch (_) {
+      return <String>{};
+    }
+  }
+
+  Future<String?> _resolveAdminDefaultSpaceId(String adminId) async {
+    final ids = await _loadAdminSpaceIds(adminId);
+    if (ids.isNotEmpty) return ids.first;
+    try {
+      final spacesSnap = await _db
+          .collection('spaces')
+          .where('adminId', isEqualTo: adminId)
+          .limit(1)
+          .get();
+      if (spacesSnap.docs.isNotEmpty) {
+        return spacesSnap.docs.first.id;
+      }
+    } catch (_) {}
+    return null;
   }
 
   Future<void> _runOneTimeOffersMigrationAndBootstrap() async {

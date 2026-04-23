@@ -1,5 +1,6 @@
 ﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import '../../../_shared/admin_session.dart';
 import 'reviews_reports_source.dart';
 import '../models/review_model.dart';
 import '../models/report_model.dart';
@@ -10,12 +11,21 @@ class ReviewsReportsFirebaseSource implements ReviewsReportsSource {
 
   @override
   Future<List<ReviewModel>> fetchReviews() async {
+    final adminSpaceIds = await _resolveAdminSpaceIds();
+
     final snap = await _db
         .collection('reviews')
         .where('hidden', isNotEqualTo: true)
         .get();
 
-    return snap.docs.map((doc) {
+    return snap.docs.where((doc) {
+      if (adminSpaceIds.isEmpty) return true;
+      final data = doc.data();
+      final spaceId = (data['spaceId'] ?? '').toString();
+      if (spaceId.isNotEmpty) return adminSpaceIds.contains(spaceId);
+      final reviewAdminId = (data['adminId'] ?? '').toString();
+      return reviewAdminId.isNotEmpty && reviewAdminId == AdminSession.userId;
+    }).map((doc) {
       final d = doc.data();
       return ReviewModel(
         id: doc.id,
@@ -27,6 +37,26 @@ class ReviewsReportsFirebaseSource implements ReviewsReportsSource {
         adminReply: d['adminReply'] as String?,
       );
     }).toList();
+  }
+
+  Future<Set<String>> _resolveAdminSpaceIds() async {
+    final ids = AdminSession.assignedSpaceIds
+        .where((e) => e.trim().isNotEmpty)
+        .toSet();
+    if (ids.isNotEmpty) return ids;
+
+    final uid = AdminSession.userId;
+    if (uid.isEmpty) return <String>{};
+
+    try {
+      final spaces = await _db
+          .collection('spaces')
+          .where('adminId', isEqualTo: uid)
+          .get();
+      return spaces.docs.map((d) => d.id).toSet();
+    } catch (_) {
+      return <String>{};
+    }
   }
 
   @override

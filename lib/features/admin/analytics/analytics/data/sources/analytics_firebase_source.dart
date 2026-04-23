@@ -82,18 +82,64 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
       weekValues.add(dayRevenue.toStringAsFixed(0));
     }
 
-    // أفضل المساحات حسب عدد الحجوزات
+    // أفضل المساحات حسب الإيراد
     final spaceBookingCount = <String, int>{};
+    final spaceRevenue = <String, double>{};
+    final spaceRatings = <String, List<double>>{};
+
+    final spaceNameById = <String, String>{};
+    for (final doc in spacesDocs) {
+      final d = doc.data() as Map<String, dynamic>;
+      final name = (d['name'] ?? d['spaceName'] ?? doc.id).toString();
+      spaceNameById[doc.id] = name;
+    }
+
     for (final doc in bookingsDocs) {
-      final spaceName = doc.data()['spaceName'] as String? ?? '';
+      final data = doc.data() as Map<String, dynamic>;
+      final status = (data['status'] as String? ?? '').toLowerCase();
+      final spaceId = (data['spaceId'] ?? '').toString();
+      final spaceName = (data['spaceName'] ??
+              spaceNameById[spaceId] ??
+              (spaceId.isEmpty ? '' : spaceId))
+          .toString();
       if (spaceName.isNotEmpty) {
         spaceBookingCount[spaceName] = (spaceBookingCount[spaceName] ?? 0) + 1;
+        if (status == 'paid' || status == 'confirmed') {
+          spaceRevenue[spaceName] =
+              (spaceRevenue[spaceName] ?? 0) +
+              (data['totalAmount'] as num? ?? 0).toDouble();
+        }
       }
     }
-    final topSpaces = (spaceBookingCount.entries.toList()
+
+    for (final doc in reviewsDocs) {
+      final data = doc.data() as Map<String, dynamic>;
+      final spaceId = (data['spaceId'] ?? '').toString();
+      final spaceName = (data['spaceName'] ??
+              spaceNameById[spaceId] ??
+              (spaceId.isEmpty ? '' : spaceId))
+          .toString();
+      final rating = double.tryParse(
+        data['rating']?.toString() ?? data['stars']?.toString() ?? '',
+      );
+      if (spaceName.isEmpty || rating == null) continue;
+      spaceRatings.putIfAbsent(spaceName, () => <double>[]).add(rating);
+    }
+
+    final topSpaces = (spaceRevenue.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value)))
-        .take(3)
-        .map((e) => e.key)
+        .take(5)
+        .map((entry) {
+          final name = entry.key;
+          final bookings = spaceBookingCount[name] ?? 0;
+          final ratings = spaceRatings[name] ?? const <double>[];
+          final avg = ratings.isEmpty
+              ? '0.0'
+              : (ratings.reduce((a, b) => a + b) / ratings.length)
+                    .toStringAsFixed(1);
+          final revenue = entry.value.toStringAsFixed(0);
+          return '$name|$avg|$bookings|$revenue';
+        })
         .toList();
 
     return AnalyticsModel(
@@ -102,7 +148,7 @@ class AnalyticsFirebaseSource implements AnalyticsSource {
       avgRating: avgRating,
       weekLabels: weekLabels,
       weekValues: weekValues,
-      topSpaces: topSpaces.isEmpty ? ['No data'] : topSpaces,
+      topSpaces: topSpaces.isEmpty ? ['No data|0.0|0|0'] : topSpaces,
     );
   }
 

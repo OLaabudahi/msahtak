@@ -44,6 +44,18 @@ class OfferCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 10),
+          if ((offer.spaceName ?? '').trim().isNotEmpty) ...[
+            Text(
+              offer.spaceName!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AdminText.label12(
+                color: AdminColors.black40,
+                w: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 6),
+          ],
           Text(_subtitle(offer), maxLines: 3, overflow: TextOverflow.ellipsis, style: AdminText.body14(color: AdminColors.black40, w: FontWeight.w600)),
 
           const SizedBox(height: 10),
@@ -100,5 +112,4 @@ class OfferCard extends StatelessWidget {
     }
   }
 }
-
 

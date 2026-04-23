@@ -58,8 +58,15 @@ class MySpacesPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: 'my_spaces_fab',
         backgroundColor: AdminColors.primaryBlue,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: null)));
+        onPressed: () async {
+          final created = await Navigator.of(context).push<bool>(
+            MaterialPageRoute(
+              builder: (_) => AddEditSpacePage.withBloc(spaceId: null),
+            ),
+          );
+          if (created == true && context.mounted) {
+            context.read<MySpacesBloc>().add(const MySpacesStarted());
+          }
         },
         child: Icon(AdminIconMapper.plus(), color: Colors.white),
       ),
@@ -83,7 +90,17 @@ class MySpacesPage extends StatelessWidget {
                         separatorBuilder: (_, __) => const SizedBox(height: AdminSpace.s12),
                         itemBuilder: (ctx, i) => SpaceCard(
                           space: list[i],
-                          onManage: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddEditSpacePage.withBloc(spaceId: list[i].id))),
+                          onManage: () async {
+                            final updated = await Navigator.of(context).push<bool>(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    AddEditSpacePage.withBloc(spaceId: list[i].id),
+                              ),
+                            );
+                            if (updated == true && context.mounted) {
+                              context.read<MySpacesBloc>().add(const MySpacesStarted());
+                            }
+                          },
                           onHide: () => context.read<MySpacesBloc>().add(MySpacesHidePressed(list[i].id)),
                           onDelete: () => _confirmDelete(context, list[i].id, list[i].name),
                         ),
@@ -100,7 +117,6 @@ class MySpacesPage extends StatelessWidget {
     );
   }
 }
-
 
 
 

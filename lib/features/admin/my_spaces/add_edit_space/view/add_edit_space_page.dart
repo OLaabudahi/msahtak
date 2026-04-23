@@ -75,19 +75,13 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
     }
   }
 
-  void _next(AddEditSpaceState s, bool isSaving) {
+  void _next(AddEditSpaceState s) {
     if (!_validateStep(s)) return;
 
     if (currentStep < 3) {
       setState(() => currentStep++);
     } else {
       context.read<AddEditSpaceBloc>().add(const AddEditSpaceSavePressed());
-    }
-    if (isSaving) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.t('adminSpaceSavedSuccess'))),
-      );
-      Navigator.pop(context);
     }
   }
 
@@ -101,7 +95,21 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddEditSpaceBloc, AddEditSpaceState>(
+    return BlocConsumer<AddEditSpaceBloc, AddEditSpaceState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == AddEditSpaceStatus.saved) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.t('adminSpaceSavedSuccess'))),
+          );
+          Navigator.of(context).pop(true);
+        } else if (state.status == AddEditSpaceStatus.failure &&
+            state.error != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error!)),
+          );
+        }
+      },
       builder: (context, state) {
         final f = state.form;
         final isSaving = state.status == AddEditSpaceStatus.saving;
@@ -170,7 +178,9 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
                                         : context.t('adminUpdateSpace'))
                                   : context.t('next'),
 
-                          onTap: isValid ? () => _next(state, isSaving) : null,
+                          onTap: (isValid && !isSaving)
+                              ? () => _next(state)
+                              : null,
                           bg: isValid
                               ? AdminColors.primaryBlue
                               : AppColors.secondary,
@@ -342,6 +352,7 @@ class _AddEditSpacePageState extends State<AddEditSpacePage> {
         const SizedBox(height: 12),
 
         TextFormField(
+          key: ValueKey('totalSeats_${f.totalSeats}'),
           initialValue: f.totalSeats.toString(),
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(labelText: "عدد المقاعد"),
@@ -443,6 +454,7 @@ class _Field extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            key: ValueKey('${label}_$value'),
             initialValue: value,
             onChanged: onChanged,
             maxLength: maxLength,
