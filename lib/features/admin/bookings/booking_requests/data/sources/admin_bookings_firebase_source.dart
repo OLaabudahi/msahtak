@@ -26,6 +26,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       'awaiting_confirmation' => ['payment_under_review'],
       'booked' => ['confirmed', 'paid', 'active', 'completed'],
       'canceled' => ['canceled', 'rejected', 'expired'],
+      'all' => const [],
       _ => [status],
     };
 
@@ -40,7 +41,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
     final filtered = allBookings.where((b) {
       final bookingStatus = b['status'] ?? '';
 
-      if (!statuses.contains(bookingStatus)) return false;
+      if (statuses.isNotEmpty && !statuses.contains(bookingStatus)) return false;
 
       final space = b['space'] as Map<String, dynamic>? ?? {};
       final bookingAdminId = space['adminId'] ?? '';
@@ -493,6 +494,7 @@ class AdminBookingsFirebaseSource implements AdminBookingsSource {
       'pending' => ['pending', 'under_review'],
       'approved' => ['approved', 'approved_waiting_payment', 'payment_under_review', 'confirmed'],
       'canceled' => ['canceled', 'rejected', 'expired'],
+      'all' => const [],
       _ => [status],
     };
 

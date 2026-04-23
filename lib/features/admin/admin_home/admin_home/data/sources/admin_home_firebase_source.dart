@@ -7,6 +7,7 @@ import 'admin_home_source.dart';
 import '../models/kpi_model.dart';
 import '../../domain/entities/admin_space_item.dart';
 import '../../domain/entities/admin_activity_item.dart';
+import '../../domain/entities/admin_notification_item.dart';
 
 class AdminHomeFirebaseSource implements AdminHomeSource {
   final FirestoreApi _api = FirestoreApi();
@@ -80,6 +81,41 @@ class AdminHomeFirebaseSource implements AdminHomeSource {
         spaceName: spaceName,
         status: status,
         createdAt: createdAt,
+      );
+    }).toList();
+  }
+
+  @override
+  Future<List<AdminNotificationItem>> fetchNotifications() async {
+    final adminId = await _storage.getUserId();
+    final notifications = await _api.getCollection(collection: 'notifications');
+
+    final filtered = notifications.where((n) {
+      final uid = (n['userId'] ?? n['user_id'] ?? '').toString();
+      return uid == adminId;
+    }).toList();
+
+    filtered.sort((a, b) {
+      final aTs = a['createdAt'] ?? a['created_at'];
+      final bTs = b['createdAt'] ?? b['created_at'];
+      final aDate = (aTs is Timestamp) ? aTs.toDate() : DateTime.fromMillisecondsSinceEpoch(0);
+      final bDate = (bTs is Timestamp) ? bTs.toDate() : DateTime.fromMillisecondsSinceEpoch(0);
+      return bDate.compareTo(aDate);
+    });
+
+    return filtered.take(30).map((d) {
+      final ts = d['createdAt'] ?? d['created_at'];
+      final createdAt = (ts is Timestamp) ? ts.toDate() : DateTime.now();
+      return AdminNotificationItem(
+        id: (d['id'] ?? d['docId'] ?? d['notificationId'] ?? '').toString(),
+        title: (d['title'] ?? '').toString(),
+        subtitle: (d['subtitle'] ?? d['body'] ?? d['message'] ?? '').toString(),
+        createdAt: createdAt,
+        isRead: d['isRead'] as bool? ?? d['is_read'] as bool? ?? false,
+        bookingId:
+            (d['bookingId'] ?? d['requestId'] ?? d['request_id'] ?? '').toString().isEmpty
+            ? null
+            : (d['bookingId'] ?? d['requestId'] ?? d['request_id']).toString(),
       );
     }).toList();
   }

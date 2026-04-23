@@ -1,1 +1,1 @@
-enum BookingStatus { pending, awaitingPayment, awaitingConfirmation, booked, canceled }
+enum BookingStatus { all, pending, awaitingPayment, awaitingConfirmation, booked, canceled }

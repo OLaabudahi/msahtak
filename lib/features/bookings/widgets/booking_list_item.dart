@@ -25,12 +25,27 @@ class BookingListItem extends StatelessWidget {
           booking.status.toLowerCase() == 'confirmed';
   bool get _isAwaitingConfirmation =>
       booking.status.toLowerCase() == 'awaiting_confirmation';
+  bool get _isAwaitingPayment =>
+      booking.status.toLowerCase() == 'awaiting_payment';
 
   bool get _isCompleted =>
       booking.status.toLowerCase() == 'completed';
 
   bool get _isCancelled =>
       booking.status.toLowerCase() == 'cancelled';
+
+  bool get _isActiveNow {
+    final start = booking.startAt;
+    final end = booking.endAt;
+    if (start == null || end == null) return false;
+
+    final now = DateTime.now();
+    final raw = booking.rawStatus.toLowerCase();
+    final isEligible = raw == 'confirmed' || raw == 'paid' || raw == 'active';
+    if (!isEligible) return false;
+
+    return (now.isAtSameMomentAs(start) || now.isAfter(start)) && now.isBefore(end);
+  }
 
   String _dateLine() => booking.dateText;
 
@@ -43,6 +58,26 @@ class BookingListItem extends StatelessWidget {
   }
 
   Widget _statusChip(BuildContext context) {
+    if (_isAwaitingPayment) {
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.warningBg,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: AppColors.amber, width: 1.0),
+        ),
+        child: Text(
+          context.t('bookingsTabAwaitingPayment'),
+          style: const TextStyle(
+            color: AppColors.warningText,
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
+
     if (booking.status.toLowerCase() == 'awaiting_confirmation') {
       return Container(
         padding:
@@ -56,6 +91,27 @@ class BookingListItem extends StatelessWidget {
           context.t('bookingStatusAwaitingConfirmation'),
           style: const TextStyle(
             color: AppColors.reviewStatusText,
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
+
+    if (_isActiveNow) {
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.approvedBg,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: AppColors.approvedBorder, width: 1.2),
+        ),
+        child: Text(
+          context.t('activeStatusLabel'),
+          style: TextStyle(
+            color: AppColors.approvedText,
             fontWeight: FontWeight.w700,
             fontSize: 12.5,
           ),
@@ -154,7 +210,7 @@ class BookingListItem extends StatelessWidget {
       );
     }
 
-    if (_isUpcoming || _isAwaitingConfirmation) {
+    if (_isUpcoming || _isAwaitingConfirmation || _isAwaitingPayment) {
       return TwoButtonsBar(
         leftText: context.t('view'),
         leftFilled: true,
@@ -339,6 +395,27 @@ class BookingListItem extends StatelessWidget {
   }
 
   Widget _statusChip(BuildContext context) {
+    if (_isActiveNow) {
+      return Container(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.approvedBg,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: AppColors.approvedBorder, width: 1.2),
+        ),
+        child: Text(
+          context.t('activeStatusLabel'),
+          style: TextStyle(
+            color: AppColors.approvedText,
+            fontWeight: FontWeight.w700,
+            fontSize: 12.5,
+          ),
+        ),
+      );
+    }
+
     if (booking.status.toLowerCase() == 'confirmed') {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),

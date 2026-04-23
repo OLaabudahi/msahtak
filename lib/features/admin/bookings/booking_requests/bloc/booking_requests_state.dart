@@ -19,7 +19,7 @@ class BookingRequestsState extends Equatable {
 
   factory BookingRequestsState.initial() => const BookingRequestsState(
         status: BookingRequestsLoadStatus.initial,
-        activeTab: BookingStatus.pending,
+        activeTab: BookingStatus.all,
         bookings: [],
         error: null,
       );

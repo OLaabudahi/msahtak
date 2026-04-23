@@ -1,6 +1,7 @@
 import '../../domain/entities/kpi_entity.dart';
 import '../../domain/entities/admin_space_item.dart';
 import '../../domain/entities/admin_activity_item.dart';
+import '../../domain/entities/admin_notification_item.dart';
 import '../../domain/repos/admin_home_repo.dart';
 import '../sources/admin_home_source.dart';
 
@@ -19,6 +20,8 @@ class AdminHomeRepoImpl implements AdminHomeRepo {
 
   @override
   Future<List<AdminActivityItem>> getRecentActivity() => source.fetchRecentActivity();
-}
 
+  @override
+  Future<List<AdminNotificationItem>> getNotifications() => source.fetchNotifications();
+}
 

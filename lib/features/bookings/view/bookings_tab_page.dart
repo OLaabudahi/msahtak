@@ -153,22 +153,33 @@ class _BookingsTabPageState extends State<BookingsTabPage> {
             if (start == null || end == null) return false;
 
             final raw = b.rawStatus.toLowerCase();
-            final hasAcceptedStatus = raw == 'approved' ||
-                raw == 'approved_waiting_payment' ||
-                raw == 'confirmed' ||
-                raw == 'paid' ||
-                raw == 'active';
-            if (!hasAcceptedStatus) return false;
+            final isEligible = raw == 'confirmed' || raw == 'paid' || raw == 'active';
+            if (!isEligible) return false;
 
-            return (now.isAtSameMomentAs(start) || now.isAfter(start)) &&
-                now.isBefore(end);
+            return (now.isAtSameMomentAs(start) || now.isAfter(start)) && now.isBefore(end);
           }).toList(growable: false),
         );
-        final confirmed = filter(list
-            .where((b) => b.status.toLowerCase() == 'confirmed')
-            .toList(growable: false));
+        final confirmed = filter(
+          list.where((b) {
+            final start = b.startAt;
+            final end = b.endAt;
+            if (start == null || end == null) return false;
+
+            final raw = b.rawStatus.toLowerCase();
+            final isEligible = raw == 'confirmed' || raw == 'paid' || raw == 'active';
+            if (!isEligible) return false;
+
+            return now.isBefore(start);
+          }).toList(growable: false),
+        );
         final awaitingPayment = filter(list
-            .where((b) => b.rawStatus.toLowerCase() == 'approved_waiting_payment')
+            .where((b) {
+              final raw = b.rawStatus.toLowerCase();
+              final normalized = b.status.toLowerCase();
+              return raw == 'approved_waiting_payment' ||
+                  raw == 'approved' ||
+                  normalized == 'awaiting_payment';
+            })
             .toList(growable: false));
         final awaitingAcceptance = filter(list
             .where((b) =>

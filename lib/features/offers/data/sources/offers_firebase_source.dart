@@ -13,16 +13,15 @@ class OffersFirebaseSource implements OffersRemoteSource {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null || userId.isEmpty) return const [];
 
-    final bookedSpaceIds = await _getBookedSpaceIds(userId);
-    if (bookedSpaceIds.isEmpty) return const [];
-
     final snap = await FirebaseFirestore.instance.collection('offers').limit(30).get();
 
     final offers = snap.docs.isNotEmpty
         ? snap.docs.map(_fromDoc).toList(growable: false)
         : _fallbackOffers();
 
-    final eligible = offers.where((offer) => bookedSpaceIds.contains(offer.id)).toList();
+    final eligible = offers
+        .where((offer) => offer.originalPrice > 0 && offer.discountedPrice > 0)
+        .toList(growable: false);
 
     return eligible.map(_applyMsahtakUserDiscount).toList(growable: false);
   }
@@ -65,7 +64,10 @@ class OffersFirebaseSource implements OffersRemoteSource {
     final spaceId = (d['spaceId'] ?? d['space_id'] ?? d['workspaceId'] ?? doc.id).toString();
     return OfferModel(
       id: spaceId,
-      name: d['name'] as String? ?? d['space_name'] as String? ?? 'Space',
+      name: d['name'] as String? ??
+          d['space_name'] as String? ??
+          d['title'] as String? ??
+          'Space',
       location: d['location'] as String? ?? '',
       originalPrice: (d['original_price'] as num?)?.toInt() ??
           (d['originalPrice'] as num?)?.toInt() ??

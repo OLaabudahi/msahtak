@@ -93,13 +93,14 @@ class BookingModel extends BookingEntity {
 
   static String _normalizeStatus(String? raw) {
     switch (raw?.toLowerCase()) {
+      case 'approved':
+      case 'approved_waiting_payment':
+        return 'awaiting_payment';
       case 'payment_under_review':
         return 'awaiting_confirmation';
       case 'paid':
       case 'active':
         return 'confirmed';
-      case 'approved':
-      case 'approved_waiting_payment':
       case 'confirmed':
         return 'confirmed';
       case 'pending':

@@ -17,15 +17,18 @@ class AiConciergeStarted extends AiConciergeEvent {
 }
 
 class SendMessage extends AiConciergeEvent {
-  const SendMessage({required this.message, required this.lang});
+  const SendMessage({required this.message});
 
   final String message;
-  final String lang;
 
   @override
-  List<Object?> get props => [message, lang];
+  List<Object?> get props => [message];
 }
 
 class ReceiveResponse extends AiConciergeEvent {
   const ReceiveResponse();
+}
+
+class FinalizeSessionRequested extends AiConciergeEvent {
+  const FinalizeSessionRequested();
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -23,7 +24,7 @@ class AppInitializerService {
     );
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FCMService.instance.attachNavigatorKey(AppNavigator.key);
-    await FCMService.instance.init();
+    unawaited(FCMService.instance.init());
 
     _isInitialized = true;
   }

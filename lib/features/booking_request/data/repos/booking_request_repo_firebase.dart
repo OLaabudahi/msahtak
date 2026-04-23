@@ -237,24 +237,52 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
   }) async {
     if (offerId == null || offerId.isEmpty) return 0;
 
-    final spaceDoc = await source.getSpace(space.id);
-    final rawOffers = (spaceDoc?['offers'] as List?) ?? const [];
-
     Map<String, dynamic>? offer;
-    for (final item in rawOffers) {
-      if (item is! Map) continue;
-      final map = Map<String, dynamic>.from(item);
-      final id = (map['id'] ?? '').toString().trim().toLowerCase();
-      if (id == offerId.trim().toLowerCase()) {
-        offer = map;
-        break;
+
+    try {
+      final byDoc = await _db.collection('offers').doc(offerId).get();
+      if (byDoc.exists) {
+        offer = byDoc.data();
+      }
+    } catch (_) {}
+
+    if (offer == null) {
+      try {
+        final q = await _db
+            .collection('offers')
+            .where('id', isEqualTo: offerId)
+            .limit(1)
+            .get();
+        if (q.docs.isNotEmpty) {
+          offer = q.docs.first.data();
+        }
+      } catch (_) {}
+    }
+
+    if (offer == null) {
+      final spaceDoc = await source.getSpace(space.id);
+      final rawOffers = (spaceDoc?['offers'] as List?) ?? const [];
+      for (final item in rawOffers) {
+        if (item is! Map) continue;
+        final map = Map<String, dynamic>.from(item);
+        final id = (map['id'] ?? '').toString().trim().toLowerCase();
+        if (id == offerId.trim().toLowerCase()) {
+          offer = map;
+          break;
+        }
       }
     }
+
     if (offer == null) return 0;
 
     final discountPercent = _asDouble(offer['discountPercent']);
     if (discountPercent != null && discountPercent > 0) {
       return (subtotal * (discountPercent / 100)).round();
+    }
+
+    final packageDiscountPercent = _asDouble(offer['packageDiscountPercent']);
+    if (packageDiscountPercent != null && packageDiscountPercent > 0) {
+      return (subtotal * (packageDiscountPercent / 100)).round();
     }
 
     final discountValue = _asDouble(offer['discountValue']);
@@ -264,6 +292,8 @@ class BookingRequestRepoFirebase implements BookingRequestRepo {
     }
 
     final newPriceValue =
+        _asDouble(offer['fixedPriceValue']) ??
+        _asDouble(offer['fixedMonthlyPrice']) ??
         _asDouble(offer['new_price_value']) ?? _extractFirstNumber(offer['new_price_text']?.toString());
     if (newPriceValue == null || newPriceValue <= 0) return 0;
 

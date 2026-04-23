@@ -16,12 +16,51 @@ class ChatInputBar extends StatefulWidget {
 }
 
 class _ChatInputBarState extends State<ChatInputBar> {
+  static const int _maxMessageLength = 250;
   final _controller = TextEditingController();
+
+  late TextDirection _inputDirection;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_controller.text.isEmpty) {
+      _inputDirection = Directionality.of(context);
+    }
+  }
 
   @override
   void dispose() {
+    _controller.removeListener(_onTextChanged);
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    if (!mounted) return;
+    final nextDirection = _resolveInputDirection(_controller.text);
+    setState(() {
+      _inputDirection = nextDirection;
+    });
+  }
+
+  TextDirection _resolveInputDirection(String text) {
+    for (final rune in text.runes) {
+      final char = String.fromCharCode(rune);
+      if (RegExp(r'[A-Za-z]').hasMatch(char)) {
+        return TextDirection.ltr;
+      }
+      if (RegExp(r'[\u0600-\u06FF]').hasMatch(char)) {
+        return TextDirection.rtl;
+      }
+    }
+    return Directionality.of(context);
   }
 
   void _send() {
@@ -33,6 +72,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final count = _controller.text.length;
+
     return SafeArea(
       top: false,
       child: Container(
@@ -42,16 +83,23 @@ class _ChatInputBarState extends State<ChatInputBar> {
         ),
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: TextField(
                 controller: _controller,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (_) => _send(),
+                textDirection: _inputDirection,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                minLines: 1,
+                maxLines: 5,
+                maxLength: _maxMessageLength,
                 decoration: InputDecoration(
                   hintText: context.t('askAnything'),
                   filled: true,
                   fillColor: AppColors.surface,
+                  counterText: '$count/$_maxMessageLength',
                   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),

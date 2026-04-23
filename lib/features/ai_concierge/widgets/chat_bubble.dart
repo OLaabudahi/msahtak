@@ -17,6 +17,16 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUser = message.sender == ConciergeSender.user;
+    final actions = message.actions.isNotEmpty
+        ? message.actions
+        : (message.hasAction
+            ? [
+                ConciergeAction(
+                  spaceId: message.actionSpaceId ?? '',
+                  spaceName: message.actionSpaceName,
+                )
+              ]
+            : const <ConciergeAction>[]);
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -50,22 +60,32 @@ class ChatBubble extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-              if (message.hasAction) ...[
+              if (actions.isNotEmpty) ...[
                 const SizedBox(height: 10),
-                FilledButton(
-                  onPressed: () => onActionTap(message.actionSpaceId!),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.amber,
-                    foregroundColor: Colors.black,
-                    visualDensity: VisualDensity.compact,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-
-                  child: Text(
-                    context.t('bookNow'),
-                  ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: actions
+                      .where((a) => a.spaceId.isNotEmpty)
+                      .map(
+                        (action) => FilledButton(
+                          onPressed: () => onActionTap(action.spaceId),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.amber,
+                            foregroundColor: Colors.black,
+                            visualDensity: VisualDensity.compact,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            action.spaceName?.isNotEmpty == true
+                                ? '${context.t('bookNow')} - ${action.spaceName}'
+                                : context.t('bookNow'),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ],
             ],

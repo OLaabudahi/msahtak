@@ -2,6 +2,7 @@ import 'admin_home_source.dart';
 import '../models/kpi_model.dart';
 import '../../domain/entities/admin_space_item.dart';
 import '../../domain/entities/admin_activity_item.dart';
+import '../../domain/entities/admin_notification_item.dart';
 
 class AdminHomeDummySource implements AdminHomeSource {
   @override
@@ -29,7 +30,11 @@ class AdminHomeDummySource implements AdminHomeSource {
       KpiModel(id: 'revenue', title: 'Weekly Revenue', value: '\$1,240', delta: '+12%'),
     ];
   }
-}
 
+  @override
+  Future<List<AdminNotificationItem>> fetchNotifications() async {
+    return const [];
+  }
+}
 
 

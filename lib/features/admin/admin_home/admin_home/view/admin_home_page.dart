@@ -8,11 +8,13 @@ import '../bloc/admin_home_state.dart';
 import '../data/repos/admin_home_repo_impl.dart';
 import '../data/sources/admin_home_firebase_source.dart';
 import '../domain/usecases/get_admin_home_kpis_usecase.dart';
+import '../domain/usecases/get_admin_notifications_usecase.dart';
 import '../domain/usecases/get_admin_spaces_usecase.dart';
 import '../domain/usecases/get_admin_recent_activity_usecase.dart';
 import '../widgets/kpi_tile.dart';
 import '../domain/entities/admin_activity_item.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
+import '../../../bookings/booking_details/view/booking_details_page.dart';
 import '../../../calendar/calendar_availability/view/calendar_availability_page.dart';
 import '../../../offers/offers_management/view/offers_management_page.dart';
 import '../../../reviews/reviews_reports/view/reviews_reports_page.dart';
@@ -22,6 +24,7 @@ import '../../../_shared/admin_session.dart';
 import '../../../../../core/i18n/app_i18n.dart';
 import '../../../../../features/language/bloc/language_bloc.dart';
 import '../../../../../services/language_service.dart';
+import 'admin_notifications_page.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -34,6 +37,7 @@ class AdminHomePage extends StatelessWidget {
         getSpaces: GetAdminSpacesUseCase(repo),
         getKpis: GetAdminHomeKpisUseCase(repo),
         getActivity: GetAdminRecentActivityUseCase(repo),
+        getNotifications: GetAdminNotificationsUseCase(repo),
       )..add(const AdminHomeStarted()),
       child: const AdminHomePage(),
     );
@@ -67,7 +71,39 @@ class AdminHomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(context.t('adminDashboardTitle'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.h1()),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                context.t('adminDashboardTitle'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AdminText.h1(),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              tooltip: context.t('notificationsPageTitle'),
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => AdminNotificationsPage(
+                                    items: state.notifications,
+                                    onOpenBooking: (bookingId) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              BookingDetailsPage.withBloc(bookingId: bookingId),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              icon: const Icon(Icons.notifications_outlined),
+                              color: AdminColors.text,
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 4),
                         Text(context.t('adminDashboardSubtitle'), maxLines: 1, overflow: TextOverflow.ellipsis, style: AdminText.body14()),
 
@@ -378,5 +414,3 @@ class _QuickActionBtn extends StatelessWidget {
     );
   }
 }
-
-

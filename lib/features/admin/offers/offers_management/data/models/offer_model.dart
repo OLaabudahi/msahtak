@@ -23,6 +23,8 @@ class OfferModel {
   final double? fixedMonthlyPrice;
 
   final String? bonusText;
+  final String? adminId;
+  final String? spaceId;
 
   const OfferModel({
     required this.id,
@@ -39,6 +41,8 @@ class OfferModel {
     required this.packageDiscountPercent,
     required this.fixedMonthlyPrice,
     required this.bonusText,
+    this.adminId,
+    this.spaceId,
   });
 
   factory OfferModel.fromJson(Map<String, dynamic> json) => OfferModel(
@@ -56,6 +60,8 @@ class OfferModel {
         packageDiscountPercent: (json['packageDiscountPercent'] as num?)?.toDouble(),
         fixedMonthlyPrice: (json['fixedMonthlyPrice'] as num?)?.toDouble(),
         bonusText: json['bonusText']?.toString(),
+        adminId: json['adminId']?.toString(),
+        spaceId: json['spaceId']?.toString(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -73,6 +79,8 @@ class OfferModel {
         'packageDiscountPercent': packageDiscountPercent,
         'fixedMonthlyPrice': fixedMonthlyPrice,
         'bonusText': bonusText,
+        'adminId': adminId,
+        'spaceId': spaceId,
       };
 
   OfferEntity toEntity() => OfferEntity(
@@ -90,6 +98,8 @@ class OfferModel {
         packageDiscountPercent: packageDiscountPercent,
         fixedMonthlyPrice: fixedMonthlyPrice,
         bonusText: bonusText,
+        adminId: adminId,
+        spaceId: spaceId,
       );
 
   static OfferModel fromEntity(OfferEntity e) => OfferModel(
@@ -107,6 +117,8 @@ class OfferModel {
         packageDiscountPercent: e.packageDiscountPercent,
         fixedMonthlyPrice: e.fixedMonthlyPrice,
         bonusText: e.bonusText,
+        adminId: e.adminId,
+        spaceId: e.spaceId,
       );
 
   OfferType _parseType(String s) {
@@ -148,5 +160,4 @@ class OfferModel {
     }
   }
 }
-
 

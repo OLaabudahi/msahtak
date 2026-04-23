@@ -18,7 +18,6 @@ import '../widgets/settings_group.dart';
 import '../../../analytics/analytics/view/analytics_performance_page.dart';
 import '../../../analytics/analytics/view/analytics_top_spaces_page.dart';
 import '../../../bookings/booking_requests/view/booking_requests_page.dart';
-import '../../../calendar/calendar_availability/view/calendar_availability_page.dart';
 import '../../../offers/offers_management/view/offers_management_page.dart';
 import '../../../reviews/reviews_reports/view/reviews_reports_page.dart';
 
@@ -96,11 +95,6 @@ class AdminSettingsPage extends StatelessWidget {
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookingRequestsPage.withBloc())),
                           ),
                           SettingsRow(
-                            title: context.t('adminManageCalendar'),
-                            subtitle: context.t('adminManageCalendarSubtitle'),
-                            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CalendarAvailabilityPage.withBloc(fromHome: true))),
-                          ),
-                          SettingsRow(
                             title: context.t('adminOffersManagement'),
                             subtitle: context.t('adminOffersManagementSubtitle'),
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => OffersManagementPage.withBloc(fromHome: true))),
@@ -139,5 +133,4 @@ class AdminSettingsPage extends StatelessWidget {
     );
   }
 }
-
 

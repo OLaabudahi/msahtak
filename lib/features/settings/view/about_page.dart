@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
+import '../data/repos/help_content_repo_firebase.dart';
+import '../domain/entities/help_content_entity.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -13,11 +15,14 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late final Future<AboutContentEntity?> _aboutFuture;
+  final HelpContentRepoFirebase _contentRepo = HelpContentRepoFirebase();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _aboutFuture = _contentRepo.getAboutContent();
   }
 
   @override
@@ -45,110 +50,104 @@ class _AboutPageState extends State<AboutPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              _AboutCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.t('aboutAppHeading'),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          FutureBuilder<AboutContentEntity?>(
+            future: _aboutFuture,
+            builder: (context, snapshot) {
+              final isArabic = context.isArabic;
+              final remote = snapshot.data;
+              final lines = remote == null
+                  ? _fallbackAppInfo(context)
+                  : (isArabic ? remote.appInfoAr : remote.appInfoEn);
+
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _AboutCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: lines.map((e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(e),
+                      )).toList(),
                     ),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutAppDescription')),
-                    const SizedBox(height: 14),
-                    Text(context.t('aboutProvidesTitle')),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutFeatureSearch')),
-                    Text(context.t('aboutFeatureBookingPlans')),
-                    Text(context.t('aboutFeatureRatings')),
-                    Text(context.t('aboutFeatureFavorites')),
-                    Text(context.t('aboutFeatureInvoices')),
-                    Text(context.t('aboutFeatureAi')),
-                    const SizedBox(height: 16),
-                    Text(
-                      context.t('aboutVersionText'),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      context.t('aboutToolsTitle'),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutToolFlutter')),
-                    Text(context.t('aboutToolFirebase')),
-                    Text(context.t('aboutToolFirestore')),
-                    Text(context.t('aboutToolMapLocation')),
-                    Text(context.t('aboutToolPrefs')),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
-          ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              _AboutCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.t('aboutPoliciesTitle'),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          FutureBuilder<AboutContentEntity?>(
+            future: _aboutFuture,
+            builder: (context, snapshot) {
+              final isArabic = context.isArabic;
+              final remote = snapshot.data;
+              final lines = remote == null
+                  ? _fallbackPolicies(context)
+                  : (isArabic ? remote.policiesAr : remote.policiesEn);
+
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _AboutCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: lines.map((e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(e),
+                      )).toList(),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      context.t('aboutTermsSectionTitle'),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutTermsItem1')),
-                    Text(context.t('aboutTermsItem2')),
-                    Text(context.t('aboutTermsItem3')),
-                    Text(context.t('aboutTermsItem4')),
-                    Text(context.t('aboutTermsItem5')),
-                    Text(context.t('aboutTermsItem6')),
-                    const SizedBox(height: 14),
-                    Text(
-                      context.t('aboutUsageSectionTitle'),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutUsageItem1')),
-                    Text(context.t('aboutUsageItem2')),
-                    Text(context.t('aboutUsageItem3')),
-                    Text(context.t('aboutUsageItem4')),
-                    const SizedBox(height: 14),
-                    Text(
-                      context.t('aboutPrivacySectionTitle'),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(context.t('aboutPrivacyItem1')),
-                    Text(context.t('aboutPrivacyItem2')),
-                    Text(context.t('aboutPrivacyItem3')),
-                    Text(context.t('aboutPrivacyItem4')),
-                    Text(context.t('aboutPrivacyItem5')),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
     );
+  }
+
+  List<String> _fallbackAppInfo(BuildContext context) {
+    return [
+      context.t('aboutAppHeading'),
+      context.t('aboutAppDescription'),
+      context.t('aboutProvidesTitle'),
+      context.t('aboutFeatureSearch'),
+      context.t('aboutFeatureBookingPlans'),
+      context.t('aboutFeatureRatings'),
+      context.t('aboutFeatureFavorites'),
+      context.t('aboutFeatureInvoices'),
+      context.t('aboutFeatureAi'),
+      context.t('aboutVersionText'),
+      context.t('aboutToolsTitle'),
+      context.t('aboutToolFlutter'),
+      context.t('aboutToolFirebase'),
+      context.t('aboutToolFirestore'),
+      context.t('aboutToolMapLocation'),
+      context.t('aboutToolPrefs'),
+    ];
+  }
+
+  List<String> _fallbackPolicies(BuildContext context) {
+    return [
+      context.t('aboutPoliciesTitle'),
+      context.t('aboutTermsSectionTitle'),
+      context.t('aboutTermsItem1'),
+      context.t('aboutTermsItem2'),
+      context.t('aboutTermsItem3'),
+      context.t('aboutTermsItem4'),
+      context.t('aboutTermsItem5'),
+      context.t('aboutTermsItem6'),
+      context.t('aboutUsageSectionTitle'),
+      context.t('aboutUsageItem1'),
+      context.t('aboutUsageItem2'),
+      context.t('aboutUsageItem3'),
+      context.t('aboutUsageItem4'),
+      context.t('aboutPrivacySectionTitle'),
+      context.t('aboutPrivacyItem1'),
+      context.t('aboutPrivacyItem2'),
+      context.t('aboutPrivacyItem3'),
+      context.t('aboutPrivacyItem4'),
+      context.t('aboutPrivacyItem5'),
+    ];
   }
 }
 

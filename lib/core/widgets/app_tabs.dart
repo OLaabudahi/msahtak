@@ -32,6 +32,7 @@ class AppTabs extends StatelessWidget {
           color: active ? Colors.black : AppColors.textSecondary,
           fontWeight: FontWeight.w700,
         ),
+        showCheckmark: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
           side: BorderSide(

@@ -16,6 +16,7 @@ class BookingRequestsPage extends StatelessWidget {
   const BookingRequestsPage({super.key});
 
   static const _tabs = [
+    BookingStatus.all,
     BookingStatus.pending,
     BookingStatus.awaitingPayment,
     BookingStatus.awaitingConfirmation,
@@ -50,6 +51,7 @@ class BookingRequestsPage extends StatelessWidget {
                 buildWhen: (p, n) => p.activeTab != n.activeTab,
                 builder: (context, state) {
                   final labels = [
+                    context.t('bookingsTabAll'),
                     context.t('adminTabPending'),
                     context.t('adminTabAwaitingPayment'),
                     context.t('adminTabAwaitingConfirmation'),
@@ -112,6 +114,7 @@ class BookingRequestsPage extends StatelessWidget {
   }
 
   static String _tabLabel(BookingStatus s) => switch (s) {
+        BookingStatus.all => 'all',
         BookingStatus.pending => 'pending',
         BookingStatus.awaitingPayment => 'awaiting payment',
         BookingStatus.awaitingConfirmation => 'awaiting confirmation',

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../domain/entities/kpi_entity.dart';
 import '../domain/entities/admin_space_item.dart';
 import '../domain/entities/admin_activity_item.dart';
+import '../domain/entities/admin_notification_item.dart';
 
 enum AdminHomeStatus { initial, loading, success, failure }
 
@@ -12,6 +13,7 @@ class AdminHomeState extends Equatable {
   final String activeSpaceName;
   final List<KpiEntity> kpis;
   final List<AdminActivityItem> recentActivity;
+  final List<AdminNotificationItem> notifications;
   final String? error;
 
   const AdminHomeState({
@@ -21,6 +23,7 @@ class AdminHomeState extends Equatable {
     required this.activeSpaceName,
     required this.kpis,
     required this.recentActivity,
+    required this.notifications,
     required this.error,
   });
 
@@ -31,6 +34,7 @@ class AdminHomeState extends Equatable {
         activeSpaceName: '',
         kpis: [],
         recentActivity: [],
+        notifications: [],
         error: null,
       );
 
@@ -41,6 +45,7 @@ class AdminHomeState extends Equatable {
     String? activeSpaceName,
     List<KpiEntity>? kpis,
     List<AdminActivityItem>? recentActivity,
+    List<AdminNotificationItem>? notifications,
     String? error,
   }) {
     return AdminHomeState(
@@ -50,12 +55,21 @@ class AdminHomeState extends Equatable {
       activeSpaceName: activeSpaceName ?? this.activeSpaceName,
       kpis: kpis ?? this.kpis,
       recentActivity: recentActivity ?? this.recentActivity,
+      notifications: notifications ?? this.notifications,
       error: error,
     );
   }
 
   @override
-  List<Object?> get props => [status, spaces, activeSpaceId, activeSpaceName, kpis, recentActivity, error];
+  List<Object?> get props => [
+    status,
+    spaces,
+    activeSpaceId,
+    activeSpaceName,
+    kpis,
+    recentActivity,
+    notifications,
+    error,
+  ];
 }
-
 

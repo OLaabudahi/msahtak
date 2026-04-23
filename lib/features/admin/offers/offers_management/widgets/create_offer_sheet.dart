@@ -73,9 +73,27 @@ class CreateOfferSheet extends StatelessWidget {
                 hint: 'e.g. Sep 30',
                 value: form.validUntil,
                 error: form.validUntilError,
-                onChanged: (v) => dispatch(
-                  OffersManagementCreateFieldChanged('validUntil', v),
+                readOnly: true,
+                suffixIcon: Icon(
+                  Icons.calendar_month_rounded,
+                  color: AdminColors.black40,
+                  size: 20,
                 ),
+                onTap: () async {
+                  final now = DateTime.now();
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: _parseDate(form.validUntil) ?? now,
+                    firstDate: now,
+                    lastDate: DateTime(now.year + 5),
+                  );
+                  if (picked == null) return;
+                  final formatted = _formatDate(picked);
+                  dispatch(
+                    OffersManagementCreateFieldChanged('validUntil', formatted),
+                  );
+                },
+                onChanged: (_) {},
               ),
 
               const SizedBox(height: 10),
@@ -376,6 +394,9 @@ class _Field extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final int maxLines;
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final Widget? suffixIcon;
 
   const _Field({
     required this.label,
@@ -385,6 +406,9 @@ class _Field extends StatelessWidget {
     required this.onChanged,
     this.maxLines = 1,
     this.inputFormatters,
+    this.readOnly = false,
+    this.onTap,
+    this.suffixIcon,
   });
 
   @override
@@ -404,13 +428,16 @@ class _Field extends StatelessWidget {
           TextFormField(
             initialValue: value,
             maxLines: maxLines,
+            readOnly: readOnly,
             inputFormatters: inputFormatters,
             onChanged: onChanged,
+            onTap: onTap,
             style: AdminText.body16(),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: AdminText.body16(color: AdminColors.black40),
               errorText: error,
+              suffixIcon: suffixIcon,
               contentPadding: const EdgeInsets.all(14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -432,4 +459,21 @@ class _Field extends StatelessWidget {
   }
 }
 
+DateTime? _parseDate(String raw) {
+  final value = raw.trim();
+  if (value.isEmpty) return null;
+  final parts = value.split('-');
+  if (parts.length != 3) return null;
+  final y = int.tryParse(parts[0]);
+  final m = int.tryParse(parts[1]);
+  final d = int.tryParse(parts[2]);
+  if (y == null || m == null || d == null) return null;
+  return DateTime(y, m, d);
+}
+
+String _formatDate(DateTime date) {
+  final mm = date.month.toString().padLeft(2, '0');
+  final dd = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$mm-$dd';
+}
 

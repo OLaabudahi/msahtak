@@ -9,6 +9,7 @@ import '../bloc/ai_concierge_bloc.dart';
 import '../bloc/ai_concierge_event.dart';
 import '../bloc/ai_concierge_state.dart';
 import '../data/repos/ai_concierge_repo_dummy.dart';
+import '../domain/usecases/finalize_concierge_session_usecase.dart';
 import '../domain/usecases/start_concierge_usecase.dart';
 import '../domain/usecases/submit_answer_usecase.dart';
 import '../widgets/chat_bubble.dart';
@@ -24,6 +25,7 @@ class AiConciergePage extends StatefulWidget {
       create: (_) => AiConciergeBloc(
         startUseCase: StartConciergeUseCase(repo),
         submitAnswerUseCase: SubmitAnswerUseCase(repo),
+        finalizeConciergeSessionUseCase: FinalizeConciergeSessionUseCase(repo),
       ),
       child: const AiConciergePage(),
     );
@@ -48,6 +50,7 @@ class _AiConciergePageState extends State<AiConciergePage> {
 
   @override
   void dispose() {
+    context.read<AiConciergeBloc>().add(const FinalizeSessionRequested());
     _scrollController.dispose();
     super.dispose();
   }
@@ -68,7 +71,7 @@ class _AiConciergePageState extends State<AiConciergePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.switchThumb,
-        title:  Text(context.t('aiAssistantName')),
+        title: Text(context.t('aiConcierge')),
       ),
       body: BlocConsumer<AiConciergeBloc, AiConciergeState>(
         listenWhen: (prev, next) =>
@@ -97,16 +100,12 @@ class _AiConciergePageState extends State<AiConciergePage> {
                     ...state.messages.map(
                       (message) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child:ChatBubble(
+                        child: ChatBubble(
                           message: message,
                           onActionTap: (spaceId) {
                             _openSpaceDetails(context, spaceId);
                           },
                         ),
-                        /* ChatBubble(
-                          message: message,
-                          onActionTap: (spaceId) => _openSpaceDetails(context, spaceId),
-                        ),*/
                       ),
                     ),
                     if (state.loading)
@@ -136,8 +135,7 @@ class _AiConciergePageState extends State<AiConciergePage> {
               ),
               ChatInputBar(
                 onSend: (text) {
-                  final code = context.isArabic ? 'ar' : LanguageService.supported.first.code;
-                  context.read<AiConciergeBloc>().add(SendMessage(message: text, lang: code));
+                  context.read<AiConciergeBloc>().add(SendMessage(message: text));
                 },
               ),
             ],
@@ -146,6 +144,7 @@ class _AiConciergePageState extends State<AiConciergePage> {
       ),
     );
   }
+
 
   void _openSpaceDetails(BuildContext context, String spaceId) {
     Navigator.of(context).push(

@@ -14,6 +14,7 @@ class AdminBookingsRepoImpl implements AdminBookingsRepo {
       BookingStatus.awaitingConfirmation => 'awaiting_confirmation',
       BookingStatus.booked => 'booked',
       BookingStatus.canceled => 'canceled',
+      BookingStatus.all => 'all',
       _ => 'pending',
     };
     final models = await source.fetchBookings(status: s);

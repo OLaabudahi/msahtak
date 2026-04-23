@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'api_service.dart';
+
 class NotificationApiService {
   NotificationApiService({
     http.Client? client,
     String? baseUrl,
   })  : _client = client ?? http.Client(),
-        _baseUrl = (baseUrl ?? _defaultBaseUrl).replaceAll(RegExp(r'/$'), '');
-
-  static const String _defaultBaseUrl = 'https://masahatak-admin.vercel.app';
+        _baseUrl = ApiService.normalizeBaseUrl(baseUrl ?? ApiService.baseUrl);
 
   final http.Client _client;
   final String _baseUrl;
@@ -20,7 +20,7 @@ class NotificationApiService {
     required String title,
     required String body,
   }) async {
-    final uri = Uri.parse('$_baseUrl/send-booking-notification');
+    final uri = ApiService.sendBookingNotificationUri(base: _baseUrl);
     final response = await _client.post(
       uri,
       headers: {'Content-Type': 'application/json'},

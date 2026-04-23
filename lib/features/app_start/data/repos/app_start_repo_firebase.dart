@@ -12,8 +12,6 @@ class AppStartRepoFirebase implements AppStartRepo {
 
   @override
   Future<AppStartDecision> decide() async {
-    await Future.delayed(const Duration(milliseconds: 600));
-
     final user = FirebaseAuth.instance.currentUser ??
         await FirebaseAuth.instance.authStateChanges().first;
 

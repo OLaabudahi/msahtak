@@ -236,16 +236,16 @@ class RequestBookingPage extends StatelessWidget {
   }
 
   Future<List<_PickItem>> _loadOfferItems() async {
-    final doc = await FirebaseFirestore.instance.collection('spaces').doc(space.id).get();
-    final data = doc.data() ?? <String, dynamic>{};
-    final rawOffers = (data['offers'] as List?) ?? const [];
-
     final items = <_PickItem>[const _PickItem(id: null, label: 'Skip')];
+    final offersSnap = await FirebaseFirestore.instance
+        .collection('offers')
+        .where('spaceId', isEqualTo: space.id)
+        .where('enabled', isEqualTo: true)
+        .get();
 
-    for (final item in rawOffers) {
-      if (item is! Map) continue;
-      final offer = Map<String, dynamic>.from(item);
-      final id = (offer['id'] ?? '').toString().trim();
+    for (final doc in offersSnap.docs) {
+      final offer = doc.data();
+      final id = (offer['id'] ?? doc.id).toString().trim();
       if (id.isEmpty) continue;
       final label = (offer['title'] ?? offer['label'] ?? id).toString().trim();
       items.add(_PickItem(id: id, label: label.isEmpty ? id : label));
@@ -366,6 +366,5 @@ Future<_PickItem?> _pickFromBottomSheet(
     },
   );
 }
-
 
 

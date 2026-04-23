@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../domain/entities/kpi_entity.dart';
 import '../domain/entities/admin_space_item.dart';
 import '../domain/entities/admin_activity_item.dart';
+import '../domain/entities/admin_notification_item.dart';
 import '../domain/usecases/get_admin_home_kpis_usecase.dart';
+import '../domain/usecases/get_admin_notifications_usecase.dart';
 import '../domain/usecases/get_admin_spaces_usecase.dart';
 import '../domain/usecases/get_admin_recent_activity_usecase.dart';
 import 'admin_home_event.dart';
@@ -12,11 +14,13 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
   final GetAdminSpacesUseCase getSpaces;
   final GetAdminHomeKpisUseCase getKpis;
   final GetAdminRecentActivityUseCase getActivity;
+  final GetAdminNotificationsUseCase getNotifications;
 
   AdminHomeBloc({
     required this.getSpaces,
     required this.getKpis,
     required this.getActivity,
+    required this.getNotifications,
   }) : super(AdminHomeState.initial()) {
     on<AdminHomeStarted>(_onStarted);
     on<AdminHomeSpaceChanged>(_onSpaceChanged);
@@ -27,6 +31,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
     try {
       final List<AdminSpaceItem> spaces = await getSpaces();
       final List<AdminActivityItem> activity = await getActivity();
+      final List<AdminNotificationItem> notifications = await getNotifications();
       final firstId = spaces.isNotEmpty ? spaces.first.id : '';
       final firstName = spaces.isNotEmpty ? spaces.first.name : '';
       final List<KpiEntity> kpis = firstId.isEmpty ? const [] : await getKpis(spaceId: firstId);
@@ -37,6 +42,7 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
         activeSpaceName: firstName,
         kpis: kpis,
         recentActivity: activity,
+        notifications: notifications,
       ));
     } catch (e) {
       emit(state.copyWith(status: AdminHomeStatus.failure, error: e.toString()));
@@ -58,5 +64,4 @@ class AdminHomeBloc extends Bloc<AdminHomeEvent, AdminHomeState> {
     }
   }
 }
-
 

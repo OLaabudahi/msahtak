@@ -30,6 +30,8 @@ class OfferEntity extends Equatable {
 
   
   final String? bonusText;
+  final String? adminId;
+  final String? spaceId;
 
   const OfferEntity({
     required this.id,
@@ -46,6 +48,8 @@ class OfferEntity extends Equatable {
     required this.packageDiscountPercent,
     required this.fixedMonthlyPrice,
     required this.bonusText,
+    this.adminId,
+    this.spaceId,
   });
 
   @override
@@ -64,7 +68,8 @@ class OfferEntity extends Equatable {
         packageDiscountPercent,
         fixedMonthlyPrice,
         bonusText,
+        adminId,
+        spaceId,
       ];
 }
-
 

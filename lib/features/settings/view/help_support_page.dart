@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/i18n/app_i18n.dart';
 import '../../../theme/app_colors.dart';
+import '../data/repos/help_content_repo_firebase.dart';
+import '../domain/entities/help_content_entity.dart';
 
 class HelpSupportPage extends StatefulWidget {
   const HelpSupportPage({super.key});
@@ -13,6 +15,8 @@ class HelpSupportPage extends StatefulWidget {
 class _HelpSupportPageState extends State<HelpSupportPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late final Future<List<FaqItemEntity>> _faqFuture;
+  final HelpContentRepoFirebase _contentRepo = HelpContentRepoFirebase();
 
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -23,6 +27,7 @@ class _HelpSupportPageState extends State<HelpSupportPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _faqFuture = _contentRepo.getFaqItems();
   }
 
   @override
@@ -68,29 +73,29 @@ class _HelpSupportPageState extends State<HelpSupportPage>
             padding: const EdgeInsets.all(16),
             children: [
               _SectionCard(
-                child: Column(
-                  children: [
-                    _FaqTile(
-                      question: context.t('faqBookingQuestion'),
-                      answer: context.t('faqBookingAnswer'),
-                    ),
-                    _FaqTile(
-                      question: context.t('faqCancelQuestion'),
-                      answer: context.t('faqCancelAnswer'),
-                    ),
-                    _FaqTile(
-                      question: context.t('faqPaymentQuestion'),
-                      answer: context.t('faqPaymentAnswer'),
-                    ),
-                    _FaqTile(
-                      question: context.t('faqInvoiceQuestion'),
-                      answer: context.t('faqInvoiceAnswer'),
-                    ),
-                    _FaqTile(
-                      question: context.t('faqPricingQuestion'),
-                      answer: context.t('faqPricingAnswer'),
-                    ),
-                  ],
+                child: FutureBuilder<List<FaqItemEntity>>(
+                  future: _faqFuture,
+                  builder: (context, snapshot) {
+                    final remoteFaq = snapshot.data ?? const <FaqItemEntity>[];
+                    final isArabic = context.isArabic;
+                    final fallbackFaq = _fallbackFaq(context);
+                    final faqs = remoteFaq.isNotEmpty
+                        ? remoteFaq
+                            .map(
+                              (item) => _FaqVm(
+                                question: isArabic ? item.questionAr : item.questionEn,
+                                answer: isArabic ? item.answerAr : item.answerEn,
+                              ),
+                            )
+                            .toList()
+                        : fallbackFaq;
+
+                    return Column(
+                      children: faqs
+                          .map((item) => _FaqTile(question: item.question, answer: item.answer))
+                          .toList(),
+                    );
+                  },
                 ),
               ),
             ],
@@ -166,8 +171,12 @@ class _FaqTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      child:  ExpansionTile(
-        backgroundColor: AppColors.switchThumb,
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      shadowColor: Colors.black12,
+      child: ExpansionTile(
+        backgroundColor: Colors.white,
+        collapsedBackgroundColor: Colors.white,
         title: Text(question),
         children: [
           Padding(
@@ -177,6 +186,24 @@ class _FaqTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _FaqVm {
+  final String question;
+  final String answer;
+  const _FaqVm({required this.question, required this.answer});
+}
+
+extension on _HelpSupportPageState {
+  List<_FaqVm> _fallbackFaq(BuildContext context) {
+    return List<_FaqVm>.generate(14, (i) {
+      final n = i + 1;
+      return _FaqVm(
+        question: context.t('faqQuestion$n'),
+        answer: context.t('faqAnswer$n'),
+      );
+    });
   }
 }
 
